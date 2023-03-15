@@ -53,14 +53,15 @@ apply-extras:
 
 bootstrap-flux:
 	cd $(K8S_DIR)
-	kubectl apply --server-side --kustomize ./bootstrap
-	sops -d ./bootstrap/age-key.sops.yaml | kubectl apply -f -
-	sops -d ./bootstrap/github-deploy-key.sops.yaml | kubectl apply -f -
-	sops -d ./flux/vars/global-secrets.yaml | kubectl apply -f -
-	kubectl apply -f ./flux/vars/global-vars.yaml
-	kubectl get pods -n flux-system
+	$(KC) apply --server-side --kustomize ./bootstrap
+	sops -d ./bootstrap/age-key.sops.yaml | $(KC) apply -f -
+	sops -d ./bootstrap/github-deploy-key.sops.yaml | $(KC) apply -f -
+	sops -d ./flux/vars/global-secrets.yaml | $(KC) apply -f -
+	$(KC) apply -f ./flux/vars/global-vars.yaml
+	$(KC) apply -f ./flux/vars/global-auto-vars.yaml
+	$(KC) get pods -n flux-system
 	sleep 10
-	kubectl apply --server-side --kustomize ./flux/config
+	$(KC) apply --server-side --kustomize ./flux/config
 	sleep 10
 	flux reconcile -n flux-system source git flux-system
 	flux reconcile -n flux-system kustomization cluster
