@@ -99,9 +99,9 @@ spec:
                 - *host
 
     bgpControlPlane:
-      enabled: false
-    bgp:
       enabled: true
+    bgp:
+      enabled: false
       announce:
         loadbalancerIP: true
         podCIDR: false

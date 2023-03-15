@@ -32,7 +32,10 @@ spec:
           value: "${SECRET_TIMEZONE}"
       service:
         annotations:
-          metallb.universe.tf/loadBalancerIPs: "${SVC_INGRESS_ADDR}"
+          io.cilium/lb-ipam-ips:  "${SVC_INGRESS_ADDR}"
+        #enabled: true
+        #type: LoadBalancer
+        #loadBalancerIP: "${SVC_INGRESS_ADDR}"
         externalTrafficPolicy: Local
       publishService:
         enabled: true
