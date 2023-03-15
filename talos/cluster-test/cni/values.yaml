@@ -7,8 +7,8 @@ cluster:
 autoDirectNodeRoutes: true
 bgp:
   enabled: false
-  announce:
-    loadbalancerIP: true
+bgpControlPlane:
+  enabled: true
 containerRuntime:
   integration: containerd
 endpointRoutes:
