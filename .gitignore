@@ -22,8 +22,6 @@ node_modules
 packer_cache
 .pio*
 .private/
-secrets*yaml
-secrets*yml
 server/ansible/inventory/e2e/hosts.yml
 state/pki/certs
 !state/pki/certs/.gitkeep

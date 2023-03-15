@@ -9,8 +9,8 @@ eval "$(sops -d env.sops.sh)"
 MON_SECRET_NAME=rook-ceph-mon
 CSI_RBD_NODE_SECRET_NAME=rook-csi-rbd-node
 CSI_RBD_PROVISIONER_SECRET_NAME=rook-csi-rbd-provisioner
-CSI_CEPHFS_NODE_SECRET_NAME=rook-csi-cephfs-node
-CSI_CEPHFS_PROVISIONER_SECRET_NAME=rook-csi-cephfs-provisioner
+#CSI_CEPHFS_NODE_SECRET_NAME=rook-csi-cephfs-node
+#CSI_CEPHFS_PROVISIONER_SECRET_NAME=rook-csi-cephfs-provisioner
 MON_SECRET_CLUSTER_NAME_KEYNAME=cluster-name
 MON_SECRET_FSID_KEYNAME=fsid
 MON_SECRET_ADMIN_KEYRING_KEYNAME=admin-secret
@@ -58,14 +58,14 @@ function checkEnvVars() {
       echo "Please populate the environment variable CSI_RBD_PROVISIONER_SECRET"
       exit 1
     fi
-    if [ -z "$CSI_CEPHFS_NODE_SECRET" ]; then
-      echo "Please populate the environment variable CSI_CEPHFS_NODE_SECRET"
-      exit 1
-    fi
-    if [ -z "$CSI_CEPHFS_PROVISIONER_SECRET" ]; then
-      echo "Please populate the environment variable CSI_CEPHFS_PROVISIONER_SECRET"
-      exit 1
-    fi
+    #if [ -z "$CSI_CEPHFS_NODE_SECRET" ]; then
+    #  echo "Please populate the environment variable CSI_CEPHFS_NODE_SECRET"
+    #  exit 1
+    #fi
+    #if [ -z "$CSI_CEPHFS_PROVISIONER_SECRET" ]; then
+    #  echo "Please populate the environment variable CSI_CEPHFS_PROVISIONER_SECRET"
+    #  exit 1
+    #fi
   fi
   if [[ "$ROOK_EXTERNAL_ADMIN_SECRET" != "admin-secret" ]] && [ -n "$ROOK_EXTERNAL_USER_SECRET" ] ; then
     echo "Providing both ROOK_EXTERNAL_ADMIN_SECRET and ROOK_EXTERNAL_USER_SECRET is not supported, choose one only."
@@ -160,7 +160,7 @@ echo "---" >> secrets.sops.yaml
 importCsiRBDNodeSecret
 echo "---" >> secrets.sops.yaml
 importCsiRBDProvisionerSecret
-echo "---" >> secrets.sops.yaml
-importCsiCephFSNodeSecret
-echo "---" >> secrets.sops.yaml
-importCsiCephFSProvisionerSecret
+#echo "---" >> secrets.sops.yaml
+#importCsiCephFSNodeSecret
+#echo "---" >> secrets.sops.yaml
+#importCsiCephFSProvisionerSecret
