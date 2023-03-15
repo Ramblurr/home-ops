@@ -1,0 +1,43 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: rook-ceph
+  namespace: rook-ceph
+spec:
+  interval: 5m
+  install:
+    disableWait: true
+    remediation:
+      retries: 100
+  upgrade:
+    remediation:
+      retries: 100
+  chart:
+    spec:
+      chart: rook-ceph
+      version: v1.10.11
+      sourceRef:
+        kind: HelmRepository
+        name: rook-ceph-charts
+        namespace: flux-system
+  values:
+    pspEnable: false
+    csi:
+      pluginTolerations:
+        - key: "nuc"
+          operator: "Equal"
+          value: "true"
+          effect: "NoSchedule"
+    crds:
+      enabled: false
+    cephBlockPoolsVolumeSnapshotClass:
+      enabled: true
+      name: csi-rbdplugin-snapclass
+    resources:
+      requests:
+        cpu: 1
+        memory: 128Mi
+      limits:
+        cpu: 4
+        memory: 256Mi

@@ -1,0 +1,180 @@
+---
+# Ansible managed: talconfig.yaml.j2 modified on 2023-03-15 10:52:01 by ramblurr on toolbox
+clusterName: "cluster-test"
+talosVersion: v1.3.6
+kubernetesVersion: v1.26.0
+endpoint: https://10.9.10.100:6443
+allowSchedulingOnMasters: true
+cniConfig:
+  name: none
+additionalApiServerCertSans:
+  - 10.9.10.100
+  - cluster-test.mgmt.socozy.casa
+additionalMachineCertSans:
+  - 10.9.10.100
+  - cluster-test.mgmt.socozy.casa
+clusterPodNets:
+  - 10.44.0.0/16
+clusterSvcNets:
+  - 10.45.0.0/16
+nodes:
+  - hostname: cp0.cluster-test.mgmt.socozy.casa
+    disableSearchDomain: true
+    ipAddress: 10.9.9.101
+    installDiskSelector:
+      size: ">= 99GB"
+    controlPlane: true
+    kernelModules:
+      - name: br_netfilter
+        parameters:
+          - nf_conntrack_max=131072
+    nameservers:
+    - 192.168.1.3
+    - 10.9.9.4
+    networkInterfaces:
+      - interface: eth0
+        dhcp: true
+        mtu: 9000
+      - interface: eth1
+        dhcp: true
+        mtu: 1500
+        vip:
+          ip: 10.9.10.100
+        dhcpOptions:
+          routeMetric: 2048
+      - interface: eth2
+        dhcp: true
+        mtu: 1500
+        dhcpOptions:
+          routeMetric: 4096
+  - hostname: cp1.cluster-test.mgmt.socozy.casa
+    disableSearchDomain: true
+    ipAddress: 10.9.9.102
+    installDiskSelector:
+      size: ">= 99GB"
+    controlPlane: true
+    kernelModules:
+      - name: br_netfilter
+        parameters:
+          - nf_conntrack_max=131072
+    nameservers:
+    - 192.168.1.3
+    - 10.9.9.4
+    networkInterfaces:
+      - interface: eth0
+        dhcp: true
+        mtu: 9000
+      - interface: eth1
+        dhcp: true
+        mtu: 1500
+        vip:
+          ip: 10.9.10.100
+        dhcpOptions:
+          routeMetric: 2048
+      - interface: eth2
+        dhcp: true
+        mtu: 1500
+        dhcpOptions:
+          routeMetric: 4096
+  - hostname: cp2.cluster-test.mgmt.socozy.casa
+    disableSearchDomain: true
+    ipAddress: 10.9.9.103
+    installDiskSelector:
+      size: ">= 99GB"
+    controlPlane: true
+    kernelModules:
+      - name: br_netfilter
+        parameters:
+          - nf_conntrack_max=131072
+    nameservers:
+    - 192.168.1.3
+    - 10.9.9.4
+    networkInterfaces:
+      - interface: eth0
+        dhcp: true
+        mtu: 9000
+      - interface: eth1
+        dhcp: true
+        mtu: 1500
+        vip:
+          ip: 10.9.10.100
+        dhcpOptions:
+          routeMetric: 2048
+      - interface: eth2
+        dhcp: true
+        mtu: 1500
+        dhcpOptions:
+          routeMetric: 4096
+
+controlPlane:
+  patches:
+    #- |-
+    #  - op: add
+    #    path: /cluster/apiServer/admissionControl/0/configuration/exemptions
+    #    value:
+    #      namespaces:
+    #        - kube-system
+    #        - cilium-test
+    #        - rook-ceph
+    - |-
+      cluster:
+        allowSchedulingOnMasters: true
+        apiServer:
+          admissionControl: []
+          extraArgs:
+            feature-gates: MixedProtocolLBService=true,EphemeralContainers=True
+        controllerManager:
+          extraArgs:
+            feature-gates: MixedProtocolLBService=true,EphemeralContainers=True
+        discovery:
+          registries:
+            service:
+              disabled: true
+        proxy:
+          disabled: true
+          extraArgs:
+            feature-gates: MixedProtocolLBService=true,EphemeralContainers=True
+        scheduler:
+          extraArgs:
+            feature-gates: MixedProtocolLBService=true,EphemeralContainers=True
+      machine:
+        files:
+          - content: |
+              [plugins]
+                [plugins."io.containerd.grpc.v1.cri"]
+                  enable_unprivileged_ports = true
+                  enable_unprivileged_icmp = true
+            path: /etc/cri/conf.d/20-customization.part
+            op: create
+        sysctls:
+          fs.inotify.max_user_watches: "1048576"
+          fs.inotify.max_user_instances: "8192"
+        time:
+          disabled: false
+          servers:
+            - "192.168.1.1"
+        network:
+          extraHostEntries:
+            - ip: 10.9.10.100
+              aliases:
+                - cluster-test.mgmt.socozy.casa
+        kubelet:
+          extraArgs:
+            feature-gates: GracefulNodeShutdown=true,MixedProtocolLBService=true,CronJobTimeZone=true
+            rotate-server-certificates: "false"
+            #rotate-server-certificates: "true"
+worker:
+  patches:
+    - |-
+      - op: add
+        path: /machine/kubelet/extraArgs
+        value:
+          feature-gates: GracefulNodeShutdown=false,MixedProtocolLBService=false,CronJobTimeZone=true
+          rotate-server-certificates: "false"
+          #rotate-server-certificates: "true"
+    - |-
+      machine:
+        time:
+          disabled: false
+          servers:
+            - "192.168.1.1"

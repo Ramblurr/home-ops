@@ -1,0 +1,6 @@
+* text=auto eol=lf
+secret.enc.yaml diff=sopsdiffer
+secret.sops.yaml diff=sopsdiffer
+secrets.sops.yaml diff=sopsdiffer
+global-secrets.yaml diff=sopsdiffer
+*.sops.toml linguist-language=JSON

@@ -1,0 +1,48 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
+kind: Kustomization
+metadata:
+  name: workloads
+  namespace: flux-system
+spec:
+  interval: 2m0s
+  path: ./k8s/cluster-test/workloads
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
+  postBuild:
+    substitute: {}
+    substituteFrom:
+      - kind: ConfigMap
+        name: global-vars
+      - kind: Secret
+        name: global-secrets
+  patches:
+    - patch: |-
+        apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+        kind: Kustomization
+        metadata:
+          name: not-used
+        spec:
+          decryption:
+            provider: sops
+            secretRef:
+              name: sops-age
+          postBuild:
+            substituteFrom:
+              - kind: ConfigMap
+                name: global-vars
+              - kind: ConfigMap
+                name: global-auto-vars
+              - kind: Secret
+                name: global-secrets
+      target:
+        group: kustomize.toolkit.fluxcd.io
+        version: v1beta2
+        kind: Kustomization
+        labelSelector: substitution.flux.home.arpa/disabled notin (true)

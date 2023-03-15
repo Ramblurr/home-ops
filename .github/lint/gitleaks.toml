@@ -1,0 +1,10 @@
+title = "gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "global allow list"
+regexes = [
+  '''.*ENC\[AES256_GCM,.*''',
+]
