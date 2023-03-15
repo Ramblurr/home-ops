@@ -13,13 +13,16 @@ KC := kubectl
 CP_IPS = 10.9.9.101 10.9.9.102 10.9.9.103
 CP_ARGS = $(addprefix -n ,$(CP_IPS))
 CP_ENDPOINT = 10.9.9.101
+ARGS ?=
 
 dist-clean:
 	rm -rf clusterconfig/*.yaml clusterconfig/talosconfig kubeconfig talsecret.sops.yaml
 
-gen:
+talsecret.sops.yaml:
 	talhelper gensecret > talsecret.sops.yaml
 	sops -e -i talsecret.sops.yaml
+
+gen: talsecret.sops.yaml
 	talhelper genconfig
 
 reset:
@@ -38,14 +41,14 @@ kubeconf:
 	${TC} kubeconfig --nodes 10.9.9.101 -f .
 
 reboot:
-	${TC} reboot --nodes 10.9.9.101 --wait
-	${TC} reboot --nodes 10.9.9.102 --wait
-	${TC} reboot --nodes 10.9.9.103 --wait
+	${TC} reboot --nodes 10.9.9.101 --wait  $(ARGS)
+	${TC} reboot --nodes 10.9.9.102 --wait  $(ARGS)
+	${TC} reboot --nodes 10.9.9.103 --wait  $(ARGS)
 
 reapply:
-	${TC} apply-config --nodes 10.9.9.101 --file clusterconfig/cluster-test-cp0.cluster-test.mgmt.socozy.casa.yaml
-	${TC} apply-config --nodes 10.9.9.102 --file clusterconfig/cluster-test-cp1.cluster-test.mgmt.socozy.casa.yaml
-	${TC} apply-config --nodes 10.9.9.103 --file clusterconfig/cluster-test-cp2.cluster-test.mgmt.socozy.casa.yaml
+	${TC} apply-config --nodes 10.9.9.101 --file clusterconfig/cluster-test-cp0.cluster-test.mgmt.socozy.casa.yaml $(ARGS)
+	${TC} apply-config --nodes 10.9.9.102 --file clusterconfig/cluster-test-cp1.cluster-test.mgmt.socozy.casa.yaml $(ARGS)
+	${TC} apply-config --nodes 10.9.9.103 --file clusterconfig/cluster-test-cp2.cluster-test.mgmt.socozy.casa.yaml $(ARGS)
 
 apply-extras:
 	${KC} kustomize --enable-helm ./cni | kubectl apply -f -
