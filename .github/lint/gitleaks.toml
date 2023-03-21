@@ -4,8 +4,16 @@ title = "gitleaks config"
 useDefault = true
 
 [allowlist]
-description = "global allow list"
-regexTarget = "match"
-regexes = [
-  '''.*ENC\[AES256_GCM,.*''',
+description = "ignore sops encrypted secrets"
+paths = [
+'ansible_collections',
+'terraform.tfstate.*',
+'clusterconfig/.*yaml',
+'ansible/roles/external',
+'readme.md'
+]
+regexTarget = "line"
+regexes= [
+  '''ExAmPl3PA55W0rD''',
+  '''.*ENC\[AES256_GCM,data:.*'''
 ]
