@@ -98,6 +98,7 @@ set firewall group address-group admin address '192.168.1.82'
 set firewall group address-group admin address '192.168.1.243'
 
 set firewall group address-group mali address '10.9.4.10'
+set firewall group address-group mali address '10.9.10.10'
 
 set firewall group address-group local-dns-servers address '10.9.4.4'
 set firewall group address-group local-dns-servers address '192.168.1.3'
