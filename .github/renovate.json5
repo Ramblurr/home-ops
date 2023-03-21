@@ -1,0 +1,182 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    ":enableRenovate",
+    "config:base",
+    ":disableRateLimiting",
+    ":dependencyDashboard",
+    ":semanticCommits",
+    ":separatePatchReleases",
+    "docker:enableMajor",
+    ":enablePreCommit",
+    "github>ramblurr/home-ops//.github/renovate/allowedVersions.json5",
+    "github>ramblurr/home-ops//.github/renovate/autoMerge.json5",
+    "github>ramblurr/home-ops//.github/renovate/disabledDatasources.json5",
+    "github>ramblurr/home-ops//.github/renovate/groups.json5",
+    "github>ramblurr/home-ops//.github/renovate/labels.json5",
+  ],
+  "enabled": true,
+  "timezone": "Europe/Berlin",
+  "semanticCommits": "enabled",
+  "dependencyDashboard": true,
+  "platform": "github",
+  "dependencyDashboardTitle": "Renovate Dashboard",
+  // do not notify on closed unmerged PRs
+  "suppressNotifications": ["prIgnoreNotification"],
+  // only rebase PRs when there's a conflict
+  "rebaseWhen": "conflicted",
+  "ignoreDeps": [
+    "ghcr.io/fluxcd/helm-controller",
+    "ghcr.io/fluxcd/image-automation-controller",
+    "ghcr.io/fluxcd/image-reflector-controller",
+    "ghcr.io/fluxcd/kustomize-controller",
+    "ghcr.io/fluxcd/notification-controller",
+    "ghcr.io/fluxcd/source-controller"
+  ],
+  "repositories": ["ramblurr/home-ops"],
+  "flux": {
+    "fileMatch": ["k8s/.+\\.ya?ml$"]
+  },
+  "helm-values": {
+    "fileMatch": ["k8s/.+\\.ya?ml$"]
+  },
+  "kubernetes": {
+    "fileMatch": ["k8s/.+\\.ya?ml$"]
+  },
+  "regexManagers": [
+    {
+      "description": ["Process CRD dependencies - Chart and Github Release are the same version"],
+      "fileMatch": ["k8s/.+\\.ya?ml$"],
+      "matchStrings": [
+        "# renovate: registryUrl=(?<registryUrl>\\S+) chart=(?<depName>\\S+)\n.*?(?<currentValue>[^-\\s]*)\n",
+      ],
+      "datasourceTemplate": "helm"
+    },
+    // regexManager to read and process Rook-Ceph CRD's
+    {
+      "fileMatch": [
+        "k8s/.+/crds/rook-ceph/.+\\.yaml$"
+      ],
+      "matchStrings": [
+        "registryUrl=(?<registryUrl>.*?) chart=(?<depName>.*?)\n *tag: (?<currentValue>.*)\n"
+      ],
+      "datasourceTemplate": "helm"
+    },
+    {
+      "description": ["Generic Docker image Regex manager"],
+      "fileMatch": [
+        "ansible/.+\\.ya?ml$",
+        "talos/.+\\.ya?ml$",
+        "vyos/.+\\.ya?ml$",
+        "terraform/.+\\.tf$"
+      ],
+      "matchStrings": [
+        "# renovate: docker-image( versioning=(?<versioning>.*=?))?\n .*[:|=] \"?(?<depName>.*?):(?<currentValue>[^\"\n]*=?)\"?",
+      ],
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
+    },
+    {
+      "description": ["Generic Docker image Regex manager for VyOS"],
+      "fileMatch": [
+        "vyos/router0/config-parts/.+\\.sh$"
+      ],
+      "matchStrings": [
+        "set container name .* image '?(?<depName>.*?):(?<currentValue>[^'\n]*=?)'?"
+      ],
+      "datasourceTemplate": "docker"
+    },
+    {
+      "description": ["Raw GitHub URL Regex manager"],
+      "fileMatch": [
+        "ansible/.+\\.ya?ml$",
+        "terraform/.+\\.ya?ml$",
+        "k8s/.+\\.ya?ml$"
+      ],
+      "matchStrings": [
+        "https:\\/\\/raw.githubusercontent.com\\/(?<depName>[\\w\\d\\-_]+\\/[\\w\\d\\-_]+)\\/(?<currentValue>[\\w\\d\\.\\-_]+)\\/.*",
+      ],
+      "datasourceTemplate": "github-releases",
+      "versioningTemplate": "semver"
+    }
+  ],
+  "packageRules": [
+    // Custom version schemes
+    {
+      "description": "Use custom versioning for Vector",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["docker.io/timberio/vector"],
+      "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)-(?<compatibility>.*)$"
+    },
+    {
+      "description": "Use custom versioning for http-https-echo",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ghcr.io/mendhak/http-https-echo"],
+      "versioning": "regex:^(?<major>\\d+)$"
+    },
+    // Version strategies
+    {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ghcr.io/onedr0p/plex", "ghcr.io/onedr0p/qbittorrent"],
+      "versioning": "loose"
+    },
+    {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["tomsquest/docker-radicale"],
+      "versioning": "pep440"
+    },
+        {
+      "matchDatasources": ["helm"],
+      "semanticCommitScope": "charts",
+      "separateMinorPatch": true,
+      "ignoreDeprecated": true
+    },
+    {
+      "matchDatasources": ["docker"],
+      "enabled": true,
+      "matchUpdateTypes": ["major", "minor", "patch"]
+    },
+        {
+      "matchDatasources": ["docker"],
+      "semanticCommitScope": "images",
+      "separateMinorPatch": true
+    },
+    // add labels according to package and update types
+    {
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["major"],
+      "commitMessagePrefix": "feat(images)!: ",
+      "labels": ["renovate/image", "dep/major"]
+    },
+     {
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["minor"],
+      "semanticCommitType": "feat",
+      "labels": ["renovate/image", "dep/minor"]
+    },
+    {
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["patch"],
+      "semanticCommitType": "fix",
+      "labels": ["renovate/image", "dep/patch"]
+    },
+    {
+      "matchDatasources": ["helm"],
+      "matchUpdateTypes": ["major"],
+      "commitMessagePrefix": "feat(charts)!: ",
+      "labels": ["renovate/helm", "dep/major"]
+    },
+    {
+      "matchDatasources": ["helm"],
+      "matchUpdateTypes": ["minor"],
+      "semanticCommitType": "feat",
+      "labels": ["renovate/helm", "dep/minor"]
+    },
+    {
+      "matchDatasources": ["helm"],
+      "matchUpdateTypes": ["patch"],
+      "semanticCommitType": "fix",
+      "labels": ["renovate/helm", "dep/patch"]
+    },
+  ]
+}
