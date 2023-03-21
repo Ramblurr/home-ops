@@ -1,4 +1,5 @@
 #!/bin/vbash
+# shellcheck shell=bash
 
 # From GUEST to IOT
 set firewall name guest-iot default-action 'drop'
@@ -741,6 +742,12 @@ set firewall name primary-data description 'From PRIMARY to DATA'
 set firewall name primary-data rule 1 action 'accept'
 set firewall name primary-data rule 1 description 'Rule: accept_icmp'
 set firewall name primary-data rule 1 protocol 'icmp'
+set firewall name primary-data rule 2 action 'accept'
+set firewall name primary-data rule 2 description 'Rule: accept_samba_from_homeassistant'
+set firewall name primary-data rule 2 destination group port-group 'truenas-samba'
+set firewall name primary-data rule 2 destination group address-group 'mali'
+set firewall name primary-data rule 2 protocol 'tcp_udp'
+set firewall name primary-data rule 2 source group address-group 'homeassistant'
 
 # From PRIMARY to WAN
 set firewall name primary-wan default-action 'accept'
