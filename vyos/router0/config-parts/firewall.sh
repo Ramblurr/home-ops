@@ -1,4 +1,5 @@
 #!/bin/vbash
+# shellcheck shell=bash
 
 # General configuration
 set firewall state-policy established action 'accept'
@@ -138,3 +139,9 @@ set firewall group port-group esphome-api port '6053'
 set firewall group port-group wled-api port '80'
 set firewall group port-group roon-arc port '33399'
 set firewall group port-group mali-replication port '3478'
+set firewall group port-group truenas-nfs port '111'
+set firewall group port-group truenas-nfs port '2049'
+set firewall group port-group truenas-samba port '137'
+set firewall group port-group truenas-samba port '138'
+set firewall group port-group truenas-samba port '139'
+set firewall group port-group truenas-samba port '445'
