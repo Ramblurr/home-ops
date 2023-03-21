@@ -1,0 +1,35 @@
+socozy.casa:53 {
+    import /etc/coredns/common.conf
+    forward . {$DNS_IP}:54
+    alternate original NXDOMAIN,SERVFAIL,REFUSED . {$DNS_IP}:55
+}
+
+socozy.casa:54 {
+    import /etc/coredns/common.conf
+    file /etc/coredns/zones/db.socozy.casa socozy.casa
+}
+
+outskirtslabs.com:53 {
+    import /etc/coredns/common.conf
+    forward . {$DNS_IP}:54
+    alternate original NXDOMAIN,SERVFAIL,REFUSED . {$DNS_IP}:55
+}
+
+outskirtslabs.com:54 {
+    import /etc/coredns/common.conf
+    file /etc/coredns/zones/db.outskirtslabs.com outskirtslabs.com
+}
+
+. {
+    import /etc/coredns/common.conf
+    forward . tls://{$DNS_UPSTREAM1} tls://{$DNS_UPSTREAM2} {
+      tls_servername {$DNS_UPSTREAM_NAME}
+    }
+}
+
+.:55 {
+    import /etc/coredns/common.conf
+    forward . tls://{$DNS_UPSTREAM1} tls://{$DNS_UPSTREAM2} {
+      tls_servername {$DNS_UPSTREAM_NAME}
+    }
+}
