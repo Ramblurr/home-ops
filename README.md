@@ -13,7 +13,6 @@ _... managed by Flux, Renovate and GitHub Actions_ :robot:
 [![k8s@home](https://img.shields.io/badge/-%20k8s%40home-blue?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/k8s-at-home)
 [![selfhosted.show](https://img.shields.io/badge/-%20self--hosted-orange?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/U3Gvr54VRp)
 [![Kubernetes](https://img.shields.io/badge/v1.26-blue?style=for-the-badge&logo=kubernetes&logoColor=white)](https://www.talos.dev/)
-[![Renovate](https://img.shields.io/github/actions/workflow/status/ramblurr/home-ops/schedule-renovate.yaml?branch=main&label=&logo=renovatebot&style=for-the-badge&color=blue)](https://github.com/ramblurr/home-ops/actions/workflows/schedule-renovate.yaml)
 
 </div>
 <br><br>
