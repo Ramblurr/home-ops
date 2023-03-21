@@ -19,5 +19,12 @@ creation_rules:
   - key_groups:
     - age:
         - age15j42dspmmwprjau6l48xp05d97s8ml5s3tjxrfwvm37tvuynssuqtsevkj
+        - age1zzx80xmkhz9yhuugaw3vt3s0lwu2k3w9l7sgjh4u8vad9msthsxqlmdxhr
+      pgp:
+        - 978C4D08058BA26EB97CB51820782DBCACFAACDA
+    path_regex: 'vyos/.*\.sops.env$'
+  - key_groups:
+    - age:
+        - age15j42dspmmwprjau6l48xp05d97s8ml5s3tjxrfwvm37tvuynssuqtsevkj
       pgp:
         - 978C4D08058BA26EB97CB51820782DBCACFAACDA
