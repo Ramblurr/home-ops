@@ -1,9 +1,10 @@
 ---
 - name: VyOS local config generation
   hosts: localhost
+  gather_facts: false
   roles:
     - name: rmblr.vyos_config_generate
-  tags: [config]
+  tags: [vyos-config]
 
 - name: VyOS router setup
   hosts: vyos

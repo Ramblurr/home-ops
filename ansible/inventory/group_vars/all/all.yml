@@ -1,6 +1,7 @@
 ---
 cidr_primary: 10.9.4.0/23
 cidr_mgmt: 10.9.8.0/23
+cidr_data: 10.9.10.0/23
 cidr_mgmt_suffix: 23
 cidr_prim_suffix: 22
 cidr_data_suffix: 23

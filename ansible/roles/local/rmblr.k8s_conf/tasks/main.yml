@@ -1,11 +1,9 @@
 ---
-- name: build cp ips
-  ansible.builtin.set_fact:
-    control_plane_ips: >-
-      {{ cluster_control_plane_nodes | dict2items | map(attribute='value') | map(attribute='ifaces') | map(attribute='mgmt') | map(attribute='ip') }}
+- debug:
+    var: control_plane_ips_mgmt
 
 - debug:
-    var: control_plane_ips
+    var: control_plane_ips_data
 
 - name: Talconfig
   ansible.builtin.template:
