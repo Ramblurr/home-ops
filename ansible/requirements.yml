@@ -12,7 +12,7 @@ collections:
     name: https://github.com/Ramblurr/ramblurr.freenas.git
     version: main
   - name: community.sops
-    version: 1.6.0
+    version: 1.6.1
   - name: community.healthchecksio
     version: 1.2.0
   - name: git+https://github.com/prometheus-community/ansible.git
