@@ -11,14 +11,6 @@ provider "proxmox" {
   pm_parallel     = 25
 }
 
-provider "unifi" {
-  username       = data.sops_file.secrets.data["unifi_user"]
-  password       = data.sops_file.secrets.data["unifi_password"]
-  api_url        = data.sops_file.secrets.data["unifi_api_url"]
-  site           = data.sops_file.secrets.data["unifi_site"]
-  allow_insecure = true
-}
-
 locals {
   clients = {
     for client in flatten([
@@ -39,26 +31,9 @@ output "clients" {
   value = local.clients
 }
 
-data "unifi_network" "net" {
-  for_each = toset(var.cluster_networks)
-  name     = each.value
-}
-
-resource "unifi_user" "ips" {
-  for_each       = local.clients
-  name           = each.value.name
-  mac            = each.value.macaddr
-  fixed_ip       = each.value.ip
-  network_id     = data.unifi_network.net[each.value.network_name].id
-  allow_existing = true
-}
-
 resource "proxmox_vm_qemu" "controlplane" {
   for_each = var.control_plane_nodes
 
-  depends_on = [
-    unifi_user.ips
-  ]
   name        = "${var.cluster_name}-cp-${each.value.idx}"
   iso         = var.iso_image_location
   target_node = each.value.target_node
