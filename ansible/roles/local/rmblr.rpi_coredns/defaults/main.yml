@@ -1,5 +1,4 @@
 ---
-coredns_config_dir: "{{ playbook_dir }}/../dns"
 coredns_version: 1.8.4
 coredns_local_path: coredns-{{ coredns_version }}-arm/dns-builder/usr/local/bin/coredns
 coredns_systemd_unit: |
