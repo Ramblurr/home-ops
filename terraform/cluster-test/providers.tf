@@ -8,9 +8,5 @@ terraform {
       source  = "carlpett/sops"
       version = "0.7"
     }
-    unifi = {
-      source  = "paultyng/unifi"
-      version = "0.41.0"
-    }
   }
 }
