@@ -1,0 +1,36 @@
+---
+- name: ensure systemd
+  when: not container_remove
+  ansible.builtin.systemd:
+    name: pod-{{ container_name }}.service
+    state: "{{ container_state }}"
+    enabled: "{{ container_state == 'started' }}"
+    daemon_reload: true
+
+- name: ensure pod systemd removed
+  when: container_remove
+  ansible.builtin.file:
+    state: absent
+    path: /usr/local/lib/systemd/system/pod-{{ container_name }}.service
+  notify: reload systemd daemon
+
+- name: ensure container systemd removed
+  when: container_remove
+  ansible.builtin.file:
+    state: absent
+    path: /usr/local/lib/systemd/system/container-{{ container_name }}-{{ item }}.service
+  notify: reload systemd daemon
+  loop: "{{ pod_members }}"
+
+
+- name: ensure restarted
+  when: container_recreate and not container_remove
+  debug:
+    msg: "notify restart"
+  notify: service restart
+
+- name: ensure auto-update enabled
+  ansible.builtin.systemd:
+    name: podman-auto-update.timer
+    state: "started"
+    enabled: true

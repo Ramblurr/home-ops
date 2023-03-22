@@ -1,0 +1,212 @@
+---
+- ansible.builtin.import_role:
+    name: rmblr.service_pre
+
+- name: set container pod members
+  set_fact:
+    pod_members:
+      - prometheus
+      - grafana
+      - alertmanager
+      - blackbox-exporter
+
+- name: Prevent backups of transient dirs
+  ansible.builtin.file:
+    path: "{{ item  }}"
+    state: touch
+    owner: "{{ container_vol_user }}"
+    group: "{{ container_vol_user }}"
+    mode: 0640
+    access_time: preserve
+    modification_time: preserve
+  loop: []
+
+- name: ensure prom dirs
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: nobody
+    group: nobody
+    mode: 0760
+    state: directory
+  loop: "{{ service_extra_dirs }}"
+
+- name: traefik services alertmanager
+  ansible.builtin.import_role:
+    name: rmblr.traefik_redis_service
+  vars:
+    service_fqdn: "{{ alertmanager_fqdn }}"
+    service_upstream: "http://{{ inventory_hostname }}:9093"
+
+- name: traefik services grafana
+  ansible.builtin.import_role:
+    name: rmblr.traefik_redis_service
+  vars:
+    service_fqdn: "{{ grafana_fqdn }}"
+    service_upstream: "http://{{ inventory_hostname }}:3000"
+
+- name: traefik service prometheus
+  ansible.builtin.import_role:
+    name: rmblr.traefik_redis_service
+  vars:
+    service_fqdn: "{{ prometheus_fqdn }}"
+    service_upstream: "http://{{ inventory_hostname }}:9090"
+
+- name: pod
+  when: container_state == "started" and not container_remove
+  containers.podman.podman_pod:
+    name: "{{ container_name }}"
+    infra_name: "{{ container_name }}-infra"
+    state: created
+    publish:
+      - 0.0.0.0:3000:3000 # grafana
+      - 0.0.0.0:9090:9090 # prom
+      - 0.0.0.0:9093:9093 # alertmanager
+
+    network: "{{ container_podman_network }}"
+    hostname: "{{ service_fqdn }}"
+
+- name: secrets
+  containers.podman.podman_secret:
+    state: "{{ (container_state == 'started') | ternary('present', 'absent') }}"
+    name: "{{ item.name }}"
+    data: "{{ item.value }}"
+    force: "{{ container_recreate }}"
+    skip_existing: "{{ not container_recreate }}"
+  no_log: true
+  loop:
+    - name: grafana_smtp_host
+      value: "{{ grafana_settings.smtp_host }}"
+    - name: grafana_smtp_user
+      value: "{{ grafana_settings.smtp_user }}"
+    - name: grafana_smtp_password
+      value: "{{ grafana_settings.smtp_password }}"
+    - name: grafana_smtp_from_address
+      value: "{{ grafana_settings.smtp_from_address }}"
+    - name: grafana_admin_password
+      value: "{{ grafana_settings.admin_password }}"
+
+- name: grafana container
+  when: container_state == "started" and not container_remove
+  containers.podman.podman_container:
+    name: "{{ container_name }}-grafana"
+    pod: "{{ container_name }}"
+    image: docker.io/grafana/grafana:latest
+    state: created
+    recreate: "{{ container_recreate }}"
+    labels:
+      io.containers.autoupdate: registry
+    env:
+      GF_SMTP_ENABLED: "true"
+      GF_SMTP_HOST_FILE: /run/secrets/grafana_smtp_host
+      GF_SMTP_USER_FILE: /run/secrets/grafana_smtp_user
+      GF_SMTP_PASSWORD_FILE: /run/secrets/grafana_smtp_password
+      GF_SMTP_FROM_ADDRESS_FILE: /run/secrets/grafana_smtp_from_address
+      GF_SECURITY_ADMIN_PASSWORD: /run/secrets/grafana_admin_password
+      GF_SERVER_ROOT_URL: "{{ grafana_settings.root_url }}"
+      GF_SECURITY_ADMIN_USER: "{{ grafana_settings.admin_user }}"
+    volumes:
+      - "{{ service_data_dir }}/grafana:/var/lib/grafana:z"
+    user: "{{ container_vol_uid }}:{{ container_vol_uid }}"
+    secrets:
+      - grafana_smtp_host
+      - grafana_smtp_password
+      - grafana_smtp_user
+      - grafana_smtp_from_address
+      - grafana_admin_password
+  notify: restart service
+
+
+- name: blackbox-exporter container
+  when: container_state == "started" and not container_remove
+  containers.podman.podman_container:
+    name: "{{ container_name }}-blackbox-exporter"
+    pod: "{{ container_name }}"
+    image: docker.io/prom/blackbox-exporter:latest
+    state: created
+    recreate: "{{ container_recreate }}"
+    labels:
+      io.containers.autoupdate: registry
+    volumes:
+      - "{{ service_conf_dir }}/blackbox-exporter:/etc/blackbox_exporter:z"
+    user: "{{ container_vol_uid }}:{{ container_vol_uid }}"
+  notify: restart service
+
+- name: alertmanager container
+  when: container_state == "started" and not container_remove
+  containers.podman.podman_container:
+    name: "{{ container_name }}-alertmanager"
+    pod: "{{ container_name }}"
+    image: docker.io/prom/alertmanager:latest
+    state: created
+    recreate: "{{ container_recreate }}"
+    labels:
+      io.containers.autoupdate: registry
+    volumes:
+      - "{{ service_conf_dir }}/alertmanager:/etc/alertmanager:z"
+      - "{{ service_data_dir }}/alertmanager:/alertmanager:z"
+    user: "{{ container_vol_uid }}:{{ container_vol_uid }}"
+  notify: restart service
+
+- name: prometheus container
+  when: container_state == "started" and not container_remove
+  containers.podman.podman_container:
+    name: "{{ container_name }}-prometheus"
+    pod: "{{ container_name }}"
+    image: docker.io/prom/prometheus:latest
+    state: created
+    recreate: "{{ container_recreate }}"
+    labels:
+      io.containers.autoupdate: registry
+    volumes:
+      - "{{ service_conf_dir }}/prometheus:/etc/prometheus:z"
+      - "{{ service_data_dir }}/prometheus:/var/lib/prometheus:z"
+  notify: restart service
+  # no user, the prom container drops privs itself
+
+- name: generate pod systemd
+  containers.podman.podman_generate_systemd:
+    new: true
+    name: "{{ container_name }}"
+    dest: /usr/local/lib/systemd/system
+    no_header: true
+    restart_policy: always
+    restart_sec: 10
+  when: not container_remove
+  notify: restart service
+
+- name: configure prometheus static targets
+  copy:
+    content: |
+      #jinja2: lstrip_blocks: True
+      {{ item.value | to_nice_yaml(indent=2,sort_keys=False) }}
+    dest: "{{ service_conf_dir }}/prometheus/file_sd/{{ item.key }}.yml"
+    force: true
+    owner: nobody
+    group: nobody
+    mode: 0640
+  with_dict: "{{ prometheus_targets }}"
+  when: prometheus_targets != {}
+  notify: restart service
+
+- name: configure prometheus
+  template:
+    src: "prometheus.yml.j2"
+    dest: "{{ service_conf_dir }}/prometheus/prometheus.yml"
+    force: true
+    owner: nobody
+    group: nobody
+    mode: 0640
+  notify: restart service
+
+- name: configure alertmanager
+  template:
+    src: "alertmanager.yml.j2"
+    dest: "{{ service_conf_dir }}/alertmanager/alertmanager.yml"
+    force: true
+    owner: "{{ container_vol_user }}"
+    group: "{{ container_vol_user }}"
+    mode: 0640
+  notify: restart service
+
+- ansible.builtin.import_role:
+    name: rmblr.service_post

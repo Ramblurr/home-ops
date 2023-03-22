@@ -1,0 +1,70 @@
+.ONESHELL:
+.SHELLFLAGS += -e -o pipefail
+
+export ROOT := $(realpath {{ playbook_dir }}/..)
+export CLUSTER := "{{ cluster_name }}"
+export TALOS_DIR := $(realpath {{ cluster_talos_dir }})
+export K8S_DIR := $(realpath {{ cluster_k8s_dir }})
+export TALOSCONFIG := ${TALOS_DIR}/clusterconfig/talosconfig
+export KUBECONFIG := ${TALOS_DIR}/kubeconfig
+
+TC := talosctl --talosconfig ${TALOSCONFIG}
+KC := kubectl
+CP_IPS = {{ control_plane_ips | join (" ") }}
+CP_ARGS = $(addprefix -n ,$(CP_IPS))
+CP_ENDPOINT = {{ control_plane_ips[0] }}
+ARGS ?=
+
+dist-clean:
+    rm -rf clusterconfig/*.yaml clusterconfig/talosconfig kubeconfig talsecret.sops.yaml
+
+talsecret.sops.yaml:
+    talhelper gensecret > talsecret.sops.yaml
+    sops -e -i talsecret.sops.yaml
+
+gen: talsecret.sops.yaml
+    talhelper genconfig
+
+reset:
+    ${TC} reset --endpoints $(CP_ENDPOINT) --graceful=false $(CP_ARGS) --reboot --wait=false
+    $(MAKE) dist-clean
+
+first-apply:
+{% for node in cluster_control_plane_nodes | dict2items %}
+    ${TC} apply-config --insecure --nodes {{ node.value.ifaces.mgmt.ip }} --file clusterconfig/{{ cluster_name }}-cp{{ node.value.idx }}.{{ cluster_domain }}.yaml
+{% endfor %}
+
+bootstrap:
+    ${TC} bootstrap --nodes {{ control_plane_ips[0] }}
+
+kubeconf:
+    ${TC} kubeconfig --nodes {{ control_plane_ips[0] }} -f .
+
+reboot:
+{% for node in cluster_control_plane_nodes | dict2items %}
+    ${TC} reboot --nodes {{ node.value.ifaces.mgmt.ip }} --wait  $(ARGS)
+{% endfor %}
+
+reapply:
+{% for node in cluster_control_plane_nodes | dict2items %}
+    ${TC} apply-config --nodes {{ node.value.ifaces.mgmt.ip }} --file clusterconfig/{{ cluster_name }}-cp{{ node.value.idx }}.{{ cluster_domain }}.yaml $(ARGS)
+{% endfor %}
+
+apply-extras:
+    ${KC} kustomize --enable-helm ./cni | kubectl apply -f -
+    ${KC} kustomize --enable-helm ./kubelet-csr-approver | kubectl apply -f -
+
+bootstrap-flux:
+    cd $(K8S_DIR)
+    $(KC) apply --server-side --kustomize ./bootstrap
+    sops -d ./bootstrap/age-key.sops.yaml | $(KC) apply -f -
+    sops -d ./bootstrap/github-deploy-key.sops.yaml | $(KC) apply -f -
+    sops -d ./flux/vars/global-secrets.yaml | $(KC) apply -f -
+    $(KC) apply -f ./flux/vars/global-vars.yaml
+    $(KC) apply -f ./flux/vars/global-auto-vars.yaml
+    $(KC) get pods -n flux-system
+    sleep 10
+    $(KC) apply --server-side --kustomize ./flux/config
+    sleep 10
+    flux reconcile -n flux-system source git flux-system
+    flux reconcile -n flux-system kustomization cluster

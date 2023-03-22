@@ -1,0 +1,38 @@
+#jinja2: lstrip_blocks: "true", trim_blocks: "false"
+---
+# {{ ansible_managed }}
+cluster:
+  name: "{{ cluster_name }}"
+  id: "{{ cluster_id }}"
+
+autoDirectNodeRoutes: true
+bgp:
+  enabled: false
+bgpControlPlane:
+  enabled: true
+containerRuntime:
+  integration: containerd
+endpointRoutes:
+  enabled: true
+hubble:
+  enabled: false
+ipam:
+  mode: kubernetes
+ipv4NativeRoutingCIDR: {{ cluster_net_pod_cidr }}
+k8sServiceHost: {{ cluster_apiserver_addr }}
+k8sServicePort: 6443
+# kubeProxyReplacement enables kube-proxy replacement in Cilium BPF datapath
+kubeProxyReplacement: strict
+loadBalancer:
+  algorithm: maglev
+  mode: dsr
+localRedirectPolicy: true
+operator:
+  rollOutPods: true
+rollOutCiliumPods: true
+securityContext:
+  privileged: true
+# direct routing
+tunnel: disabled
+ipv6:
+  enabled: false

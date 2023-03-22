@@ -1,0 +1,19 @@
+---
+- name: Gather the package facts
+  ansible.builtin.package_facts:
+    manager: auto
+
+- name: set ceph installed
+  ansible.builtin.set_fact:
+    _ceph_installed: "{{ ceph in ansible_facts.packages and (ansible_facts.packages['ceph'] | length) > 0  }}"
+
+- name: install ceph
+  ansible.builtin.command: pveceph install --version {{ proxmox_ceph_version }}
+  when: not _ceph_installed
+
+- name: install ceph extra packages
+  ansible.builtin.package:
+    name:
+      - ceph-mgr-dashboard
+    state: present
+...

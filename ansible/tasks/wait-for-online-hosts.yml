@@ -1,0 +1,22 @@
+---
+- name: wait for hosts to come online
+  become: false
+  ansible.builtin.wait_for:
+    host: "{{ inventory_hostname }}"
+    port: 22
+    sleep: 5
+    timeout: 3600
+  delegate_to: localhost
+
+- name: ssh-keyscan hosts
+  become: false
+  ansible.builtin.shell: >-
+    if ! ssh-keygen -F {{ inventory_hostname }}; then
+      ssh-keyscan -t ed25519 {{ inventory_hostname }} >> ~/.ssh/known_hosts
+      exit 255
+    fi
+  register: keyscan
+  changed_when: keyscan.rc == 255
+  failed_when: keyscan.rc > 0 and keyscan.rc != 255
+  delegate_to: localhost
+...

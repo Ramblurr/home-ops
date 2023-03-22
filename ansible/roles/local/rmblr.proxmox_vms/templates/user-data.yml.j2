@@ -1,0 +1,14 @@
+#jinja2: lstrip_blocks: "true", trim_blocks: "false"
+#cloud-config
+hostname: {{ vm.name }}
+ssh_authorized_keys: {{ ssh_public_keys }}
+packages:
+  - qemu-guest-agent
+write_files:
+  - path: /etc/resolvconf/resolv.conf.d/base
+    content: |
+        nameserver {{ vm_nameserver }}
+runcmd:
+  - systemctl restart resolvconf
+  - systemctl start qemu-guest-agent
+final_message: "[ansible] Cloud init finished after $UPTIME seconds"

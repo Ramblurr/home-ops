@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# {{ ansible_managed }}
+REMOTE="{{ job.remote }}"
+LOCAL="{{ job.local_dir }}"
+HC="{{ hc_check.uuid }}"
+source /root/bin/rclone-backup

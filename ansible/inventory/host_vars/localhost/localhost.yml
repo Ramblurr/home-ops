@@ -1,0 +1,245 @@
+---
+# START  LXCS
+# see scripts/lxc-centos-stream-template.sh to create this
+centos_template: mali-tank2:vztmpl/CentOS-Stream-GenericCloud-9-20230216.0.x86_64.tar.gz
+
+# pass -e lxc_id=XXX at runtime to target a single container
+lxc_containers: "{{ lxc_all_containers | selectattr('id', 'in', (lxc_id.split(',') | map('int')) ) }}"
+
+lxc_nameserver: "{{ local_nameservers }}"
+_lxc_shared: &lxc_shared
+  ostemplate: "{{ centos_template }}"
+  api_user: root@pam
+  proxmox_node: ibnsina
+  api_host: ibnsina.mgmt.socozy.casa
+  api_token_secret: "{{ proxmox_token_secret }}"
+  api_token_id: "{{ proxmox_token_id }}"
+  unprivileged: true
+
+_mgmt_net: &mgmt_net
+  cidr: "{{ cidr_mgmt_suffix }}"
+  gw: "{{ mgmt_gateway }}"
+  tag: "{{ mgmt_id }}"
+  firewall: 0
+
+_prim_net: &prim_net
+  cidr: "{{ cidr_prim_suffix }}"
+  gw: "{{ prim_gateway }}"
+  tag: "{{ prim_id }}"
+  firewall: 0
+
+lxc_all_containers:
+  - name: photos-viki.lxc.socozy.casa
+    id: 104
+    cores: 4
+    memory: 8192
+    swap: 4096
+    disk_size: 30
+    extra_conf:
+      - "features: fuse=1,nesting=1"
+      - "mp0: /mnt/bindmounts/mali-photos-viki,mp=/mnt/photoprism,shared=1,mountoptions=noatime"
+    netifs:
+      - iface: 0
+        ip: "{{ hostvars['photos-viki.lxc.socozy.casa'].ip_address_mgmt }}"
+        <<: *mgmt_net
+    <<: *lxc_shared
+
+  - name: photos-casey.lxc.socozy.casa
+    id: 105
+    cores: 4
+    memory: 8192
+    swap: 4096
+    disk_size: 30
+    extra_conf:
+      - "features: fuse=1,nesting=1"
+      - "mp0: /mnt/bindmounts/mali-photos-casey,mp=/mnt/photoprism,shared=1,mountoptions=noatime"
+    netifs:
+      - iface: 0
+        ip: "{{ hostvars['photos-casey.lxc.socozy.casa'].ip_address_mgmt }}"
+        <<: *mgmt_net
+    <<: *lxc_shared
+
+  - name: books.lxc.socozy.casa
+    id: 106
+    cores: 2
+    memory: 2048
+    swap: 4096
+    disk_size: 10
+    extra_conf:
+      - "features: fuse=1,nesting=1"
+      - "mp0: /mnt/bindmounts/mali-books,mp=/mnt/books,shared=1,mountoptions=noatime"
+    netifs:
+      - iface: 0
+        ip: "{{ hostvars['books.lxc.socozy.casa'].ip_address_mgmt }}"
+        <<: *mgmt_net
+    <<: *lxc_shared
+
+  - name: nextcloud-sc.lxc.socozy.casa
+    id: 107
+    cores: 2
+    memory: 2048
+    swap: 4096
+    disk_size: 10
+    extra_conf:
+      - "features: fuse=1,nesting=1"
+      - "mp0: /mnt/bindmounts/mali-nextcloud-sc,mp=/mnt/nextcloud,shared=1,mountoptions=noatime"
+    netifs:
+      - iface: 0
+        ip: "{{ hostvars['nextcloud-sc.lxc.socozy.casa'].ip_address_mgmt }}"
+        <<: *mgmt_net
+    <<: *lxc_shared
+
+  - name: nextcloud-ol.lxc.socozy.casa
+    id: 108
+    cores: 2
+    memory: 2048
+    swap: 4096
+    disk_size: 10
+    extra_conf:
+      - "features: fuse=1,nesting=1"
+      - "mp0: /mnt/bindmounts/mali-nextcloud-ol,mp=/mnt/nextcloud,shared=1,mountoptions=noatime"
+    netifs:
+      - iface: 0
+        ip: "{{ hostvars['nextcloud-ol.lxc.socozy.casa'].ip_address_mgmt }}"
+        <<: *mgmt_net
+    <<: *lxc_shared
+
+  - name: invoiceninja.lxc.socozy.casa
+    id: 109
+    cores: 2
+    memory: 2048
+    swap: 1024
+    disk_size: 10
+    extra_conf:
+      - "features: fuse=1,nesting=1"
+      - "mp0: /mnt/bindmounts/mali-clients-ol,mp=/mnt/nextcloud,shared=1,mountoptions=noatime"
+    netifs:
+      - iface: 0
+        ip: "{{ hostvars['invoiceninja.lxc.socozy.casa'].ip_address_mgmt }}"
+        <<: *mgmt_net
+    <<: *lxc_shared
+
+  - name: paperless-ng.lxc.socozy.casa
+    id: 110
+    cores: 3
+    memory: 4096
+    swap: 1024
+    disk_size: 15
+    extra_conf:
+      - "features: fuse=1,nesting=1"
+      - "mp0: /mnt/bindmounts/mali-paperless,mp=/mnt/paperless,shared=1,mountoptions=noatime"
+    netifs:
+      - iface: 0
+        ip: "{{ hostvars['paperless-ng.lxc.socozy.casa'].ip_address_mgmt }}"
+        <<: *mgmt_net
+    <<: *lxc_shared
+
+  - name: grafana.lxc.socozy.casa
+    id: 111
+    cores: 3
+    memory: 2048
+    swap: 1024
+    disk_size: 15
+    extra_conf:
+      - "features: fuse=1,nesting=1"
+    netifs:
+      - iface: 0
+        ip: "{{ hostvars['grafana.lxc.socozy.casa'].ip_address_mgmt  }}"
+        <<: *mgmt_net
+      - iface: 1
+        ip: "{{ hostvars['grafana.lxc.socozy.casa'].ip_address_prim  }}"
+        <<: *mgmt_net
+    <<: *lxc_shared
+    proxmox_node: mill
+    api_host: mill.mgmt.socozy.casa
+
+  - name: inventree.lxc.socozy.casa
+    id: 113
+    cores: 2
+    memory: 2048
+    swap: 4096
+    disk_size: 25
+    extra_conf:
+      - "features: fuse=1,nesting=1"
+      - "mp0: /mnt/bindmounts/mali-inventree,mp=/mnt/inventree,shared=1,mountoptions=noatime"
+    netifs:
+      - iface: 0
+        ip: "{{ hostvars['inventree.lxc.socozy.casa'].ip_address_mgmt }}"
+        <<: *mgmt_net
+    <<: *lxc_shared
+
+# END LXCS
+# START VMS
+
+vm_nameserver: "{{ local_nameserver }}"
+proxmox_nodes:
+  - proxmox_node: peirce
+    proxmox_host: peirce.mgmt.socozy.casa
+  - proxmox_node: ibnsina
+    proxmox_host: ibnsina.mgmt.socozy.casa
+  - proxmox_node: mill
+    proxmox_host: mill.mgmt.socozy.casa
+container_node_id_start: 230
+container_node_count: 1
+container_node_count_start: 0
+container_node_gateway: 10.9.4.1
+
+_vm_shared: &vm_shared
+  boot: "c"
+  bootdisk: scsi0
+
+# pass -e vm_id=XXX at runtime to target a single container
+proxmox_vms: "{{ _proxmox_vms | selectattr('id', 'in', (vm_id.split(',') | map('int')) ) }}"
+
+_proxmox_vms:
+  - id: 230
+    name: container0
+    recreate: false
+    proxmox_source_node: peirce
+    proxmox_user: root@pam
+    proxmox_token_id: "{{ proxmox_token_id }}"
+    proxmox_token_secret: "{{ proxmox_token_secret }}"
+    cloud_init_storage: "{{ prox_image_storage }}"
+    disk: 50
+    memory: 32000
+    cores: 11
+    net:
+      net0: "virtio,bridge=vmbr0,firewall=0,tag=9"
+      net1: "virtio,bridge=vmbr0,firewall=0,tag=4"
+      net2: "virtio,bridge=vmbr1,firewall=0"
+    ipconfig:
+      ipconfig0: >-
+        ip={{ hostvars['container0.mgmt.socozy.casa'].container_node_mgmt_cidr }}
+      ipconfig1: >-
+        ip={{ hostvars['container0.mgmt.socozy.casa'].container_node_prim_cidr }},gw={{ container_node_gateway }}
+      ipconfig2: >-
+        ip={{ hostvars['container0.mgmt.socozy.casa'].container_node_data_cidr }}
+    clone: 9997
+    <<: *vm_shared
+
+  - id: 231
+    name: testvm
+    recreate: false
+    proxmox_source_node: mill
+    proxmox_node: mill
+    proxmox_user: root@pam
+    proxmox_token_id: "{{ proxmox_token_id }}"
+    proxmox_token_secret: "{{ proxmox_token_secret }}"
+    cloud_init_storage: "{{ prox_image_storage }}"
+    disk: 10
+    memory: 1024
+    cores: 4
+    net:
+      net0: "virtio,bridge=vmbr0,firewall=0,tag=9"
+      net1: "virtio,bridge=vmbr0,firewall=0,tag=4"
+      net2: "virtio,bridge=vmbr1,firewall=0"
+    ipconfig:
+      ipconfig0: >-
+        ip={{ hostvars['container1.mgmt.socozy.casa'].container_node_mgmt_cidr }}
+      ipconfig1: >-
+        ip={{ hostvars['container1.mgmt.socozy.casa'].container_node_prim_cidr }},gw={{ container_node_gateway }}
+      ipconfig2: >-
+        ip={{ hostvars['container1.mgmt.socozy.casa'].container_node_data_cidr }}
+    clone: 9996
+    <<: *vm_shared
+...

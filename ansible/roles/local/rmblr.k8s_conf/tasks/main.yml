@@ -1,0 +1,66 @@
+---
+- name: build cp ips
+  ansible.builtin.set_fact:
+    control_plane_ips: >-
+      {{ cluster_control_plane_nodes | dict2items | map(attribute='value') | map(attribute='ifaces') | map(attribute='mgmt') | map(attribute='ip') }}
+
+- debug:
+    var: control_plane_ips
+
+- name: Talconfig
+  ansible.builtin.template:
+    src: talconfig.yaml.j2
+    dest: "{{ cluster_talos_dir }}/talconfig.yaml"
+    owner: ramblurr
+    group: ramblurr
+    mode: 0600
+  delegate_to: localhost
+
+- name: Makefile template
+  ansible.builtin.template:
+    src: Makefile.j2
+    dest: "{{ cluster_talos_dir }}/Makefile"
+    owner: ramblurr
+    group: ramblurr
+    mode: 0600
+  delegate_to: localhost
+
+- name: CNI config
+  ansible.builtin.template:
+    src: cilium-values.yaml.j2
+    dest: "{{ cluster_talos_dir }}/cni/values.yaml"
+    owner: ramblurr
+    group: ramblurr
+    mode: 0600
+  delegate_to: localhost
+
+- name: Global auto vars
+  ansible.builtin.template:
+    src: global-auto-vars.yaml.j2
+    dest: "{{ cluster_k8s_dir }}/flux/vars/global-auto-vars.yaml"
+    owner: ramblurr
+    group: ramblurr
+    mode: 0600
+  delegate_to: localhost
+
+- name: Terraform vars
+  ansible.builtin.template:
+    src: inputs.tf.json.j2
+    dest: "{{ cluster_terraform_dir }}/terraform.tfvars.json"
+    owner: ramblurr
+    group: ramblurr
+    mode: 0600
+  delegate_to: localhost
+  vars:
+    terraform_inputs:
+      cluster_name: "{{ cluster_name }}"
+      cluster_networks: "{{ cluster_networks }}"
+      boot_disk_size: "{{ cluster_node_boot_disk_size }}"
+      boot_disk_storage_pool: "{{ cluster_node_boot_disk_storage_pool }}"
+      control_plane_nodes: "{{ cluster_control_plane_nodes }}"
+      iso_image_location: "{{ cluster_node_iso_image_location }}"
+      guest_agent_enabled: "{{ cluster_guest_agent_enabled }}"
+      #node_cidr_suffix: "{{ cluster_node_vlan_cidr_suffix }}"
+      #node_gateway: "{{ cluster_node_vlan_gateway }}"
+      #node_vlan_tag: "{{ cluster_node_vlan_tag }}"
+...

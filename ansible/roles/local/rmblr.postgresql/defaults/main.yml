@@ -1,0 +1,10 @@
+---
+postgresql_version: 13
+postgresql_service: postgresql
+postgresql_user: postgres
+postgresql_group: root
+postgresql_admin_user: admin
+# postgresql_admin_password:
+#postgresql_allowed_cidrs: []
+
+postgresql_pg_hba_extra: []

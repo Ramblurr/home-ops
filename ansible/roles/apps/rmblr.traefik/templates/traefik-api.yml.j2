@@ -1,0 +1,17 @@
+---
+http:
+  serversTransports:
+    ignorecert:
+      insecureSkipVerify: true
+  routers:
+    traefik:
+      rule: Host(`{{ traefik_fqdn }}`) && ( (PathPrefix(`/api`) || PathPrefix(`/dashboard`)) )
+      service: api@internal
+      entryPoints:
+        - web-internal-secure
+      tls:
+        certResolver: {{ service_cert_resolver }}
+        domains:
+          - main: "{{ letsencrypt_domain }}"
+            sans:
+              {{ letsencrypt_domain_sans | default ([]) | to_nice_yaml(indent=2) | trim | indent(14) }}

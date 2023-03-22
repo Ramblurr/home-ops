@@ -1,0 +1,22 @@
+#jinja2: lstrip_blocks: "true", trim_blocks: "false"
+#cloud-config
+---
+package_upgrade: true
+{% if prox_cloudimg_username is defined %}
+user: "{{ prox_cloudimg_username }}"
+{% endif %}
+manage_etc_hosts: true
+hostname: "{{ prox_cloudimg_name }}"
+ssh_authorized_keys: {{ prox_template_ssh_keys }}
+packages:
+  {{ (prox_cloudimg_default_packages + prox_cloudimg_extra_packages) | to_nice_yaml(indent=2) | trim | indent(2) }}
+write_files:
+  - path: /etc/resolvconf/resolv.conf.d/base
+    content: |
+        nameserver {{ prox_template_nameserver }}
+        search {{ prox_template_domain }}
+runcmd:
+  {{ (prox_cloudimg_default_runcmd + prox_cloudimg_extra_runcmd) | to_nice_yaml(indent=2) | trim | indent(2) }}
+
+final_message: "Cloud init finished after $UPTIME seconds"
+...

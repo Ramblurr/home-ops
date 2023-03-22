@@ -1,0 +1,11 @@
+---
+- name: Show VMs we are working with
+  ansible.builtin.debug:
+    var: proxmox_vms
+
+- ansible.builtin.include_tasks: vm.yml
+  loop_control:
+    label: "{{ vm.name }}"
+    loop_var: vm
+  loop: "{{ proxmox_vms }}"
+...

@@ -1,0 +1,41 @@
+---
+container_state: started
+container_down: false
+container_remove: false
+container_recreate: false
+container_name: invoiceninja
+container_pod: true
+container_volumes_recreate: false
+container_volumes_state: present
+service_port: 80
+service_upstream: http://{{ inventory_hostname }}:{{ service_port }}
+service_base_dir: "{{ service_local_data_dir }}/{{ container_name }}"
+service_conf_dir: "{{ service_base_dir }}/conf"
+service_conf_dir_app: "{{ service_conf_dir }}/app"
+service_conf_dir_nginx: "{{ service_conf_dir }}/nginx"
+service_conf_dir_psysh: "{{ service_conf_dir }}/psysh"
+service_conf_dir_supervisord: "{{ service_conf_dir }}/supervisord"
+service_data_dir: "{{ service_base_dir }}/data"
+service_data_dir_public: "{{ service_data_dir }}/public"
+service_data_dir_storage: "{{ service_data_dir }}/storage"
+service_dirs:
+  - "{{ service_base_dir }}"
+  - "{{ service_conf_dir }}"
+  - "{{ service_conf_dir_app }}"
+  - "{{ service_conf_dir_nginx }}"
+  - "{{ service_conf_dir_psysh }}"
+  - "{{ service_conf_dir_supervisord }}"
+  - "{{ service_data_dir }}"
+  - "{{ service_data_dir_public }}"
+  - "{{ service_data_dir_storage }}"
+
+#service_healthcheck:
+#  hostname: "{{ container_name }}"
+#  port: "8083"
+#  path: /
+
+
+container_nfs_enabled: false
+container_cifs_enabled: false
+container_vol_user: app
+container_vol_uid: 1000

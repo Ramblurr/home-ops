@@ -1,0 +1,54 @@
+---
+cidr_primary: 10.9.4.0/23
+cidr_mgmt: 10.9.8.0/23
+cidr_mgmt_suffix: 23
+cidr_prim_suffix: 22
+cidr_data_suffix: 23
+cidr_int_old: "{{ cidr_int }}"
+cidr_aquinas: 192.168.1.243/32
+cidr_rorty: 10.9.4.26/32
+mgmt_gateway: 10.9.8.1
+prim_gateway: 10.9.4.1
+data_gateway: 10.9.10.1
+data_netmask: 255.255.254.0
+mgmt_id: 9
+prim_id: 4
+data_id: 11
+REPO_ROOT: "{{ lookup('pipe', 'git rev-parse --show-toplevel') }}"
+casey_pubkey: "{{ lookup('file', '/home/ramblurr/.ssh/casey.pub') }}"
+mobile_pubkey: "{{ lookup('file', '/home/ramblurr/.ssh/juice.pub') }}"
+ipad_pubkey: "{{ lookup('file', '/home/ramblurr/.ssh/ipad.pub') }}"
+disaster_recovery_pubkey: "{{ lookup('file', '/home/ramblurr/.ssh/id_disaster_recovery_2021.pub') }}"
+ssh_public_keys:
+  - "{{ casey_pubkey }}"
+  - "{{ mobile_pubkey }}"
+  - "{{ ipad_pubkey }}"
+  - "{{ disaster_recovery_pubkey }}"
+prox_template_ssh_keys: "{{ ssh_public_keys }}"
+ssh_public_keys_str: "{{ ssh_public_keys | join('\n')}}"
+vyos_config_dir: "{{ REPO_ROOT }}/vyos/router0"
+lxc_pubkey: "{{ ssh_public_keys_str  }}"
+prox_template_nameserver: "{{ local_nameservers }}"
+prox_template_domain: "{{ subdomain_mgmt }}"
+prox_cloudimg_template_disk_size: 10G
+wireguard_port: 51820
+wireguard_interface: wg0
+mali_wireguard_ip: 10.73.73.1
+mali_prim_ip: 10.9.4.10
+etcd_hosts_with_scheme: "{{ etcd_hosts_list_with_scheme | join(',') }}"
+etcd_cacert_file: "{{ REPO_ROOT }}/state/pki/root-ca.pem"
+pki_certs_dir: "{{ REPO_ROOT }}/state/pki/certs"
+pki_ca_pem: "{{ pki_certs_dir }}/root-ca.pem"
+pki_truenas_certs_dir: "{{ REPO_ROOT }}/state/pki/truenas"
+borg_retention_policy:
+  keep_hourly: 6
+  keep_daily: 7
+  keep_weekly: 4
+  keep_monthly: 6
+borg_ssh_command: ssh -i ~/.ssh/id_borgbackup
+node_exporter_version: 1.4.0
+postgresql_tls_ca_file: "{{ pki_certs_dir }}/root-ca.pem"
+prox_cloudimg_template_id_centos: 9997
+borg_install_method: package
+proxmox_lxc_root_uid: 100000
+proxmox_lxc_app_uid: 101000

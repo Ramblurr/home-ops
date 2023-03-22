@@ -1,0 +1,26 @@
+---
+- name: restart sysusers
+  ansible.builtin.systemd:
+    name: systemd-sysusers.service
+    state: restarted
+    enabled: true
+    daemon_reload: true
+
+- name: restart coredns
+  ansible.builtin.systemd:
+    name: coredns
+    state: restarted
+    enabled: true
+    daemon_reload: true
+
+- name: reload coredns
+  ansible.builtin.systemd:
+    name: coredns
+    state: reloaded
+    enabled: true
+
+- name: restart dhcpcd
+  ansible.builtin.systemd:
+    name: dhcpcd
+    state: restarted
+...

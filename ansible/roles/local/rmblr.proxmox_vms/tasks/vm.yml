@@ -1,0 +1,142 @@
+---
+- name: set proxmox host
+  ansible.builtin.set_fact:
+    proxmox_host: "{{ vm.proxmox_source_node }}.mgmt.socozy.casa"
+
+- name: vm {{ vm.name }} destroy @ {{ vm.proxmox_node }}
+  delegate_to: "{{ proxmox_host }}"
+  shell: >-
+    qm stop {{ vm.id }} && qm destroy {{ vm.id }} -purge
+  when: vm.recreate | default(false)
+
+- name: vm {{ vm.name }} create @ {{ vm.proxmox_node }}
+  community.general.proxmox_kvm:
+    node: "{{ vm.proxmox_source_node }}"
+    api_user: "{{ vm.proxmox_user }}"
+    api_host: "{{ proxmox_host }}"
+      #api_password: "{{ vm.proxmox_password | default(omit) }}"
+    api_token_id: "{{ vm.proxmox_token_id | default(omit) }}"
+    api_token_secret: "{{ vm.proxmox_token_secret | default(omit) }}"
+    clone: "{{ vm.name }}"
+    target: "{{ vm.proxmox_node }}"
+    full: "{{ vm.full | default(true) }}"
+    vmid: "{{ vm.clone }}"
+    newid: "{{ vm.id }}"
+    citype: nocloud
+    timeout: "{{ vm.timeout | default(120) }}"
+    proxmox_default_behavior: compatibility
+
+- name: vm {{ vm.name }} update @ {{ vm.proxmox_node }}
+  community.general.proxmox_kvm:
+    node: "{{ vm.proxmox_node }}"
+    api_user: "{{ vm.proxmox_user }}"
+    api_host: "{{ proxmox_host }}"
+    api_password: "{{ vm.proxmox_password | default(omit) }}"
+    api_token_id: "{{ vm.proxmox_token_id | default(omit) }}"
+    api_token_secret: "{{ vm.proxmox_token_secret | default(omit) }}"
+    vmid: "{{ vm.id }}"
+    name: "{{ vm.name }}"
+    storage: "{{ prox_image_storage }}"
+    memory: "{{ vm.memory | default(512) }}"
+    cores: "{{ vm.cores | default(4) }}"
+    boot: "{{ vm.boot }}"
+    args: "{{ vm.args | default(omit) }}"
+    onboot: true
+    proxmox_default_behavior: compatibility
+    state: present
+    update: true
+
+# module cannot be used to update the network interfaces
+# https://github.com/ansible-collections/community.general/issues/1342#issuecomment-734203965
+- name: vm {{ vm.name }} configure network adapters
+  delegate_to: "{{ proxmox_host }}"
+  command: >
+    qm set {{ vm.id }} -{{ item.key }} {{ item.value }}
+  loop: "{{ vm.net | dict2items }}"
+
+- name: wait for pve to settle
+  pause:
+    seconds: 3
+
+- name: vm {{ vm.name }} resize disk
+  delegate_to: "{{ proxmox_host }}"
+  command: >
+    qm resize {{ vm.id }} scsi0 {{ vm.disk }}G
+
+- name: vm {{ vm.name }} set ssh key
+  delegate_to: "{{ proxmox_host }}"
+  command: >
+    qm set {{ vm.id }} --sshkey {{ prox_snippets_dir }}/casey.pub
+
+- name: vm {{ vm.name }} configure network
+  delegate_to: "{{ proxmox_host }}"
+  command: >
+    qm set {{ vm.id }} --{{ item.key }} {{ item.value }}
+  loop: "{{ vm.ipconfig | dict2items }}"
+  when: vm.ipconfig is defined
+
+- name: vm {{ vm.name }} check if cloudinit drive is attached
+  delegate_to: "{{ proxmox_host }}"
+  shell: >
+    qm config {{ vm.id }} | grep cloudinit
+  failed_when: false
+  changed_when: false
+  register: prox_cloudinit_attached
+  when: vm.cloud_init_storage is defined
+
+- name: vm {{ vm.name }} add cloud init drive
+  delegate_to: "{{ proxmox_host }}"
+  command: >
+    qm set {{ vm.id }} --ide2 {{ vm.cloud_init_storage }}:cloudinit
+  when: vm.cloud_init_storage is defined and prox_cloudinit_attached.rc > 0
+
+
+- include_tasks: disk.yml
+  loop: "{{ vm.extra_disks| default([]) }}"
+  loop_control:
+    loop_var: disk
+
+- name: vm {{ vm.name }} create cloud init configuration
+  delegate_to: "{{ proxmox_host }}"
+  become: true
+  template:
+    src: user-data.yml.j2
+    dest: "{{ prox_snippets_dir}}/user-data-{{ vm.id }}"
+
+- name: vm {{ vm.name }} set cloud init configuration
+  delegate_to: "{{ proxmox_host }}"
+  command: >
+    qm set {{ vm.id }}
+    --cicustom "user={{ prox_snippets_storage }}:snippets/user-data-{{ vm.id }}"
+
+#- set_fact:
+#ansible_remote_tmp: /etc/pve
+
+- name: vm {{ vm.name }} enable firewall
+  shell: echo "{{ vm.firewall }}" >  /etc/pve/firewall/{{ vm.id }}.fw
+  delegate_to: "{{ proxmox_host }}"
+  when: vm.firewall is defined
+
+- name: vm {{ vm.name }} disable firewall
+  file:
+    path: /etc/pve/firewall/{{ vm.id }}.fw
+    state: absent
+  delegate_to: "{{ proxmox_host }}"
+  when: vm.firewall is not defined
+
+- name: vm {{ vm.name }} start
+  community.general.proxmox_kvm:
+    node: "{{ vm.proxmox_node }}"
+    api_user: "{{ vm.proxmox_user }}"
+    api_host: "{{ proxmox_host }}"
+    api_password: "{{ vm.proxmox_password | default(omit) }}"
+    api_token_id: "{{ vm.proxmox_token_id | default(omit) }}"
+    api_token_secret: "{{ vm.proxmox_token_secret | default(omit) }}"
+    state: "{{ vm.state | default('started') }}"
+    vmid: "{{ vm.id }}"
+    proxmox_default_behavior: compatibility
+
+- name: pause
+  pause:
+    seconds: "{{ proxmox_pause_between }}"
+  when: proxmox_pause_between is defined

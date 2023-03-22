@@ -1,0 +1,164 @@
+---
+- name: VyOS local config generation
+  hosts: localhost
+  roles:
+    - name: rmblr.vyos_config_generate
+  tags: [config]
+
+- name: VyOS router setup
+  hosts: vyos
+  become: true
+  gather_facts: false
+  roles:
+    - name: rmblr.vyos_setup
+
+- name: TrueNAS setup
+  hosts: truenas
+  become: false
+  tags: [truenas-setup]
+  roles:
+    - name: rmblr.truenas_setup
+    - name: rmblr.truenas_zrepl
+      tags: [zrepl]
+
+- name: Proxmox nodes setup
+  hosts: proxmox
+  become: true
+  tags: [proxmox-setup]
+  roles:
+    - role: rmblr.proxmox_setup
+
+- name: Rasperry PI DNS build coredns
+  # builds my flavor of coredns for arm systems
+  hosts: dns-builder
+  gather_facts: true
+  become: true
+  tags: [dns-build]
+  roles:
+    - role: rmblr.rpi_coredns_build
+
+- name: Rasperry PI DNS nodes setup
+  hosts: dns
+  gather_facts: false
+  become: true
+  tags: [dns]
+  pre_tasks:
+    - ansible.builtin.import_tasks: tasks/wait-for-online-hosts.yml
+    - setup:
+  roles:
+    - role: rmblr.rpi_coredns
+
+# START: Jails
+
+- name: TrueNAS Jails
+  hosts: mali.int.socozy.casa
+  become: true
+  tags: [jail-create]
+  vars_files:
+    - vars/pg-single.yml
+    #- vars/mariadb.yml
+    #- vars/borgbackup-host.yml
+  roles:
+    - rmblr.truenas_jails
+
+- name: Postgres jail install and configure
+  hosts: pg.int.socozy.casa
+  gather_facts: false
+  become: true
+  tags: [postgres]
+  vars_files:
+    - vars/pg-single.yml
+  pre_tasks:
+    - ansible.builtin.import_tasks: tasks/wait-for-online-hosts.yml
+    - setup:
+  roles:
+    - role: rmblr.pgbackrest
+    - role: rmblr.postgresql
+
+- name: MariaDB jail install and configure
+  hosts: mysql.mgmt.socozy.casa
+  gather_facts: true
+  become: true
+  tags: [mariadb]
+  vars_files:
+    - vars/mariadb.yml
+  roles:
+    - role: rmblr.mariadb
+
+- name: Borgbackup jail host install and configure
+  hosts: borgbackup-host.int.socozy.casa
+  gather_facts: false
+  become: true
+  tags: [borg-host]
+  vars_files:
+    - vars/borgbackup-host.yml
+  pre_tasks:
+    - ansible.builtin.import_tasks: tasks/wait-for-online-hosts.yml
+    - setup:
+  roles:
+    - role: rmblr.baseline
+    - role: rmblr.borgbackup
+
+# END: Jails
+
+# Start: VMs
+#
+- name: Create Proxmox VMs
+  hosts: localhost
+  become: false
+  tags: [vm-create]
+  roles:
+    - rmblr.proxmox_vms
+
+- name: Configure deprecated podman host
+  hosts: container_hosts
+  become: true
+  gather_facts: false
+  tags: [vm-baseline]
+  vars:
+    cockpit_bind_addr: "{{ container_node_mgmt_cidr | ansible.netcommon.ipaddr('address') }}"
+  pre_tasks:
+    - ansible.builtin.import_tasks: tasks/wait-for-online-hosts.yml
+    - ansible.builtin.setup:
+    - name: Change user password
+      ansible.builtin.user:
+        name: "{{ ansible_user }}"
+        password: "{{ container_hosts_admin_password | password_hash('sha512') }}"
+  roles:
+    - role: rmblr.baseline
+    - role: rmblr.podman_host
+
+# END: VMs
+
+# Start: LXCs
+
+- name: Create Proxmox Bindmounts
+  hosts: proxmox
+  become: true
+  tags: [lxc-create, proxmox-bindmounts]
+  roles:
+    - rmblr.proxmox_bindmounts
+
+- name: Create Proxmox LXCs
+  hosts: localhost
+  become: false
+  tags: [lxc-create]
+  roles:
+    - rmblr.proxmox_lxcs
+
+- name: Configure LXC base
+  hosts: lxc_services
+  gather_facts: false
+  tags: [lxc-baseline]
+  pre_tasks:
+    - ansible.builtin.import_tasks: tasks/wait-for-online-hosts.yml
+    - ansible.builtin.setup:
+  roles:
+    - role: rmblr.baseline
+    - role: rmblr.podman_host
+    - role: prometheus.prometheus.node_exporter
+
+- ansible.builtin.import_playbook: apps.yml
+
+# END: LXCs
+...

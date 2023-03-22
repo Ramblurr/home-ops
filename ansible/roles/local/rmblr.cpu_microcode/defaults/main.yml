@@ -1,0 +1,7 @@
+---
+cpu_microcode_amd_cpu_packages:
+  - amd64-microcode
+cpu_microcode_intel_cpu_packages:
+  - intel-microcode
+  - iucode-tool
+...

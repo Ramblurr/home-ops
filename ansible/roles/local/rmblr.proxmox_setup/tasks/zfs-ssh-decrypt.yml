@@ -1,0 +1,59 @@
+---
+
+- name: install dropbear-initramfs
+  ansible.builtin.package:
+    name:
+      - dropbear-initramfs
+  notify:
+    - rebuild initramfs
+
+- name: install ssh keys
+  ansible.builtin.copy:
+    content: "{{ ssh_public_keys | join('\n\n') }}"
+    dest: /etc/dropbear-initramfs/authorized_keys
+    mode: 0644
+    owner: root
+    group: root
+  notify:
+    - rebuild initramfs
+
+- name: Ensure static ip for dopbear-initramfs
+  ansible.builtin.lineinfile:
+    path: /etc/initramfs-tools/initramfs.conf
+    regexp: "^IP=.*"
+    line: "IP={{ ip_address_data }}::{{ data_gateway }}:{{ data_netmask }}:{{ inventory_hostname }}:{{ proxmox_10gbe_iface }}"
+  notify:
+    - rebuild initramfs
+
+
+- name: create key file
+  ansible.builtin.copy:
+    content: "{{ proxmox_zfs_encryption_key_guest_data }}"
+    dest: /root/.rpool-data-encrypted.key
+    mode: 0600
+    owner: root
+    group: root
+
+- name: create encrypted guest zfs volume {{ proxmox_zfs_encrypted_guest_dataset }}
+  community.general.zfs:
+    name: "{{ proxmox_zfs_encrypted_guest_dataset }}"
+    state: present
+    extra_zfs_properties:
+      encryption: aes-256-gcm
+      keyformat: hex
+      keylocation: file:///root/.rpool-data-encrypted.key
+      compression: zstd-3
+
+- name: check storage exists
+  ansible.builtin.shell: pvesm status |grep -q "{{ proxmox_zfs_encrypted_guest_storage }}"
+  failed_when: false
+  changed_when: false
+  register: _prox_enc_storage_exists
+
+- debug:
+    var: _prox_enc_storage_exists
+
+- name: import {{ proxmox_zfs_encrypted_guest_dataset }} as pve storage
+  ansible.builtin.command: pvesm add zfspool {{ proxmox_zfs_encrypted_guest_storage  }} -pool {{ proxmox_zfs_encrypted_guest_dataset }}
+  when: _prox_enc_storage_exists.rc != 0
+...

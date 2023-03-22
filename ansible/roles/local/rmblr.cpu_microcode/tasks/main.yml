@@ -1,0 +1,63 @@
+---
+- name: cpu-microcode
+  when: ansible_architecture == "x86_64"
+  block:
+    - name: get CPU vendor
+      set_fact:
+        cpu_vendor: 'intel'
+      when: ansible_processor | lower is search("intel")
+      tags:
+        - microcode
+        - vendor
+
+    - name: get CPU vendor
+      set_fact:
+        cpu_vendor: 'amd'
+      when: ansible_processor | lower is search("amd")
+      tags:
+        - microcode
+        - vendor
+
+    - name: add related package(s)
+      package:
+        name: "{{ cpu_microcode_intel_cpu_packages }}"
+      when:
+        - ansible_virtualization_role == 'host'
+        - cpu_vendor == 'intel'
+      tags:
+        - microcode
+        - package
+        - add
+
+    - name: add related package(s)
+      package:
+        name: "{{ cpu_microcode_amd_cpu_packages }}"
+      when:
+        - ansible_virtualization_role == 'host'
+        - cpu_vendor == 'amd'
+      tags:
+        - microcode
+        - package
+        - add
+
+    - name: remove non related package
+      package:
+        name: "{{ cpu_microcode_intel_cpu_packages }}"
+        state: absent
+        purge: true
+      when: cpu_vendor == 'amd' or ansible_virtualization_role == 'guest'
+      tags:
+        - microcode
+        - package
+        - del
+
+    - name: remove non related package
+      package:
+        name: "{{ cpu_microcode_amd_cpu_packages }}"
+        state: absent
+        purge: true
+      when: cpu_vendor == 'intel' or ansible_virtualization_role == 'guest'
+      tags:
+        - microcode
+        - package
+        - del

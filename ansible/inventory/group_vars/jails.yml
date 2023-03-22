@@ -1,0 +1,6 @@
+---
+ansible_user: ansible
+#  workaround bug in ansible in freebsd
+ansible_fqdn: "{{ inventory_hostname }}"
+ansible_python_interpreter: /usr/local/bin/python3
+security_ssh_permit_root_login: "yes"

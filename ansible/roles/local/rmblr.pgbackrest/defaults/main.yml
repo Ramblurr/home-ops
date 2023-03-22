@@ -1,0 +1,5 @@
+---
+pgbackrest_version: "2.31"
+pgbackrest_stanza: "stanza_name"  # specify your --stanza
+pgbackrest_repo_type: "posix"
+pgbackrest_repo_user: postgres

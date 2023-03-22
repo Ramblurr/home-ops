@@ -1,0 +1,47 @@
+---
+container_state: started
+container_down: false
+container_remove: false
+container_recreate: false
+container_volumes_recreate: false
+container_volumes_state: present
+container_name: pp
+#service_port: 2342
+#service_upstream: http://{{ container_name }}:{{ service_port }}
+service_port: 80
+service_upstream: http://{{ inventory_hostname }}:{{ service_port }}
+service_base_dir: "{{ service_local_data_dir }}/{{ container_name }}"
+service_data_dir: "{{ service_base_dir }}/data"
+service_db_dir: "{{ service_base_dir }}/db"
+service_dirs:
+  - "{{ service_base_dir }}"
+  - "{{ service_db_dir }}"
+  - "{{ service_data_dir }}"
+
+service_healthcheck:
+  hostname: "{{ inventory_hostname }}"
+  port: "{{ service_port }}"
+  path: /ping
+
+photoprism_db_server: "127.0.0.1:3306"
+container_pod: true
+#photoprism_base_volume_host_path: "{{ host_cifs_path }}"
+#photoprism_cifs_workgroup: WORKGROUP
+#container_cifs_mount_opts: 'username={{ photoprism_cifs_username  }},password={{ photoprism_cifs_password }},workgroup={{ photoprism_cifs_workgroup }},rw,uid={{ container_vol_uid }},gid={{ container_vol_uid }},file_mode=0770,dir_mode=0770,context="system_u:object_r:container_file_t:s0",seal'
+#photoprism_cifs_username: "{{ photoprism_settings.cifs_username }}"
+#photoprism_cifs_password: "{{ photoprism_settings.cifs_password }}"
+
+
+container_nfs_enabled: false
+container_cifs_enabled: false
+photoprism_base_volume_host_path: "/mnt/photoprism"
+
+photoprism_db_database: "{{ container_name }}"
+photoprism_db_username: "{{ photoprism_settings.db_username }}"
+photoprism_db_password: "{{ photoprism_settings.db_password }}"
+photoprism_db_root_password: "{{ photoprism_settings.db_root_password }}"
+photoprism_admin_password: "{{ photoprism_settings.admin_password }}"
+photoprism_title: "{{ photoprism_settings.title }}"
+photoprism_caption: "{{ photoprism_settings.caption }}"
+container_vol_user: app
+container_vol_uid: 1000

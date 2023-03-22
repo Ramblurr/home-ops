@@ -1,0 +1,61 @@
+---
+- name: RedHat - Add InfluxDB repository
+  yum_repository:
+    name: InfluxDB
+    description: InfluxDB Repository - RHEL 9
+    baseurl: "{{ influxdb_yum_url }}"
+    gpgkey: "{{ influxdb_yum_key }}"
+    gpgcheck: true
+
+- name: RedHat - Ensure InfluxDB is installed
+  ansible.builtin.dnf:
+    name:
+      - influxdb2
+      - influxdb2-cli
+    state: present
+  notify: Restart InfluxDB
+
+- name: Setup InfluxDB default file
+  ansible.builtin.template:
+    dest: /etc/default/influxdb2
+    group: root
+    mode: 0644
+    owner: root
+    src: default.j2
+  notify: Restart InfluxDB
+
+- name: Ensure InfluxDB directories exist
+  ansible.builtin.file:
+    group: influxdb
+    mode: 0750
+    owner: influxdb
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - "{{ influxdb_config_path }}"
+    - "{{ influxdb_bolt_path | dirname }}"
+    - "{{ influxdb_engine_path }}"
+
+- name: Remove any previous InfluxDB configuration file
+  ansible.builtin.file:
+    path: "{{ influxdb_config_path }}/{{ item }}"
+    state: absent
+  loop:
+    - config.json
+    - config.toml
+  notify: Restart InfluxDB
+
+- name: Setup InfluxDB configuration file
+  ansible.builtin.template:
+    dest: "{{ influxdb_config_path }}/config.yml"
+    group: influxdb
+    mode: 0644
+    owner: influxdb
+    src: config.yml.j2
+  notify: Restart InfluxDB
+
+- name: Ensure InfluxDB service is in the desired state
+  ansible.builtin.service:
+    enabled: "{{ influxdb_service_enabled }}"
+    name: "{{ influxdb_service_name }}"
+    state: "{{ influxdb_service_state }}"

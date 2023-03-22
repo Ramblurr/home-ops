@@ -1,0 +1,52 @@
+---
+- name: create credentials location
+  ansible.builtin.file:
+    path: /etc/pve/priv/cifs-credentials
+    state: directory
+    mode: 0700
+  run_once: true
+
+- name: write cifs credentials
+  loop: "{{ proxmox_bindmounts }}"
+  when: item.cifs is defined
+  ansible.builtin.copy:
+    dest: /root/cifs-{{ item.name }}
+    content: |
+      username={{ item.cifs.username }}
+      password={{ item.cifs.password }}
+    mode: 0600
+  run_once: true
+
+- name: write cifs credentials
+  loop: "{{ proxmox_bindmounts }}"
+  when: item.cifs is defined
+  ansible.builtin.command: mv /root/cifs-{{ item.name }} /etc/pve/priv/cifs-credentials/{{ item.name }}
+  run_once: true
+
+- name: create bindmounts location
+  ansible.builtin.file:
+    path: /mnt/bindmounts
+    state: directory
+    owner: root
+    group: root
+    mode: 0771
+
+- name: add bind mounts
+  ansible.builtin.file:
+    path: /mnt/bindmounts/{{ item.name }}
+    state: directory
+    owner: 101000
+    group: "{{ item.group }}"
+    mode: "{{ item.mode | default('0755') }}"
+  loop: "{{ proxmox_bindmounts }}"
+
+- name: mount mounts
+  loop: "{{ proxmox_bindmounts }}"
+  ansible.posix.mount:
+    backup: true
+    fstype: "{{ item.fstype }}"
+    opts: "{{ item.opts }}"
+    src: "{{ item.src }}"
+    path: "/mnt/bindmounts/{{ item.name }}"
+    state: "{{ item.state | default('mounted') }}"
+...

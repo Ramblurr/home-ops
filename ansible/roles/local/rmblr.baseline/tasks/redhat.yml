@@ -1,0 +1,187 @@
+---
+- name: update dnf cache
+  dnf:
+    update_cache: true
+    state: latest
+
+- name: centos enable epel
+  when: ansible_distribution == "CentOS"
+  dnf:
+    name:
+      - epel-release
+      - epel-next-release
+    state: present
+
+- name: Update all packages
+  dnf:
+    update_only: true
+    state: latest
+  retries: 10
+  delay: 10
+  register: dnf_result
+  until: dnf_result is success
+
+- name: Install common packages
+  dnf:
+    name:
+      - bind-utils # dig
+      - logrotate
+      - bash-completion
+      - bzip2
+      - curl
+      - gawk
+      - htop
+      - iotop
+      - jq
+      - lsof
+      - make
+      - ncdu
+      - nfs-utils
+      - python3-pip
+      - rsync
+      - vim-enhanced
+      - vnstat
+      - wget
+      - zip
+      - firewalld
+      - systemd-resolved
+      - kitty-terminfo
+    state: present
+
+- name: Install cockpit
+  when: cockpit_enabled
+  dnf:
+    name:
+      - cockpit
+      - cockpit-networkmanager
+    state: present
+
+- name: non-centos stream specific
+  when: ansible_distribution != "CentOS"
+  dnf:
+    name:
+      - kitty-terminfo
+
+#- name: centos stream specific
+#  when: false and ansible_distribution == "CentOS" and ansible_distribution_release == "Stream"
+#  block:
+#    - name: create terminfo dir
+#      file:
+#        state: directory
+#        recurse: true
+#        path: /usr/share/terminfo/x
+#        mode: 0755
+#        owner: root
+#        group: root
+#
+#    - name: download kitty terminfo
+#      get_url:
+#        url: https://github.com/kovidgoyal/kitty/blob/master/terminfo/x/xterm-kitty?raw=true
+#        dest: /usr/share/terminfo/x/xterm-kitty
+#        mode: 0644
+
+- name: Extra packages
+  dnf:
+    name: "{{ extra_packages }}"
+    state: present
+
+- name: Set timezone
+  timezone:
+    name: "UTC"
+
+- include_tasks: ssh.yml
+
+- name: Ensure firewalld is started and enabled
+  systemd:
+    name: firewalld
+    state: started
+    enabled: true
+  when: firewalld_enabled
+
+- name: Firewalld Stop and disable
+  systemd:
+    name: firewalld
+    state: stopped
+    enabled: false
+  when: not firewalld_enabled
+
+- name: Enable firewalld services
+  ansible.posix.firewalld:
+    permanent: true
+    service: "{{ item }}"
+    state: enabled
+    zone: public
+  loop: "{{ firewalld_services }}"
+  when: firewalld_enabled
+
+- name: Ensure systemd-resolved is enabled
+  systemd:
+    name: systemd-resolved
+    state: started
+    enabled: true
+
+- name: create cockpit config directory
+  when: cockpit_enabled and cockpit_bind_addr is defined
+  file:
+    state: directory
+    path: /etc/systemd/system/cockpit.socket.d/
+    recurse: true
+    owner: root
+    group: root
+    mode: 0755
+  notify: restart cockpit
+
+- name: create cockpit config file
+  when: cockpit_enabled and cockpit_bind_addr is defined
+  copy:
+    dest: /etc/systemd/system/cockpit.socket.d/listen.conf
+    content: |
+      [Socket]
+      ListenStream=
+      ListenStream={{ cockpit_bind_addr }}:9090
+      FreeBind=yes
+  notify: restart cockpit
+
+- name: Install dnf-automatic package
+  package:
+    name: dnf-automatic
+    state: present
+
+- name: Deploy dnf-automatic configuration file
+  template:
+    src: dnf-automatic.conf.j2
+    dest: /etc/dnf/automatic.conf
+
+- name: Start and enable systemd timer for dnf-automatic
+  systemd:
+    name: dnf-automatic-install.timer
+    state: started
+    enabled: true
+
+- name: set hostname
+  hostname:
+    name: "{{ inventory_hostname }}"
+    use: systemd
+
+#- name: ensure consistent net ifnames is enabled
+#  command: grubby --remove-args=net.ifnames=0 --update-kernel=ALL
+#  notify:
+#    - update grub
+#    - reboot and wait
+
+#- name: ensure consistent net ifnames is enabled
+#  command: grubby --args=net.ifnames=1 --update-kernel=ALL
+#  notify:
+#    - update grub
+#    - reboot and wait
+#
+#- name: remove /etc/udev/rules.d/70-persistent-net.rules
+#  file:
+#    path: /etc/udev/rules.d/70-persistent-net.rules
+#    state: absent
+#
+#- name: remove /etc/udev/rules.d/70-persistent-net-generator.rules
+#  file:
+#    src: /dev/null
+#    dest: /etc/udev/rules.d/70-persistent-net-generator.rules
+#    state: link

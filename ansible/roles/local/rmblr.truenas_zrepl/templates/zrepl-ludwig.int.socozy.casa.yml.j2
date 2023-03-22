@@ -1,0 +1,92 @@
+---
+# {{ ansible_managed }}
+jobs:
+#- name: push_socozy
+#  # push ludwig to mali
+#  type: push
+#  connect:
+#    type: tls
+#    address: "{{ socozy_public_host }}:3478"
+#    ca: /usr/local/etc/zrepl/mali.int.socozy.casa.crt
+#    cert: /usr/local/etc/zrepl/ludwig.int.socozy.casa.crt
+#    key:  /usr/local/etc/zrepl/ludwig.int.socozy.casa.key
+#    server_cn: "mali"
+#  filesystems:
+#    "tank<": true
+#    "tank/.system<": false
+#    "tank/replication": false
+#  snapshotting:
+#    type: periodic
+#    interval: 60m
+#    prefix: ludwigzrepl_
+#  pruning:
+#    keep_sender:
+#    - type: not_replicated
+#    - type: last_n
+#      count: 1
+#    - type: grid
+#      grid: 1x1h(keep=all) | 24x1h | 14x1d
+#      regex: "^ludwigzrepl_.*"
+#    # keep snapshots not created by zrepl
+#    - type: regex
+#      negate: true
+#      regex: "^ludwigzrepl_.*"
+#    keep_receiver:
+#    - type: grid
+#      grid: 1x1h(keep=all) | 24x1h | 35x1d | 6x30d | 2x365d
+#      regex: "^ludwigzrepl_.*"
+#    # keep snapshots not created by zrepl
+#    - type: regex
+#      negate: true
+#      regex: "^ludwigzrepl_.*"
+
+- name: pull_socozy
+  # pull mali to ludwig
+  type: pull
+  connect:
+    type: tls
+    address: "{{ socozy_public_host }}:3478"
+    ca: /usr/local/etc/zrepl/mali.int.socozy.casa.crt
+    cert: /usr/local/etc/zrepl/ludwig.int.socozy.casa.crt
+    key:  /usr/local/etc/zrepl/ludwig.int.socozy.casa.key
+    server_cn: "mali"
+  recv:
+    properties:
+      override:
+        mountpoint: none
+        canmount: off
+        readonly: on
+    placeholder:
+      encryption: inherit
+  root_fs: "tank/replication/mali"
+  interval: 10m
+  pruning:
+    keep_sender:
+    - type: not_replicated
+    - type: last_n
+      count: 1
+    - type: grid
+      grid: 1x1h(keep=all) | 24x1h | 14x1d
+      regex: "^zrepl_.*"
+    # keep snapshots not created by zrepl
+    - type: regex
+      negate: true
+      regex: "^zrepl_.*"
+    keep_receiver:
+    - type: grid
+      grid: 1x1h(keep=all) | 24x1h | 35x1d | 6x30d | 2x365d
+      regex: "^zrepl_.*"
+    # keep snapshots not created by zrepl
+    - type: regex
+      negate: true
+      regex: "^zrepl_.*"
+  replication:
+    concurrency:
+      steps: 16
+      size_estimates: 16
+
+global:
+  monitoring:
+    - type: prometheus
+      listen: ':9811'
+      listen_freebind: true # optional, default false

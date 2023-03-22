@@ -1,0 +1,6 @@
+---
+- ansible.builtin.include_tasks: container-post-systemd.yml
+  when: container_pod is not defined
+
+- ansible.builtin.include_tasks: pod-post-systemd.yml
+  when: container_pod is defined

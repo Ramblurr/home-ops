@@ -1,0 +1,9 @@
+#!/bin/vbash
+{{ ansible_managed | comment }}
+
+{% for key in ssh_public_keys %}
+{% set key_parts = key.split(' ') %}
+{% set key_name = (key_parts[2] | replace(":", "-") | replace(".", "-") | replace(" ", "-")) %}
+set system login user vyos authentication public-keys {{ key_name }} key '{{ key_parts[1] }}'
+set system login user vyos authentication public-keys {{ key_name }} type '{{ key_parts[0] }}'
+{% endfor %}

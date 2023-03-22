@@ -1,0 +1,25 @@
+---
+- name: configure interfaces
+  ansible.builtin.template:
+    src: "network.interfaces.j2"
+    dest: /etc/network/interfaces
+    owner: root
+    group: root
+    mode: 0644
+    backup: true
+
+- file:
+    path: /etc/network/interfaces.testing
+    state: absent
+
+- name: ensure proper ip in /etc/hosts
+  ansible.builtin.lineinfile:
+    dest: /etc/hosts
+    line: "{{ ip_address_data }} {{ inventory_hostname }} {{ proxmox_nodename }}"
+    regexp: "^.*{{ proxmox_nodename }}.*$"
+    mode: 0644
+    owner: root
+    group: root
+    backup: true
+
+...

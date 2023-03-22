@@ -1,0 +1,204 @@
+---
+- set_fact:
+    container_volumes_state: absent
+  when: container_down | bool
+
+- set_fact:
+    container_remove: true
+  when: container_down | bool
+
+- name: create logrotate for traefik
+  copy:
+    dest: /etc/logrotate.d/traefik
+    owner: root
+    group: root
+    mode: 0644
+    content: |
+      {{ service_logs_dir }}/*.log {
+          size 10M
+          rotate 3
+          create 0640 root root
+          missingok
+          notifempty
+          postrotate
+              /usr/bin/podman kill --signal USR1 {{ container_name }}
+          endscript
+      }
+- name: ensure traefik dirs
+  tags: mount
+  file:
+    path: "{{ item }}"
+    owner: "{{ traefik_owner }}"
+    group: "{{ traefik_group }}"
+    mode: 0760
+    state: directory
+  loop: "{{ service_dirs }}"
+
+- name: Prevent backups of transient dirs
+  ansible.builtin.file:
+    path: "{{ item  }}"
+    state: touch
+    owner: "{{ traefik_owner }}"
+    group: "{{ traefik_group }}"
+    mode: 0640
+    access_time: preserve
+    modification_time: preserve
+  loop:
+    - "{{ service_logs_dir }}/.nobackup"
+
+- name: create cloudflare secrets
+  copy:
+    content: "{{ item.value }}"
+    dest: "{{ item.path }}"
+    owner: "{{ traefik_owner }}"
+    group: "{{ traefik_group }}"
+    mode: 0600
+  no_log: true
+  loop:
+    - path: "{{ service_conf_dir }}/cf-dns-token"
+      value: "{{ cloudflare_dns_edit_token }}"
+    - path: "{{ service_conf_dir }}/cf-zone-token"
+      value: "{{ cloudflare_zone_read_token }}"
+
+- name: traefik config
+  template:
+    src: traefik-conf.yml.j2
+    dest: "{{ service_conf_dir }}/traefik.yml"
+    owner: "{{ traefik_owner }}"
+    group: "{{ traefik_group }}"
+    mode: 0600
+
+- name: traefik api config
+  template:
+    src: traefik-api.yml.j2
+    dest: "{{ service_conf_dir }}/dynamic/traefik-api.yml"
+    owner: "{{ traefik_owner }}"
+    group: "{{ traefik_group }}"
+    mode: 0600
+
+- name: secret
+  containers.podman.podman_secret:
+    state: present
+    name: cf-dns-token
+    force: true
+    data: "{{ cloudflare_dns_edit_token }}"
+
+- name: secret
+  containers.podman.podman_secret:
+    state: present
+    name: cf-zone-token
+    force: true
+    data: "{{ cloudflare_zone_read_token }}"
+
+- name: pod info
+  containers.podman.podman_pod_info:
+    name: "{{ container_name }}"
+  register: pod_info
+
+- set_fact:
+    pod_exists: "{{ (pod_info.pods | length) > 0 }}"
+
+- name: stop pod
+  when: container_recreate and pod_exists
+  containers.podman.podman_pod:
+    name: "{{ container_name }}"
+    state: stopped
+
+- name: remove pod
+  when: container_recreate or container_remove
+  containers.podman.podman_pod:
+    name: "{{ container_name }}"
+    state: absent
+
+- name: pod
+  when: container_state == "started" and not container_remove
+  containers.podman.podman_pod:
+    name: "{{ container_name }}"
+    infra_name: "{{ container_name }}-infra"
+    state: created
+    publish:
+      - 8080:8080/tcp
+      - 8000:8000/tcp
+      - 8443:8443/tcp
+      - 8448:8448/tcp
+      - 80:80/tcp
+      - 443:443/tcp
+      - "{{ redis_bind_ip }}:6379:6379/tcp"
+    network: "{{ container_podman_network }}"
+    hostname: "{{ traefik_fqdn }}"
+
+- name: container traefik
+  when: container_state == "started" and not container_remove
+  containers.podman.podman_container:
+    name: "{{ container_name }}-traefik"
+    pod: "{{ container_name }}"
+    image: docker.io/traefik:v2.9
+    state: created
+    recreate: "{{ container_recreate }}"
+    labels:
+      io.containers.autoupdate: registry
+    secrets:
+      - cf-zone-token
+      - cf-dns-token
+    volume:
+      - "{{ service_conf_dir }}:/etc/traefik/:z"
+      - "{{ service_logs_dir }}:/var/log/traefik/:Z"
+      - "{{ service_data_dir }}:/data/:Z"
+    env:
+      CF_DNS_API_TOKEN_FILE: /run/secrets/cf-dns-token
+      CF_ZONE_API_TOKEN_FILE: /run/secrets/cf-zone-token
+
+- name: container redis
+  when: container_state == "started" and not container_remove
+  containers.podman.podman_container:
+    name: "{{ container_name }}-redis"
+    pod: "{{ container_name }}"
+    image: docker.io/library/redis:7
+    state: created
+    recreate: "{{ container_recreate }}"
+    labels:
+      io.containers.autoupdate: registry
+    volume:
+      - "{{ service_redis_dir }}:/data:z"
+    command: [--save, 60, 1, --notify-keyspace-events, AKE]
+
+#- name: generate systemd pod
+#  when: container_state == "started" and not container_remove
+#  containers.podman.podman_pod:
+#    name: "{{ container_name }}"
+#    state: started
+#    generate_systemd:
+#      new: true
+#      restart_policy: on-failure
+#      path: /usr/local/lib/systemd/system
+
+# manually creating these as containers.podman.podman_pod's generate_systemd was not
+# producing the individual container service files for some reason
+- name: generate pod systemd (manually)
+  when: not container_remove
+  ansible.builtin.command:
+    cmd: "podman generate systemd --files --name --new {{ container_name }}"
+    chdir: /usr/local/lib/systemd/system
+
+- name: ensure traefik starts after redis
+  when: not container_remove
+  ansible.builtin.lineinfile:
+    path: /usr/local/lib/systemd/system/container-{{ container_name }}-traefik.service
+    insertafter: ^After=.*$
+    line: "After={{ container_name }}-redis.service"
+  notify: reload systemd daemon
+
+- name: ensure systemd
+  when: not container_remove
+  ansible.builtin.systemd:
+    name: pod-{{ container_name }}.service
+    state: "{{ container_state }}"
+    enabled: "{{ container_state == 'started' }}"
+    daemon_reload: true
+
+- name: ensure systemd removed
+  when: container_remove
+  ansible.builtin.file:
+    state: absent
+    path: /usr/local/lib/systemd/system/pod-{{ container_name }}.service
+  notify: reload systemd daemon

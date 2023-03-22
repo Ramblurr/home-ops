@@ -1,0 +1,5 @@
+---
+borg_provisioner_enabled: true
+borg_provisioner_client_pubkeys: "{{ ssh_public_keys }}"
+with_admin_tools: false
+...

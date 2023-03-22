@@ -1,0 +1,41 @@
+lxc_root_password: ENC[AES256_GCM,data:Ve7YtgR7MZyic61OEa+6yfGbDUl8vhlnpZma4FrW,iv:I/2aH9jNQ5W/NINrCKp9W63IXPB8+JFaOjCiZOo5PyY=,tag:+u3+swLNkgJnOYMX18uHKQ==,type:str]
+sops:
+    kms: []
+    gcp_kms: []
+    azure_kv: []
+    hc_vault: []
+    age:
+        - recipient: age15j42dspmmwprjau6l48xp05d97s8ml5s3tjxrfwvm37tvuynssuqtsevkj
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBjUXFRMmFuNEdjUWIwcHVp
+            d2FlTzdBc3ZyWmNaNEE5OUdWclBCajd6YmpjCkpVY3FXaUR4cVdQdDA1QnNZb3lY
+            R2RrczYwV0VtZE15c3FVc0xuejgyQ00KLS0tIGN4Z1VyMStnZ1R5T0l2L0tEV1Zv
+            MWhNQ3RVTmhsWllrL2h5Wld2a0x4QncKDiY/1m5EwQTxPLsZ6OYN/LgvpFLElCtY
+            899fagLFrAZrxMFpQnB3/gLpqA0Q8Gfh6NHdJZYMEvLA3BguQ/phQg==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2021-08-18T08:12:44Z"
+    mac: ENC[AES256_GCM,data:rjlJVn31PnwDQeILWCCq9gx3kjeLr4r1Yarn2q0BLAzOSoLgU/inWoyCTEdCRbUStSovhnglQkeir5+wcFp+k3rb+C/WSsT3G5CMrGnTXhePJGF81LkbgyBLn4Tpwx9f13J5e5PxgDAaAjtTWxh7ZHjo2kZgOuxzwkmX+2bDSbA=,iv:WOee+KbyHZOh5l65FTYvWcA6z7DQ0ptxl2buz13j4MQ=,tag:gUMkTA+9WYl22XWPWMHkZw==,type:str]
+    pgp:
+        - created_at: "2021-08-18T08:09:58Z"
+          enc: |-
+            -----BEGIN PGP MESSAGE-----
+
+            wcFMAz/c2vn977oWARAAYCzOnDxSshaiWywKdiaiwcyCUhlsnubP8sNkj/Ptm3/4
+            dwetKaAomr+xeIo8ZwQNy1SPKnNRcQD2ZAG7ECg+PMqbalPISdsvkyCiQiQ0YHXL
+            VJhh1BcLTTTEu6UHzPUkXyueg3iIHcl/jPS+siyk6/G5lE2ZRsoEK0yKwUkxP5Oa
+            4Vlq16BdNleYN93puReLfQ2CnedPKhlzYX4hl8S4rR8nFh1LUNjty7hHZ1SX6y4L
+            oa2r4wPXhVrsk1arifFFQbvze9krXBq/QEk+Rg3tsDB7LN/YgItgasbVjFSH3Wzz
+            lQNwV5wxVeIRdgEVs8ewbh1Ot4NV9PODiKENACaLJAt2SrU+wwxPLWZTS7I+vQK3
+            u9zP4LsOVQVQyaAM+3lXQJBmHAa4HpQJHY10kqQMCunt1Z96OzuQVZy1a9h38Wkp
+            y9J0mq5MylIZTWy1DnHnw2BoJkHTcbrYphepvrurF0OnGH+ds9KdmaFr/ilKlHMA
+            bq2qTQpSoxALDMHVqI9j+Nr5Ft+ODP1gkvQCxxsvuE4jvf3T/5/QeB3hMOtvWXP3
+            VmdmAR3bfE82NxVfCdFr0/P1P3DIXWY7TGLtCvsqHRR8t8sSA/DFFuOnUy94C3cc
+            sbBsMm2luOGt9qojQAyLfiILhFeAWGYXuWWAjEUvnrwSM2W9JS0qtoecpnO1CqbS
+            5gHtkQeCWndFUAvMXTVxfTlH2SeXAJDtpT7kVApm46m+6Oa29SAo8zTA5bhYXXYk
+            EWwB8+BtteCpix3A8830juXkHzzIrxHvjgKZ16vYkOvXmeIKRRixAA==
+            =BZOS
+            -----END PGP MESSAGE-----
+          fp: 978C4D08058BA26EB97CB51820782DBCACFAACDA
+    unencrypted_suffix: _unencrypted
+    version: 3.6.1

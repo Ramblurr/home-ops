@@ -1,0 +1,19 @@
+---
+- name: Removing Known Host
+  ansible.builtin.debug:
+    msg: "removing {{ item }}"
+
+- name: lookup ip address
+  ansible.builtin.set_fact:
+    host_ip: "{{ lookup('community.general.dig', item)}}"
+
+- name: remove known hosts
+  become: false
+  delegate_to: localhost
+  ansible.builtin.command: ssh-keygen -R {{ item }}
+
+- name: remove known hosts ip
+  become: false
+  delegate_to: localhost
+  ansible.builtin.command: ssh-keygen -R {{ host_ip }}
+...

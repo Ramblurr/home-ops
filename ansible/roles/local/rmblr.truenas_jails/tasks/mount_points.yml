@@ -1,0 +1,37 @@
+---
+- name: list existing mounts
+  command: iocage fstab --list --header {{ jail.name }}
+  register: existing_mounts_raw
+  changed_when: false
+
+- name: generate mount params
+  set_fact:
+    existing_mounts: "{{ existing_mounts_raw.stdout | replace('\t',' ')  }}"
+    expected_mount: '.*{{ jail_mountpoint.src }} /mnt/tank/iocage/jails/{{ jail.name }}/root{{ jail_mountpoint.dest }}.*'
+
+- name: check mount exists
+  set_fact:
+    mount_exists: "{{ existing_mounts | regex_search(expected_mount, multiline=True) }}"
+
+- debug:
+    var: existing_mounts
+
+- debug:
+    var: expected_mount
+
+- debug:
+    var: mount_exists
+
+- name: Create mount point
+  block:
+    - name: Create src mount point if necessary
+      file:
+        state: directory
+        path: "{{ jail_mountpoint.src }}"
+
+    - name: Create dest mount point if necessary
+      command: iocage exec {{ jail.name }} mkdir -p {{ jail_mountpoint.dest }}
+
+    - name: Add mount to fstab
+      command: iocage fstab -a {{ jail.name }} {{ jail_mountpoint.src }} {{ jail_mountpoint.dest }} nullfs rw 0 0
+  when: not mount_exists

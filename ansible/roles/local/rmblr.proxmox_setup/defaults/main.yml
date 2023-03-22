@@ -1,0 +1,20 @@
+---
+proxmox_upgrade_enabled: false
+proxmox_acme_enabled: false
+proxmox_wireguard_enabled: false
+proxmox_setup_network_interfaces_enabled: false
+proxmox_borg_enabled: false
+nag_force_install: false
+letsencrypt_directory: https://acme-v02.api.letsencrypt.org/directory
+proxmox_pveproxy_ciphers: ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256
+
+proxmox_zfs_encryption_enabled: false
+proxmox_zfs_encrypted_guest_storage: local-enc-zfs
+proxmox_zfs_encrypted_guest_dataset: rpool/data/encrypted
+
+proxmox_ipv6_enabled: false
+proxmox_wifi_enabled: false
+proxmox_bluetooth_enabled: false
+
+proxmox_ceph_enabled: false
+proxmox_ceph_version: quincy

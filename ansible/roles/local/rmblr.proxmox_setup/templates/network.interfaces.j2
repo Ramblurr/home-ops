@@ -1,0 +1,47 @@
+{{ ansible_managed | ansible.builtin.comment }}
+auto lo
+iface lo inet loopback
+
+auto {{ proxmox_10gbe_iface }}
+iface {{ proxmox_10gbe_iface }} inet manual
+    mtu 9000
+
+auto {{ proxmox_10gbe_iface }}
+iface {{ proxmox_10gbe_iface }} inet manual
+    ovs_type OVSPort
+    ovs_bridge vmbr0
+    ovs_mtu 9000
+    ovs_options vlan_mode=native-untagged
+
+auto data
+iface data inet static
+    address {{ ip_address_data }}/{{ cidr_data_suffix }}
+    ovs_type OVSIntPort
+    ovs_bridge vmbr0
+    ovs_mtu 9000
+    ovs_options tag={{ data_id }}
+
+auto vmbr0
+iface vmbr0 inet manual
+    ovs_type OVSBridge
+    ovs_ports {{ proxmox_10gbe_iface }} data
+    ovs_mtu 9000
+
+auto {{ proxmox_1gbe_iface }}
+iface {{ proxmox_1gbe_iface }} inet manual
+    ovs_type OVSPort
+    ovs_bridge vmbr1
+    ovs_options vlan_mode=native-untagged
+
+auto vmbr1
+iface vmbr1 inet manual
+    ovs_type OVSBridge
+    ovs_ports {{ proxmox_1gbe_iface }} mgmt
+
+auto mgmt
+iface mgmt inet static
+    address {{ ip_address_mgmt }}/{{ cidr_mgmt_suffix }}
+    gateway {{ mgmt_gateway }}
+    ovs_type OVSIntPort
+    ovs_bridge vmbr1
+    ovs_options tag={{ mgmt_id }}

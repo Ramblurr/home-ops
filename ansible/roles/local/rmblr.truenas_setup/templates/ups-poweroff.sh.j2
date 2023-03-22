@@ -1,0 +1,9 @@
+#!/bin/bash
+
+UDR="{{ truenas_udr_ssh_host }}"
+
+# Triggered when charge state of UPS is critical
+ssh -o StrictHostKeyChecking=accept-new $UDR ubnt-systool poweroff
+
+# power myself off
+/sbin/poweroff

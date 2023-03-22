@@ -1,0 +1,28 @@
+---
+cluster_name: cluster-prod
+cluster_domain: cluster-prod.mgmt.socozy.casa
+cluster_id: 1
+cluster_ntp_server: time.cloudflare.com
+cluster_nameservers: "{{ local_nameservers | split (' ') }}"
+cluster_node_vlan_cidr_suffix: "{{ cidr_mgmt_suffix }}"
+cluster_node_vlan_gateway: "{{ mgmt_gateway }}"
+cluster_control_plane_nodes:
+  # ibnsina
+  - addr: 10.9.8.113
+  # mill
+  - addr: 10.9.8.114
+  # peirce
+  - addr: 10.9.8.115
+  # witt
+  - addr: 10.9.8.116
+  # debord
+  - addr: 10.9.8.117
+cluster_apiserver_addr: 10.9.8.112
+cluster_net_pod_cidr: 10.42.0.0/16
+cluster_net_svc_cidr: 10.43.0.0/16
+cluster_net_lb_ext_cidr: 10.11.10.0/23
+cluster_net_lb_ext_usable_range: "{{  ( cluster_net_lb_ext_cidr | ansible.utils.usable_range).usable_ips[1:-1] }}"
+cluster_net_lb_ext_range: "{{ cluster_net_lb_ext_usable_range | first }}-{{ cluster_net_lb_ext_usable_range | last }}"
+cluster_svc_ingress_addr: 10.11.10.1
+cluster_svc_k8s_gateway_dns_addr: 10.11.10.53
+cluster_default_storage_class: ceph-block-testpool

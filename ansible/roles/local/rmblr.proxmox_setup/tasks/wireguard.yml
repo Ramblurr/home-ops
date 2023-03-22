@@ -1,0 +1,19 @@
+---
+# note: assumes backports is enabled (needed on buster)
+- name: install packages
+  package:
+    name:
+      - pve-headers
+      - wireguard
+    state: present
+- name: load wireguard module
+  community.general.modprobe:
+    name: wireguard
+    state: present
+- name: load wireguard module on boot
+  copy:
+    content: >-
+        wireguard
+    dest: /etc/modules-load.d/wireguard.conf
+    owner: root
+    group: root

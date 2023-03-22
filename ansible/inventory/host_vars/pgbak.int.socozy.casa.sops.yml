@@ -1,0 +1,41 @@
+postgresql_admin_password: ENC[AES256_GCM,data:6w6a/rVYUK82TsO1A7HKBe/VPpPCE1yeGcr6wtTxUf3ub4FaSlehgE+rtiZBpu883BKIROV1r11vpGRETLvfEw==,iv:d9nyBcVzIp5gDlNKGicnnaDHL0hi/ZQmKUZhrSFPPug=,tag:8UL0ascvo/4lGf8v7kRRfQ==,type:str]
+sops:
+    kms: []
+    gcp_kms: []
+    azure_kv: []
+    hc_vault: []
+    age:
+        - recipient: age15j42dspmmwprjau6l48xp05d97s8ml5s3tjxrfwvm37tvuynssuqtsevkj
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSA0R1RWUm5TK1EyZmVPTGJF
+            V3dxa1BTeWpLcXpoTGFkL0xpR2dXRGNNSVVVCkpvc3d1dGZrSmxEL01kSnU3U1lW
+            ZE1uQ2UxTjFPN0N5b2k5Rno4S3hvUjAKLS0tIG5BN0hTeXdoMHNYMW04aGhyM01j
+            Zk05SEIvS1BYMDZHRWc0Yno5VFJOQVkKU5Awa+/zj+Odt7fv8htkcZZ+9NHAFPTb
+            MXq0Mm1oEsUVqadGkkmYGy9djEh927PqgD2ZHSIPvKzt1RFjM1RT7g==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2021-08-18T08:13:00Z"
+    mac: ENC[AES256_GCM,data:r5NrOwC4ahwCcdC+ZYdSIOFh2jxp7tjZp68Mx963jxmQWkxAydEkcOgKJCFO6ZPOPhfuv7uwqjXL0/RCBglIgISi75vrT2zxucRGgIUgUToDo8G4FfXzW+oHiYygGJ93gqoaMUtC3dzLwWqtzd4HN+udFDgnee9DB8Gug5vRLk8=,iv:Bm7dokjjrstGywz7iMGJ7jklRdkuVYeJ36XgU4mUlNE=,tag:3oT6lfXTRGkobnh3LbKy+Q==,type:str]
+    pgp:
+        - created_at: "2021-08-18T08:10:14Z"
+          enc: |-
+            -----BEGIN PGP MESSAGE-----
+
+            wcFMAz/c2vn977oWARAAq6KrVayJarYS0AlqK6HI3lsJ6YrWNR/Y+UshJVDsL0Fw
+            G2Ye7VngYzfCWC+Ga3xZZ62HIoQr7sAhmPm49dx/Lv0P83Wp6HyfPMeHXwYXumpD
+            aZw5ctsrpWgPZ8p+ePc0oxOc2OW69iVfHvfJyEhVw277pHRTbWpBForBMu7EtfhY
+            y/+nVMTb+giAjdw90N9HYMfRDq6YFYSzBEf6HvzL117TUh349uDQVesB7v67AnXg
+            max1igWnfNjB0LgeKbnEw60aihNvm9fpFJV0Hjuma1yftA6hIiqTQILvoU3w26ql
+            t8KJMfmlvWyr+uTVVcmcbJ7NseL7doDbRNXNQzffqXGjql4a0qxih8wxwcmk23Az
+            dMIniJIOopD6fuM2OdclNM1ng9X2EHN5eir4EFg0gMqo2lbgzpStQM2A/ghy/UmE
+            d3859Tkp75iaSgSrJ9hYFc0ReIza36vPmkb3RLYWDHXB54TKXkWn3Y6Pvlf8tM+E
+            JE+qnNPJMrlO4gsKvwMs5O47zr7HWvVyQy69g0jBzqtLhAhXf3TV6/g69ksDIvXl
+            bGlGs9uFoOBeWBTIZb0sb4GALfdiw3kqM/lDeTFuyQErRKBjlhRKH14WkEu3gM84
+            GHALpnZ2VVxyX5/+W13VwscTGkrQZamiAj2YjodBVsWqkp7nbphNuLoZdvxnoFbS
+            5gFaeyZbFIhX0OLroSD+tg+XLJaRAK3NzzSy0V2BVAPGxqRG6g2jskpDeyn67pVS
+            InuCglwvRmcOmxDaSipIFg/kotSzJUTR5iabgiLh8MQiueJoZUmnAA==
+            =VhYg
+            -----END PGP MESSAGE-----
+          fp: 978C4D08058BA26EB97CB51820782DBCACFAACDA
+    unencrypted_suffix: _unencrypted
+    version: 3.6.1

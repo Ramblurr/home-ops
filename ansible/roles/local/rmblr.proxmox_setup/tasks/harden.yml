@@ -1,0 +1,41 @@
+---
+- name: enforce strong tls cipher
+  ansible.builtin.lineinfile:
+    create: true
+    backup: true
+    mode: 0644
+    owner: root
+    group: root
+    path: /etc/default/pveproxy
+    regexp: "^CIPHERS=.*"
+    line: 'CIPHERS="{{ proxmox_pveproxy_ciphers }}"'
+  notify:
+    - restart pveproxy.service
+
+- name: enforce cipher order
+  ansible.builtin.lineinfile:
+    create: true
+    backup: true
+    mode: 0644
+    owner: root
+    group: root
+    path: /etc/default/pveproxy
+    regexp: '^HONOR_CIPHER_ORDER=.*'
+    line: 'HONOR_CIPHER_ORDER="1"'
+  notify:
+    - restart pveproxy.service
+
+
+- name: enable debian-nonfree
+  ansible.builtin.apt_repository:
+    repo: deb http://deb.debian.org/debian {{ ansible_distribution_release }} non-free
+    state: present
+
+- name: enable debian-nonfree security
+  ansible.builtin.apt_repository:
+    repo: deb http://deb.debian.org/debian-security/ {{ ansible_distribution_release }}-security non-free
+    state: present
+
+- name: install cpu microcode
+  ansible.builtin.import_role:
+    name: rmblr.cpu_microcode

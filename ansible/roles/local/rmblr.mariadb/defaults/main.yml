@@ -1,0 +1,11 @@
+---
+mariadb_packages:
+  - mariadb105-server
+  - mariadb105-client
+mariadb_data_dir: /var/db/mysql
+mariadb_user: mysql
+mariadb_group: mysql
+mysql_root_password: changeme
+mysql_remove_test_database: true
+mysql_remove_anonymous_users: true
+mysql_remove_remote_root: true

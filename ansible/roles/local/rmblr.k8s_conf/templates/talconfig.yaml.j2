@@ -1,0 +1,126 @@
+#jinja2: lstrip_blocks: "true", trim_blocks: "false"
+---
+# {{ ansible_managed }}
+clusterName: "{{ cluster_name }}"
+talosVersion: v1.3.6
+kubernetesVersion: v1.26.0
+endpoint: https://{{ cluster_apiserver_addr }}:6443
+allowSchedulingOnMasters: true
+cniConfig:
+  name: none
+additionalApiServerCertSans:
+  - {{ cluster_apiserver_addr }}
+  - {{ cluster_domain }}
+additionalMachineCertSans:
+  - {{ cluster_apiserver_addr }}
+  - {{ cluster_domain }}
+clusterPodNets:
+  - {{ cluster_net_pod_cidr }}
+clusterSvcNets:
+  - {{ cluster_net_svc_cidr }}
+nodes:
+{% for node in cluster_control_plane_nodes |  dict2items %}
+  - hostname: cp{{ node.value.idx }}.{{ cluster_domain }}
+    disableSearchDomain: true
+    ipAddress: {{ node.value.ifaces.mgmt.ip }}
+    installDiskSelector:
+      size: ">= 99GB"
+    controlPlane: true
+    nodeLabels:
+      peering: "yes"
+    kernelModules:
+      - name: br_netfilter
+        parameters:
+          - nf_conntrack_max=131072
+    nameservers:
+{% for ns in cluster_nameservers %}
+    - {{ ns }}
+{% endfor %}
+    networkInterfaces:
+{% for iface in node.value.ifaces | dict2items %}
+      - interface: eth{{ loop.index - 1 }}
+        dhcp: true
+        mtu: {{ iface.value.mtu }}
+{% if iface.key == "mgmt" %}
+        vip:
+          ip: {{ cluster_apiserver_addr }}
+{% endif %}
+{% if iface.value.routeMetric is defined %}
+        dhcpOptions:
+          routeMetric: {{ iface.value.routeMetric }}
+{% endif %}
+{% endfor %}
+{% endfor %}
+
+controlPlane:
+  patches:
+    #- |-
+    #  - op: add
+    #    path: /cluster/apiServer/admissionControl/0/configuration/exemptions
+    #    value:
+    #      namespaces:
+    #        - kube-system
+    #        - cilium-test
+    #        - rook-ceph
+    - |-
+      cluster:
+        allowSchedulingOnMasters: true
+        apiServer:
+          admissionControl: []
+          extraArgs:
+            feature-gates: MixedProtocolLBService=true,EphemeralContainers=True
+        controllerManager:
+          extraArgs:
+            feature-gates: MixedProtocolLBService=true,EphemeralContainers=True
+        discovery:
+          registries:
+            service:
+              disabled: true
+        proxy:
+          disabled: true
+          extraArgs:
+            feature-gates: MixedProtocolLBService=true,EphemeralContainers=True
+        scheduler:
+          extraArgs:
+            feature-gates: MixedProtocolLBService=true,EphemeralContainers=True
+      machine:
+        files:
+          - content: |
+              [plugins]
+                [plugins."io.containerd.grpc.v1.cri"]
+                  enable_unprivileged_ports = true
+                  enable_unprivileged_icmp = true
+            path: /etc/cri/conf.d/20-customization.part
+            op: create
+        sysctls:
+          fs.inotify.max_user_watches: "1048576"
+          fs.inotify.max_user_instances: "8192"
+        time:
+          disabled: false
+          servers:
+            - "{{ cluster_ntp_server }}"
+        network:
+          extraHostEntries:
+            - ip: {{ cluster_apiserver_addr }}
+              aliases:
+                - {{ cluster_domain }}
+        kubelet:
+          extraArgs:
+            feature-gates: GracefulNodeShutdown=true,MixedProtocolLBService=true,CronJobTimeZone=true
+            rotate-server-certificates: "false"
+            #rotate-server-certificates: "true"
+worker:
+  patches:
+    - |-
+      - op: add
+        path: /machine/kubelet/extraArgs
+        value:
+          feature-gates: GracefulNodeShutdown=false,MixedProtocolLBService=false,CronJobTimeZone=true
+          rotate-server-certificates: "false"
+          #rotate-server-certificates: "true"
+    - |-
+      machine:
+        time:
+          disabled: false
+          servers:
+            - "{{ cluster_ntp_server }}"

@@ -1,0 +1,192 @@
+---
+- ansible.builtin.import_role:
+    name: rmblr.service_pre
+
+- name: set container pod members
+  when: calibre_enabled
+  set_fact:
+    pod_members:
+      - web
+      - calibre
+
+- name: set container pod members
+  when: not calibre_enabled
+  set_fact:
+    pod_members:
+      - web
+
+- name: traefik service desktop gui
+  when: calibre_enabled
+  ansible.builtin.import_role:
+    name: rmblr.traefik_redis_service
+  vars:
+    service_fqdn: "calibre-desktop.int.socozy.casa"
+    service_upstream: "http://{{ inventory_hostname }}:{{ calibre_desktop_port }}"
+    service_entrypoints_secure:
+      - web-internal-secure
+    service_basic_auth: "{{ calibre_settings.desktop_htpasswd }}"
+    service_extra_labels: "{{ service_extra_labels_calibre }}"
+
+- name: traefik service calibre webserver gui
+  when: calibre_enabled
+  ansible.builtin.import_role:
+    name: rmblr.traefik_redis_service
+  vars:
+    service_fqdn: "{{ calibre_fqdn }}"
+    service_upstream: "http://{{ inventory_hostname }}:{{ calibre_webserver_port }}"
+    service_entrypoints_secure:
+      - web-internal-secure
+    service_extra_labels: "{{ service_extra_labels_calibre }}"
+
+- name: calibre-web traefik service
+  ansible.builtin.import_role:
+    name: rmblr.traefik_redis_service
+  vars:
+    service_upstream: "http://{{ inventory_hostname }}:{{ calibre_web_port }}"
+    service_entrypoints_secure:
+      - web-external-secure
+      - web-internal-secure
+
+    service_extra_labels: []
+
+- name: set publish ports
+  when: calibre_enabled
+  set_fact:
+    calibre_publish_ports:
+      - "{{ ip_address_mgmt }}:{{ calibre_desktop_port }}:8080"
+      - "{{ ip_address_mgmt }}:{{ calibre_webserver_port }}:8081"
+      - "{{ ip_address_mgmt }}:{{ calibre_web_port }}:8083"
+
+- name: set publish ports
+  when: not calibre_enabled
+  set_fact:
+    calibre_publish_ports:
+      - "{{ ip_address_mgmt }}:{{ calibre_web_port }}:8083"
+
+- name: pod
+  when: container_state == "started" and not container_remove
+  containers.podman.podman_pod:
+    name: "{{ container_name }}"
+    infra_name: "{{ container_name }}-infra"
+    state: created
+    network: "{{ container_podman_network }}"
+    hostname: "{{ service_fqdn }}"
+    publish: "{{ calibre_publish_ports }}"
+
+- name: secrets
+  when: calibre_enabled
+  containers.podman.podman_secret:
+    #state: "{{ (container_state == 'started') | ternary('present', 'absent') }}"
+    state: absent
+    name: "{{ item.name }}"
+    data: "{{ item.value }}"
+    force: true
+  no_log: true
+  loop:
+    - name: "{{ container_name }}-calibre-desktop-password"
+      value: "{{ calibre_settings.desktop_password }}"
+
+- name: calibre container created
+  when: container_state == "started" and not container_remove and calibre_enabled
+  containers.podman.podman_container:
+    name: "{{ container_name }}-calibre"
+    pod: "{{ container_name }}"
+    image: lscr.io/linuxserver/calibre:latest
+    state: created
+    recreate: "{{ container_recreate }}"
+    labels:
+      io.containers.autoupdate: registry
+    memory: 1024M
+    volume:
+      - "{{ calibreweb_base_volume_host_path }}:/books:rw"
+      - "{{ service_conf_dir_calibre }}:/config:Z"
+    env:
+      TZ: "Europe/Berlin"
+      PUID: "{{ container_vol_uid }}"
+      PGID: "{{ container_vol_uid }}"
+
+- name: Patch out the session protection
+  ansible.builtin.copy:
+    dest: "{{ service_cont_dir }}/patch-session-protection.sh"
+    owner: "{{ container_vol_user }}"
+    group: "{{ container_vol_user }}"
+    mode: 0755
+    content: |
+     #!/bin/bash
+     echo "**** patching calibre-web - removing session protection ****"
+
+     sed -i "/lm.session_protection = 'strong'/d" /app/calibre-web/cps/__init__.py
+     sed -i "/if not ub.check_user_session(current_user.id, flask_session.get('_id')) and 'opds' not in request.path:/d" /app/calibre-web/cps/admin.py
+     sed -i "/logout_user()/d" /app/calibre-web/cps/admin.py
+
+
+- name: calibre-web container created
+  when: container_state == "started" and not container_remove
+  containers.podman.podman_container:
+    name: "{{ container_name }}-web"
+    pod: "{{ container_name }}"
+    image: lscr.io/linuxserver/calibre-web:latest
+    state: created
+    recreate: "{{ container_recreate }}"
+    labels:
+      io.containers.autoupdate: registry
+    memory: 1024M
+    volume:
+      - "{{ service_cont_dir }}:/custom-cont-init.d:ro"
+      - "{{ service_conf_dir_calibre_web }}:/config:Z"
+      - "{{ calibreweb_base_volume_host_path }}:/books:ro"
+    env:
+      PUID: "{{ container_vol_uid }}"
+      PGID: "{{ container_vol_uid }}"
+      TZ: "Europe/Berlin"
+        #DOCKER_MODS: ghcr.io/linuxserver/mods:universal-calibre
+    healthcheck: "curl -fSs http://127.0.0.1:8083 || exit 1"
+    healthcheck_start_period: 500s
+    healthcheck_timeout: 10s
+    healthcheck_interval: 15s
+    healthcheck_retries: 5
+
+- name: generate pod systemd
+  containers.podman.podman_generate_systemd:
+    new: true
+    name: "{{ container_name }}"
+    dest: /usr/local/lib/systemd/system
+    no_header: true
+    restart_policy: always
+    restart_sec: 10
+  when: not container_remove
+  notify: restart service
+
+- set_fact:
+    cw_container_service_d: /etc/systemd/system/container-{{ container_name }}-web.service.d
+
+- name: Create <service>.service.d directory
+  ansible.builtin.file:
+    path: "{{ cw_container_service_d }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  notify: reload systemd daemon
+
+- name: add systemd override
+  ansible.builtin.copy:
+    content: |
+      [Service]
+      TimeoutStartSec=500
+    dest: "{{ cw_container_service_d }}/override.conf"
+    owner: root
+    group: root
+    mode: 0644
+  when: not container_remove
+  notify: reload systemd daemon
+
+- name: remove systemd override
+  ansible.builtin.file:
+    path: "{{ cw_container_service_d }}/override.conf"
+    state: absent
+  when: container_remove
+  notify: reload systemd daemon
+
+- ansible.builtin.import_role:
+    name: rmblr.service_post

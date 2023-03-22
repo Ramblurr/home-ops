@@ -1,0 +1,5 @@
+---
+- name: prepare jail
+  ansible.builtin.import_role:
+    name: rmblr.freenas_jail_lifecycle
+...

@@ -1,0 +1,5 @@
+---
+prox_image_storage: local-zfs
+prox_snippets_dir: /mnt/pve/mali/snippets
+prox_snippets_storage: mali
+...
