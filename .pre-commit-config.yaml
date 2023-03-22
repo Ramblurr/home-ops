@@ -19,19 +19,26 @@ repos:
     rev: v4.4.0
     hooks:
       - id: trailing-whitespace
+        exclude: iot/
       - id: end-of-file-fixer
+        exclude: iot/
       - id: fix-byte-order-marker
+        exclude: iot/
       - id: mixed-line-ending
+        exclude: iot/
       - id: check-added-large-files
         args: [--maxkb=2048]
       - id: check-merge-conflict
       - id: check-executables-have-shebangs
+        exclude: iot/
 
   - repo: https://github.com/Lucas-C/pre-commit-hooks
     rev: v1.4.2
     hooks:
       - id: remove-crlf
+        exclude: iot/
       - id: remove-tabs
+        exclude: iot/
 
   - repo: https://github.com/sirosen/texthooks
     rev: 0.5.0
