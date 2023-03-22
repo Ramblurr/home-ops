@@ -96,6 +96,10 @@ set firewall name iot-lan rule 1 description 'Rule: accept_dns'
 set firewall name iot-lan rule 1 destination port 'domain,domain-s'
 set firewall name iot-lan rule 1 destination group address-group 'local-dns-servers'
 set firewall name iot-lan rule 1 protocol 'tcp_udp'
+set firewall name iot-lan rule 2 action 'accept'
+set firewall name iot-lan rule 2 description 'Rule: accept_icmp_to_dns'
+set firewall name iot-lan rule 2 protocol 'icmp'
+set firewall name iot-lan rule 2 destination group address-group 'local-dns-servers'
 
 # From IOT to LOCAL
 set firewall name iot-local default-action 'drop'
@@ -171,6 +175,10 @@ set firewall name iot-primary rule 4 description 'Rule: accept_octoprint_to_home
 set firewall name iot-primary rule 4 destination group address-group 'homeassistant'
 set firewall name iot-primary rule 4 protocol 'tcp_udp'
 set firewall name iot-primary rule 4 source group address-group 'octoprint'
+set firewall name iot-primary rule 5 action 'accept'
+set firewall name iot-primary rule 5 description 'Rule: accept_icmp_to_dns'
+set firewall name iot-primary rule 5 protocol 'icmp'
+set firewall name iot-primary rule 5 destination group address-group 'local-dns-servers'
 
 
 # From IOT to DATA
@@ -204,6 +212,11 @@ set firewall name not-lan rule 1 description 'Rule: accept_dns'
 set firewall name not-lan rule 1 destination port 'domain,domain-s'
 set firewall name not-lan rule 1 destination group address-group 'local-dns-servers'
 set firewall name not-lan rule 1 protocol 'tcp_udp'
+
+set firewall name not-lan rule 2 action 'accept'
+set firewall name not-lan rule 2 description 'Rule: accept_icmp_to_dns'
+set firewall name not-lan rule 2 protocol 'icmp'
+set firewall name not-lan rule 2 destination group address-group 'local-dns-servers'
 
 # From NOT to LOCAL
 set firewall name not-local default-action 'drop'
@@ -257,6 +270,10 @@ set firewall name not-primary rule 2 description 'Rule: accept_dns'
 set firewall name not-primary rule 2 destination port 'domain,domain-s'
 set firewall name not-primary rule 2 destination group address-group 'local-dns-servers'
 set firewall name not-primary rule 2 protocol 'tcp_udp'
+set firewall name not-primary rule 3 action 'accept'
+set firewall name not-primary rule 3 description 'Rule: accept_icmp_to_dns'
+set firewall name not-primary rule 3 protocol 'icmp'
+set firewall name not-primary rule 3 destination group address-group 'local-dns-servers'
 
 # From NOT to DATA
 set firewall name not-data default-action 'drop'
