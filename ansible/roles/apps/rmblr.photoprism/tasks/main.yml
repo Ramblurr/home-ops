@@ -50,7 +50,7 @@
   containers.podman.podman_container:
     name: "{{ container_name }}-mariadb"
     pod: "{{ container_name }}"
-    image: docker.io/library/mariadb:10.6
+    image: docker.io/library/mariadb:10.11
     command: mysqld --innodb-buffer-pool-size=512M --transaction-isolation=READ-COMMITTED --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --max-connections=512 --innodb-rollback-on-timeout=OFF --innodb-lock-wait-timeout=120
     state: present
     recreate: "{{ container_recreate }}"
