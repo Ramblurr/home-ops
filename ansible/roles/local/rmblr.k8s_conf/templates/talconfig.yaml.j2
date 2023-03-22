@@ -34,7 +34,7 @@ nodes:
           - nf_conntrack_max=131072
     nameservers:
 {% for ns in cluster_nameservers %}
-    - {{ ns }}
+      - {{ ns }}
 {% endfor %}
     networkInterfaces:
 {% for iface in node.value.ifaces | dict2items %}
@@ -69,6 +69,8 @@ controlPlane:
           admissionControl: []
           extraArgs:
             feature-gates: MixedProtocolLBService=true,EphemeralContainers=True
+        etcd:
+          subnet: "{{ cluster_node_cidr }}"
         controllerManager:
           extraArgs:
             feature-gates: MixedProtocolLBService=true,EphemeralContainers=True
@@ -105,6 +107,10 @@ controlPlane:
               aliases:
                 - {{ cluster_domain }}
         kubelet:
+          nodeIP:
+            validSubnets:
+             - {{ cluster_node_cidr }}
+
           extraArgs:
             feature-gates: GracefulNodeShutdown=true,MixedProtocolLBService=true,CronJobTimeZone=true
             rotate-server-certificates: "false"
