@@ -20,16 +20,8 @@ collections:
   - name: vyos.vyos
     version: 4.0.1
 roles:
-  - name: cchurch.admin-users
-    version: 0.8.6
   - name: m3nu.ansible_role_borgbackup
     version: v0.9.4
-  - name: geerlingguy.docker
-    version: 6.0.3
-  - name: geerlingguy.pip
-    version: 2.0.0
-  - name: cloudalchemy.node_exporter
-    version: 2.0.0
   - name: rmblr.traefik_redis_service
     src: git+https://github.com/Ramblurr/ansible-role-traefik-redis-service.git
     version: main
