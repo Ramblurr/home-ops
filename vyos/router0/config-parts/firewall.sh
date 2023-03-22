@@ -50,9 +50,13 @@ set firewall group address-group esphome address '10.8.60.28'
 set firewall group address-group esphome address '10.8.60.29'
 set firewall group address-group esphome address '10.8.60.30'
 set firewall group address-group esphome address '10.8.60.45'
-set firewall group address-group wled address '10.8.60.46'
-set firewall group address-group wled address '10.8.60.32'
-set firewall group address-group wled address '10.8.60.47'
+set firewall group address-group esphome address '10.8.60.48'
+set firewall group address-group wled address '10.8.60.46' # wled-childroom-nightlight
+set firewall group address-group wled address '10.8.60.32' # wled-office
+set firewall group address-group wled address '10.8.60.47' # wled-fairylights
+set firewall group address-group wled address '10.8.60.102' # wled-gr-rgb
+
+set firewall group address-group octoprint address '10.8.50.52'
 
 set firewall group address-group k8s_api address '10.5.0.2'
 
@@ -134,8 +138,8 @@ set firewall group port-group roon port '9330-9339'
 set firewall group port-group roon port '30000-30010'
 set firewall group port-group roon port '42839'
 set firewall group port-group roon port '9093'
-set firewall group port-group shelly-coiot port '5683'
-set firewall group port-group shelly-api port '80'
+set firewall group port-group shelly port '5683'
+set firewall group port-group shelly port '80'
 set firewall group port-group esphome-api port '6053'
 set firewall group port-group wled-api port '80'
 set firewall group port-group roon-arc port '33399'
@@ -146,3 +150,7 @@ set firewall group port-group truenas-samba port '137'
 set firewall group port-group truenas-samba port '138'
 set firewall group port-group truenas-samba port '139'
 set firewall group port-group truenas-samba port '445'
+set firewall group port-group octoprint port '80'
+set firewall group port-group octoprint port '5000'
+set firewall group port-group octoprint port '443'
+set firewall group port-group homeassistant port '8123'

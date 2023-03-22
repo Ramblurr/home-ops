@@ -139,8 +139,9 @@ set firewall name iot-mgmt description 'From IOT to MGMT'
 set firewall name iot-mgmt enable-default-log
 
 # From IOT to SERVICES
-set firewall name iot-services default-action 'accept'
+set firewall name iot-services default-action 'accept' # TODO: drop
 set firewall name iot-services description 'From IOT to SERVICES'
+#set firewall name iot-services enable-default-log
 set firewall name iot-services rule 1 action 'accept'
 set firewall name iot-services rule 1 description 'Rule: accept_dns'
 set firewall name iot-services rule 1 destination port 'domain,domain-s'
@@ -165,6 +166,12 @@ set firewall name iot-primary rule 3 description 'Rule: accept_roon'
 set firewall name iot-primary rule 3 destination group address-group 'roon'
 set firewall name iot-primary rule 3 destination group port-group 'roon'
 set firewall name iot-primary rule 3 protocol 'tcp_udp'
+set firewall name iot-primary rule 4 action 'accept'
+set firewall name iot-primary rule 4 description 'Rule: accept_octoprint_to_homeassistant'
+set firewall name iot-primary rule 4 destination group address-group 'homeassistant'
+set firewall name iot-primary rule 4 protocol 'tcp_udp'
+set firewall name iot-primary rule 4 source group address-group 'octoprint'
+
 
 # From IOT to DATA
 set firewall name iot-data default-action 'drop'
@@ -229,6 +236,7 @@ set firewall name not-mgmt enable-default-log
 # From NOT to SERVICES
 set firewall name not-services default-action 'drop'
 set firewall name not-services description 'From NOT to SERVICES'
+set firewall name not-services enable-default-log
 set firewall name not-services rule 1 action 'accept'
 set firewall name not-services rule 1 description 'Rule: accept_dns'
 set firewall name not-services rule 1 destination port 'domain,domain-s'
@@ -241,9 +249,9 @@ set firewall name not-primary enable-default-log
 set firewall name not-primary rule 1 action 'accept'
 set firewall name not-primary rule 1 description 'Rule: accept_shelly_to_homeassistant'
 set firewall name not-primary rule 1 destination group address-group 'homeassistant'
-set firewall name not-primary rule 1 destination group port-group 'shelly-coiot'
+set firewall name not-primary rule 1 destination group port-group 'shelly'
 set firewall name not-primary rule 1 source group address-group 'shellys'
-set firewall name not-primary rule 1 protocol 'udp'
+set firewall name not-primary rule 1 protocol 'tcp_udp'
 set firewall name not-primary rule 2 action 'accept'
 set firewall name not-primary rule 2 description 'Rule: accept_dns'
 set firewall name not-primary rule 2 destination port 'domain,domain-s'
@@ -269,6 +277,15 @@ set firewall name lan-iot default-action 'drop'
 set firewall name lan-iot description 'From LAN to IOT'
 set firewall name lan-iot enable-default-log
 
+set firewall name lan-iot rule 1 action 'accept'
+set firewall name lan-iot rule 1 description 'Rule: accept_icmp'
+set firewall name lan-iot rule 1 protocol 'icmp'
+set firewall name lan-iot rule 2 action 'accept'
+set firewall name lan-iot rule 2 description 'Rule: accept_admin_to_octoprint'
+set firewall name lan-iot rule 2 destination group port-group 'octoprint'
+set firewall name lan-iot rule 2 protocol 'tcp_udp'
+set firewall name lan-iot rule 2 source group address-group 'admin'
+
 # From LAN to NOT
 set firewall name lan-not default-action 'drop'
 set firewall name lan-not description 'From LAN to NOT'
@@ -290,15 +307,14 @@ set firewall name lan-not rule 2 source group address-group 'admin'
 
 set firewall name lan-not rule 3 action 'accept'
 set firewall name lan-not rule 3 description 'Rule: accept_admin_to_shelly'
-set firewall name lan-not rule 3 destination group port-group 'shelly-api'
+set firewall name lan-not rule 3 destination group port-group 'shelly'
 set firewall name lan-not rule 3 destination group address-group 'shellys'
-set firewall name lan-not rule 3 protocol 'tcp'
+set firewall name lan-not rule 3 protocol 'tcp_udp'
 set firewall name lan-not rule 3 source group address-group 'admin'
 
 set firewall name lan-not rule 4 action 'accept'
 set firewall name lan-not rule 4 description 'Rule: accept_icmp'
 set firewall name lan-not rule 4 protocol 'icmp'
-set firewall name lan-not rule 4 source group address-group 'admin'
 
 # From LAN to LOCAL
 set firewall name lan-local default-action 'drop'
@@ -346,6 +362,11 @@ set firewall name lan-primary rule 1 destination port 'domain,domain-s'
 set firewall name lan-primary rule 1 destination group address-group 'local-dns-servers'
 set firewall name lan-primary rule 1 protocol 'tcp_udp'
 
+set firewall name lan-primary rule 2 action 'accept'
+set firewall name lan-primary rule 2 description 'Rule: accept_to_homeassistant'
+set firewall name lan-primary rule 2 destination group port-group 'homeassistant'
+set firewall name lan-primary rule 2 protocol 'tcp_udp'
+
 # From LAN to DATA
 set firewall name lan-data default-action 'drop'
 set firewall name lan-data description 'From LAN to DATA'
@@ -382,11 +403,18 @@ set firewall name local-iot rule 4 description 'Rule: accept_discovery_from_roon
 set firewall name local-iot rule 4 destination group port-group 'roon'
 set firewall name local-iot rule 4 protocol 'tcp_udp'
 set firewall name local-iot rule 4 source group address-group roon
+set firewall name local-iot rule 5 action 'accept'
+set firewall name local-iot rule 5 description 'Rule: accept_icmp'
+set firewall name local-iot rule 5 protocol 'icmp'
 
 # From LOCAL to NOT
 set firewall name local-not default-action 'drop'
 set firewall name local-not description 'From LOCAL to NOT'
 set firewall name local-not enable-default-log
+
+set firewall name local-not rule 1 action 'accept'
+set firewall name local-not rule 1 description 'Rule: accept_icmp'
+set firewall name local-not rule 1 protocol 'icmp'
 
 # From LOCAL to LAN
 set firewall name local-lan default-action 'drop'
@@ -398,6 +426,10 @@ set firewall name local-lan rule 1 description 'Rule: accept_dns'
 set firewall name local-lan rule 1 destination port 'domain,domain-s'
 set firewall name local-lan rule 1 destination group address-group 'local-dns-servers'
 set firewall name local-lan rule 1 protocol 'tcp_udp'
+
+set firewall name local-lan rule 2 action 'accept'
+set firewall name local-lan rule 2 description 'Rule: accept_icmp'
+set firewall name local-lan rule 2 protocol 'icmp'
 
 
 # From LOCAL to MGMT
@@ -412,6 +444,14 @@ set firewall name local-mgmt rule 2 action 'accept'
 set firewall name local-mgmt rule 2 description 'Rule: accept_dns'
 set firewall name local-mgmt rule 2 destination port 'domain,domain-s'
 set firewall name local-mgmt rule 2 protocol 'tcp_udp'
+set firewall name local-mgmt rule 3 action 'accept'
+set firewall name local-mgmt rule 3 description 'Rule: accept_icmp'
+set firewall name local-mgmt rule 3 protocol 'icmp'
+set firewall name local-mgmt rule 4 action 'accept'
+set firewall name local-mgmt rule 4 description 'Rule: accept_ssh'
+set firewall name local-mgmt rule 4 destination port 'ssh'
+set firewall name local-mgmt rule 4 protocol 'tcp'
+
 
 # From LOCAL to SERVICES
 set firewall name local-services default-action 'accept'
@@ -482,6 +522,7 @@ set firewall name mgmt-not rule 1 protocol 'icmp'
 # From MGMT to LAN
 set firewall name mgmt-lan default-action 'drop'
 set firewall name mgmt-lan description 'From MGMT to LAN'
+set firewall name mgmt-lan enable-default-log
 
 set firewall name mgmt-lan rule 1 action 'accept'
 set firewall name mgmt-lan rule 1 description 'Rule: accept_icmp'
@@ -533,6 +574,7 @@ set firewall name mgmt-services rule 1 protocol 'tcp_udp'
 # From MGMT to PRIMARY
 set firewall name mgmt-primary default-action 'drop'
 set firewall name mgmt-primary description 'From MGMT to PRIMARY'
+set firewall name mgmt-primary enable-default-log
 set firewall name mgmt-primary rule 1 action 'accept'
 set firewall name mgmt-primary rule 1 description 'Rule: accept_icmp'
 set firewall name mgmt-primary rule 1 protocol 'icmp'
@@ -629,6 +671,7 @@ set firewall name primary-guest enable-default-log
 # From PRIMARY to IOT
 set firewall name primary-iot default-action 'accept'
 set firewall name primary-iot description 'From PRIMARY to IOT'
+set firewall name primary-iot enable-default-log
 set firewall name primary-iot rule 1 action 'accept'
 set firewall name primary-iot rule 1 description 'Rule: accept_icmp'
 set firewall name primary-iot rule 1 protocol 'icmp'
@@ -642,24 +685,31 @@ set firewall name primary-iot rule 3 description 'Rule: accept_roon'
 set firewall name primary-iot rule 3 destination group port-group 'roon'
 set firewall name primary-iot rule 3 protocol 'tcp_udp'
 set firewall name primary-iot rule 3 source group address-group 'roon'
+set firewall name primary-iot rule 4 action 'accept'
+set firewall name primary-iot rule 4 description 'Rule: accept_homeassistant_to_octoprint'
+set firewall name primary-iot rule 4 destination group port-group 'octoprint'
+set firewall name primary-iot rule 4 destination group address-group 'octoprint'
+set firewall name primary-iot rule 4 protocol 'tcp_udp'
+set firewall name primary-iot rule 4 source group address-group 'homeassistant'
 
 # From PRIMARY to NOT
 set firewall name primary-not default-action 'accept'
 set firewall name primary-not description 'From PRIMARY to NOT'
+set firewall name primary-not enable-default-log
 set firewall name primary-not rule 1 action 'accept'
 set firewall name primary-not rule 1 description 'Rule: accept_icmp'
 set firewall name primary-not rule 1 protocol 'icmp'
 set firewall name primary-not rule 2 action 'accept'
 set firewall name primary-not rule 2 description 'Rule: accept_homeassistant_to_shelly'
-set firewall name primary-not rule 2 destination group port-group 'shelly-api'
+set firewall name primary-not rule 2 destination group port-group 'shelly'
 set firewall name primary-not rule 2 destination group address-group 'shellys'
-set firewall name primary-not rule 2 protocol 'tcp'
+set firewall name primary-not rule 2 protocol 'tcp_udp'
 set firewall name primary-not rule 2 source group address-group 'homeassistant'
 set firewall name primary-not rule 3 action 'accept'
 set firewall name primary-not rule 3 description 'Rule: accept_homeassistant_to_esphome'
 set firewall name primary-not rule 3 destination group port-group 'esphome-api'
 set firewall name primary-not rule 3 destination group address-group 'esphome'
-set firewall name primary-not rule 3 protocol 'tcp'
+set firewall name primary-not rule 3 protocol 'tcp_udp'
 set firewall name primary-not rule 3 source group address-group 'homeassistant'
 set firewall name primary-not rule 4 action 'accept'
 set firewall name primary-not rule 4 description 'Rule: accept_homeassistant_to_wled'
@@ -671,6 +721,7 @@ set firewall name primary-not rule 4 source group address-group 'homeassistant'
 # From PRIMARY to LAN
 set firewall name primary-lan default-action 'accept'
 set firewall name primary-lan description 'From PRIMARY to LAN'
+set firewall name primary-lan enable-default-log
 
 set firewall name primary-lan rule 1 action 'accept'
 set firewall name primary-lan rule 1 description 'Rule: accept_dns'
@@ -724,6 +775,7 @@ set firewall name primary-local rule 9 source group address-group 'roon'
 # From PRIMARY to MGMT
 set firewall name primary-mgmt default-action 'drop'
 set firewall name primary-mgmt description 'From PRIMARY to MGMT'
+set firewall name primary-mgmt enable-default-log
 set firewall name primary-mgmt rule 1 action 'accept'
 set firewall name primary-mgmt rule 1 description 'Rule: accept_icmp'
 set firewall name primary-mgmt rule 1 protocol 'icmp'
@@ -739,6 +791,7 @@ set firewall name primary-services rule 1 protocol 'tcp_udp'
 # From PRIMARY to DATA
 set firewall name primary-data default-action 'drop'
 set firewall name primary-data description 'From PRIMARY to DATA'
+set firewall name primary-data enable-default-log
 set firewall name primary-data rule 1 action 'accept'
 set firewall name primary-data rule 1 description 'Rule: accept_icmp'
 set firewall name primary-data rule 1 protocol 'icmp'
@@ -801,6 +854,7 @@ set firewall name data-mgmt enable-default-log
 # From DATA to SERVICES
 set firewall name data-services default-action 'accept'
 set firewall name data-services description 'From DATA to SERVICES'
+set firewall name data-services enable-default-log
 set firewall name data-services rule 1 action 'accept'
 set firewall name data-services rule 1 description 'Rule: accept_dns'
 set firewall name data-services rule 1 destination port 'domain,domain-s'
