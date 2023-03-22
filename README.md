@@ -13,6 +13,8 @@ _... managed by Flux, Renovate and GitHub Actions_ :robot:
 [![k8s@home](https://img.shields.io/badge/-%20k8s%40home-blue?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/k8s-at-home)
 [![selfhosted.show](https://img.shields.io/badge/-%20self--hosted-orange?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/U3Gvr54VRp)
 [![Kubernetes](https://img.shields.io/badge/v1.26-blue?style=for-the-badge&logo=kubernetes&logoColor=white)](https://www.talos.dev/)
+[![Documentation](https://img.shields.io/badge/documentation-green?&style=for-the-badge)][0]
+
 
 </div>
 <br><br>
@@ -23,7 +25,7 @@ _... managed by Flux, Renovate and GitHub Actions_ :robot:
 
 ### 📖 Docs
 
-The documentation that goes along with this repo can be found [over here](https://ramblurr.github.io/notes/).
+The documentation that goes along with this repo can be found [in my HomeOps docs][0].
 
 ---
 
@@ -39,3 +41,5 @@ And also a big thanks to the great community from the [Self-Hosted Podcast](http
 ### 🔏 License
 
 Different parts of this repo have different licenses. Refer to the LICENSE file in the various subdirectories.
+
+[0]: https://notes.binaryelysium.com/HomeOps/
