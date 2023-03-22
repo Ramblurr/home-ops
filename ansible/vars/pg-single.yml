@@ -1,0 +1,19 @@
+---
+postgresql_version: 13
+postgresql_data_dir: "/var/db/postgres/data{{ postgresql_version }}"
+postgresql_backup_mount: /mnt/backup
+postgresql_backup_dir: "{{ postgresql_backup_mount }}"
+postgresql_data_tank: /mnt/tank/databases/pg
+postgresql_wal_tank: /mnt/tank/databases/pg/pg_wal
+postgresql_tls_key_file: "{{ pki_certs_dir }}/pg.{{ subdomain_mgmt }}-key.pem"
+postgresql_tls_cert_file: "{{ pki_certs_dir }}/pg.{{ subdomain_mgmt }}.pem"
+pgbackrest_enabled: true
+pgbackrest_stanza: pg_standalone
+postgresql_restoring: false
+postgresql_allowed_cidrs:
+  - "{{ cidr_mgmt }}"
+  - "{{ cidr_int_old }}"
+  - "{{ cidr_aquinas }}"
+
+postgresql_pg_hba_extra:
+  - host all             synapse_ol             {{ hostvars['matrix.int.socozy.casa']['ip_address_prim'] }}/32              scram-sha-256

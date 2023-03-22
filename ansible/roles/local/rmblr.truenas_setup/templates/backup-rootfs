@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# {{ ansible_managed }}
+set -euo pipefail
+
+HC="{{ hc_check.uuid }}"
+DEST="{{ truenas_rootfs_backup_dest }}"
+
+if [[ ! -z "$HC" ]]; then
+  curl -sS -m 10 --retry 5 "https://hc-ping.com/$HC/start"
+fi
+
+
+mkdir -p "$DEST/usr/local"
+
+# backup /etc
+rsync -avr /etc "$DEST"
+
+# backup /usr/local/etc
+rsync --exclude "site-packages" --exclude "python3.*" \
+        -avr \
+        /usr/local/etc \
+        "$DEST/usr/local"
+
+# backup /root
+rsync -avr /root "$DEST"
+
+if [[ ! -z "$HC" ]]; then
+  curl -sS -m 10 --retry 5 "https://hc-ping.com/$HC"
+fi

@@ -1,0 +1,86 @@
+---
+- name: "go version string"
+  ansible.builtin.set_fact:
+    go_version_string: "go{{ go_version }}"
+  changed_when: false
+
+- name: "look for existing go installation"
+  ansible.builtin.stat:
+    path: "{{ go_root }}/bin/go"
+  register: go_binary
+  failed_when: false
+
+- name: "getting go version information"
+  ansible.builtin.command: "{{ go_root }}/bin/go version"
+  environment:
+    GOPATH: "{{ go_path }}"
+    GOROOT: "{{ go_root }}"
+  register: current_go_version
+  changed_when: false
+  failed_when: false
+
+- name: "define expected version output"
+  ansible.builtin.set_fact:
+    expected_go_version_output: "go version {{ go_version_string }} linux/arm"
+  when: expected_go_version_output is not defined
+
+- name: install golang
+  when: (not go_binary.stat.exists) or
+    (expected_go_version_output|string not in current_go_version.stdout|default(''))
+  ansible.builtin.shell: |
+    mkdir -p /usr/local/go
+    curl -SLO "https://storage.googleapis.com/golang/go{{ go_version }}.linux-armv6l.tar.gz"
+    echo "0dae30385e3564a557dac7f12a63eedc73543e6da0f6017990e214ce8cc8797c  go{{ go_version }}.linux-armv6l.tar.gz" | sha256sum -c -
+    tar -xzf "go{{ go_version }}.linux-armv6l.tar.gz" -C /usr/local/go --strip-components=1
+    rm -f go{{ go_version }}.linux-armv6l.tar.gz
+    mkdir -p "{{ go_path }}/src" "{{ go_path }}/bin" && chmod -R 777 "{{ go_path }}"
+
+- name: verify go version
+  ansible.builtin.command: "{{ go_root }}/bin/go version"
+  environment:
+    GOROOT: "{{ go_root }}"
+    GOPATH: "{{ go_path }}"
+  register: go_version_output
+  failed_when: >
+    (go_version_string not in go_version_output.stdout) and
+    ("go version devel" not in go_version_output.stdout)
+  changed_when: false
+
+- name: checkout coredns
+  ansible.builtin.shell: >-
+    {{ go_root }}/bin/go mod download github.com/coredns/coredns@v{{ coredns_version }}
+  environment:
+    GOROOT: "{{ go_root }}"
+    GOPATH: "{{ go_path }}"
+    CGO_ENABLED: "0"
+    GO111MODULE: "on"
+
+- name: coredns plugins
+  ansible.builtin.copy:
+    content: "{{ coredns_plugins }}"
+    dest: >-
+      {{ go_path }}/pkg/mod/github.com/coredns/coredns@v{{ coredns_version }}/plugin.cfg
+    owner: root
+    group: root
+    mode: 0644
+
+- name: compile coredns
+  ansible.builtin.shell: |
+    {{ go_root }}/bin/go generate coredns.go
+    {{ go_root }}/bin/go build -mod=mod -o=/usr/local/bin/coredns
+  args:
+    chdir: >-
+      {{ go_path }}/pkg/mod/github.com/coredns/coredns@v{{ coredns_version }}
+  environment:
+    PATH: >-
+      {{ go_root }}/bin:{{ ansible_env.PATH }}
+    GOROOT: "{{ go_root }}"
+    GOPATH: "{{ go_path }}"
+    CGO_ENABLED: "0"
+    GO111MODULE: "on"
+
+- name: copy coredns binary locally
+  ansible.builtin.fetch:
+    src: /usr/local/bin/coredns
+    dest: "{{ rmblr_ansible_workdir }}/coredns-{{ coredns_version }}-arm"
+...

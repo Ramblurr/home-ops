@@ -1,0 +1,47 @@
+---
+coredns_version: 1.10.0
+go_version: 1.19.1
+go_root: /usr/local/go
+go_path: /home/pi/go
+# the order of the plugins is very important
+# the order here (at compile time) is the order of
+# execution at runtime
+coredns_plugins: |
+  records:github.com/coredns/records
+  metadata:metadata
+  cancel:cancel
+  tls:tls
+  reload:reload
+  nsid:nsid
+  bufsize:bufsize
+  root:root
+  bind:bind
+  debug:debug
+  trace:trace
+  ready:ready
+  health:health
+  pprof:pprof
+  prometheus:metrics
+  errors:errors
+  log:log
+  acl:acl
+  any:any
+  loadbalance:loadbalance
+  cache:cache
+  rewrite:rewrite
+  dnssec:dnssec
+  autopath:autopath
+  template:template
+  transfer:transfer
+  hosts:hosts
+  file:file
+  auto:auto
+  secondary:secondary
+  etcd:etcd
+  loop:loop
+  alternate:github.com/coredns/alternate
+  forward:forward
+  erratic:erratic
+  whoami:whoami
+  sign:sign
+...

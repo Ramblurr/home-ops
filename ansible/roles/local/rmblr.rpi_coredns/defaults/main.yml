@@ -1,0 +1,38 @@
+---
+coredns_config_dir: "{{ playbook_dir }}/../dns"
+coredns_version: 1.8.4
+coredns_local_path: coredns-{{ coredns_version }}-arm/dns-builder/usr/local/bin/coredns
+coredns_systemd_unit: |
+  [Unit]
+  Description=CoreDNS DNS server
+  Documentation=https://coredns.io
+  After=network-online.target
+  StartLimitIntervalSec=0
+
+  [Service]
+  Environment="DNS_IP={{ ansible_host }}"
+  Environment="DNS_DHCP_RESOLVER={{ dns_local_dhcp_resolver }}"
+  Environment="DNS_UPSTREAM1={{ upstream_nameserver1 }}"
+  Environment="DNS_UPSTREAM2={{ upstream_nameserver2 }}"
+  Environment="DNS_UPSTREAM_NAME={{ upstream_nameserver_http }}"
+  PermissionsStartOnly=true
+  LimitNOFILE=1048576
+  LimitNPROC=512
+  CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+  AmbientCapabilities=CAP_NET_BIND_SERVICE
+  NoNewPrivileges=true
+  User=coredns
+  WorkingDirectory=/etc/coredns
+  ExecStart=/usr/bin/coredns -conf=/etc/coredns/Corefile
+  ExecReload=/bin/kill -SIGUSR1 $MAINPID
+  Restart=always
+  # restart every 1 second
+  RestartSec=1
+
+  [Install]
+  WantedBy=multi-user.target
+coredns_tmpfiles: >-
+  d /var/lib/coredns 0755 coredns coredns -
+coredns_sysusers: >-
+  u coredns - "CoreDNS is a DNS server that chains plugins" /var/lib/coredns
+...

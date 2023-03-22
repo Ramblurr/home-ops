@@ -1,0 +1,23 @@
+---
+- name: add distribution-specific variables
+  include_vars: "../defaults/{{ ansible_distribution }}.yml"
+
+- name: add backports repository
+  ansible.builtin.apt_repository:
+    repo: deb {{ backports_uri }} {{ backports_components }}
+    state: "{{ backports_state }}"
+
+- name: pinning backports priority
+  ansible.builtin.template:
+    src: "001-ansible-role-debian-backports.j2"
+    dest: "/etc/apt/preferences.d/001-ansible-role-debian-backports"
+    owner: root
+    group: root
+    mode: 0644
+  when: backports_priority_enabled
+
+- name: cleanup backports priority if needed
+  ansible.builtin.file:
+    path: "/etc/apt/preferences.d/001-ansible-role-debian-backports"
+    state: absent
+  when: not backports_priority_enabled

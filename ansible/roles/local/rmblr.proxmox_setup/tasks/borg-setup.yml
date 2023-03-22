@@ -1,0 +1,55 @@
+---
+- name: create healthcheck for borg backup
+  community.healthchecksio.checks:
+    state: present
+    api_key: "{{ healthchecksio_api_key }}"
+    name: "Proxmox node {{ inventory_hostname }}"
+    unique: ["name"]
+    tags: ["ansible"]
+    desc: "(ansible managed)"
+    # 2 days
+    timeout: 172800
+  register: hc_check_config
+
+- name: set borgmatic_hooks
+  ansible.builtin.set_fact:
+    borgmatic_hooks: |
+      {
+        'healthchecks': 'https://hc-ping.com/{{ hc_check_config.uuid }}'
+      }
+
+- name: run borgmatic role
+  ansible.builtin.import_role:
+    name: m3nu.ansible_role_borgbackup
+
+- name: install ssh key
+  ansible.builtin.copy:
+    dest: /root/.ssh/id_borgbackup
+    mode: 0600
+    owner: root
+    group: root
+    content: |
+      {{ borg_ssh_key_private }}
+- name: install known host
+  ansible.builtin.known_hosts:
+    path: /etc/ssh/ssh_known_hosts
+    key: "{{ item.key }}"
+    name: "{{ item.name }}"
+    state: present
+  loop: "{{ borgbackup_host_known_hosts }}"
+
+- name: check borgmatic
+  ansible.builtin.shell: borgmatic -v 1 info
+  register: borg_check
+  failed_when: "'does not exist' not in borg_check.stdout and borg_check.rc != 0"
+
+- name: debug borg check
+  ansible.builtin.debug:
+    var: borg_check
+
+- name: check borgmatic
+  ansible.builtin.shell: borgmatic -v 1 init --encryption repokey-blake2
+  register: borg_init
+  when: borg_check.rc == 1
+
+...

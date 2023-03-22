@@ -1,0 +1,5 @@
+---
+cluster_talos_dir: "{{ playbook_dir }}/../talos/{{ cluster_name }}"
+cluster_k8s_dir: "{{ playbook_dir }}/../k8s/{{ cluster_name }}"
+cluster_terraform_dir: "{{ playbook_dir }}/../terraform/{{ cluster_name }}"
+...

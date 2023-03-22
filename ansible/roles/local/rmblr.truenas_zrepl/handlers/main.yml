@@ -1,0 +1,7 @@
+---
+- name: restart zrepl
+  ansible.builtin.service:
+    name: zrepl
+    state: restarted
+    enabled: true
+...

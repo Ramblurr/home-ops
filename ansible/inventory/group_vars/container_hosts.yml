@@ -1,0 +1,13 @@
+---
+service_local_data_dir: /srv/services
+container_nfs_base: /mnt/tank2/services
+container_podman_network: services
+nfs_host: "{{ mali_data_domain }}"
+nfs_host_inventory: "{{ mali_domain }}"
+cifs_host: "{{ mali_data_domain }}"
+
+container_node_mgmt_ip: "{{ container_node_mgmt_cidr | ansible.netcommon.ipaddr('address') }}"
+container_node_prim_ip: "{{ container_node_prim_cidr | ansible.netcommon.ipaddr('address') }}"
+cloudflare_public_ip: "{{ socozy_public_ip }}"
+traefik_redis_bind_ip: "{{ container_node_mgmt_ip }}"
+traefik_redis_bind_port: 6379

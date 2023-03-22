@@ -1,0 +1,194 @@
+---
+- name: install popularity-contest
+  ansible.builtin.apt:
+    state: present
+    name: popularity-contest
+    install_recommends: false
+- name: enable popularity-contest
+  ansible.builtin.lineinfile:
+    dest: /etc/popularity-contest.conf
+    regexp: ^PARTICIPATE=
+    line: PARTICIPATE="yes"
+
+- name: ensure utf8 locale exists
+  community.general.locale_gen:
+    name: en_US.UTF-8
+    state: present
+
+- name: install sysusers
+  ansible.builtin.copy:
+    content: "{{ coredns_sysusers }}"
+    dest: /usr/lib/sysusers.d/coredns-sysusers.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart sysusers
+
+- meta: flush_handlers
+
+- name: install coredns binary
+  ansible.builtin.copy:
+    src: >-
+      {{ coredns_local_path }}
+    dest: /usr/bin/coredns
+    owner: root
+    group: root
+    mode: 0755
+  notify: restart coredns
+
+- name: install service unit
+  ansible.builtin.copy:
+    content: "{{ coredns_systemd_unit }}"
+    dest: /usr/lib/systemd/system/coredns.service
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart coredns
+
+- name: install tmpfiles
+  ansible.builtin.copy:
+    content: "{{ coredns_tmpfiles }}"
+    dest: /usr/lib/tmpfiles.d/coredns-tmpfiles.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart coredns
+
+- name: create config location
+  ansible.builtin.file:
+    state: directory
+    path: /etc/coredns
+    owner: root
+    group: coredns
+    mode: 0750
+  notify: restart coredns
+
+- name: install config
+  tags: [dns-config-only]
+  ansible.posix.synchronize:
+    src: >-
+      {{ coredns_config_dir }}/
+    dest: /etc/coredns
+    recursive: true
+    rsync_opts:
+      - "--perms"
+      - "--chown=root:coredns"
+      - "--exclude='*.sops'"
+      - "--chmod=D0750,F0644"
+  notify: reload coredns
+
+- name: decrypt zone1
+  tags: [dns-config-only]
+  set_fact:
+    zone1_data: "{{ lookup('community.sops.sops', coredns_config_dir +  '/zones/' + coredns_zone1_sops) }}"
+
+- name: decrypt zone2
+  tags: [dns-config-only]
+  set_fact:
+    zone2_data: "{{ lookup('community.sops.sops', coredns_config_dir +  '/zones/' + coredns_zone2_sops) }}"
+
+- debug:
+    var: zone1_data
+  tags: [dns-config-only]
+
+- name: copy zone1
+  tags: [dns-config-only]
+  ansible.builtin.copy:
+    content: "{{ zone1_data }}\n"
+    dest: /etc/coredns/zones/{{ coredns_zone1_name }}
+    owner: root
+    group: coredns
+    mode: 0650
+  notify: reload coredns
+
+- name: copy zone2
+  tags: [dns-config-only]
+  ansible.builtin.copy:
+    content: "{{ zone2_data }}\n"
+    dest: /etc/coredns/zones/{{ coredns_zone2_name }}
+    owner: root
+    group: coredns
+    mode: 0650
+  notify: reload coredns
+
+- name: add self to /etc/hosts
+  ansible.builtin.lineinfile:
+    dest: /etc/hosts
+    regexp: '.*{{ inventory_hostname }}$'
+    line: "{{ ansible_host }} {{ inventory_hostname }} "
+    state: present
+
+- name: set hostname
+  ansible.builtin.hostname:
+    name: >-
+      {{ inventory_hostname }}
+
+- name: disable resolveconf
+  # see: https://wiki.debian.org/resolv.conf
+  ansible.builtin.lineinfile:
+    path: /etc/resolvconf.conf
+    state: present
+    line: "resolvconf=NO"
+
+- name: prevent dhclient from modifying /etc/resolv.conf
+  # see: https://wiki.debian.org/resolv.conf
+  ansible.builtin.copy:
+    dest: /etc/dhcp/dhclient-enter-hooks.d/leave_my_resolv_conf_alone
+    content: |
+      make_resolv_conf() { :; }
+    mode: 0755
+  notify: restart dhcpcd
+
+- name: configure dns
+  ansible.builtin.copy:
+    dest: /etc/resolv.conf
+    mode: 0644
+    content: |
+      nameserver {{ upstream_nameserver1 }}
+      nameserver {{ upstream_nameserver2 }}
+  notify: restart dhcpcd
+
+- name: disable unnecessary services
+  ansible.builtin.systemd:
+    state: stopped
+    enabled: false
+    name: "{{ item }}"
+  tags: disable
+  with_items:
+    - hciuart
+    - bluetooth
+    - wpa_supplicant
+    - triggerhappy
+    - avahi-daemon
+  notify: restart dhcpcd
+
+- name: prevent dhcp from starting wpa_supplicant
+  tags: disable
+  ansible.builtin.lineinfile:
+    dest: /etc/dhcpcd.conf
+    regexp: '.*wpa_supplicant$'
+    line: "nohook wpa_supplicant"
+    state: present
+  notify: restart dhcpcd
+
+- name: blacklist hw modules we don't need
+  tags: disable
+  ansible.builtin.copy:
+    dest: /etc/modprobe.d/raspi-blacklist.conf
+    mode: 0644
+    owner: root
+    group: root
+    content: |
+      # WiFi
+      blacklist brcmfmac
+      blacklist brcmutil
+      # Bluetooth
+      blacklist btbcm
+      blacklist hci_uart
+      # Soundcard
+      blacklist snd_bcm2835
+      blacklist bcm2835_codec
+      blacklist bcm2835_isp
+      blacklist bcm2835_v4l2
+...

@@ -1,0 +1,16 @@
+---
+- name: start postgresql
+  service:
+    name: "{{ postgresql_service }}"
+    state: started
+
+- name: stop postgresql
+  service:
+    name: "{{ postgresql_service }}"
+    state: stopped
+
+
+- name: restart postgresql
+  service:
+    name: "{{ postgresql_service }}"
+    state: restarted

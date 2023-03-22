@@ -1,0 +1,9 @@
+---
+- name: Generate system config
+  ansible.builtin.template:
+    src: system-generated.sh.j2
+    dest: "{{ vyos_config_dir }}/config-parts/system-generated.sh"
+    owner: ramblurr
+    group: ramblurr
+    mode: 0760
+...

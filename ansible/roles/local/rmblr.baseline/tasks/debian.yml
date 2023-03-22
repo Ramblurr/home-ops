@@ -1,0 +1,97 @@
+---
+- name: Update APT package cache
+  apt:
+    update_cache: true
+  retries: 10
+  delay: 10
+  register: apt_result
+  until: apt_result is success
+
+- name: Upgrade APT to the latest packages
+  apt:
+    upgrade: safe
+  retries: 10
+  delay: 10
+  register: apt_result
+  until: apt_result is success
+
+- name: Install common packages
+  apt:
+    state: present
+    name:
+      - acl
+      - apt-transport-https
+      - autossh
+      - bash-completion
+      - bzip2
+      - curl
+      - debsums
+      - gawk
+      - htop
+      - iotop
+      - jq
+      - lnav
+      - locales
+      - lsb-release
+      - lsof
+      - make
+      - ncdu
+      - nfs-common
+      - p7zip-full
+      - python3-dev
+      - python3-pip
+      - rsync
+      - sudo
+      - unrar-free
+      - vim
+      - virtualenvwrapper
+      - vnstat
+      - wget
+      - zip
+      - apparmor-profiles
+      - apparmor-utils
+      - zsh
+      - kitty-terminfo
+- name: Install extra packages
+  apt:
+    state: present
+    name: "{{ extra_packages }}"
+
+- name: install popularity-contest
+  apt:
+    state: present
+    name: popularity-contest
+    install_recommends: false
+
+- name: enable popularity-contest
+  lineinfile:
+    dest: /etc/popularity-contest.conf
+    regexp: ^PARTICIPATE=
+    line: PARTICIPATE="yes"
+
+- name: Ensure ntp and tzdata packages are present
+  apt:
+    name:
+      - tzdata
+      - ntp
+    state: present
+
+- name: Set timezone
+  timezone:
+    name: "UTC"
+
+- name: Ensure ntp is running and enabled
+  service:
+    name: ntp
+    state: started
+    enabled: true
+
+- name: Ensure utf8 locale exists
+  locale_gen:
+    name: en_US.UTF-8
+    state: present
+
+
+- include_tasks: ssh.yml
+
+- include_tasks: autoupdate.yml

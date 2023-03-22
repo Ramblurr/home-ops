@@ -1,0 +1,158 @@
+---
+all:
+  children:
+    bsd:
+      children:
+        truenas:
+        jails:
+    centos:
+      vars:
+        ansible_user: admin
+      children:
+        container_hosts:
+    fedora:
+      vars:
+        ansible_user: fedora
+    debian:
+      vars:
+        ansible_user: debian
+      hosts:
+        matrix.int.socozy.casa:
+    ubuntu:
+      vars:
+        ansible_user: ubuntu
+    lxc:
+      vars:
+        ansible_user: root
+        security_ssh_permit_root_login: "yes"
+      children:
+        lxc_services:
+      hosts:
+        tailscale0.int.socozy.casa:
+        matrix.int.socozy.casa:
+          ip_address_prim: 10.9.4.28
+    lxc_services:
+      hosts:
+        photos-viki.lxc.socozy.casa:
+          ip_address_mgmt: 10.9.8.100
+        photos-casey.lxc.socozy.casa:
+          ip_address_mgmt: 10.9.8.101
+        books.lxc.socozy.casa:
+          ip_address_mgmt: 10.9.8.102
+        inventree.lxc.socozy.casa:
+          ip_address_mgmt: 10.9.8.111
+        nextcloud-sc.lxc.socozy.casa:
+          ip_address_mgmt: 10.9.8.103
+        nextcloud-ol.lxc.socozy.casa:
+          ip_address_mgmt: 10.9.8.104
+        invoiceninja.lxc.socozy.casa:
+          ip_address_mgmt: 10.9.8.105
+        paperless-ng.lxc.socozy.casa:
+          ip_address_mgmt: 10.9.8.107
+        grafana.lxc.socozy.casa:
+          ip_address_mgmt: 10.9.8.108
+          ip_address_prim: 10.9.4.35
+    proxmox_creds:
+      hosts:
+        localhost:
+      children:
+        proxmox:
+    proxmox:
+      hosts:
+        peirce.mgmt.socozy.casa:
+          ip_address_mgmt: 10.9.8.18
+          ip_address_data: 10.9.10.18
+          ip_address_prim: 10.9.4.16
+          proxmox_10gbe_iface: enp6s0
+          proxmox_1gbe_iface: eno1
+        ibnsina.mgmt.socozy.casa:
+          ip_address_mgmt: 10.9.8.16
+          ip_address_data: 10.9.10.16
+          ip_address_prim: 10.9.4.17
+          proxmox_10gbe_iface: enp6s0
+          proxmox_1gbe_iface: eno1
+        mill.mgmt.socozy.casa:
+          ip_address_mgmt: 10.9.8.13
+          ip_address_data: 10.9.10.13
+          ip_address_prim: 10.9.4.18
+          proxmox_10gbe_iface: enp6s0
+          proxmox_1gbe_iface: eno1
+        witt.mgmt.socozy.casa:
+          ip_address_mgmt: 10.9.8.11
+          ip_address_data: 10.9.10.11
+          proxmox_10gbe_iface: enp6s0
+          proxmox_1gbe_iface: eno1
+        debord.mgmt.socozy.casa:
+          ip_address_mgmt: 10.9.8.21
+          ip_address_data: 10.9.10.21
+          proxmox_10gbe_iface: enp4s0
+          proxmox_1gbe_iface: enp100s0
+    k8s:
+      hosts:
+        cluster-test.mgmt.socozy.casa:
+    truenas:
+      hosts:
+        mali.int.socozy.casa:
+        ludwig.int.socozy.casa:
+    mysql_dbs:
+      hosts:
+        mysql.mgmt.socozy.casa:
+    mariadb_standalone:
+      hosts:
+        mysql.mgmt.socozy.casa:
+    pg_standalone:
+      hosts:
+        pg.int.socozy.casa:
+        pgbak.svc.socozy.casa:
+    jails:
+      vars:
+        ansible_user: ansible
+      hosts:
+        pg.int.socozy.casa:
+          jail_cidr: 10.9.8.20/23
+        borgbackup-host.int.socozy.casa:
+          jail_cidr: 10.9.4.21/23
+        mysql.mgmt.socozy.casa:
+          jail_cidr: 10.9.8.21/23
+    container_hosts:
+      hosts:
+        container0.mgmt.socozy.casa:
+          ansible_ssh_host: 10.9.4.30
+          container_node_mgmt_cidr: 10.9.8.30/23
+          container_node_prim_cidr: 10.9.4.30/22
+          container_node_data_cidr: 10.9.10.30/23
+        container1.mgmt.socozy.casa:
+          container_node_mgmt_cidr: 10.9.8.31/23
+          container_node_prim_cidr: 10.9.4.31/22
+          container_node_data_cidr: 10.9.10.31/23
+    rpi:
+      vars:
+        ansible_user: pi
+      hosts:
+        pikvm.mgmt.socozy.casa:
+          ansible_user: root
+    dns:
+      hosts:
+        ns1.int.socozy.casa:
+          ansible_host: 192.168.1.3
+          ansible_user: admin
+        ns2.int.socozy.casa:
+          ansible_host: 10.9.4.4
+          ansible_user: pi
+    cloudflare:
+      # hosts that need access to cloudflare credentials
+      children:
+        proxmox:
+        container_hosts:
+        lxc_services:
+    tailscale_router:
+      hosts:
+        tailscale0.int.socozy.casa:
+    vyos:
+      vars:
+        ansible_user: vyos
+        ansible_python_interpreter: /usr/bin/python3
+      hosts:
+        router0.int.socozy.casa:
+          ansible_host: 192.168.1.1
+...

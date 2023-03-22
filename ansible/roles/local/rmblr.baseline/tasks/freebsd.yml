@@ -1,0 +1,13 @@
+---
+- set_fact:
+    freebsd_python_prefix: "py{{ ansible_python_version.split('.')[0:2]|join() }}"
+
+- include_tasks: ssh.yml
+
+- name: install deps and tools
+  when: with_admin_tools
+  pkgng:
+    name:
+      - jq
+      - rsync
+    state: present

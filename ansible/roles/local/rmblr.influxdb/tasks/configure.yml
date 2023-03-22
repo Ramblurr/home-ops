@@ -1,0 +1,69 @@
+---
+- name: Ensure InfluxDB is up and running
+  ansible.builtin.command: influx ping \
+    --host "{{ influxdb_host }}"
+  retries: 10
+  delay: 5
+  register: _ping
+  until: _ping.rc == 0
+  changed_when: false
+
+- name: Set InfluxDB default user, organization, and bucket
+  ansible.builtin.command: influx setup \
+    --host "{{ influxdb_host }}" \
+    --org {{ influxdb_primary_org }} \
+    --bucket {{ influxdb_primary_bucket }} \
+    --username {{ influxdb_primary_username }} \
+    --password {{ influxdb_primary_password }} \
+    --token {{ influxdb_admin_token }} \
+    --force
+  register: _setup
+  failed_when:
+    - _setup.rc != 0
+    - '"has already been set up" not in _setup.stderr'
+  changed_when: _setup.rc == 0
+
+- name: Ensure organizations exist
+  ansible.builtin.command: influx org create \
+    --host "{{ influxdb_host }}" \
+    --name "{{ item.name }}" \
+    --description "{{ item.description | d('') }}"
+  loop: "{{ influxdb_orgs }}"
+  loop_control:
+    label: "{{ item.name }}"
+  register: _org
+  failed_when:
+    - _org.rc != 0
+    - '"already exists" not in _org.stderr'
+  changed_when: _org.rc == 0
+
+- name: Ensure users exist
+  ansible.builtin.command: influx user create \
+    --host "{{ influxdb_host }}" \
+    --name "{{ item.name }}" \
+    --org "{{ item.org }}" \
+    --password "{{ item.password }}"
+  loop: "{{ influxdb_users }}"
+  loop_control:
+    label: "{{ item.name }}"
+  register: _user
+  failed_when:
+    - _user.rc != 0
+    - '"already exists" not in _user.stderr'
+  changed_when: _user.rc == 0
+
+- name: Ensure buckets exist
+  ansible.builtin.command: influx bucket create \
+    --host "{{ influxdb_host }}" \
+    --name "{{ item.name }}" \
+    --description "{{ item.description | d('') }}" \
+    --org "{{ item.org }}" \
+    --retention "{{ item.retention | d(0) }}"
+  loop: "{{ influxdb_buckets }}"
+  loop_control:
+    label: "{{ item.name }}"
+  register: _bucket
+  failed_when:
+    - _bucket.rc != 0
+    - '"already exists" not in _bucket.stderr'
+  changed_when: _bucket.rc == 0

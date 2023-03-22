@@ -1,0 +1,6 @@
+---
+mariadb_bind_addr: "{{ hostvars['mysql.' + subdomain_mgmt]['mysql_node_cidr'] | ansible.netcommon.ipaddr('address') }}"
+mariadb_tls_ca_file: "{{ pki_certs_dir }}/root-ca.pem"
+mariadb_tls_key_file: "{{ pki_certs_dir }}/mysql.{{ subdomain_mgmt }}-key.pem"
+mariadb_tls_cert_file: "{{ pki_certs_dir }}/mysql.{{ subdomain_mgmt }}.pem"
+login_unix_socket: /var/run/mysql/mysql.sock

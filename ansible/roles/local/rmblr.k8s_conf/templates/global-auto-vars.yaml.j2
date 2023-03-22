@@ -1,0 +1,23 @@
+#jinja2: lstrip_blocks: "true", trim_blocks: "false"
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.26.1-standalone-strict/configmap-v1.json
+# {{ ansible_managed }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: global-auto-vars
+  namespace: flux-system
+data:
+  CLUSTER_ID: "{{ cluster_id }}"
+  CLUSTER_NAME: "{{ cluster_name }}"
+  CLUSTER_APISERVER_ENDPOINT: "{{ cluster_apiserver_addr }}"
+  CLUSTER_CIDR: "{{ cluster_net_pod_cidr }}"
+  NET_POD_CIDR: "{{ cluster_net_pod_cidr }}"
+  NET_SVC_CIDR: "{{ cluster_net_svc_cidr }}"
+  NET_EXT_CIDR: "{{ cluster_net_lb_ext_cidr }}"
+  CILIUM_BGP_PEER: "{{ cluster_node_bgp_peer }}"
+  CILIUM_BGP_LB_CIDR: "{{ cluster_net_lb_ext_cidr }}"
+  GATEWAY_ADDRESS: "{{ cluster_node_vlan_gateway }}"
+  SVC_K8S_GATEWAY_ADDR: "{{ cluster_svc_k8s_gateway_dns_addr }}"
+  SVC_INGRESS_ADDR: "{{ cluster_svc_ingress_addr }}"
+  DEFAULT_STORAGE_CLASS: "{{ cluster_default_storage_class }}"

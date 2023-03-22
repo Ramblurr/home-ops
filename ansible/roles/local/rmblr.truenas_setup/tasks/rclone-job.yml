@@ -1,0 +1,57 @@
+---
+- name: sanity check args | rclone job {{ job.name }}
+  ansible.builtin.assert:
+    that:
+      - job.name | length > 0
+      - job.description | length > 0
+      - job.remote | length > 0
+      - job.local_dir | length > 0
+
+- name: check existence of local_dir | rclone job {{ job.name }}
+  ansible.builtin.stat:
+    path: "{{ job.local_dir }}"
+  register: local_dir
+
+- name: assert local_dir exists | rclone job {{ job.name }}
+  ansible.builtin.assert:
+    that:
+      - local_dir.stat.isdir is defined and local_dir.stat.isdir
+
+- name: create healthcheck | rclone job {{ job.name }}
+  community.healthchecksio.checks:
+    state: present
+    api_key: "{{ healthchecksio_api_key }}"
+    name: "{{ job.name }}"
+    unique: ["name"]
+    tags: ["ansible"]
+    desc: "{{ job.description }} (ansible managed)"
+    # 2 days
+    timeout: 172800
+  register: hc_check
+
+- name: backup script | rclone job {{ job.name }}
+  ansible.builtin.template:
+    src: rclone-job.j2
+    dest: "/root/bin/rclone-{{ job.name }}"
+    owner: root
+    group: wheel
+    mode: 0750
+
+- name: create cron job | rclone job {{ job.name }}
+  ramblurr.truenas.truenas_cron:
+    url: "{{ truenas_url }}"
+    password: "{{ truenas_password }}"
+    description: "{{ job.description }}"
+    command: "/root/bin/rclone-{{ job.name }}"
+    state: present
+    hide_stdout: true
+    hide_stderr: true
+    schedule:
+      minute: "0"
+      hour: "4"
+      dom: "*"
+      month: "*"
+      dow: "*"
+    user: root
+  delegate_to: localhost
+...

@@ -1,0 +1,49 @@
+---
+- name: list acme plugins
+  ansible.builtin.command: pvenode acme plugin list  --output-format json-pretty
+  register: acme_plugin_exists_raw
+
+- name: set acme plugin name
+  ansible.builtin.set_fact:
+    acme_plugin_name: "{{ inventory_hostname | regex_replace('\\.', '-')}}"
+
+- ansible.builtin.debug:
+    var: acme_plugin_name
+
+- name: check acme plugin exists
+  ansible.builtin.set_fact:
+    acme_plugin_exists: >-
+        {{ acme_plugin_exists_raw.stdout | from_json | selectattr('plugin', 'equalto', acme_plugin_name) | list | count > 0 }}
+
+
+- name: add acme plugin
+  when: not acme_plugin_exists
+  block:
+    - name: create acme plugin data tempfile
+      ansible.builtin.tempfile:
+        state: file
+        suffix: plugindata
+      register: data_file
+    - ansible.builtin.copy:
+        dest: "{{ data_file.path }}"
+        content: |
+          CF_Account_ID={{ cloudflare_account_id }}
+          CF_Token={{ cloudflare_dns_edit_token }}
+          CF_Zone_ID={{ cloudflare_zone_id }}
+
+    - name: add plugin
+      ansible.builtin.command: pvenode acme plugin add dns {{ acme_plugin_name }} --api cf --data {{ data_file.path }}
+
+- name: check account exists
+  ansible.builtin.command: pvenode acme account info {{ acme_plugin_name }} --output-format json-pretty
+  register: acme_account
+  failed_when: >-
+    acme_account.rc != 0 and (acme_plugin_name + "' does not exist") not in acme_account.stderr
+
+- name: register acme account
+  when: acme_account.rc != 0
+  ansible.builtin.expect:
+    command: pvenode acme account register {{ acme_plugin_name }} {{ letsencrypt_email }} --directory {{ letsencrypt_directory }}
+    responses:
+      ".*Do you agree to the above terms?.*": y
+...

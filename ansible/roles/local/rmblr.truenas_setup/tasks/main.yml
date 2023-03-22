@@ -1,0 +1,146 @@
+---
+- name: ensure bin dir
+  ansible.builtin.file:
+    path: /root/bin
+    owner: root
+    group: wheel
+    mode: 0750
+    state: directory
+
+
+- name: install scripts
+  ansible.builtin.copy:
+    src: "bin/{{ item }}"
+    dest: "/root/bin/{{ item }}"
+    owner: root
+    group: wheel
+    mode: 0750
+  loop:
+    - rclone-backup
+
+- name: create rclone jobs
+  ansible.builtin.include_tasks: rclone-job.yml
+  loop: "{{ truenas_rclone_backup_jobs }}"
+  loop_control:
+    loop_var: job
+
+- name: Create rootfs backup healthcheck
+  community.healthchecksio.checks:
+    state: present
+    api_key: "{{ healthchecksio_api_key }}"
+    name: "TrueNAS {{ inventory_hostname }} rootfs backup"
+    unique: ["name"]
+    tags: ["ansible"]
+    desc: "(ansible managed)"
+    # 2 days
+    timeout: 172800
+  register: hc_check
+
+- name: install backup-rootfs script
+  ansible.builtin.template:
+    src: "backup-rootfs"
+    dest: "/root/bin/backup-rootfs"
+    owner: root
+    group: wheel
+    mode: 0750
+
+- name: create backup-rootfs cron job
+  ramblurr.truenas.truenas_cron:
+    url: "{{ truenas_url }}"
+    password: "{{ truenas_password }}"
+    description: "TrueNAS rootfs Backup"
+    command: "/root/bin/backup-rootfs"
+    state: present
+    hide_stdout: true
+    hide_stderr: true
+    schedule:
+      minute: "2"
+      hour: "0"
+      dom: "*"
+      month: "*"
+      dow: "*"
+    user: root
+  delegate_to: localhost
+
+- name: check existence of FreeNAS-scripts
+  ansible.builtin.stat:
+    path: /root/FreeNAS-scripts
+  register: freenas_scripts_dir
+
+- name: clone FreeNAS-scripts
+  ansible.builtin.git:
+    repo: https://github.com/Spearfoot/FreeNAS-scripts.git
+    dest: /root/FreeNAS-scripts
+    force: true
+    version: master
+  when: local_dir.stat.isdir is not defined
+
+- name: munge save_config_enc.sh
+  ansible.builtin.lineinfile:
+    path: /root/FreeNAS-scripts/save_config_enc.sh
+    regexp: "^configdir=.*$"
+    line: "#configdir"
+
+- name: make save config script executable
+  ansible.builtin.file:
+    path: /root/FreeNAS-scripts/save_config_enc.sh
+    owner: root
+    group: wheel
+    mode: 0760
+
+- name: setup config backup encryption key
+  ansible.builtin.copy:
+    content: "{{ truenas_config_backup_encryption_passphrase }}"
+    dest: /root/config_passphrase
+    owner: root
+    group: wheel
+    mode: 0600
+
+- name: Create config backup healthcheck
+  community.healthchecksio.checks:
+    state: present
+    api_key: "{{ healthchecksio_api_key }}"
+    name: "TrueNAS {{ inventory_hostname }} config backup"
+    unique: ["name"]
+    tags: ["ansible"]
+    desc: "(ansible managed)"
+    # 2 days
+    timeout: 172800
+  register: hc_check_config
+
+- name: install backup-config script
+  ansible.builtin.template:
+    src: "backup-config"
+    dest: "/root/bin/backup-config"
+    owner: root
+    group: wheel
+    mode: 0750
+
+- name: create backup-config cron job
+  ramblurr.truenas.truenas_cron:
+    url: "{{ truenas_url }}"
+    password: "{{ truenas_password }}"
+    description: "TrueNAS Config Backup"
+    command: "/root/bin/backup-config"
+    state: present
+    hide_stdout: true
+    hide_stderr: true
+    schedule:
+      minute: "0"
+      hour: "0"
+      dom: "*"
+      month: "*"
+      dow: "*"
+    user: root
+  delegate_to: localhost
+
+- name: install ups-poweroff script
+  ansible.builtin.template:
+    src: "ups-poweroff.sh.j2"
+    dest: "/root/bin/ups-poweroff.sh"
+    owner: root
+    group: wheel
+    mode: 0760
+  when: truenas_udr_ssh_host is defined
+
+...

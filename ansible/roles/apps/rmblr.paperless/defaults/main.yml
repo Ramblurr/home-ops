@@ -1,0 +1,39 @@
+---
+container_state: started
+container_down: false
+container_remove: false
+container_recreate: false
+container_volumes_recreate: false
+container_volumes_state: present
+container_name: paperless
+service_port: 80
+service_upstream: http://{{ inventory_hostname }}:{{ service_port }}
+service_base_dir: "{{ service_local_data_dir }}/{{ container_name }}"
+service_data_dir: "{{ service_base_dir }}/data"
+service_media_dir: "{{ service_base_dir }}/media"
+service_redis_dir: "{{ service_base_dir }}/redis"
+service_dirs:
+  - "{{ service_base_dir }}"
+  - "{{ service_data_dir }}"
+  - "{{ service_media_dir }}"
+  - "{{ service_redis_dir }}"
+
+service_healthcheck:
+  hostname: "{{ inventory_hostname }}"
+  port: "{{ service_port }}"
+  path: /
+
+container_pod: true
+container_nfs_enabled: false
+container_cifs_enabled: false
+paperless_base_volume_host_path: "/mnt/paperless"
+
+paperless_db_database: "{{ container_name }}"
+paperless_db_username: "{{ paperless_settings.db_username }}"
+paperless_db_password: "{{ paperless_settings.db_password }}"
+paperless_db_root_password: "{{ paperless_settings.db_root_password }}"
+paperless_admin_password: "{{ paperless_settings.admin_password }}"
+paperless_title: "{{ paperless_settings.title }}"
+paperless_caption: "{{ paperless_settings.caption }}"
+container_vol_user: app
+container_vol_uid: 1000

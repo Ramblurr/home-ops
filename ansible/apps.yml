@@ -1,0 +1,223 @@
+---
+- name: traefik
+  hosts: container0.mgmt.socozy.casa
+  become: true
+  tags: [traefik]
+  roles:
+    - role: rmblr.traefik
+      vars:
+        redis_bind_ip: "{{ container_node_mgmt_ip }}"
+        traefik_fqdn: "{{ inventory_hostname }}"
+        service_cert_resolver: socozy
+        letsencrypt_domain: "{{ letsencrypt_domain_internal }}"
+        letsencrypt_domain_sans: "{{ letsencrypt_domain_internal_sans }}"
+
+- name: mqtt
+  hosts: container0.mgmt.socozy.casa
+  become: true
+  tags: [app, socozy, mqtt]
+  pre_tasks:
+    - name: set dns record
+      community.general.cloudflare_dns:
+        api_token: "{{ cloudflare_dns_edit_token }}"
+        zone: "{{ cloudflare_zone_name }}"
+        state: present
+        solo: true
+        proxied: false
+        type: A
+        value: "{{ cloudflare_public_ip }}"
+        record: "{{ service_fqdn }}"
+  roles:
+    - role: rmblr.traefik_redis_service
+      vars:
+        container_name: mqtt
+        container_remove: false
+        service_type: tcp
+        service_fqdn: mqtt.socozy.casa
+        service_upstream: 10.9.4.25:1883
+        service_name: "{{ service_fqdn }}"
+        service_entrypoints:
+          - web-external-secure
+        service_cert_resolver: socozy
+        service_cert_domains:
+          - main: "{{ letsencrypt_domain_external }}"
+            sans: "{{ letsencrypt_domain_external_sans }}"
+
+- name: matrix-ol
+  hosts: container0.mgmt.socozy.casa
+  become: true
+  tags: [app, ol, matrix]
+  roles:
+    - role: rmblr.traefik_redis_service
+      vars:
+        container_name: matrix
+        container_remove: false
+        service_type: http
+        service_fqdn: matrix.outskirtslabs.com
+        service_upstream: http://matrix.int.socozy.casa
+        service_name: "{{ service_fqdn }}"
+        service_entrypoints_secure:
+          - web-internal-secure
+          - web-external-secure
+        service_entrypoints:
+          - web-internal
+        service_cert_resolver: socozy
+        service_cert_domains:
+          - main: "{{ letsencrypt_domain_ol }}"
+            sans: "{{ letsencrypt_domain_ol_sans }}"
+
+- name: element-ol
+  hosts: container0.mgmt.socozy.casa
+  become: true
+  tags: [app, ol, matrix, element]
+  roles:
+    - role: rmblr.traefik_redis_service
+      vars:
+        container_name: matrix-federation
+        container_remove: false
+        service_type: http
+        service_fqdn: element.outskirtslabs.com
+        service_upstream: http://matrix.int.socozy.casa
+        service_name: "{{ service_fqdn }}"
+        service_entrypoints_secure:
+          - web-internal-secure
+          - web-external-secure
+        service_entrypoints: []
+        service_cert_resolver: socozy
+        service_cert_domains:
+          - main: "{{ letsencrypt_domain_ol }}"
+            sans: "{{ letsencrypt_domain_ol_sans }}"
+
+- name: homeassistant
+  hosts: container0.mgmt.socozy.casa
+  become: true
+  tags: [app, socozy, homeassistant, ha]
+  roles:
+    - role: rmblr.traefik_redis_service
+      vars:
+        container_name: homeassistant
+        container_remove: false
+        service_type: http
+        service_fqdn: home.socozy.casa
+        service_upstream: http://home.int.socozy.casa:8123
+        service_name: "{{ service_fqdn }}"
+        service_entrypoints_secure:
+          - web-internal-secure
+          - web-external-secure
+        service_entrypoints: []
+        service_cert_resolver: socozy
+        service_cert_domains:
+          - main: "{{ letsencrypt_domain_external }}"
+            sans: "{{ letsencrypt_domain_external_sans }}"
+
+- name: photoprism-casey
+  hosts: photos-casey.lxc.socozy.casa
+  become: true
+  roles:
+    - role: rmblr.photoprism
+      tags: [app, photoprism, pp-casey]
+      vars:
+        service_fqdn: photos-casey.int.socozy.casa
+        photoprism_settings: "{{ photoprism_casey_settings }}"
+
+- name: photoprism-viki
+  hosts: photos-viki.lxc.socozy.casa
+  become: true
+  roles:
+    - role: rmblr.photoprism
+      tags: [app, photoprism, pp-viki]
+      vars:
+        service_fqdn: photos-viki.int.socozy.casa
+        photoprism_settings: "{{ photoprism_viki_settings }}"
+
+- name: books
+  hosts: books.lxc.socozy.casa
+  become: true
+  tags: [app, socozy, books, calibreweb]
+  roles:
+    - role: rmblr.calibre_web
+      vars:
+        container_name: books-casey
+        service_fqdn: books.socozy.casa
+        service_exposed_preset: external-https
+        calibre_settings: "{{ calibre_socozy }}"
+        calibre_fqdn: calibre.int.socozy.casa
+
+- name: inventree
+  hosts: inventree.lxc.socozy.casa
+  become: true
+  tags: [app, socozy, inventree, inventory]
+  roles:
+    - role: rmblr.inventree
+      vars:
+        container_name: inventree
+        service_fqdn: inventree.int.socozy.casa
+
+- name: nextcloud socozy
+  hosts: nextcloud-sc.lxc.socozy.casa
+  become: true
+  tags: [app, nextcloud, socozy, nextcloud-socozy]
+  roles:
+    - role: rmblr.nextcloud
+      vars:
+        service_fqdn: drive.socozy.casa
+        service_exposed_preset: external-https
+        nextcloud_settings: "{{ nextcloud_socozy }}"
+
+- name: nextcloud ol
+  hosts: nextcloud-ol.lxc.socozy.casa
+  become: true
+  tags: [app, nextcloud, ol, nextcloud-ol]
+  roles:
+    - role: rmblr.nextcloud
+      vars:
+        service_fqdn: data.outskirtslabs.com
+        service_domain_preset: ol
+        service_exposed_preset: external-https
+        nextcloud_settings: "{{ nextcloud_ol }}"
+
+- name: clients-ol
+  hosts: invoiceninja.lxc.socozy.casa
+  become: true
+  tags: [app, invoiceninja, ol]
+  roles:
+    - role: rmblr.invoiceninja
+      vars:
+        service_fqdn: clients.outskirtslabs.com
+        service_domain_preset: ol
+        service_exposed_preset: external-https
+        smtp_settings: "{{ ol_smtp_settings }}"
+
+
+- name: paperless
+  hosts: paperless-ng.lxc.socozy.casa
+  become: true
+  tags: [app, paperless]
+  roles:
+    - role: rmblr.paperless
+      vars:
+        service_fqdn: paperless.int.socozy.casa
+
+- name: grafana
+  hosts: grafana.lxc.socozy.casa
+  become: true
+  tags: [app, monitor]
+  gather_facts: false
+  pre_tasks:
+    - ansible.builtin.gather_facts:
+      tags: [monitoring]
+  roles:
+    - role: rmblr.monitoring
+      vars:
+        service_entrypoints_secure:
+          - web-internal-secure
+      tags: [monitoring]
+    - role: rmblr.influxdb
+      tags: [influxdb]
+    - role: rmblr.uptime_kuma
+      tags: [uptime-kuma]
+      vars:
+        service_fqdn: uptime.socozy.casa
+        service_exposed_preset: external-https
+
+# END: LXCs

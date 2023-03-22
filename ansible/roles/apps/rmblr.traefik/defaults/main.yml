@@ -1,0 +1,51 @@
+---
+traefik_state: running
+traefik_owner: 0
+traefik_group: 0
+# traefik_fqdn:
+container_name: traefik
+container_down: false
+container_state: started
+container_remove: false
+container_recreate: false
+container_volumes_recreate: false
+container_image_list:
+  - index.docker.io/traefik:latest
+container_run_args: >-
+  --rm
+  -p 8080:8080/tcp
+  -p 8000:8000/tcp
+  -p 8443:8443/tcp
+  -p 80:80/tcp
+  -p 443:443/tcp
+  -v "{{ service_conf_dir }}:/etc/traefik/:Z"
+  -v "{{ service_logs_dir }}:/var/log/traefik/:Z"
+  -v "{{ service_data_dir }}:/data/:Z"
+  -e CF_DNS_API_TOKEN_FILE=/etc/traefik/cf-dns-token
+  -e CF_ZONE_API_TOKEN_FILE=/etc/traefik/cf-zone-token
+  --name traefik
+  --hostname="{{ traefik_fqdn }}"
+  --network={{ podman_network }}
+
+service_base_dir: "{{ container_local_data_base }}/{{ container_name }}"
+service_conf_dir: "{{ service_base_dir }}/conf"
+service_data_dir: "{{ service_base_dir }}/data"
+service_redis_dir: "{{ service_base_dir }}/redis"
+service_logs_dir: "{{ service_base_dir }}/logs"
+service_dirs:
+  - "{{ service_base_dir }}"
+  - "{{ service_conf_dir }}"
+  - "{{ service_conf_dir }}/dynamic"
+  - "{{ service_logs_dir }}"
+  - "{{ service_data_dir }}"
+  - "{{ service_redis_dir }}"
+
+
+service_public_ports:
+  - 8080/tcp
+  - 8000/tcp
+  - 8443/tcp
+  - 80/tcp
+  - 443/tcp
+service_mgmt_ports:
+  - 6379/tcp

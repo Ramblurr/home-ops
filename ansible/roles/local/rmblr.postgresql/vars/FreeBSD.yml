@@ -1,0 +1,22 @@
+---
+postgresql_packages:
+  - postgresql{{ postgresql_version }}-server
+  - postgresql{{ postgresql_version }}-contrib
+  - postgresql{{ postgresql_version }}-client
+  - postgresql{{ postgresql_version }}-plperl
+  - py{{ ansible_python_version.split('.')[0:2]|join() }}-pip
+  - jq
+
+
+postgresql_hba_location: "/usr/local/pgsql/data/pg_hba.conf"
+postgresql_user: postgres
+postgresql_group: postgres
+locale_latin_suffix: .ISO8859-1
+locale_utf8_suffix: .UTF-8
+pgbackrest_bin_dir: /usr/local/bin
+pgbackrest_conf_dir: /usr/local/etc
+pgbackrest_log_dir: /var/log/pgbackrest
+pgbackrest_run_dir: /var/run/pgbackrest
+pgbackrest_lib_dir: /var/db/pgbackrest
+pgbackrest_pg_socket_dir: /tmp
+logrotate_dir: /usr/local/etc/logrotate.d

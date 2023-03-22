@@ -1,0 +1,52 @@
+---
+- name: preflight container id duplicate check
+  block:
+    - name: create data structure to check
+      ansible.builtin.set_fact:
+        lxc_dupe_check: |
+          {
+          'lxc_ids_total': {{ lxc_all_containers | length }},
+          'lxc_ids_unique_total': {{ (lxc_all_containers | selectattr('id', 'defined') | map(attribute='id') | list) | unique | length }},
+          'lxc_ips_total': {{ (lxc_all_containers | selectattr('netifs', 'defined') | map(attribute='netifs') | sum(start=[]) | map(attribute='ip') | list) | length }},
+          'lxc_ips_unique_total': {{ (lxc_all_containers | selectattr('netifs', 'defined') | map(attribute='netifs') | sum(start=[]) | map(attribute='ip') | list) | unique | length }},
+          }
+
+    - name: prints counts for basic duplicate checks
+      ansible.builtin.debug:
+        var: lxc_dupe_check
+
+    - name: assert no duplicates
+      ansible.builtin.assert:
+        that:
+          - lxc_dupe_check.lxc_ids_total == lxc_dupe_check.lxc_ids_unique_total
+          - lxc_dupe_check.lxc_ips_total == lxc_dupe_check.lxc_ips_unique_total
+  rescue:
+    - debug:
+        msg: "{{ lxc_all_containers | selectattr('id', 'defined') | map(attribute='id') }}"
+    - debug:
+        msg: "{{ lxc_all_containers | selectattr('netifs', 'defined')  }}"
+    - debug:
+        msg: "{{ lxc_all_containers | selectattr('netifs', 'defined') | map(attribute='netifs') | sum(start=[])  }}"
+    - debug:
+        msg: "{{ lxc_all_containers | selectattr('netifs', 'defined') | map(attribute='netifs') | sum(start=[]) | map(attribute='ip') }}"
+
+    - name: dupe check
+      ansible.builtin.debug:
+        msg: "Duplicate entry: {{ item | duplicates }}"
+      loop:
+        - "{{ lxc_all_containers | selectattr('id', 'defined') | map(attribute='id') }}"
+        - "{{ lxc_all_containers | selectattr('netifs', 'defined') | map(attribute='netifs') | sum(start=[]) | map(attribute='ip') }}"
+
+    - name: Fail when errors
+      ansible.builtin.fail:
+        msg: 'Duplicate LXC container id. Fail!'
+
+- ansible.builtin.include_tasks: container.yml
+  vars:
+    # this allows us to use the lineinfile module inside /etc/pve
+    #ansible_remote_tmp: /tmp
+  loop_control:
+    label: "{{ container.name }}"
+    loop_var: container
+  loop: "{{ lxc_containers }}"
+...

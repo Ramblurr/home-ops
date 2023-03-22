@@ -1,0 +1,137 @@
+---
+#- name: Include OS-specific variables
+#  include_vars: "{{ ansible_os_family }}.yml"
+
+- name: Set default mysql version
+  ansible.builtin.lineinfile:
+    path: /usr/ports/Mk/bsd.default-versions.mk
+    state: present
+    regexp: "^MYSQL_DEFAULT.*"
+    line: "MYSQL_DEFAULT?= 10.5m"
+
+- name: Install packages
+  ansible.builtin.package:
+    state: present
+    name: "{{ mariadb_packages }}"
+
+- name: Build py-msyqlclient
+  ansible.builtin.command: make install
+  args:
+    chdir: /usr/ports/databases/py-pymysql
+
+- name: Enable mariadb
+  community.general.sysrc:
+    name: mysql_enable
+    value: "YES"
+
+- name: Ensure directory permissions
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: "{{ mariadb_user }}"
+    group: "{{ mariadb_group }}"
+    mode: 0750
+    state: directory
+  loop:
+    - "{{ mariadb_data_dir }}/innodb_data"
+    - "{{ mariadb_data_dir }}/innodb_log"
+    - "{{ mariadb_data_dir }}/datadir"
+
+- name: Copy tls files
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "{{ mariadb_data_dir }}/{{ item.dest }}"
+    owner: "{{ mariadb_user }}"
+    group: "{{ mariadb_group }}"
+    mode: 0600
+  loop:
+    - src: "{{ mariadb_tls_ca_file }}"
+      dest: root.crt
+    - src: "{{ mariadb_tls_key_file }}"
+      dest: server.key
+    - src: "{{ mariadb_tls_cert_file }}"
+      dest: server.crt
+  notify:
+    - restart mysql
+
+- name: fail the role if the mysql root password was not set
+  ansible.builtin.fail:
+    msg: "ERROR - you have to change default mysql_root_password"
+  when: mysql_root_password == 'changeme'
+
+- name: install server.cnf
+  ansible.builtin.template:
+    src: server.cnf.j2
+    dest: /usr/local/etc/mysql/conf.d/server.cnf
+    owner: "{{ mariadb_user }}"
+    group: "{{ mariadb_group }}"
+    mode: 0400
+  notify:
+    - restart mysql
+
+- name: install root my.cnf
+  ansible.builtin.template:
+    src: my-root.cnf.j2
+    dest: /root/.my.cnf
+    owner: root
+    group: wheel
+    mode: 0400
+
+- name: check first start
+  ansible.builtin.find:
+    paths:
+      - "{{ mariadb_data_dir }}/innodb_data"
+    patterns: "*.*"
+  register: found_files
+
+- name: start first time
+  ansible.builtin.service:
+    name: mysql-server
+    state: started
+  when: found_files.matched == 0
+
+- meta: flush_handlers
+
+- name: root password is present
+  community.mysql.mysql_user:
+    name: "root"
+    host_all: true
+    password: "{{ mysql_root_password | mandatory }}"
+    state: present
+    login_unix_socket: "{{ login_unix_socket | default(omit) }}"
+
+- name: test database is absent
+  community.mysql.mysql_db:
+    name: test
+    state: absent
+    login_unix_socket: "{{ login_unix_socket | default(omit) }}"
+  when: mysql_remove_test_database
+
+- name: anonymous users are absent
+  community.mysql.mysql_user:
+    name: ""
+    state: absent
+    host_all: true
+    login_unix_socket: "{{ login_unix_socket | default(omit) }}"
+  when: mysql_remove_anonymous_users
+
+- name: remove remote root
+  community.mysql.mysql_query:
+    query:
+      - DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1')
+    login_unix_socket: "{{ login_unix_socket | default(omit) }}"
+  when: mysql_remove_remote_root
+
+- name: create admin user
+  no_log: true
+  community.mysql.mysql_user:
+    name: admin
+    password: "{{ mariadb_admin_password }}"
+    state: present
+    host: "{{ item }}"
+    priv: "*.*:ALL"
+    login_unix_socket: "{{ login_unix_socket | default(omit) }}"
+  loop:
+    #- 192.168.1.0/255.255.255.0
+    - "{{ mariadb_admin_ip }}"
+
+- import_tasks: ./create_db_and_users.yml

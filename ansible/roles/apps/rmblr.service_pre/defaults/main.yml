@@ -1,0 +1,7 @@
+---
+container_nfs_mount_opts_ro: "vers=3,ro,async,proto=tcp,noatime,sec=sys,retrans=2,local_lock=none,rsize=8192,wsize=8192"
+container_nfs_mount_opts_rw: "vers=3,rw,async,proto=tcp,noatime,sec=sys,retrans=2,local_lock=none,rsize=8192,wsize=8192"
+container_expose_public: false
+container_nfs_remote_path: "{{ container_nfs_base }}/{{ service_fqdn }}"
+container_nfs_enabled: false
+container_cifs_enabled: false

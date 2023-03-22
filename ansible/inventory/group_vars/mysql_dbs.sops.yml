@@ -1,0 +1,56 @@
+mariadb_admin_password: ENC[AES256_GCM,data:VoitVcEn51iw7xlBmW8nboGceRq0N1o76I86s6nL,iv:YwAqygIJlAq55ukkFy0jZKcOEhXWlgt319I3KyxyN00=,tag:Q11o2T8yyA14+hEHGdmj0g==,type:str]
+mariadb_admin_ip: ENC[AES256_GCM,data:Woj4Zh2IgxQ=,iv:nZdZnYYFhMtmsqbX2YcNtBxaZrmGhrNeMNuTbAI2faI=,tag:3Dni2Gm80/SMasFeHMlSHw==,type:str]
+mariadb_databases:
+    - name: ENC[AES256_GCM,data:ySxUCl7Ybw==,iv:vnwhojBRlDpRMUFS4edec2y6MQkQs7sUEA1G3xNqR8I=,tag:/+tEfAv2anONnAKyx1D1tQ==,type:str]
+    - name: ENC[AES256_GCM,data:AWV28OZES0i4V7HS,iv:iDPOCze1wVsMTjCXXCKA6WBa8QjWWMowbxkjCKhOxt8=,tag:eotu1dc865750t1G6YsZPg==,type:str]
+mariadb_users:
+    - username: ENC[AES256_GCM,data:29N2RZTIgQ==,iv:d2P0dOJZZ4vIRZnHSxsOQmdqSTGQeFWpYg+yCaIady8=,tag:GmNcXN4EM17dWJQvyiSbdg==,type:str]
+      password: ENC[AES256_GCM,data:snpJlQnqtEY/R9a7vXoHlboFgwadbTW09f1pKHdx,iv:oRbOEqY5qMGvekm94paw4N2+e9cVQBl47i25UEw27+s=,tag:mZ3QHZSky1ohYg/tZOnb8A==,type:str]
+      host: ENC[AES256_GCM,data:VHr2l0yftEY=,iv:Ik0tbyByDiP18FjIFnxwiAJn1dIsWzA4HeH2yp9z3cw=,tag:ti7Q9BRv4fJzoveU1p5TrA==,type:str]
+      priv:
+        pancake.*: ENC[AES256_GCM,data:0EE7IzSDGTdJ,iv:rgWfvCpWStacXBN9/jggSuqfGigfsMTLEVcXoOFjgJM=,tag:OrljTaRl8wZhNsYLfKwPjg==,type:str]
+    - username: ENC[AES256_GCM,data:CoZMEv4ha3FEUcaP,iv:chBsatj+6vMXz3LvN5d52zBYnvTrSnxP87B1OTl3FV0=,tag:ZkOfOj7CWvVZzL7PbTZuWA==,type:str]
+      password: ENC[AES256_GCM,data:fHo3Ikmxg0a4aqj2fvod0XIyz8dGVh4d/ZlLN1MY,iv:qxR9L7b4TyfNRDqstMgjmak8jlgqWCVwbWzIuqKphQM=,tag:GOhWaqqg24gIuqT62xrEcA==,type:str]
+      host: ENC[AES256_GCM,data:VHr2l0yftEY=,iv:Ik0tbyByDiP18FjIFnxwiAJn1dIsWzA4HeH2yp9z3cw=,tag:ti7Q9BRv4fJzoveU1p5TrA==,type:str]
+      priv:
+        invoiceninja.*: ENC[AES256_GCM,data:FwaNQwWHe+Vw,iv:v2rKghBo9+9Y/8UZM6H8BNt/e95Xq1uKOfBPexUW9x4=,tag:S1Qn10BNO0dbFJ9XMbxHhA==,type:str]
+sops:
+    kms: []
+    gcp_kms: []
+    azure_kv: []
+    hc_vault: []
+    age:
+        - recipient: age15j42dspmmwprjau6l48xp05d97s8ml5s3tjxrfwvm37tvuynssuqtsevkj
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBlV3VJMHJ4NGl1Y09jL2dp
+            NDkvS2ZVZWZ4dnBXYXZLanhwZUpEVnhPNnpjClJ1WnRpVTRVSzJOcWRDajFGSmZn
+            eXBqVks2YzRJQ1BhK1cxWm1kaWdIQ0UKLS0tIExkNUxYYkMwbzJvdlBkeE1SWkxB
+            NzkyUzBuakpGZjBRTUlkVERlNldaVzQKtO9YKH62t5tZiKvYev1npKKQnW6mkj2m
+            y+3q5+S5c5ISLDPrTCfn58OQTqCu/tINvcp2oUiMb0O27CzE0wIWBw==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2022-09-13T11:31:50Z"
+    mac: ENC[AES256_GCM,data:D4MPuoI+oxeCihE+EEgOa1tYwo9LH4jcPanJsV82rw8YH4IJp2U1ONNxN5WauXGQkrCXKTGAhTRFSoWLlLjelaOzeUivvbUziOlRoVU5DbFF0Uwi8jewh4Izejp+ozhca90IscGXYRTJGFPvtj7LBp9T7WlTQ3IG0Wo7ekk4bVk=,iv:knO34/aGMiSwypn16jAU596zYS5NAdF+BOX8bsWkdXg=,tag:vBWtchQ0H1/DUj3k+f9kTg==,type:str]
+    pgp:
+        - created_at: "2021-08-18T08:10:01Z"
+          enc: |-
+            -----BEGIN PGP MESSAGE-----
+
+            wcFMAz/c2vn977oWARAAijysHMSVI3zEIpcLPPcgS9M0UY9j8LZFqSgW/AKkti9u
+            Bj4stmS5F46H/r241KeAhq9b4OwDw3KgjxpXmUTHcRQXcSQJ5+tZN152fv2Er9O0
+            g5HD/492wFonLuCYPGfhGyd/YTUxo1pAKUu10P7igoC6AmskW0nNfQs/6mKr+0ok
+            p4gjNmsRYgPpLU1EPh97g5+vz1M+FlcxesIYcf6KGlnIa8Lm+tFgsaHrNScnKvJ3
+            or5jY0hOEZk0M1138m2WyZcRq6Vtkm84tR0CxfJ4wmLhNavloQr3Te3bY8yk93WF
+            mIjAviO+fQHK5PpLXQj7GpmNCjF+yqTw2ehdXIOZhZ4AzHC4BUJ2o49X55+v4i1i
+            BecLyL/zbWbovSfzyCsBBvtduPenVfFknFq1/HRL4o0KVVDf45HVbgnUrJCXMZSi
+            pJaWk2PuNr9fFofF3xRqq+FnC8xgVHFSSN3KgDq/x5SCIetN13DmGLinCmZFC3Nm
+            /buqzuYYWOqENlaQvQtDalc9EIHc1jP98mF5bLUVGlcopuQ5UIDEaQq4rpvyw7Oo
+            v/PH8Oysmls0OTwUxV/09LQnFuYcJ8FNnz/4XPwG2p1MEDF4ameCAUHnuY0moIa5
+            UFzbHz/Fzih2D398n/qXGXmSQ2Xz7u03TQ+XokiXqFm2ubTYCwrO/t4xj49qAyzS
+            5gG61TrEUlcWHU7DZ2X8kK3zz3o+NiYIAf4EA5tOhATiV4HOZp86PBDXrXfEVKWa
+            pLw3kok+elDfNjOWO46n31LkCvSOsTs9O4d2AobDkw1x9+LZoV8HAA==
+            =pcHc
+            -----END PGP MESSAGE-----
+          fp: 978C4D08058BA26EB97CB51820782DBCACFAACDA
+    unencrypted_suffix: _unencrypted
+    version: 3.7.3

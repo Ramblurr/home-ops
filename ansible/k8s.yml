@@ -1,0 +1,7 @@
+---
+- name: Template k8s config
+  hosts: cluster-test.mgmt.socozy.casa
+  become: false
+  gather_facts: false
+  roles:
+    - name: rmblr.k8s_conf

@@ -1,0 +1,50 @@
+---
+# {{ ansible_managed }}
+jobs:
+- name: socozy_source
+  type: source
+  serve:
+    type: tls
+    listen: "{{ mali_prim_ip }}:3478"
+    ca: /usr/local/etc/zrepl/ludwig.int.socozy.casa.crt
+    cert: /usr/local/etc/zrepl/mali.int.socozy.casa.crt
+    key:  /usr/local/etc/zrepl/mali.int.socozy.casa.key
+    client_cns:
+    - ludwig
+  filesystems: {
+    "tank<": true,
+    "tank/.system<": false,
+    "tank2<": true,
+    "tank2/media/music/other<": false,
+    "tank2/replication<": false,
+  }
+  snapshotting:
+    type: periodic
+    interval: 60m
+    prefix: zrepl_
+
+#- name: ludwig_sink
+#  root_fs: "tank2/replication/ludwig"
+#  type: sink
+#  serve:
+#    type: tls
+#    listen: "{{ mali_prim_ip }}:3478"
+#    ca: /usr/local/etc/zrepl/ludwig.int.socozy.casa.crt
+#    cert: /usr/local/etc/zrepl/mali.int.socozy.casa.crt
+#    key:  /usr/local/etc/zrepl/mali.int.socozy.casa.key
+#    client_cns:
+#      - ludwig
+#  recv:
+#    properties:
+#      override:
+#        mountpoint: none
+#        canmount: off
+#        readonly: on
+#    placeholder:
+#      encryption: inherit
+
+global:
+  monitoring:
+    - type: prometheus
+      listen: ':9811'
+      listen_freebind: true # optional, default false

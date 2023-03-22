@@ -1,0 +1,200 @@
+---
+# This file expects a jail definition under the 'jail' var
+# Start: Lifecycle
+- name: check if exists {{ jail.name }}
+  ansible.builtin.command: iocage get host_hostname {{ jail.name }}
+  register: jail_exists
+  failed_when: false
+  changed_when: false
+
+- name: set if exists
+  ansible.builtin.set_fact:
+    jail_exists: "{{ jail_exists.rc == 0 }}"
+
+- name: check current state {{ jail.com }}
+  ansible.builtin.command: iocage get state {{ jail.name }}
+  register: jail_state_return
+  failed_when: false
+  changed_when: false
+  when: jail_exists
+
+- name: set jail_state
+  ansible.builtin.set_fact:
+    jail_state: "{{ jail_state_return.stdout }}"
+  when: jail_exists
+
+- name: set jail_state (fallback)
+  ansible.builtin.set_fact:
+    jail_state: absent
+  when: not jail_exists
+
+- name: stop jail {{ jail.name }}
+  when:
+    - jail_exists
+    - jail.allow_stop | default(false)
+    - jail_state == "up"
+  block:
+    - name: stop jail
+      ansible.builtin.command: iocage stop {{ jail.name }}
+      register: jail_stop
+      failed_when: jail_stop.rc != 0 and jail_stop.stderr is not ansible.builtin.match(".*not running.*")
+      changed_when: jail_stop.rc == 0 and jail_stop.stderr is not ansible.builtin.match(".*not running.*")
+    - name: set jail state down
+      set_fact:
+        jail_state: down
+
+- name: destroy-before-create jail {{ jail.name }}
+  when:
+    - jail_exists
+    - jail.destroy_before_create | default(false)
+  block:
+    - name: destroy jail {{ jail.name }}
+      ansible.builtin.command: iocage destroy --force {{ jail.name }}
+    - name: set if exists to false
+      ansible.builtin.set_fact:
+        jail_exists: false
+
+- name: create jail {{ jail.name }}
+  ansible.builtin.command: iocage create -n {{ jail.name }} -r {{ jail.release | default(jail_release) }}
+  when:
+    - not jail_exists
+
+- name: set jail properties list
+  ansible.builtin.set_fact:
+    jail_properties: >-
+      {{ jail_properties_base
+        + jail_network_properties[jail.network|default('none')]
+        + [{ 'key': 'host_hostname', 'val': "{{ jail.name }}" },
+           { 'key': 'ip4_addr',      'val': "vnet0|{{ jail.vnet0 }}"}
+          ]
+        + jail.extra_properties | default([])
+      }}
+
+- name: set jail options {{ jail.name }}
+  ansible.builtin.command: iocage set {{ prop.key }}="{{ prop.val }}" {{ jail.name }}
+  register: jail_prop_set
+  changed_when: "jail_prop_set.stdout is not ansible.builtin.match(prop.key + ': ' + prop.val + ' -> ' + prop.val)"
+  loop_control:
+    label: "{{ prop.key }}"
+    loop_var: prop
+  loop: "{{ jail_properties }}"
+  when:
+    - not jail_exists or jail_state == "down"
+
+- name: start jail {{ jail.name }}
+  ansible.builtin.command: iocage start {{ jail.name }}
+  register: jail_start
+  failed_when: jail_start.rc != 0 and jail_start.stderr is not ansible.builtin.match(".*already running.*")
+  changed_when: jail_start.rc == 0 or jail_start.stderr is not ansible.builtin.match(".*already running.*")
+  when: (jail.state | default('started')) == 'started'
+
+- name: stop jail
+  ansible.builtin.command: iocage stop {{ jail.name }}
+  register: jail_stop
+  failed_when: jail_stop.rc != 0 and jail_stop.stderr is not ansible.builtin.match(".*not running.*")
+  changed_when: jail_stop.rc == 0 and jail_stop.stderr is not ansible.builtin.match(".*not running.*")
+  when:
+    - jail_exists
+    - (jail.state | default('started')) == 'stopped'
+
+# END: Lifecycle
+# START: Prepare
+- name: add mount points to jail
+  ansible.builtin.include_tasks: mount_points.yml
+  loop_control:
+    label: "{{ jail_mountpoint.src }}"
+    loop_var: jail_mountpoint
+  with_items: "{{ jail.mountpoints }}"
+  tags: [mountpoints]
+  when:
+    - jail.mountpoints is defined
+
+- name: initialize pkg
+  ansible.builtin.command: iocage exec -f {{ jail.name }} env ASSUME_ALWAYS_YES=true pkg update
+  register: pkg_init
+  changed_when: pkg_init.stdout is not ansible.builtin.match(pattern="(?s:.)*are up to date.*", multiline=True)
+
+- name: enable sshd
+  ansible.builtin.lineinfile:
+    dest: "{{ truenas_jails_path }}/{{ jail.name }}/root/etc/rc.conf"
+    line: sshd_enable="YES"
+    regexp: ^sshd_enable
+  register: sshd_conf_result
+  tags: [config]
+
+- name: start sshd
+  ansible.builtin.command: iocage exec {{ jail.name }} service sshd start
+  when: sshd_conf_result is changed
+
+- name: create the ansible user
+  ansible.builtin.command: iocage exec {{ jail.name }} pw useradd ansible
+  args:
+    creates: "{{ truenas_jails_path }}/{{ jail.name }}/root/home/ansible"
+
+- name: create ssh dir for ansible user
+  ansible.builtin.file:
+    path: "{{ truenas_jails_path }}/{{ jail.name }}/root/home/ansible/.ssh"
+    state: directory
+    mode: 0755
+
+- name: chown home dir to ansible user
+  ansible.builtin.command: iocage exec {{ jail.name }} chown -R ansible:ansible "/home/ansible"
+
+# The authorized_key module expects the user to exist, which it does,
+# but only in the jail. So we use lineinfile as a low-lelvel solution instead.
+- name: setup authorized_keys for ansible user
+  ansible.builtin.lineinfile:
+    dest: "{{ truenas_jails_path }}/{{ jail.name }}/root/home/ansible/.ssh/authorized_keys"
+    line: "{{ key }}"
+    create: true
+  loop: "{{ jails_auth_keys }}"
+  loop_control:
+    loop_var: key
+    label: "{{ key.split()[-1] }}"
+
+- name: chown authorized_keys to ansible user
+  ansible.builtin.command: iocage exec {{ jail.name }} chown ansible:ansible "/home/ansible/.ssh/authorized_keys"
+
+- name: install sudo
+  ansible.builtin.command: iocage exec {{ jail.name }} pkg install -y sudo
+  register: pkg_sudo
+  changed_when: pkg_sudo.stdout is not ansible.builtin.match(multiline=true, pattern="(?s:.)*already installed.*")
+
+- name: allow ansible to do passwordless sudo
+  ansible.builtin.copy:
+    content: |
+      Defaults:ansible !requiretty
+      ansible ALL=(ALL) NOPASSWD: ALL
+    dest: "{{ truenas_jails_path }}/{{ jail.name }}/root/usr/local/etc/sudoers.d/50_ansible"
+    mode: 0440
+    owner: root
+    group: wheel
+
+- name: install bash
+  ansible.builtin.command: iocage exec {{ jail.name }} pkg install -y bash
+  register: pkg_bash
+  changed_when: pkg_bash.stdout is not ansible.builtin.match(multiline=true, pattern="(?s:.)*already installed.*")
+
+- name: prepare ports
+  when: jail.ports_enabled | default(False)
+  block:
+    - name: update ports
+      ansible.builtin.shell: >-
+        iocage exec {{ jail.name }} bash -c 'if [ ! -e /usr/ports/README ]; then
+          portsnap --interactive fetch extract;
+        else
+          portsnap --interactive update;
+        fi'
+
+- name: install packages
+  ansible.builtin.command: iocage exec {{ jail.name }} pkg install -y {{ (jail_packages + (jail.extra_packages | default([]))) | join (' ') }}
+  register: pkg_pkgs
+  changed_when: pkg_pkgs.stdout is not ansible.builtin.match(multiline=true, pattern="(?s:.)*already installed.*")
+
+- name: set bash as default shell for ansible
+  ansible.builtin.command: iocage exec {{ jail.name }} chsh -s /usr/local/bin/bash ansible
+
+- name: set bash as default shell for root
+  ansible.builtin.command: iocage exec {{ jail.name }} chsh -s /usr/local/bin/bash root
+
+...

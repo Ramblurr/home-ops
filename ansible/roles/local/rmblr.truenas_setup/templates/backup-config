@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# {{ ansible_managed }}
+
+HC="{{ hc_check_config.uuid }}"
+if [[ ! -z "$HC" ]]; then
+  curl -sS -m 10 --retry 5 "https://hc-ping.com/$HC/start"
+fi
+
+export configdir="{{ truenas_config_backup_dest }}"
+/bin/sh -c /root/FreeNAS-scripts/save_config_enc.sh
+
+if [[ ! -z "$HC" ]]; then
+  curl -sS -m 10 --retry 5 "https://hc-ping.com/$HC"
+fi

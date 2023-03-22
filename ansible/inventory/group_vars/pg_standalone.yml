@@ -1,0 +1,2 @@
+---
+postgresql_data_dir: "/var/db/postgres/data{{ postgresql_version }}"

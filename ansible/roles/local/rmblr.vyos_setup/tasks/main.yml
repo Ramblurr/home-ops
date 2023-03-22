@@ -1,0 +1,41 @@
+---
+- name: create secrets dir
+  become: true
+  ansible.builtin.file:
+    path: /config/secrets
+    state: directory
+    owner: root
+    group: vyattacfg
+    mode: 0770
+
+- name: install age key
+  become: true
+  ansible.builtin.copy:
+    content: "{{ age_secret_key }}"
+    dest: /config/secrets/age.key
+    owner: root
+    group: vyattacfg
+    mode: 0660
+
+- name: sync vyos config
+  become: true
+  ansible.posix.synchronize:
+    src: "{{ vyos_config_dir }}/"
+    dest: /config/
+    recursive: true
+    rsync_opts:
+      - "--perms"
+      - "--chown=root:vyattacfg"
+  tags: [config]
+
+- name: mark apply script as executable
+  ansible.builtin.file:
+    path: /config/apply-config.sh
+    mode: 0770
+
+#- name: ensure root password
+#  ansible.builtin.user:
+#    name: vyos
+#    state: present
+#    password: "{{ vyos_admin_password | password_hash('sha512') }}"
+...

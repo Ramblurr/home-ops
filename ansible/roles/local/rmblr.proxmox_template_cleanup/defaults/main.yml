@@ -1,0 +1,12 @@
+---
+template_cleanup_development_exclude: []
+template_cleanup_doc_exclude: []
+template_cleanup_more:
+  - libx11-data
+  - xauth
+  - libxmuu1
+  - libxcb1
+  - libx11-6
+  - libxext6
+  - ntfs-3g
+  - fonts-ubuntu-console

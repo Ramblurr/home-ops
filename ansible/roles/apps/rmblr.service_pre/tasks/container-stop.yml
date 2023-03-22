@@ -1,0 +1,21 @@
+---
+- name: container info
+  containers.podman.podman_container_info:
+    name: "{{ container_name }}"
+  register: container_info
+
+- set_fact:
+    container_exists: "{{ (container_info.containers | length) > 0 }}"
+
+- name: stop container
+  when: container_recreate and container_exists
+  ansible.builtin.systemd:
+    name: container-{{ container_name }}.service
+    state: stopped
+    enabled: false
+
+- name: remove container
+  when: container_recreate or container_remove
+  containers.podman.podman_container:
+    name: "{{ container_name }}"
+    state: absent

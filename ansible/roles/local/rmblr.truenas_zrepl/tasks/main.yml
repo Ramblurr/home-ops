@@ -1,0 +1,101 @@
+---
+- name: get latest release
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/zrepl/zrepl/releases/latest
+    url_username: "{{ github_api_user | default (omit) }}"
+    url_password: "{{ github_api_pass | default (omit) }}"
+    return_content: true
+    force_basic_auth: "{{ github_api_auth | default (omit) }}"
+  register: release_latest
+  when: zrepl_version is undefined and zrepl_force_install == True
+
+- name: set version if not already
+  ansible.builtin.set_fact: zrepl_version="{{ release_latest.json.tag_name }}"
+  when: zrepl_version is undefined and zrepl_force_install == True
+
+- name: download release
+  ansible.builtin.get_url:
+    url: https://github.com/zrepl/zrepl/releases/download/{{ zrepl_version }}/zrepl-freebsd-amd64
+    dest: /usr/local/bin/zrepl
+  when: zrepl_force_install == True
+  notify:
+    - restart zrepl
+
+- name: ensure ownership
+  ansible.builtin.file:
+    path: /usr/local/bin/zrepl
+    owner: root
+    group: wheel
+    mode: 0755
+
+- name: install zrepl service
+  ansible.builtin.copy:
+    src: rc.zrepl
+    dest: /etc/local/rc.d/zrepl
+    owner: root
+    group: wheel
+    mode: 0755
+  notify:
+    - restart zrepl
+
+- name: ensure config dir
+  ansible.builtin.file:
+    path: /usr/local/etc/zrepl
+    owner: root
+    group: wheel
+    mode: 0750
+    state: directory
+  notify:
+    - restart zrepl
+
+- name: install config file
+  ansible.builtin.template:
+    src: zrepl-{{ inventory_hostname }}.yml.j2
+    dest: /usr/local/etc/zrepl/zrepl.yml
+    owner: root
+    group: wheel
+    mode: 0750
+  notify:
+    - restart zrepl
+
+- name: install keys
+  ansible.builtin.copy:
+    content: "{{ item.content }}"
+    dest: /usr/local/etc/zrepl/{{ item.name }}
+    owner: root
+    group: wheel
+    mode: 0750
+  loop:
+    - content: "{{ truenas_zrepl_key }}"
+      name: "{{ inventory_hostname }}.key"
+    - content: "{{ truenas_zrepl_cert }}"
+      name: "{{ inventory_hostname }}.crt"
+  notify:
+    - restart zrepl
+
+- name: install peer key
+  ansible.builtin.copy:
+    content: "{{ hostvars[item].truenas_zrepl_cert }}"
+    dest: /usr/local/etc/zrepl/{{ item }}.crt
+    owner: root
+    group: wheel
+    mode: 0750
+  loop: "{{ truenas_zrepl_peers }}"
+  notify:
+    - restart zrepl
+
+- name: enable zrepl
+  ramblurr.truenas.truenas_tunable:
+    url: "{{ truenas_url }}"
+    password: "{{ truenas_password }}"
+    name: zrepl_eanble
+    value: "YES"
+    type: RC
+    state: present
+  delegate_to: localhost
+  notify:
+    - restart zrepl
+
+- name: flush handlers
+  ansible.builtin.meta: flush_handlers
+...

@@ -1,0 +1,11 @@
+[global]
+log-level-file=detail
+log-path=/var/log/pgbackrest
+repo1-path={{ postgresql_restore_dir }}
+repo1-retention-full=4
+start-fast=y
+lock-path=/tmp/pgbackrest-lock
+
+[{{ pgbackrest_stanza }}]
+pg1-path={{ postgresql_data_dir}}
+pg1-user=postgres

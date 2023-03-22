@@ -1,0 +1,142 @@
+---
+- name: ensure root password
+  ansible.builtin.user:
+    name: root
+    state: present
+    password: "{{ proxmox_password | password_hash('sha512') }}"
+
+- name: set authorized keys
+  ansible.posix.authorized_key:
+    user: root
+    state: present
+    key: "{{ ssh_public_keys | join('\n\n') }}"
+    follow: true
+    exclusive: false
+
+- name: remove enterprise sources list
+  ansible.builtin.file:
+    path: /etc/apt/sources.list.d/pve-enterprise.list
+    state: absent
+
+- name: add no subscription repo
+  ansible.builtin.apt_repository:
+    repo: deb http://download.proxmox.com/debian/pve {{ ansible_distribution_release }} pve-no-subscription
+    state: present
+
+- name: install debian backports
+  ansible.builtin.import_role:
+    name: rmblr.debian_backports
+
+- name: update apt cache and maybe upgrade system
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+    upgrade: "{{ proxmox_upgrade_enabled | ternary('dist', false) }}"
+
+- name: install other packages
+  ansible.builtin.package:
+    name:
+      - openvswitch-switch
+      - python3-pexpect
+      - iotop
+      - nload
+      - htop
+      - nethogs
+      - kitty-terminfo
+      - vim
+      - tmux
+      - ethtool
+      - tree
+      - lm-sensors
+      - s-tui
+      - fio
+    state: present
+
+- name: configure networking
+  import_tasks: ./network.yml
+  when: proxmox_setup_network_interfaces_enabled
+
+- name: set migration network
+  ansible.builtin.lineinfile:
+    path: /etc/pve/datacenter.cfg
+    line: "migration: network={{ ip_address_data }}/{{ cidr_data_suffix }},type=insecure"
+    regexp: "^migration:.*"
+  when: inventory_hostname == play_hosts[0]
+
+- name: Disable IPv6 with sysctl
+  ansible.posix.sysctl:
+    name: "{{ item }}"
+    value: "1"
+    state: "{{ proxmox_ipv6_enabled | ternary('absent', 'present') }}"
+    reload: true
+  with_items:
+    - net.ipv6.conf.all.disable_ipv6
+    - net.ipv6.conf.default.disable_ipv6
+    - net.ipv6.conf.lo.disable_ipv6
+
+- name: disallow ipv6 in modprobe
+  ansible.builtin.lineinfile:
+    dest: /etc/modprobe.d/blacklist.conf
+    line: blacklist ipv6
+    mode: 0644
+    create: true
+    state: "{{ proxmox_ipv6_enabled | ternary('absent', 'present') }}"
+  notify:
+    - rmmodipv6
+
+- name: disallow wifi
+  ansible.builtin.lineinfile:
+    dest: /etc/modprobe.d/blacklist.conf
+    line: "blacklist {{ item }}"
+    mode: 0644
+    create: true
+    state: "{{ proxmox_wifi_enabled | ternary('absent', 'present') }}"
+  loop:
+    - iwlwifi
+    - iwlmvm
+
+- name: disallow bluetooth
+  ansible.builtin.lineinfile:
+    dest: /etc/modprobe.d/blacklist.conf
+    line: "blacklist {{ item }}"
+    mode: 0644
+    create: true
+    state: "{{ proxmox_bluetooth_enabled | ternary('absent', 'present') }}"
+  loop:
+    - btrtl
+    - btintel
+    - btbcm
+    - btusb
+    - bluetooth
+
+- name: harden system
+  ansible.builtin.import_tasks: ./harden.yml
+
+- name: setup zfs decryption over ssh
+  ansible.builtin.import_tasks: ./zfs-ssh-decrypt.yml
+  when: proxmox_zfs_encryption_enabled
+
+- name: remove the subscription nag
+  ansible.builtin.import_tasks: ./remove-nag.yml
+
+- name: install wireguard
+  ansible.builtin.import_tasks: ./wireguard.yml
+  when: proxmox_wireguard_enabled
+
+- name: configure acme plugin on one node
+  ansible.builtin.import_tasks: ./acme-plugin.yml
+  when: proxmox_acme_enabled and inventory_hostname ==  proxmox_acme_plugin_hostname
+
+- name: configure acme certs on all nodes
+  ansible.builtin.import_tasks: ./acme-cert.yml
+  when: proxmox_acme_enabled
+
+- name: install borg backup
+  ansible.builtin.import_tasks: ./borg-setup.yml
+  when: proxmox_borg_enabled
+
+- name: configure ceph
+  ansible.builtin.import_tasks: ./ceph.yml
+  when: proxmox_ceph_enabled
+
+...

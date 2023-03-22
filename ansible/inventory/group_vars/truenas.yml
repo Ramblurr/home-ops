@@ -1,0 +1,6 @@
+---
+ansible_user: root
+jails_auth_keys: "{{ ssh_public_keys }}"
+truenas_zrepl_cert: "{{ lookup('community.sops.sops', pki_truenas_certs_dir + '/' + inventory_hostname + '.crt.sops') }}\n"
+truenas_zrepl_key: "{{ lookup('community.sops.sops', pki_truenas_certs_dir + '/' + inventory_hostname + '.key.sops') }}\n"
+...

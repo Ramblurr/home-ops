@@ -1,0 +1,6 @@
+---
+- name: Remove binary
+  ansible.builtin.file:
+    path: /usr/local/bin/node_exporter
+    state: absent
+...

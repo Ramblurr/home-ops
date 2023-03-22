@@ -1,0 +1,13 @@
+# TYPE  DATABASE        USER            ADDRESS                 METHOD
+local   all             postgres                                peer
+
+# do not let the "postgres" superuser login via a certificate
+hostssl all             postgres        ::/0                    reject
+hostssl all             postgres        0.0.0.0/0               reject
+
+{% for cidr in postgresql_allowed_cidrs %}
+hostssl all             all             {{ cidr }}              scram-sha-256
+{% endfor %}
+{% for line in postgresql_pg_hba_extra %}
+{{ line }}
+{% endfor %}
