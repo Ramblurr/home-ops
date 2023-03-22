@@ -46,10 +46,10 @@ set firewall group address-group shellys address '10.8.60.41'
 set firewall group address-group shellys address '10.8.60.42'
 set firewall group address-group shellys address '10.8.60.43'
 set firewall group address-group shellys address '10.8.60.44'
-set firewall group address-group esphome address '10.8.60.28'
-set firewall group address-group esphome address '10.8.60.29'
-set firewall group address-group esphome address '10.8.60.30'
-set firewall group address-group esphome address '10.8.60.45'
+set firewall group address-group esphome address '10.8.60.28' # bedroom-switch-esphome
+set firewall group address-group esphome address '10.8.60.29' # quinled-a-south
+set firewall group address-group esphome address '10.8.60.30' # quinled-b-north
+set firewall group address-group esphome address '10.8.60.45' # bathroom-climate
 set firewall group address-group esphome address '10.8.60.48'
 set firewall group address-group wled address '10.8.60.46' # wled-childroom-nightlight
 set firewall group address-group wled address '10.8.60.32' # wled-office
