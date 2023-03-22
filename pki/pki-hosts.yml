@@ -1,0 +1,6 @@
+---
+dir: pki/certs
+hosts:
+  - cn: pg.mgmt.socozy.casa
+  - cn: pg.int.socozy.casa
+  - cn: mysql.mgmt.socozy.casa

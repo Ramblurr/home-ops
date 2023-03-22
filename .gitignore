@@ -1,5 +1,4 @@
 archive
-bin
 coredns-*-arm
 *.crt
 *.dec
@@ -23,8 +22,8 @@ packer_cache
 .pio*
 .private/
 server/ansible/inventory/e2e/hosts.yml
-state/pki/certs
-!state/pki/certs/.gitkeep
+pki/certs
+!pki/certs/.gitkeep
 talos/*/*/charts
 talosconfig
 .task/
