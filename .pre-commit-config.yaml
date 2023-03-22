@@ -38,7 +38,7 @@ repos:
       - id: remove-crlf
         exclude: iot/
       - id: remove-tabs
-        exclude: iot/
+        exclude: (Makefile|Makefile.j2|iot/)
 
   - repo: https://github.com/sirosen/texthooks
     rev: 0.5.0

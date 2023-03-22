@@ -1,6 +1,8 @@
 #!/bin/vbash
 {{ ansible_managed | comment }}
+# shellcheck shell=bash
 
+# ssh keys
 {% for key in ssh_public_keys %}
 {% set key_parts = key.split(' ') %}
 {% set key_name = (key_parts[2] | replace(":", "-") | replace(".", "-") | replace(" ", "-")) %}

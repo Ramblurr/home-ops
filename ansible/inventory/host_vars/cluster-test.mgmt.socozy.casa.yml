@@ -11,7 +11,19 @@ cluster_node_bgp_peer: 192.168.1.1
 cluster_networks:
   - data
   - mgmt
-  - primary
+
+_data_net: &data_net
+  tag: "{{ data_id }}"
+  network_name: data
+  network_bridge: vmbr0
+  mtu: 9000
+  routeMetric: 2048
+
+_mgmt_net: &mgmt_net
+  tag: "{{ mgmt_id }}"
+  network_name: mgmt
+  network_bridge: vmbr1
+  mtu: 1500
 
 cluster_guest_agent_enabled: 0
 cluster_control_plane_nodes:
@@ -20,29 +32,14 @@ cluster_control_plane_nodes:
     vmid: 301
     target_node: ibnsina
     ifaces:
-      data: &data_net
+      data:
+        <<: *data_net
         ip: 10.9.10.101
         macaddr: "1a:10:50:00:00:00"
-        tag: "{{ data_id }}"
-        network_name: data
-        network_bridge: vmbr0
-        mtu: 9000
-        routeMetric: 2048
-      mgmt: &mgmt_net
+      mgmt:
+        <<: *mgmt_net
         ip: 10.9.9.101
-        macaddr: "2a:10:50:00:00:00"
-        tag: "{{ mgmt_id }}"
-        network_name: mgmt
-        network_bridge: vmbr1
-        mtu: 1500
-      primary: &prim_net
-        ip: 10.9.5.101
-        macaddr: "3a:10:50:00:00:00"
-        tag: "{{ prim_id }}"
-        network_name: primary
-        network_bridge: vmbr1
-        mtu: 1500
-        routeMetric: 4096
+        macaddr: "1a:10:50:00:10:00"
   cp1:
     idx: 1
     vmid: 302
@@ -55,11 +52,7 @@ cluster_control_plane_nodes:
       mgmt:
         <<: *mgmt_net
         ip: 10.9.9.102
-        macaddr: "2a:10:50:00:00:01"
-      primary:
-        <<: *prim_net
-        ip: 10.9.5.102
-        macaddr: "3a:10:50:00:00:01"
+        macaddr: "1a:10:50:00:10:01"
   cp2:
     idx: 2
     vmid: 303
@@ -72,11 +65,7 @@ cluster_control_plane_nodes:
       mgmt:
         <<: *mgmt_net
         ip: 10.9.9.103
-        macaddr: "2a:10:50:00:00:02"
-      primary:
-        <<: *prim_net
-        ip: 10.9.5.103
-        macaddr: "3a:10:50:00:00:02"
+        macaddr: "1a:10:50:00:10:02"
 cluster_apiserver_addr: 10.9.10.100
 cluster_net_pod_cidr: 10.44.0.0/16
 cluster_net_svc_cidr: 10.45.0.0/16
@@ -90,3 +79,11 @@ cluster_node_boot_disk_storage_pool: test-vms
 cluster_node_boot_disk_size: 100G
 cluster_node_network_bridge: vmbr0
 cluster_node_iso_image_location: "mali-tank2:iso/talos-amd64.iso"
+control_plane_ifaces_mgmt: >-
+  {{ cluster_control_plane_nodes | dict2items | map(attribute='value') | map(attribute='ifaces') | map(attribute='mgmt') }}
+control_plane_ips_mgmt: >-
+  {{ control_plane_ifaces_mgmt | map(attribute='ip') }}
+control_plane_ifaces_data: >-
+  {{ cluster_control_plane_nodes | dict2items | map(attribute='value') | map(attribute='ifaces') | map(attribute='data') }}
+control_plane_ips_data: >-
+  {{ control_plane_ifaces_data | map(attribute='ip') }}
