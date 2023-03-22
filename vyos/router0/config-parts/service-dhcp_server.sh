@@ -1,4 +1,5 @@
 #!/bin/vbash
+# shellcheck shell=bash
 
 set service dhcp-server hostfile-update
 set service dhcp-server host-decl-name
@@ -150,8 +151,6 @@ set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-map
 set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-mapping usw-flex-office mac-address '24:5a:4c:18:c7:89'
 set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-mapping usw-8-living-room ip-address '192.168.1.53'
 set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-mapping usw-8-living-room mac-address '18:e8:29:ef:1e:a0'
-set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-mapping usw-24-poe ip-address '192.168.1.54'
-set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-mapping usw-24-poe mac-address 'f0:9f:c2:c8:06:fe'
 set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-mapping uap-ac-lite-closet ip-address '192.168.1.55'
 set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-mapping uap-ac-lite-closet mac-address 'f0:9f:c2:c8:06:fe'
 set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-mapping uap-ac-lite-office ip-address '192.168.1.56'
@@ -199,8 +198,8 @@ set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-ma
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping bluesound-node-bedroom mac-address '90:56:82:40:b8:16'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping nvidia-shield ip-address '10.9.4.14'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping nvidia-shield mac-address '00:04:4b:ab:f1:17'
-set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping ims-4 ip-address '10.9.4.15'
-set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping ims-4 mac-address '90:56:82:17:23:88'
+set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping bluesound-ims-4 ip-address '10.9.4.15'
+set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping bluesound-ims-4 mac-address '90:56:82:17:24:88'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping bluesound-flex-speaker ip-address '10.9.6.16'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping bluesound-flex-speaker mac-address '48:d8:90:e4:f0:c5'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping rock ip-address '10.9.6.23'
@@ -213,6 +212,10 @@ set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-ma
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping kindle-oasis mac-address 'FC:A1:83:B2:20:33'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping kobo-libra-h20 ip-address '10.9.6.96'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping kobo-libra-h20 mac-address '58:b0:d4:63:cc:5b'
+set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping pixel-6a ip-address '10.9.6.70'
+set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping pixel-6a mac-address '82:0b:5a:5d:57:cc'
+set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping galaxy-s21 ip-address '10.9.6.14'
+set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping galaxy-s21 mac-address 'c6:1c:79:b2:75:8b'
 
 # mgmt VLAN
 set service dhcp-server shared-network-name MGMT authoritative
