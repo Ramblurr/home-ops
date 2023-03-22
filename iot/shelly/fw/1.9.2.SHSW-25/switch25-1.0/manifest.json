@@ -1,0 +1,52 @@
+{
+  "build_id": "20201128-102046/v1.9.2@e83f7025", 
+  "build_timestamp": "2020-11-28T10:20:46Z", 
+  "name": "switch25", 
+  "parts": {
+    "boot": {
+      "addr": 0, 
+      "cs_sha1": "c0996f11597ee2a88af5efaa727cff7a09f8ac16", 
+      "size": 2320, 
+      "src": "rboot.bin", 
+      "update": false
+    }, 
+    "boot_cfg": {
+      "addr": 4096, 
+      "fill": 255, 
+      "size": 4096
+    }, 
+    "fs": {
+      "addr": 765952, 
+      "addr1": 1814528, 
+      "cs_sha1": "19239cc4b4806ac4d0772b5882e0822000e70837", 
+      "fs_block_size": 4096, 
+      "fs_erase_size": 4096, 
+      "fs_page_size": 256, 
+      "fs_size": 262144, 
+      "size": 262144, 
+      "src": "fs.bin", 
+      "type": "fs"
+    }, 
+    "fw": {
+      "addr": 32768, 
+      "addr1": 1081344, 
+      "cs_sha1": "fea5a408450c98bd356cf9c3bd4cbae59b4d2e28", 
+      "size": 617968, 
+      "src": "switch25.bin"
+    }, 
+    "rf_cal_data": {
+      "addr": 2076672, 
+      "fill": 255, 
+      "size": 4096
+    }, 
+    "sys_params": {
+      "addr": 2080768, 
+      "cs_sha1": "ff105e66b313201f5b40a2e02b7f00db24022088", 
+      "size": 128, 
+      "src": "esp_init_data_default_v08.bin", 
+      "type": "sys_params"
+    }
+  }, 
+  "platform": "esp8266", 
+  "version": "1.0"
+}

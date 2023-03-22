@@ -1,0 +1,1 @@
+0 2 * * * rsync -ar --delete /opt/zigbee2mqtt/data zigbee2mqtt@mali.int.socozy.casa:zigbee2mqtt-data && curl -fsS -m 10 --retry 5 -o /dev/null https://hc-ping.com/757e66d5-0dd5-4f80-8571-14fda9baf66f
