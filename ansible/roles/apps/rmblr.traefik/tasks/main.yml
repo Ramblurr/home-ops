@@ -132,7 +132,7 @@
   containers.podman.podman_container:
     name: "{{ container_name }}-traefik"
     pod: "{{ container_name }}"
-    image: docker.io/traefik:v2.9
+    image: docker.io/traefik:v3.0
     state: created
     recreate: "{{ container_recreate }}"
     labels:
