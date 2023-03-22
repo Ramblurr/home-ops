@@ -1,10 +1,10 @@
 .ONESHELL:
 .SHELLFLAGS += -e -o pipefail
 
-export ROOT := $(realpath /var/home/ramblurr/src/home-ops-new/ansible/..)
+export ROOT := $(realpath /var/home/ramblurr/src/home-ops/ansible/..)
 export CLUSTER := "cluster-test"
-export TALOS_DIR := $(realpath /var/home/ramblurr/src/home-ops-new/ansible/../talos/cluster-test)
-export K8S_DIR := $(realpath /var/home/ramblurr/src/home-ops-new/ansible/../k8s/cluster-test)
+export TALOS_DIR := $(realpath /var/home/ramblurr/src/home-ops/ansible/../talos/cluster-test)
+export K8S_DIR := $(realpath /var/home/ramblurr/src/home-ops/ansible/../k8s/cluster-test)
 export TALOSCONFIG := ${TALOS_DIR}/clusterconfig/talosconfig
 export KUBECONFIG := ${TALOS_DIR}/kubeconfig
 
@@ -30,10 +30,11 @@ reset:
 	$(MAKE) dist-clean
 
 first-apply:
+
+
 	${TC} apply-config --insecure --nodes 10.9.9.101 --file clusterconfig/cluster-test-cp0.cluster-test.mgmt.socozy.casa.yaml
 	${TC} apply-config --insecure --nodes 10.9.9.102 --file clusterconfig/cluster-test-cp1.cluster-test.mgmt.socozy.casa.yaml
 	${TC} apply-config --insecure --nodes 10.9.9.103 --file clusterconfig/cluster-test-cp2.cluster-test.mgmt.socozy.casa.yaml
-
 bootstrap:
 	${TC} bootstrap --nodes 10.9.9.101
 
@@ -41,15 +42,20 @@ kubeconf:
 	${TC} kubeconfig --nodes 10.9.9.101 -f .
 
 reboot:
+
 	${TC} reboot --nodes 10.9.9.101 --wait  $(ARGS)
 	${TC} reboot --nodes 10.9.9.102 --wait  $(ARGS)
 	${TC} reboot --nodes 10.9.9.103 --wait  $(ARGS)
+reboot-now:
 
+	${TC} reboot --nodes 10.9.9.101 $(ARGS)
+	${TC} reboot --nodes 10.9.9.102 $(ARGS)
+	${TC} reboot --nodes 10.9.9.103 $(ARGS)
 reapply:
+
 	${TC} apply-config --nodes 10.9.9.101 --file clusterconfig/cluster-test-cp0.cluster-test.mgmt.socozy.casa.yaml $(ARGS)
 	${TC} apply-config --nodes 10.9.9.102 --file clusterconfig/cluster-test-cp1.cluster-test.mgmt.socozy.casa.yaml $(ARGS)
 	${TC} apply-config --nodes 10.9.9.103 --file clusterconfig/cluster-test-cp2.cluster-test.mgmt.socozy.casa.yaml $(ARGS)
-
 apply-extras:
 	${KC} kustomize --enable-helm ./cni | kubectl apply -f -
 	${KC} kustomize --enable-helm ./kubelet-csr-approver | kubectl apply -f -

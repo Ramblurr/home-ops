@@ -41,8 +41,15 @@ bootstrap:
 kubeconf:
 	${TC} kubeconfig --nodes {{ control_plane_ips_mgmt[0] }} -f .
 
-reboot: {% for node in cluster_control_plane_nodes | dict2items %}
+reboot:
+{% for node in cluster_control_plane_nodes | dict2items %}
+
 	${TC} reboot --nodes {{ node.value.ifaces.mgmt.ip }} --wait  $(ARGS) {% endfor %}
+
+reboot-now:
+{% for node in cluster_control_plane_nodes | dict2items %}
+
+	${TC} reboot --nodes {{ node.value.ifaces.mgmt.ip }} $(ARGS) {% endfor %}
 
 reapply:
 {% for node in cluster_control_plane_nodes | dict2items %}
