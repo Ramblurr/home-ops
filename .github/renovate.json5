@@ -45,13 +45,13 @@
   },
   "regexManagers": [
     {
-      "description": ["Process CRD dependencies - Chart and Github Release are the same version"],
-      "fileMatch": ["k8s/.+\\.ya?ml$"],
-      "matchStrings": [
-        "# renovate: registryUrl=(?<registryUrl>\\S+) chart=(?<depName>\\S+)\n.*?(?<currentValue>[^-\\s]*)\n",
-      ],
-      "datasourceTemplate": "helm"
-    },
+    "description": ["Process CRD dependencies - Chart and Github Release are the same version"],
+    "fileMatch": ["k8s/.+\\.ya?ml$"],
+    "matchStrings": [
+      "# renovate: registryUrl=(?<registryUrl>\\S+) chart=(?<depName>\\S+)\n.*?(?<currentValue>[^-\\s]*)\n",
+    ],
+    "datasourceTemplate": "helm"
+  },
     // regexManager to read and process Rook-Ceph CRD's
     {
       "fileMatch": [
@@ -125,7 +125,12 @@
       "matchPackageNames": ["tomsquest/docker-radicale"],
       "versioning": "pep440"
     },
-        {
+    {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["traefik/traefik"],
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
       "matchDatasources": ["helm"],
       "semanticCommitScope": "charts",
       "separateMinorPatch": true,
@@ -136,7 +141,7 @@
       "enabled": true,
       "matchUpdateTypes": ["major", "minor", "patch"]
     },
-        {
+    {
       "matchDatasources": ["docker"],
       "semanticCommitScope": "images",
       "separateMinorPatch": true
@@ -148,7 +153,7 @@
       "commitMessagePrefix": "feat(images)!: ",
       "labels": ["renovate/image", "dep/major"]
     },
-     {
+    {
       "matchDatasources": ["docker"],
       "matchUpdateTypes": ["minor"],
       "semanticCommitType": "feat",
