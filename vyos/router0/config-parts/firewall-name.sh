@@ -600,6 +600,11 @@ set firewall name mgmt-primary rule 2 description 'Rule: accept_dns'
 set firewall name mgmt-primary rule 2 destination port 'domain,domain-s'
 set firewall name mgmt-primary rule 2 destination group address-group 'local-dns-servers'
 set firewall name mgmt-primary rule 2 protocol 'tcp_udp'
+set firewall name mgmt-primary rule 3 action 'accept'
+set firewall name mgmt-primary rule 3 description 'Rule: accept_container0_to_homeassistant'
+set firewall name mgmt-primary rule 3 destination group port-group 'homeassistant'
+set firewall name mgmt-primary rule 3 destination group address-group 'homeassistant'
+set firewall name mgmt-primary rule 3 protocol 'tcp_udp'
 
 # From MGMT to DATA
 set firewall name mgmt-data default-action 'drop'
@@ -931,6 +936,12 @@ set firewall name wan-mgmt rule 1 destination group address-group 'k8s_ingress'
 set firewall name wan-mgmt rule 1 destination port 'http,https'
 set firewall name wan-mgmt rule 1 protocol 'tcp'
 set firewall name wan-mgmt rule 1 source group network-group 'cloudflare-ipv4'
+
+set firewall name wan-mgmt rule 2 action 'accept'
+set firewall name wan-mgmt rule 2 description 'Rule: accept_ingress_to_container0'
+set firewall name wan-mgmt rule 2 destination address '10.9.8.30'
+set firewall name wan-mgmt rule 2 destination port 'http,https'
+set firewall name wan-mgmt rule 2 protocol 'tcp'
 
 # From WAN to SERVICES
 set firewall name wan-services default-action 'drop'
