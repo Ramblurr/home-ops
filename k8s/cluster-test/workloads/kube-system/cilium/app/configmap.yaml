@@ -27,3 +27,21 @@ metadata:
 spec:
   cidrs:
     - cidr: "${CILIUM_BGP_LB_CIDR}"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bgp-config
+  namespace: kube-system
+data:
+  config.yaml: |
+    peers:
+      - peer-address: 192.168.1.1
+        peer-asn: 64512
+        my-asn: 64512
+    address-pools:
+      - name: default
+        protocol: bgp
+        avoid-buggy-ips: true
+        addresses:
+          - 10.10.10.1-10.10.11.254
