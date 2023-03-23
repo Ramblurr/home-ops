@@ -55,16 +55,18 @@ set firewall group address-group wled address '10.8.60.46' # wled-childroom-nigh
 set firewall group address-group wled address '10.8.60.32' # wled-office
 set firewall group address-group wled address '10.8.60.47' # wled-fairylights
 set firewall group address-group wled address '10.8.60.102' # wled-gr-rgb
-
 set firewall group address-group octoprint address '10.8.50.52'
 
+set firewall group address-group k8s_cluster_test_api address '10.9.9.100'
+set firewall group address-group k8s_cluster_test_nodes address '10.9.9.101'
+set firewall group address-group k8s_cluster_test_nodes address '10.9.9.102'
+set firewall group address-group k8s_cluster_test_nodes address '10.9.9.103'
+set firewall group address-group k8s_cluster_test_ingress address '10.10.10.1'
+
 set firewall group address-group k8s_api address '10.5.0.2'
-
 set firewall group address-group k8s_ingress address '10.45.0.1'
-
 set firewall group address-group k8s_ingress_allowed address '10.1.3.35'
 set firewall group address-group k8s_ingress_allowed address '10.1.3.36'
-
 set firewall group address-group k8s_nodes address '10.1.1.31'
 set firewall group address-group k8s_nodes address '10.1.1.32'
 set firewall group address-group k8s_nodes address '10.1.1.33'
