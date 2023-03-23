@@ -5,6 +5,7 @@ dry_run=false
 auto_approve=false
 
 if [ "$(id -g -n)" != 'vyattacfg' ] ; then
+    # shellcheck disable=SC2145
     exec sg vyattacfg -c "/bin/vbash $(readlink -f "$0") $@"
 fi
 
@@ -45,31 +46,7 @@ source /opt/vyatta/etc/functions/script-template
 # Reset the configuration
 load /opt/vyatta/etc/config.boot.default
 
-# Load all config files
-for f in /config/config-parts/*.sh
-do
-  if [ -f "${f}" ]; then
-    echo "Processing ${f}"
-    source "${f}"
-  fi
-done
-
-if "$dry_run"; then
-  # Show what's different from the running config
-  compare
-else
-  echo
-  if "$auto_approve"; then
-    echo "Auto approving changes."
-  else
-    compare
-    read -p "Do you want to apply the changes? [yes/no] " answer
-    case $answer in
-      yes ) echo "Proceeding...";;
-      no ) exit;;
-      * ) echo "Only 'yes' or 'no' is accepted. Aborting";;
-    esac
-  fi
+function execute_commit() {
   # Pull new container images
   AVAILABLE_IMAGES=($(run show container image | awk '{ if ( NR > 1  ) { print $1 ":" $2} }'))
   CONFIG_IMAGES=($(sed -nr "s/set container name .* image '(.*)'/\1/p" /config/config-parts/* | uniq))
@@ -101,6 +78,34 @@ else
       run delete container image "${image_id}"
     fi
   done
+}
+
+# Load all config files
+for f in /config/config-parts/*.sh
+do
+  if [ -f "${f}" ]; then
+    echo "Processing ${f}"
+    source "${f}"
+  fi
+done
+
+if "$dry_run"; then
+  # Show what's different from the running config
+  compare
+else
+  echo
+  if "$auto_approve"; then
+    echo "Auto approving changes."
+    execute_commit
+  else
+    compare
+    read -p "Do you want to apply the changes? [yes/no] " answer
+    case $answer in
+      yes ) echo "Proceeding..." && execute_commit;;
+      no ) echo "Aborting without commit."&& exit;;
+      * ) echo "Only 'yes' or 'no' is accepted. Aborting";;
+    esac
+  fi
 fi
 
 exit
