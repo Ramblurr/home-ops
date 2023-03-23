@@ -391,6 +391,17 @@ set firewall name lan-primary rule 2 description 'Rule: accept_to_homeassistant'
 set firewall name lan-primary rule 2 destination group port-group 'homeassistant'
 set firewall name lan-primary rule 2 protocol 'tcp_udp'
 
+set firewall name lan-primary rule 3 action 'accept'
+set firewall name lan-primary rule 3 description 'Rule: accept_ssh'
+set firewall name lan-primary rule 3 destination port 'ssh'
+set firewall name lan-primary rule 3 protocol 'tcp'
+set firewall name lan-primary rule 3 source group address-group 'admin'
+
+set firewall name lan-primary rule 4 action 'accept'
+set firewall name lan-primary rule 4 description 'Rule: accept_icmp'
+set firewall name lan-primary rule 4 protocol 'icmp'
+
+
 # From LAN to DATA
 set firewall name lan-data default-action 'drop'
 set firewall name lan-data description 'From LAN to DATA'
