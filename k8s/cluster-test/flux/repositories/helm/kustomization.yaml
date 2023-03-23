@@ -21,3 +21,4 @@ resources:
   - hajimari.yaml
   - stakater.yaml
   - kubernetes-replicator-charts.yaml
+  - nextcloud.yaml
