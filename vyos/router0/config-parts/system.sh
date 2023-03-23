@@ -1,9 +1,11 @@
 #!/bin/vbash
+# shellcheck shell=bash
 
 set system domain-name 'socozy.casa'
 set system host-name 'gateway'
 set system ipv6 disable-forwarding
 set system name-server '45.90.30.124'
+set system name-server '45.90.28.124'
 set system sysctl parameter kernel.pty.max value '24000'
 
 #set system syslog host 10.45.0.2 facility kern level 'warning'

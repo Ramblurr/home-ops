@@ -143,7 +143,7 @@ set firewall name iot-mgmt description 'From IOT to MGMT'
 set firewall name iot-mgmt enable-default-log
 
 # From IOT to SERVICES
-set firewall name iot-services default-action 'accept' # TODO: drop
+set firewall name iot-services default-action 'drop'
 set firewall name iot-services description 'From IOT to SERVICES'
 #set firewall name iot-services enable-default-log
 set firewall name iot-services rule 1 action 'accept'
@@ -605,6 +605,10 @@ set firewall name mgmt-services rule 1 action 'accept'
 set firewall name mgmt-services rule 1 description 'Rule: accept_dns'
 set firewall name mgmt-services rule 1 destination port 'domain,domain-s'
 set firewall name mgmt-services rule 1 protocol 'tcp_udp'
+set firewall name mgmt-services rule 2 action 'accept'
+set firewall name mgmt-services rule 2 description 'Rule: accept_smtp_from_mgmt'
+set firewall name mgmt-services rule 2 destination port 'smtp'
+set firewall name mgmt-services rule 2 protocol 'tcp'
 
 # From MGMT to PRIMARY
 set firewall name mgmt-primary default-action 'drop'

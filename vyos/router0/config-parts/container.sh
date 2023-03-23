@@ -1,4 +1,5 @@
 #!/bin/vbash
+# shellcheck shell=bash
 
 # Container networks
 set container network services prefix '10.5.0.0/24'
@@ -12,6 +13,21 @@ set container name haproxy-k8s-api shared-memory '0'
 set container name haproxy-k8s-api volume config destination '/usr/local/etc/haproxy/haproxy.cfg'
 set container name haproxy-k8s-api volume config source '/config/containers/haproxy/config/haproxy.cfg'
 set container name haproxy-k8s-api volume config mode 'ro'
+
+# smtp-relay
+set container name smtp-relay image 'ghcr.io/foxcpp/maddy:0.6.3'
+set container name smtp-relay environment SMTP_DOMAIN value "${SECRET_SMTP_FROM_DOMAIN}"
+set container name smtp-relay environment SMTP_PASSWORD value "${SECRET_SMTP_PASSWORD}"
+set container name smtp-relay environment SMTP_PORT value "${SECRET_SMTP_PORT}"
+set container name smtp-relay environment SMTP_SERVER value "${SECRET_SMTP_HOST}"
+set container name smtp-relay environment SMTP_USERNAME value "${SECRET_SMTP_USERNAME}"
+set container name smtp-relay restart 'on-failure'
+set container name smtp-relay memory '0'
+set container name smtp-relay network services address '10.5.0.3'
+set container name smtp-relay shared-memory '0'
+set container name smtp-relay volume smtp-relay-config destination '/data/maddy.conf'
+set container name smtp-relay volume smtp-relay-config mode 'ro'
+set container name smtp-relay volume smtp-relay-config source '/config/containers/smtp-relay/config/maddy.conf'
 
 # node-exporter
 set container name node-exporter environment procfs value '/host/proc'
