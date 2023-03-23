@@ -6,4 +6,5 @@ metadata:
   name: global-vars
   namespace: flux-system
 data:
-  hello: world
+  SMTP_RELAY_HOST: '10.5.0.3'
+  SMTP_RELAY_PORT: '25'
