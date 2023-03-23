@@ -36,3 +36,4 @@ venv
 .vscode/
 xanmanning.k3s*
 *.xz
+.python-version
