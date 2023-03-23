@@ -217,6 +217,12 @@ set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-ma
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping galaxy-s21 ip-address '10.9.6.14'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping galaxy-s21 mac-address 'c6:1c:79:b2:75:8b'
 
+#container0
+#net1
+#bridge vmbr0 tag4
+# 10.9.4.30
+# CA:00:E9:D2:10:3D
+
 # mgmt VLAN
 set service dhcp-server shared-network-name MGMT authoritative
 set service dhcp-server shared-network-name MGMT ping-check
