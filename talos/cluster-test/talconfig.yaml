@@ -99,6 +99,9 @@ nodes:
 
 controlPlane:
   patches:
+    - |-
+      - op: remove
+        path: /cluster/apiServer/admissionControl
     #- |-
     #  - op: add
     #    path: /cluster/apiServer/admissionControl/0/configuration/exemptions
@@ -111,7 +114,6 @@ controlPlane:
       cluster:
         allowSchedulingOnMasters: true
         apiServer:
-          admissionControl: []
           extraArgs:
             feature-gates: MixedProtocolLBService=true,EphemeralContainers=True
         etcd:
