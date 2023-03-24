@@ -3,6 +3,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: nextcloud
+  namespace: default
 spec:
   interval: 5m
   chart:
@@ -95,14 +96,14 @@ spec:
         persistence:
           enabled: false
     internalDatabase:
+      enabled: false
+    externalDatabase:
       enabled: true
-    # externalDatabase:
-    #  enabled: true
-    #  type: postgresql
-    #  database: postgres
-    #  #user: set in secret
-    #  #password: set in secret
-    #  host: nextcloud-db-zalando-postgres-cluster-postgres
+      type: postgresql
+      host: localhost:5432
+      #user: set in secret
+      #password: set in secret
+      #database: set in secret
     cronjob:
       enabled: true
       failedJobsHistoryLimit: 1
@@ -149,6 +150,8 @@ spec:
         smtp:
           host: ${SMTP_RELAY_HOST}
           port: ${SMTP_RELAY_PORT}
+          secure: ""
+          authtype: " "
     livenessProbe:
       enabled: false
     readinessProbe:
