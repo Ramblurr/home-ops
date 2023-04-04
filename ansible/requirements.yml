@@ -18,7 +18,7 @@ collections:
   - name: git+https://github.com/prometheus-community/ansible.git
     version: main
   - name: vyos.vyos
-    version: 4.0.1
+    version: 4.0.2
 roles:
   - name: m3nu.ansible_role_borgbackup
     version: v0.9.4
