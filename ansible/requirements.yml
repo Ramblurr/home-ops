@@ -21,7 +21,7 @@ collections:
     version: 4.0.1
 roles:
   - name: m3nu.ansible_role_borgbackup
-    version: v0.9.4
+    version: v1.0.0
   - name: rmblr.traefik_redis_service
     src: git+https://github.com/Ramblurr/ansible-role-traefik-redis-service.git
     version: main
