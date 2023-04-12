@@ -109,6 +109,8 @@ set firewall group address-group mali address '10.9.10.10'
 set firewall group address-group local-dns-servers address '10.9.4.4'
 set firewall group address-group local-dns-servers address '192.168.1.3'
 
+set firewall group address-group vyos-dnsdist address '10.5.0.4'
+
 set firewall group address-group zigbee2mqtt address '10.9.4.11'
 
 set firewall group address-group filebrowser address '10.9.6.60'
