@@ -1,4 +1,5 @@
 #!/bin/vbash
+# shellcheck shell=bash
 
 # Forward HTTP(S) to ingress
 set nat destination rule 100 description 'HTTPS'

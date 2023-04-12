@@ -20,8 +20,7 @@ set service dhcp-server shared-network-name IOT ping-check
 set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 default-router '10.8.50.1'
 set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 domain-name 'socozy.casa'
 set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 lease '86400'
-set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 name-server '10.9.4.4'
-set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 name-server '192.168.1.3'
+set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 name-server '10.5.0.4'
 set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 range 0 start '10.8.50.100'
 set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 range 0 stop '10.8.50.254'
 
@@ -42,8 +41,7 @@ set service dhcp-server shared-network-name NOT ping-check
 set service dhcp-server shared-network-name NOT subnet 10.8.60.0/23 default-router '10.8.60.1'
 set service dhcp-server shared-network-name NOT subnet 10.8.60.0/23 domain-name 'socozy.casa'
 set service dhcp-server shared-network-name NOT subnet 10.8.60.0/23 lease '86400'
-set service dhcp-server shared-network-name NOT subnet 10.8.60.0/23 name-server '10.9.4.4'
-set service dhcp-server shared-network-name NOT subnet 10.8.60.0/23 name-server '192.168.1.3'
+set service dhcp-server shared-network-name NOT subnet 10.8.60.0/23 name-server '10.5.0.4'
 set service dhcp-server shared-network-name NOT subnet 10.8.60.0/23 range 0 start '10.8.60.100'
 set service dhcp-server shared-network-name NOT subnet 10.8.60.0/23 range 0 stop '10.8.61.254'
 
