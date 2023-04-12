@@ -22,12 +22,12 @@ set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 domain-name 
 set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 lease '86400'
 set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 name-server '10.9.4.4'
 set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 name-server '192.168.1.3'
-set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 range 0 start '10.8.50.50'
+set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 range 0 start '10.8.50.100'
 set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 range 0 stop '10.8.50.254'
 
 set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping oven ip-address '10.8.50.50'
 set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping oven mac-address '00:1d:63:34:f5:f7'
-set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping fire-tablet-dashboard ip-address '10.8.50.51'
+set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping fire-tablet-dashboard ip-address '10.8.50.10'
 set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping fire-tablet-dashboard mac-address '48:78:5e:d2:2f:53'
 set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping octoprint ip-address '10.8.50.52'
 set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping octoprint mac-address 'e4:5f:01:a3:5c:2a'
@@ -188,6 +188,9 @@ set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 name-serv
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 range 0 start '10.9.6.10'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 range 0 stop '10.9.7.254'
 
+
+set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping dns2-rpi ip-address '10.9.4.4'
+set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping dns2-rpi mac-address 'b8:27:eb:53:bc:5e'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping mali-prim ip-address '10.9.4.10'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping mali-prim mac-address '58:9c:fc:10:02:7b'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping zigbee2mqtt0 ip-address '10.9.4.11'

@@ -98,7 +98,7 @@ set firewall group address-group roon-server address '10.9.6.23'
 
 set firewall group address-group vyos_chronyd address '10.5.0.5'
 
-set firewall group address-group wall_displays address '10.8.50.51'
+set firewall group address-group wall-dashboards address '10.8.50.10'
 
 set firewall group address-group admin address '192.168.1.82'
 set firewall group address-group admin address '192.168.1.243'
@@ -108,6 +108,10 @@ set firewall group address-group mali address '10.9.10.10'
 
 set firewall group address-group local-dns-servers address '10.9.4.4'
 set firewall group address-group local-dns-servers address '192.168.1.3'
+
+set firewall group address-group zigbee2mqtt address '10.9.4.11'
+
+set firewall group address-group filebrowser address '10.9.6.60'
 
 # Network groups
 set firewall group network-group cloudflare-ipv4 network '173.245.48.0/20'
@@ -157,3 +161,5 @@ set firewall group port-group octoprint port '80'
 set firewall group port-group octoprint port '5000'
 set firewall group port-group octoprint port '443'
 set firewall group port-group homeassistant port '8123'
+
+set firewall group port-group zigbee2mqtt port '8080'

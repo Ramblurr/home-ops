@@ -136,6 +136,9 @@ set firewall name iot-local rule 7 description 'Rule: accept_from_roon'
 set firewall name iot-local rule 7 destination group port-group 'roon'
 set firewall name iot-local rule 7 protocol 'tcp_udp'
 set firewall name iot-local rule 7 source group address-group 'roon'
+set firewall name iot-local rule 8 action 'accept'
+set firewall name iot-local rule 8 description 'Rule: accept_icmp'
+set firewall name iot-local rule 8 protocol 'icmp'
 
 # From IOT to MGMT
 set firewall name iot-mgmt default-action 'drop'
@@ -145,7 +148,7 @@ set firewall name iot-mgmt enable-default-log
 # From IOT to SERVICES
 set firewall name iot-services default-action 'drop'
 set firewall name iot-services description 'From IOT to SERVICES'
-#set firewall name iot-services enable-default-log
+set firewall name iot-services enable-default-log
 set firewall name iot-services rule 1 action 'accept'
 set firewall name iot-services rule 1 description 'Rule: accept_dns'
 set firewall name iot-services rule 1 destination port 'domain,domain-s'
@@ -179,6 +182,12 @@ set firewall name iot-primary rule 5 action 'accept'
 set firewall name iot-primary rule 5 description 'Rule: accept_icmp_to_dns'
 set firewall name iot-primary rule 5 protocol 'icmp'
 set firewall name iot-primary rule 5 destination group address-group 'local-dns-servers'
+set firewall name iot-primary rule 6 action 'accept'
+set firewall name iot-primary rule 6 description 'Rule: accept_wall_dashboard_to_homeassistant'
+set firewall name iot-primary rule 6 source group address-group 'wall-dashboards'
+set firewall name iot-primary rule 6 destination group address-group 'homeassistant'
+set firewall name iot-primary rule 6 destination group port-group 'homeassistant'
+set firewall name iot-primary rule 6 protocol 'tcp_udp'
 
 
 # From IOT to DATA
@@ -240,6 +249,9 @@ set firewall name not-local rule 5 destination port 'mdns'
 set firewall name not-local rule 5 protocol 'udp'
 set firewall name not-local rule 5 source port 'mdns'
 set firewall name not-local rule 6 action 'accept'
+set firewall name not-local rule 7 action 'accept'
+set firewall name not-local rule 7 description 'Rule: accept_icmp'
+set firewall name not-local rule 7 protocol 'icmp'
 
 # From NOT to MGMT
 set firewall name not-mgmt default-action 'drop'
@@ -302,6 +314,11 @@ set firewall name lan-iot rule 2 description 'Rule: accept_admin_to_octoprint'
 set firewall name lan-iot rule 2 destination group port-group 'octoprint'
 set firewall name lan-iot rule 2 protocol 'tcp_udp'
 set firewall name lan-iot rule 2 source group address-group 'admin'
+set firewall name lan-iot rule 3 action 'accept'
+set firewall name lan-iot rule 3 description 'Rule: accept_ssh'
+set firewall name lan-iot rule 3 destination port 'ssh'
+set firewall name lan-iot rule 3 protocol 'tcp'
+set firewall name lan-iot rule 3 source group address-group 'admin'
 
 # From LAN to NOT
 set firewall name lan-not default-action 'drop'
@@ -400,6 +417,19 @@ set firewall name lan-primary rule 3 source group address-group 'admin'
 set firewall name lan-primary rule 4 action 'accept'
 set firewall name lan-primary rule 4 description 'Rule: accept_icmp'
 set firewall name lan-primary rule 4 protocol 'icmp'
+
+set firewall name lan-primary rule 5 action 'accept'
+set firewall name lan-primary rule 5 description 'Rule: accept_admin_to_zigbee2mqtt'
+set firewall name lan-primary rule 5 destination group port-group 'zigbee2mqtt'
+set firewall name lan-primary rule 5 destination group address-group 'zigbee2mqtt'
+set firewall name lan-primary rule 5 source group address-group 'admin'
+set firewall name lan-primary rule 5 protocol 'tcp_udp'
+
+set firewall name lan-primary rule 6 action 'accept'
+set firewall name lan-primary rule 6 description 'Rule: accept_http_from_admin'
+set firewall name lan-primary rule 6 destination port 'http,https,8080,8384'
+set firewall name lan-primary rule 6 protocol 'tcp_udp'
+set firewall name lan-primary rule 6 source group address-group 'admin'
 
 
 # From LAN to DATA
@@ -627,6 +657,13 @@ set firewall name mgmt-primary rule 3 description 'Rule: accept_container0_to_ho
 set firewall name mgmt-primary rule 3 destination group port-group 'homeassistant'
 set firewall name mgmt-primary rule 3 destination group address-group 'homeassistant'
 set firewall name mgmt-primary rule 3 protocol 'tcp_udp'
+
+set firewall name mgmt-primary rule 4 action 'accept'
+set firewall name mgmt-primary rule 4 description 'Rule: accept_admin_to_zigbee2mqtt'
+set firewall name mgmt-primary rule 4 destination group port-group 'zigbee2mqtt'
+set firewall name mgmt-primary rule 4 destination group address-group 'zigbee2mqtt'
+set firewall name mgmt-primary rule 4 source group address-group 'admin'
+set firewall name mgmt-primary rule 4 protocol 'tcp_udp'
 
 # From MGMT to DATA
 set firewall name mgmt-data default-action 'drop'

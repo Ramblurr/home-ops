@@ -1,4 +1,5 @@
 #!/bin/vbash
+# shellcheck shell=bash
 
 echo "setting wan"
 set interfaces ethernet eth0 description 'WAN'
@@ -6,10 +7,10 @@ set interfaces ethernet eth0 hw-id "${SECRET_ETH0_MAC}"
 set interfaces ethernet eth0 address "${SECRET_STATIC_WAN_CIDR}"
 
 echo "setting lan"
-# eth3 is the right most SFP+ port
+# eth3 is the left most SFP+ port
 set interfaces ethernet eth3 address '192.168.1.1/24'
 set interfaces ethernet eth3 description 'LAN'
-set interfaces ethernet eth3 hw-id "${SECRET_ETH1_MAC}"
+set interfaces ethernet eth3 hw-id "${SECRET_ETH3_MAC}"
 set interfaces ethernet eth3 mtu 9000
 set interfaces ethernet eth3 vif 3 address '10.8.3.1/24'
 set interfaces ethernet eth3 vif 3 description 'GUEST'
@@ -36,4 +37,4 @@ echo "setting eth1"
 # eth1 is the left most SFP+ port
 #set interfaces ethernet eth1 address '192.168.1.0/24'
 set interfaces ethernet eth1 description 'LAN2'
-set interfaces ethernet eth1 hw-id "${SECRET_ETH3_MAC}"
+set interfaces ethernet eth1 hw-id "${SECRET_ETH1_MAC}"
