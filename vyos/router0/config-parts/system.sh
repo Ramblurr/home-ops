@@ -1,6 +1,7 @@
 #!/bin/vbash
 # shellcheck shell=bash
 
+set system login user vyos authentication plaintext-password "${SECRET_ADMIN_PASSWORD}"
 set system domain-name 'socozy.casa'
 set system host-name 'gateway'
 set system ipv6 disable-forwarding

@@ -1,4 +1,5 @@
 #!/bin/vbash
+# shellcheck shell=bash
 
 set firewall zone guest default-action 'drop'
 set firewall zone guest from iot firewall name 'iot-guest'
@@ -109,8 +110,8 @@ set firewall zone data from services firewall name 'services-data'
 set firewall zone data from primary firewall name 'primary-data'
 set firewall zone data from wan firewall name 'wan-data'
 set firewall zone data interface 'eth3.11'
-set firewall zone wan default-action 'drop'
 
+set firewall zone wan default-action 'drop'
 set firewall zone wan from guest firewall name 'guest-wan'
 set firewall zone wan from iot firewall name 'iot-wan'
 set firewall zone wan from not firewall name 'not-wan'
