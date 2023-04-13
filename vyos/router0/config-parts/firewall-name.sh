@@ -380,12 +380,21 @@ set firewall name lan-mgmt enable-default-log
 set firewall name lan-mgmt rule 1 action 'accept'
 set firewall name lan-mgmt rule 1 description 'Rule: accept_icmp'
 set firewall name lan-mgmt rule 1 protocol 'icmp'
+
 set firewall name lan-mgmt rule 2 action 'accept'
 set firewall name lan-mgmt rule 2 description 'Rule: accept_k8s_ingress_from_admin'
 set firewall name lan-mgmt rule 2 destination port 'http,https'
 set firewall name lan-mgmt rule 2 destination group address-group 'k8s_cluster_test_ingress'
 set firewall name lan-mgmt rule 2 protocol 'tcp_udp'
 set firewall name lan-mgmt rule 2 source group address-group 'admin'
+
+
+set firewall name lan-mgmt rule 3 action 'accept'
+set firewall name lan-mgmt rule 3 description 'Rule: accept_ingress_to_container0'
+set firewall name lan-mgmt rule 3 destination address '10.9.8.30'
+set firewall name lan-mgmt rule 3 destination port 'http,https'
+set firewall name lan-mgmt rule 3 protocol 'tcp'
+set firewall name lan-mgmt rule 3 source group address-group 'admin'
 
 # From LAN to SERVICES
 set firewall name lan-services default-action 'accept'
@@ -430,7 +439,6 @@ set firewall name lan-primary rule 6 description 'Rule: accept_http_from_admin'
 set firewall name lan-primary rule 6 destination port 'http,https,8080,8384'
 set firewall name lan-primary rule 6 protocol 'tcp_udp'
 set firewall name lan-primary rule 6 source group address-group 'admin'
-
 
 # From LAN to DATA
 set firewall name lan-data default-action 'drop'
@@ -860,6 +868,13 @@ set firewall name primary-mgmt enable-default-log
 set firewall name primary-mgmt rule 1 action 'accept'
 set firewall name primary-mgmt rule 1 description 'Rule: accept_icmp'
 set firewall name primary-mgmt rule 1 protocol 'icmp'
+
+set firewall name primary-mgmt rule 2 action 'accept'
+set firewall name primary-mgmt rule 2 description 'Rule: accept_ingress_to_container0'
+set firewall name primary-mgmt rule 2 destination address '10.9.8.30'
+set firewall name primary-mgmt rule 2 destination port 'http,https'
+set firewall name primary-mgmt rule 2 protocol 'tcp'
+
 
 # From PRIMARY to SERVICES
 set firewall name primary-services default-action 'accept'
