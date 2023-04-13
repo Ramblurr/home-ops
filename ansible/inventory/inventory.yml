@@ -113,7 +113,7 @@ all:
         borgbackup-host.int.socozy.casa:
           jail_cidr: 10.9.4.21/23
         mysql.mgmt.socozy.casa:
-          jail_cidr: 10.9.8.21/23
+          jail_cidr: 10.9.8.33/23
     container_hosts:
       hosts:
         container0.mgmt.socozy.casa:
