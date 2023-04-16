@@ -440,6 +440,12 @@ set firewall name lan-primary rule 6 destination port 'http,https,8080,8384'
 set firewall name lan-primary rule 6 protocol 'tcp_udp'
 set firewall name lan-primary rule 6 source group address-group 'admin'
 
+set firewall name lan-primary rule 7 action 'accept'
+set firewall name lan-primary rule 7 description 'Rule: accept_ql_label_printer'
+set firewall name lan-primary rule 7 destination port '9100'
+set firewall name lan-primary rule 7 protocol 'tcp_udp'
+set firewall name lan-primary rule 7 source group address-group 'admin'
+
 # From LAN to DATA
 set firewall name lan-data default-action 'drop'
 set firewall name lan-data description 'From LAN to DATA'
