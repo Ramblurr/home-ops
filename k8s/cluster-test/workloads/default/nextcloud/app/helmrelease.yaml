@@ -1,3 +1,21 @@
+# note
+# To deploy multiple of these you need to have unique names for
+#   - nextcloud-redis-secrets (also in ../ks.yml)
+#   - nextcloud-helm-values
+#   - HR.metadata.name
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nextcloud-redis-session-ini
+data:
+  # https://github.com/nextcloud/docker/blob/master/26/fpm-alpine/entrypoint.sh
+  redis-session.ini: |
+    session.save_handler = redis
+    session.save_path = "tcp://$${REDIS_HOST}:$${REDIS_HOST_PORT}?auth=$${REDIS_HOST_PASSWORD}"
+    redis.session.locking_enabled = 1
+    redis.session.lock_retries = -1
+    redis.session.lock_wait_time = 10000
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
@@ -42,7 +60,42 @@ spec:
         runAsUser: 2000
         runAsGroup: 2000
         runAsNonRoot: true
+      extraVolumes:
+        - name: nextcloud-php-conf-d
+          emptyDir:
+        - name: nextcloud-redis-session-ini
+          configMap:
+            name: nextcloud-redis-session-ini
+            items:
+              - key: redis-session.ini
+                path: redis-session.ini
+      extraVolumeMounts:
+        #/usr/local/etc/php/conf.d/redis-session.ini
+        - mountPath: /usr/local/etc/php/conf.d/redis-session.ini
+          name: nextcloud-php-conf-d
+          subPath: redis-session.ini
       extraInitContainers:
+        - name: redis-session-fixer
+          image: docker.io/library/nextcloud:26.0.0-fpm-alpine
+          volumeMounts:
+            - name: nextcloud-php-conf-d
+              mountPath: /output
+            - name: nextcloud-redis-session-ini
+              mountPath: /input
+          env:
+            - name: REDIS_HOST
+              value: nextcloud-redis-master
+            - name: REDIS_HOST_PORT
+              value: "6379"
+            - name: REDIS_HOST_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: REDIS_HOST_PASSWORD
+                  name: nextcloud-redis-secrets
+          command:
+            - sh
+            - -c
+            - (apk update && apk add gettext && cat /input/redis-session.ini && env && ls -al /input && ls /output -al && cat /input/redis-session.ini | envsubst > /output/redis-session.ini )
         - name: nfs-fixer
           image: docker.io/library/nextcloud:26.0.0-fpm-alpine
           securityContext:
@@ -166,7 +219,10 @@ spec:
       # postgres creds in secret
     redis:
       enabled: true
-      # redis creds in secret
+      auth:
+        enabled: true
+        existingSecret: nextcloud-redis-secrets
+        existingSecretPasswordKey: REDIS_HOST_PASSWORD
       master:
         persistence:
           enabled: false
