@@ -8,5 +8,6 @@ resources:
   - monitoring
   - cert-manager
   - flux-system
+  - database
   - default
   - qemu-guest-agent

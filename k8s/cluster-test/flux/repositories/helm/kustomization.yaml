@@ -22,3 +22,5 @@ resources:
   - stakater.yaml
   - kubernetes-replicator-charts.yaml
   - nextcloud.yaml
+  - ext-postgres-operator.yaml
+  - zalando-postgres-operator.yaml
