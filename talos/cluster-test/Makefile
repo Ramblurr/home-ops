@@ -46,6 +46,10 @@ reboot:
 	${TC} reboot --nodes 10.9.9.101 --wait  $(ARGS)
 	${TC} reboot --nodes 10.9.9.102 --wait  $(ARGS)
 	${TC} reboot --nodes 10.9.9.103 --wait  $(ARGS)
+
+poweroff:
+	${TC} shutdown --nodes 10.9.9.101 --nodes 10.9.9.102 --nodes 10.9.9.103  --wait $(ARGS)
+
 reboot-now:
 
 	${TC} reboot --nodes 10.9.9.101 $(ARGS)
