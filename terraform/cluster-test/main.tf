@@ -41,8 +41,8 @@ resource "proxmox_vm_qemu" "controlplane" {
   agent       = var.guest_agent_enabled
   vmid        = each.value.vmid
   qemu_os     = "l26" # Linux kernel type
-  memory      = "8192"
-  cores       = 4
+  memory      = "32768"
+  cores       = 6
   sockets     = 1
   numa        = true
   hotplug     = "network,disk,usb"
