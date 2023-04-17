@@ -451,6 +451,17 @@ set firewall name lan-data default-action 'drop'
 set firewall name lan-data description 'From LAN to DATA'
 set firewall name lan-data enable-default-log
 
+set firewall name lan-data rule 1 action 'accept'
+set firewall name lan-data rule 1 description 'Rule: accept_icmp'
+set firewall name lan-data rule 1 protocol 'icmp'
+set firewall name lan-data rule 1 source group address-group 'admin'
+
+set firewall name lan-data rule 2 action 'accept'
+set firewall name lan-data rule 2 description 'Rule: accept_admin_to_minio'
+set firewall name lan-data rule 2 destination group address-group 'minio'
+set firewall name lan-data rule 2 source group address-group 'admin'
+set firewall name lan-data rule 2 protocol 'tcp_udp'
+
 # From LAN to WAN
 set firewall name lan-wan default-action 'accept'
 set firewall name lan-wan description 'From LAN to WAN'
@@ -974,7 +985,7 @@ set firewall name data-primary rule 1 destination group address-group 'local-dns
 set firewall name data-primary rule 1 protocol 'tcp_udp'
 
 # From DATA to WAN
-set firewall name data-wan default-action 'drop'
+set firewall name data-wan default-action 'accept'
 set firewall name data-wan description 'From DATA to WAN'
 
 # From WAN to GUEST
