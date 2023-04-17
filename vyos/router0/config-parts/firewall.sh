@@ -113,6 +113,9 @@ set firewall group address-group vyos-dnsdist address '10.5.0.4'
 
 set firewall group address-group zigbee2mqtt address '10.9.4.11'
 
+set firewall group address-group minio address '10.9.10.12'
+set firewall group address-group minio address '10.9.10.10'
+
 set firewall group address-group filebrowser address '10.9.6.60'
 
 # Network groups
@@ -135,6 +138,7 @@ set firewall group network-group cloudflare-ipv4 network '131.0.72.0/22'
 set firewall group network-group k8s_services network '10.45.0.0/16'
 
 # Port groups
+set firewall group port-group minio port '9100'
 set firewall group port-group wireguard port '51820'
 set firewall group port-group bluesound port '80'
 set firewall group port-group bluesound port '11000'
