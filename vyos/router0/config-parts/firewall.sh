@@ -61,7 +61,10 @@ set firewall group address-group k8s_cluster_test_api address '10.9.9.100'
 set firewall group address-group k8s_cluster_test_nodes address '10.9.9.101'
 set firewall group address-group k8s_cluster_test_nodes address '10.9.9.102'
 set firewall group address-group k8s_cluster_test_nodes address '10.9.9.103'
+
 set firewall group address-group k8s_cluster_test_ingress address '10.10.10.1'
+
+set firewall group address-group k8s_cluster_test_postgres address '10.10.10.2'
 
 set firewall group address-group k8s_api address '10.5.0.2'
 set firewall group address-group k8s_ingress address '10.45.0.1'

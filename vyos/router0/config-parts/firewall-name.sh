@@ -388,13 +388,20 @@ set firewall name lan-mgmt rule 2 destination group address-group 'k8s_cluster_t
 set firewall name lan-mgmt rule 2 protocol 'tcp_udp'
 set firewall name lan-mgmt rule 2 source group address-group 'admin'
 
-
 set firewall name lan-mgmt rule 3 action 'accept'
 set firewall name lan-mgmt rule 3 description 'Rule: accept_ingress_to_container0'
 set firewall name lan-mgmt rule 3 destination address '10.9.8.30'
 set firewall name lan-mgmt rule 3 destination port 'http,https'
 set firewall name lan-mgmt rule 3 protocol 'tcp'
 set firewall name lan-mgmt rule 3 source group address-group 'admin'
+
+set firewall name lan-mgmt rule 4 action 'accept'
+set firewall name lan-mgmt rule 4 description 'Rule: accept_k8s_postgres_from_admin'
+set firewall name lan-mgmt rule 4 destination port '5432'
+set firewall name lan-mgmt rule 4 destination group address-group 'k8s_cluster_test_postgres'
+set firewall name lan-mgmt rule 4 protocol 'tcp_udp'
+set firewall name lan-mgmt rule 4 source group address-group 'admin'
+
 
 # From LAN to SERVICES
 set firewall name lan-services default-action 'accept'
