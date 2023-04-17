@@ -47,6 +47,8 @@ spec:
   # See https://github.com/nextcloud/helm/blob/master/charts/nextcloud/values.yaml
   values:
     fullnameOverride: *app
+    podAnnotations:
+      reloader.stakater.com/auto: "true"
     image:
       repository: docker.io/library/nextcloud
       tag: 26.0.0-fpm-alpine
@@ -107,38 +109,56 @@ spec:
             - sh
             - -c
             - (id && ls -al /var/www/data && mount && mkdir -p /var/www/data/data && chmod  0770 /var/www/data && chmod 0770 /var/www/data/data && chgrp 2000 /var/www/data /var/www/data/data && ls -al /var/www/data && touch /var/www/data/data/hello)
-      # phpConfigs:
-      #   uploadLimit.ini: |
-      #     upload_max_filesize = 16G
-      #     post_max_size = 16G
-      #     max_input_time = 3600
-      #     max_execution_time = 3600
-      #     default_phone_region = AT
-      # configs:
-      #   proxy.config.php: |-
-      #     <?php
-      #     $CONFIG = array (
-      #       'trusted_proxies' =>
-      #       array(
-      #          0 => '${NET_POD_CIDR}',
-      #       ),
-      #       'forwarded_for_headers' =>
-      #       array (
-      #         0 => 'HTTP_X_FORWARDED_FOR',
-      #       ),
-      #     );
-      #   gitops.config.php: |-
-      #     <?php
-      #     $CONFIG = array (
-      #       'appstoreenabled' => true,
-      #       'mail_domain' => '${SECRET_DOMAIN_INTERNAL}',
-      #     );
-      #   # Circumvention for client freezes - https://github.com/nextcloud/desktop/issues/5094
-      #   bulkupload.config.php: |-
-      #     <?php
-      #     $CONFIG = array (
-      #       'bulkupload.enabled' => false,
-      #     );
+      phpConfigs:
+        uploadLimit.ini: |
+          upload_max_filesize = 16G
+          post_max_size = 16G
+          max_input_time = 3600
+          max_execution_time = 3600
+          default_phone_region = AT
+      defaultConfigs:
+        smtp.config.php: false
+      configs:
+        # patched smtp config to use an open smtp relay
+        # the helm chart doesn't support this.
+        smtp.config.php: |-
+          <?php
+          $CONFIG = array (
+            'mail_smtpmode' => 'smtp',
+            'mail_smtphost' => getenv('SMTP_HOST'),
+            'mail_smtpport' => getenv('SMTP_PORT') ?: (getenv('SMTP_SECURE') ? 465 : 25),
+            'mail_smtpsecure' => getenv('SMTP_SECURE') ?: '',
+            'mail_smtpauth' => '',
+            'mail_smtpauthtype' => '',
+            'mail_smtppassword' => '',
+            'mail_smtpname' => '',
+            'mail_from_address' => getenv('MAIL_FROM_ADDRESS'),
+            'mail_domain' => getenv('MAIL_DOMAIN'),
+          );
+        proxy.config.php: |-
+          <?php
+          $CONFIG = array (
+            'trusted_proxies' =>
+            array(
+               0 => '${NET_POD_CIDR}',
+            ),
+            'forwarded_for_headers' =>
+            array (
+              0 => 'HTTP_X_FORWARDED_FOR',
+            ),
+          );
+        gitops.config.php: |-
+          <?php
+          $CONFIG = array (
+            'appstoreenabled' => true,
+            'mail_domain' => '${SECRET_DOMAIN_INTERNAL}',
+          );
+        # Circumvention for client freezes - https://github.com/nextcloud/desktop/issues/5094
+        bulkupload.config.php: |-
+          <?php
+          $CONFIG = array (
+            'bulkupload.enabled' => false,
+          );
       mail:
         enabled: true
         fromAddress: ${SECRET_SMTP_FROM}
@@ -215,8 +235,7 @@ spec:
       securityContext:
         runAsGroup: 2000
     postgresql:
-      enabled: true
-      # postgres creds in secret
+      enabled: false
     redis:
       enabled: true
       auth:
@@ -234,7 +253,12 @@ spec:
     externalDatabase:
       enabled: true
       type: postgresql
-      host: localhost:5432
+      existingSecret:
+        enabled: true
+        secretName: database-nextcloud-user
+        usernameKey: LOGIN
+        passwordKey: PASSWORD
+      #host: set in secret
       #user: set in secret
       #password: set in secret
       #database: set in secret
@@ -267,6 +291,16 @@ spec:
 
   valuesFrom:
     - kind: Secret
-      name: "nextcloud-helm-values"
+      name: nextcloud-helm-values
       valuesKey: nextcloud.yaml
+      optional: false
+    - kind: Secret
+      name: database-nextcloud-user
+      valuesKey: DATABASE_NAME
+      targetPath: externalDatabase.database
+      optional: false
+    - kind: Secret
+      name: database-nextcloud-user
+      valuesKey: HOST
+      targetPath: externalDatabase.host
       optional: false

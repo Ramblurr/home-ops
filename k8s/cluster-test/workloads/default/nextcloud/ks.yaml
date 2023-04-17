@@ -8,6 +8,7 @@ spec:
   dependsOn:
     - name: cluster-workloads-cert-manager-issuers
     - name: cluster-workloads-rook-ceph-cluster
+    - name: cluster-workloads-ext-postgres-operator
   path: ./k8s/cluster-test/workloads/default/nextcloud/app
   prune: true
   sourceRef:
