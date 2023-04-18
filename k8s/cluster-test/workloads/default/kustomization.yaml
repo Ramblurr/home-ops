@@ -6,3 +6,4 @@ resources:
   - ./echo-server/ks.yaml
   - ./hajimari/ks.yaml
   - ./nextcloud/ks.yaml
+  - ./nextcloud2/ks.yaml
