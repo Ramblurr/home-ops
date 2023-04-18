@@ -409,6 +409,7 @@ set firewall name lan-mgmt rule 5 destination group address-group 'local-dns-ser
 set firewall name lan-mgmt rule 5 protocol 'tcp_udp'
 
 
+
 # From LAN to SERVICES
 set firewall name lan-services default-action 'accept'
 set firewall name lan-services description 'From LAN to SERVICES'
@@ -910,6 +911,20 @@ set firewall name primary-mgmt rule 3 description 'Rule: accept_dns'
 set firewall name primary-mgmt rule 3 destination port 'domain,domain-s'
 set firewall name primary-mgmt rule 3 destination group address-group 'local-dns-servers'
 set firewall name primary-mgmt rule 3 protocol 'tcp_udp'
+
+set firewall name primary-mgmt rule 4 action 'accept'
+set firewall name primary-mgmt rule 4 description 'Rule: accept_k8s_ingress_from_admin'
+set firewall name primary-mgmt rule 4 destination port 'http,https'
+set firewall name primary-mgmt rule 4 destination group address-group 'k8s_cluster_test_ingress'
+set firewall name primary-mgmt rule 4 protocol 'tcp_udp'
+set firewall name primary-mgmt rule 4 source group address-group 'admin'
+
+set firewall name primary-mgmt rule 5 action 'accept'
+set firewall name primary-mgmt rule 5 description 'Rule: accept_k8s_api_from_admin'
+set firewall name primary-mgmt rule 5 destination group port-group 'k8s-api'
+set firewall name primary-mgmt rule 5 destination group address-group 'k8s_cluster_test_api'
+set firewall name primary-mgmt rule 5 protocol 'tcp_udp'
+set firewall name primary-mgmt rule 5 source group address-group 'admin'
 
 
 # From PRIMARY to SERVICES
