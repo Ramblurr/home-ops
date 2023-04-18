@@ -1,0 +1,353 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: &app nextcloud2
+  namespace: default
+spec:
+  interval: 1m
+  chart:
+    spec:
+      chart: app-template
+      version: 1.4.0
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+      interval: 15m
+  install:
+    createNamespace: true
+    remediation:
+      retries: 0
+  upgrade:
+    remediation:
+      retries: 0
+  dependsOn:
+    - name: nextcloud-redis
+      namespace: default
+  values:
+    image:
+      repository: docker.io/library/nextcloud
+      tag: 26.0.0-fpm-alpine
+    env:
+      TZ: "${SECRET_TIMEZONE}"
+      NEXTCLOUD_ADMIN_USER:
+        valueFrom:
+          secretKeyRef:
+            name: nextcloud2
+            key: ADMIN_USERNAME
+      NEXTCLOUD_ADMIN_PASSWORD:
+        valueFrom:
+          secretKeyRef:
+            name: nextcloud2
+            key: ADMIN_PASSWORD
+      SMTP_HOST: "${SMTP_RELAY_HOST}"
+      SMTP_PORT: "${SMTP_RELAY_PORT}"
+      SMTP_AUTHTYPE: ""
+      MAIL_FROM_ADDRESS: "${SECRET_SMTP_FROM_USER}"
+      MAIL_DOMAIN: "${SECRET_DOMAIN_INTERNAL}"
+      POSTGRES_HOST:
+        valueFrom:
+          secretKeyRef:
+            name: database-nextcloud2-user
+            key: HOST
+      POSTGRES_USER:
+        valueFrom:
+          secretKeyRef:
+            name: database-nextcloud2-user
+            key: LOGIN
+      POSTGRES_DB:
+        valueFrom:
+          secretKeyRef:
+            name: database-nextcloud2-user
+            key: DATABASE_NAME
+      POSTGRES_PASSWORD:
+        valueFrom:
+          secretKeyRef:
+            name: database-nextcloud2-user
+            key: PASSWORD
+      REDIS_HOST: nextcloud-redis.default.svc.cluster.local
+      REDIS_HOST_PORT: 6379
+      REDIS_HOST_PASSWORD:
+        valueFrom:
+          secretKeyRef:
+            name: nextcloud2
+            key: REDIS_PASSWORD
+      NEXTCLOUD_DATA_DIR: /data
+    additionalContainers:
+      nginx:
+        name: nextcloud2-nginx
+        image: docker.io/nginxinc/nginx-unprivileged:1-alpine
+        ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+        securityContext:
+          runAsGroup: 2000
+        volumeMounts:
+          - mountPath: /var/www/html
+            name: app-config
+            subPath: nextcloud/html
+            readOnly: true
+          - mountPath: /etc/nginx/nginx.conf
+            name: nginx-config
+            subPath: nginx.conf
+    podSecurityContext:
+      runAsUser: 2000
+      runAsGroup: 2000
+      fsGroup: 2000
+    lifecycle:
+      postStart:
+        exec:
+          command: [/bin/sh, -c, /usr/local/bin/post-start.sh]
+    persistence:
+      app-config:
+        enabled: true
+        existingClaim: nextcloud2-ceph
+        subPath:
+          - path: nextcloud/html
+            mountPath: /var/www/html
+      data:
+        enabled: true
+        existingClaim: nextcloud2-nfs
+        subPath:
+          - path: nextcloud/data
+            mountPath: /data
+      post-start-sh:
+        enabled: true
+        type: configMap
+        name: nextcloud2-extra-config
+        mountPath: /usr/local/bin/post-start.sh
+        defaultMode: 0750
+        readOnly: true
+        subPath: post-start.sh
+        items:
+          - key: post-start.sh
+            path: post-start.sh
+      upload-limit-ini:
+        enabled: true
+        type: configMap
+        name: nextcloud2-extra-config
+        mountPath: /usr/local/etc/php-fpm.d/uploadLimit.ini
+        readOnly: true
+        subPath: uploadLimit.ini
+        items:
+          - key: uploadLimit.ini
+            path: uploadLimit.ini
+      nextcloud-config:
+        enabled: true
+        type: configMap
+        name: nextcloud2-extra-config
+        mountPath: /var/www/html/config/extra.config.php
+        readOnly: true
+        subPath: extra.config.php
+        items:
+          - key: extra.config.php
+            path: extra.config.php
+      redis-session-ini:
+        enabled: true
+        type: configMap
+        name: nextcloud2-extra-config
+        mountPath: /usr/local/etc/php/conf.d/redis-session.ini
+        readOnly: true
+        subPath: redis-session.ini
+        items:
+          - key: redis-session.ini
+            path: redis-session.ini
+      nginx-config:
+        enabled: true
+        type: configMap
+        name: nextcloud2-nginx-config
+        mountPath: /etc/nginx/nginx.conf
+        readOnly: true
+        subPath: nginx.conf
+        items:
+          - key: nginx.conf
+            path: nginx.conf
+    ingress:
+      main:
+        enabled: true
+        ingressClassName: nginx
+        annotations:
+          external-dns.home.arpa/enabled: "true"
+          hajimari.io/enable: "true"
+          hajimari.io/icon: simple-icons:nextcloud
+          hajimari.io/info: File and Calendar server
+          hajimari.io/group: tools
+          nginx.ingress.kubernetes.io/proxy-body-size: 10G
+          nginx.ingress.kubernetes.io/enable-global-auth: "false"
+        hosts:
+          - host: &host "nextcloud2.${SECRET_DOMAIN_INTERNAL}"
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - hosts:
+              - *host
+    service:
+      main:
+        ports:
+          http:
+            port: &port 8080
+    probes:
+      liveness: &probes
+        enabled: true
+        custom: true
+        spec:
+          httpGet:
+            path: /status.php
+            port: *port
+            httpHeaders:
+              - name: Host
+                value: *host
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+          successThreshold: 1
+      readiness: *probes
+      startup:
+        enabled: true
+        custom: true
+        spec:
+          httpGet:
+            path: /status.php
+            port: *port
+            httpHeaders:
+              - name: Host
+                value: *host
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 30
+          successThreshold: 1
+    podAnnotations:
+      reloader.stakater.com/auto: "true"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nextcloud2-extra-config
+data:
+  # https://github.com/nextcloud/docker/blob/master/26/fpm-alpine/entrypoint.sh
+  redis-session.ini: |
+    session.save_handler = redis
+    session.save_path = "tcp://$${REDIS_HOST}:$${REDIS_HOST_PORT}?auth=$${REDIS_HOST_PASSWORD}"
+    redis.session.locking_enabled = 1
+    redis.session.lock_retries = -1
+    redis.session.lock_wait_time = 10000
+  uploadLimit.ini: |
+    upload_max_filesize = 16G
+    post_max_size = 16G
+    max_input_time = 3600
+    max_execution_time = 3600
+    default_phone_region = AT
+
+  post-start.sh: |-
+    #!/bin/sh
+    set -e
+    exec > /tmp/postStart-$(date +"%s").log
+    exec 2> /tmp/postStart-$(date +"%s")_error.log
+
+    # Copied from the NC docker entrypoint to run OCC commands
+    if [ "$(id -u)" = 0 ]; then
+        echo "Running as root is not supported."
+        exit 2
+    fi
+
+    echo "STARTING post-start.sh"
+    occ="/var/www/html/occ"
+    count=0
+    limit=10
+    # There's a nextcloud setup process. First, wait for `occ` to exist
+    until [ -f "$occ" ] || [ "$count" -gt "$limit" ]
+    do
+        count=$((count+1))
+        wait=$((count*10))
+        echo "$occ doesn't exist yet, waiting $wait seconds"
+        sleep $wait
+    done
+
+    echo "$occ now exists!"
+
+    count=0
+
+    # As soon as the $occ command exist, we know that we can run occ, but
+    # Nextcloud might still be initializing, we use `occ` to find out whether
+    # the installation process has finished, and then we continue.
+    until [[ $(php /var/www/html/occ status --output json) =~ '"installed":true' ]] || [ "$count" -gt "$limit" ]
+    do
+        count=$((count+1))
+        wait=$((count*10))
+        echo "Nextcloud is not installed yet. Waiting $wait seconds..."
+        sleep $wait
+    done
+
+    echo "Nextcloud is now installed, we can do our thing!"
+
+    php $occ upgrade
+
+    echo "Updating database indices, columns, keys, etc."
+    php $occ db:add-missing-indices --no-interaction
+    php $occ db:add-missing-columns --no-interaction
+    php $occ db:add-missing-primary-keys --no-interaction
+    php $occ db:convert-filecache-bigint --no-interaction
+
+  extra.config.php: |-
+    <?php
+    $CONFIG = array(
+      'overwriteprotocol' => 'https',
+      'trusted_domains' => array(
+         'localhost',
+         'nextcloud2.${SECRET_DOMAIN_INTERNAL}',
+      ),
+      'trusted_proxies' => array(
+          0 => '${NET_POD_CIDR}'
+      ),
+      'forwarded_for_headers' => array(
+        0 => 'HTTP_X_FORWARDED_FOR',
+      ),
+
+      'appstoreenabled' => true,
+
+      'memcache.local' => '\OC\Memcache\APCu',
+      'memcache.distributed' => '\OC\Memcache\Redis',
+      'memcache.locking' => '\OC\Memcache\Redis',
+      'redis' => array(
+        'host' => getenv('REDIS_HOST'),
+        'port' => getenv('REDIS_HOST_PORT') ?: 6379,
+        'password' => getenv('REDIS_HOST_PASSWORD'),
+      ),
+
+      'apps_paths' => array(
+          0 => array (
+                  'path'     => OC::$SERVERROOT.'/apps',
+                  'url'      => '/apps',
+                  'writable' => false,
+          ),
+          1 => array (
+                  'path'     => OC::$SERVERROOT.'/custom_apps',
+                  'url'      => '/custom_apps',
+                  'writable' => true,
+          ),
+      ),
+
+      'htaccess.RewriteBase' => '/',
+
+      // SMTP without authentication
+      'mail_smtpmode' => 'smtp',
+      'mail_smtphost' => getenv('SMTP_HOST'),
+      'mail_smtpport' => getenv('SMTP_PORT') ?: (getenv('SMTP_SECURE') ? 465 : 25),
+      'mail_smtpsecure' => getenv('SMTP_SECURE') ?: '',
+      'mail_smtpauth' => '',
+      'mail_smtpauthtype' => '',
+      'mail_smtppassword' => '',
+      'mail_smtpname' => '',
+      'mail_from_address' => getenv('MAIL_FROM_ADDRESS'),
+      'mail_domain' => getenv('MAIL_DOMAIN'),
+
+       // Circumvention for client freezes - https://github.com/nextcloud/desktop/issues/5094
+      'bulkupload.enabled' => false,
+
+      'backgroundjobs_mode' => 'webcron',
+    );
