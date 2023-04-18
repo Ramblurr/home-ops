@@ -402,6 +402,12 @@ set firewall name lan-mgmt rule 4 destination group address-group 'k8s_cluster_t
 set firewall name lan-mgmt rule 4 protocol 'tcp_udp'
 set firewall name lan-mgmt rule 4 source group address-group 'admin'
 
+set firewall name lan-mgmt rule 5 action 'accept'
+set firewall name lan-mgmt rule 5 description 'Rule: accept_dns'
+set firewall name lan-mgmt rule 5 destination port 'domain,domain-s'
+set firewall name lan-mgmt rule 5 destination group address-group 'local-dns-servers'
+set firewall name lan-mgmt rule 5 protocol 'tcp_udp'
+
 
 # From LAN to SERVICES
 set firewall name lan-services default-action 'accept'
@@ -898,6 +904,12 @@ set firewall name primary-mgmt rule 2 description 'Rule: accept_ingress_to_conta
 set firewall name primary-mgmt rule 2 destination address '10.9.8.30'
 set firewall name primary-mgmt rule 2 destination port 'http,https'
 set firewall name primary-mgmt rule 2 protocol 'tcp'
+
+set firewall name primary-mgmt rule 3 action 'accept'
+set firewall name primary-mgmt rule 3 description 'Rule: accept_dns'
+set firewall name primary-mgmt rule 3 destination port 'domain,domain-s'
+set firewall name primary-mgmt rule 3 destination group address-group 'local-dns-servers'
+set firewall name primary-mgmt rule 3 protocol 'tcp_udp'
 
 
 # From PRIMARY to SERVICES
