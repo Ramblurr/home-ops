@@ -293,6 +293,9 @@ data:
     php $occ db:add-missing-primary-keys --no-interaction
     php $occ db:convert-filecache-bigint --no-interaction
 
+    # remove nextcloud advertisements for new users
+    rm -rf /var/www/html/core/skeleton/*
+
   extra.config.php: |-
     <?php
     $CONFIG = array(
