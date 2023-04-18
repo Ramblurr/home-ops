@@ -40,7 +40,7 @@ spec:
               env:
                 # Put database names to backup here
                 - name: POSTGRES_DB
-                  value: "postgres,nextcloud"
+                  value: "postgres,nextcloud,nextcloud2"
                 - name: BACKUP_KEEP_DAYS
                   value: "7"
                 - name: BACKUP_KEEP_WEEKS
