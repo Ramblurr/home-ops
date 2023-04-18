@@ -1,0 +1,36 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.26.1-standalone-strict/persistentvolume-v1.json
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgres-backup-nfs
+  namespace: database
+spec:
+  capacity:
+    storage: 1Mi # Size does not matter
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  storageClassName: postgres-backup-nfs
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    server: "${NFS_SERVER}"
+    path: /mnt/tank2/backups/k8s-test
+  mountOptions:
+    - vers=3
+    - rw
+    - nolock # TODO https://github.com/siderolabs/talos/issues/6582
+    - noatime
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.26.1-standalone-strict/persistentvolumeclaim-v1.json
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-backup-nfs
+  namespace: database
+spec:
+  accessModes: ["ReadWriteMany"]
+  storageClassName: postgres-backup-nfs
+  resources:
+    requests:
+      storage: 1Mi # Size does not matter
