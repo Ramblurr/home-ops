@@ -45,7 +45,7 @@ spec:
       SMTP_PORT: "${SMTP_RELAY_PORT}"
       SMTP_AUTHTYPE: ""
       MAIL_FROM_ADDRESS: "${SECRET_SMTP_FROM_USER}"
-      MAIL_DOMAIN: "${SECRET_DOMAIN_INTERNAL}"
+      MAIL_DOMAIN: "${SECRET_DOMAIN}"
       POSTGRES_HOST:
         valueFrom:
           secretKeyRef:
