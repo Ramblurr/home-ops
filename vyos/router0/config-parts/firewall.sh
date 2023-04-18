@@ -105,6 +105,7 @@ set firewall group address-group wall-dashboards address '10.8.50.10'
 
 set firewall group address-group admin address '192.168.1.82'
 set firewall group address-group admin address '192.168.1.243'
+set firewall group address-group admin address '10.9.6.14'
 
 set firewall group address-group mali address '10.9.4.10'
 set firewall group address-group mali address '10.9.10.10'
@@ -171,5 +172,6 @@ set firewall group port-group octoprint port '80'
 set firewall group port-group octoprint port '5000'
 set firewall group port-group octoprint port '443'
 set firewall group port-group homeassistant port '8123'
+set firewall group port-group k8s-api port '6443'
 
 set firewall group port-group zigbee2mqtt port '8080'
