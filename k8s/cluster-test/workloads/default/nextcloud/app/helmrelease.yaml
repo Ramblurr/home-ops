@@ -151,7 +151,6 @@ spec:
           <?php
           $CONFIG = array (
             'appstoreenabled' => true,
-            'mail_domain' => '${SECRET_DOMAIN_INTERNAL}',
           );
         # Circumvention for client freezes - https://github.com/nextcloud/desktop/issues/5094
         bulkupload.config.php: |-
