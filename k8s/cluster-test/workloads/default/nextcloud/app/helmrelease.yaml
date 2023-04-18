@@ -160,7 +160,7 @@ spec:
           );
       mail:
         enabled: true
-        fromAddress: ${SECRET_SMTP_FROM}
+        fromAddress: ${SECRET_SMTP_FROM_USER}
         domain: ${SECRET_DOMAIN_INTERNAL}
         smtp:
           host: ${SMTP_RELAY_HOST}
@@ -263,12 +263,9 @@ spec:
       #database: set in secret
     cronjob:
       enabled: true
-      failedJobsHistoryLimit: 1
-      successfulJobsHistoryLimit: 1
       securityContext:
         runAsUser: 2000
         runAsGroup: 2000
-        runAsNonRoot: true
     livenessProbe:
       enabled: false
     readinessProbe:
