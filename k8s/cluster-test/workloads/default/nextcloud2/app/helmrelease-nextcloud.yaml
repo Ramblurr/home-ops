@@ -353,4 +353,5 @@ data:
       'bulkupload.enabled' => false,
 
       'backgroundjobs_mode' => 'webcron',
+      'default_phone_region' => 'AT',
     );
