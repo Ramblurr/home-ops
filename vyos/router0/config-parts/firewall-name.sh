@@ -1057,7 +1057,7 @@ set firewall name wan-mgmt description 'From WAN to MGMT'
 set firewall name wan-mgmt enable-default-log
 set firewall name wan-mgmt rule 1 action 'accept'
 set firewall name wan-mgmt rule 1 description 'Rule: accept_ingress_from_cloudflare'
-set firewall name wan-mgmt rule 1 destination group address-group 'k8s_ingress'
+set firewall name wan-mgmt rule 1 destination group address-group 'k8s_cluster_test_ingress'
 set firewall name wan-mgmt rule 1 destination port 'http,https'
 set firewall name wan-mgmt rule 1 protocol 'tcp'
 set firewall name wan-mgmt rule 1 source group network-group 'cloudflare-ipv4'
