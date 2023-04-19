@@ -14,7 +14,7 @@ spec:
   storageClassName: postgres-backup-nfs
   persistentVolumeReclaimPolicy: Retain
   nfs:
-    server: "${NFS_SERVER}"
+    server: "${SECRET_NFS_SERVER}"
     path: /mnt/tank2/backups/k8s-test
   mountOptions:
     - vers=3
