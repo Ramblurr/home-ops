@@ -14,8 +14,8 @@ spec:
   storageClassName: nextcloud-nfs
   persistentVolumeReclaimPolicy: Retain
   nfs:
-    server: "${NFS_SERVER}"
-    path: /mnt/tank2/services/nextcloud.k8stest.socozy.casa
+    server: "${SECRET_NFS_SERVER}"
+    path: /mnt/tank2/services/nextcloud.${SECRET_DOMAIN_INTERNAL}
   mountOptions:
     - vers=3
     - rw
