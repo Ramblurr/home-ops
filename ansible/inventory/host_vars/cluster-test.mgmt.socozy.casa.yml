@@ -74,6 +74,7 @@ cluster_net_lb_ext_cidr: 10.10.10.0/23
 cluster_net_lb_ext_usable_range: "{{  ( cluster_net_lb_ext_cidr | ansible.utils.usable_range).usable_ips[1:-1] }}"
 cluster_net_lb_ext_range: "{{ cluster_net_lb_ext_usable_range | first }}-{{ cluster_net_lb_ext_usable_range | last }}"
 cluster_svc_ingress_addr: 10.10.10.1
+cluster_svc_ingress_internal_addr: 10.10.10.3
 cluster_svc_postgress_addr: 10.10.10.2
 cluster_svc_k8s_gateway_dns_addr: 10.10.10.53
 cluster_default_storage_class: test-k8s-storage
