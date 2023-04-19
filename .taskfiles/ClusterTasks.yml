@@ -2,7 +2,6 @@
 version: "3"
 
 tasks:
-
   reconcile:
     desc: Force update Flux to pull in changes from your Git repository
     cmds:
@@ -67,3 +66,11 @@ tasks:
       - task: certificates
       - task: ingresses
       - task: pods
+
+  schemas:
+    desc: Pull the latest CRD schemas for this cluster
+    cmds:
+      - |
+        mkdir -p {{.CLUSTER_DIR}}/schemas
+        flux pull artifact oci://ghcr.io/ramblurr/kubernetes-schemas-oci:latest \
+            --output={{.CLUSTER_DIR}}/schemas
