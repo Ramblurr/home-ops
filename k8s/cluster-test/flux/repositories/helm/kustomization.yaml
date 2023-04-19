@@ -6,6 +6,7 @@ metadata:
   namespace: flux-system
   name: repositories
 resources:
+  - actions-runner-controller-charts.yaml
   - backube.yaml
   - bitnami-charts.yaml
   - bjw-s.yaml
@@ -20,9 +21,9 @@ resources:
   - kustomization.yaml
   - metrics-server-charts.yaml
   - nextcloud.yaml
+  - piraeus.yaml
   - prometheus-community-charts.yaml
   - rook-ceph-charts.yaml
   - stakater.yaml
   - weave-gitops.yaml
   - zalando-postgres-operator.yaml
-  - piraeus.yaml
