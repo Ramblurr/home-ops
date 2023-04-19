@@ -64,6 +64,14 @@ spec:
         enabled: false
       extraArgs:
         default-ssl-certificate: "networking/${SECRET_DOMAIN/./-}-wildcard-tls"
+      topologySpreadConstraints:
+        - maxSkew: 2
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/instance: ingress-nginx
+              app.kubernetes.io/component: controller
       podAnnotations:
         configmap.reloader.stakater.com/reload: cloudflare-networks
       resources:
