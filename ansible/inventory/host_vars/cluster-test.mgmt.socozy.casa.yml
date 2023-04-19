@@ -77,6 +77,7 @@ cluster_svc_ingress_addr: 10.10.10.1
 cluster_svc_postgress_addr: 10.10.10.2
 cluster_svc_k8s_gateway_dns_addr: 10.10.10.53
 cluster_default_storage_class: test-k8s-storage
+cluster_default_storage_class_cephfs: test-k8s-cephfs
 cluster_node_boot_disk_storage_pool: test-vms
 cluster_node_boot_disk_size: 100G
 cluster_node_network_bridge: vmbr0
