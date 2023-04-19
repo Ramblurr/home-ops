@@ -63,4 +63,4 @@ spec:
       limits:
         memory: 250Mi
     podAnnotations:
-      secret.reloader.stakater.com/reload: external-dns-secret
+      secret.reloader.stakater.com/reload: external-dns-secrets
