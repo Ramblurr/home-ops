@@ -1,5 +1,6 @@
 ---
-apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
+# yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: workloads
@@ -24,7 +25,7 @@ spec:
         name: global-secrets
   patches:
     - patch: |-
-        apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+        apiVersion: kustomize.toolkit.fluxcd.io/v1
         kind: Kustomization
         metadata:
           name: not-used
@@ -43,6 +44,5 @@ spec:
                 name: global-secrets
       target:
         group: kustomize.toolkit.fluxcd.io
-        version: v1beta2
         kind: Kustomization
         labelSelector: substitution.flux.home.arpa/disabled notin (true)
