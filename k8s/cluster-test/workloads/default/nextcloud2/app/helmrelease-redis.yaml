@@ -27,7 +27,7 @@ spec:
       REDIS_PASSWORD:
         valueFrom:
           secretKeyRef:
-            name: nextcloud2
+            name: nextcloud2-secret
             key: REDIS_PASSWORD
     persistence:
       data:

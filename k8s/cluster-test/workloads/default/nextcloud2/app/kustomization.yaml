@@ -6,7 +6,7 @@ namespace: default
 resources:
   - pvc.yaml
   - database.yaml
-  - secret.sops.yaml
+  - externalsecret.yaml
   - nginx-config.yaml
   - helmrelease-redis.yaml
   - helmrelease-nextcloud.yaml

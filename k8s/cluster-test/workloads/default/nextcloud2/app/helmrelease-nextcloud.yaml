@@ -34,12 +34,12 @@ spec:
       NEXTCLOUD_ADMIN_USER:
         valueFrom:
           secretKeyRef:
-            name: nextcloud2
+            name: nextcloud2-secret
             key: ADMIN_USERNAME
       NEXTCLOUD_ADMIN_PASSWORD:
         valueFrom:
           secretKeyRef:
-            name: nextcloud2
+            name: nextcloud2-secret
             key: ADMIN_PASSWORD
       SMTP_HOST: "${SMTP_RELAY_HOST}"
       SMTP_PORT: "${SMTP_RELAY_PORT}"
@@ -71,7 +71,7 @@ spec:
       REDIS_HOST_PASSWORD:
         valueFrom:
           secretKeyRef:
-            name: nextcloud2
+            name: nextcloud2-secret
             key: REDIS_PASSWORD
       NEXTCLOUD_DATA_DIR: /data
     additionalContainers:
