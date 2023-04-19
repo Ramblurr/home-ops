@@ -2,7 +2,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: ingress-nginx
+  name: ingress-nginx-internal
   namespace: networking
 spec:
   interval: 15m
@@ -27,53 +27,43 @@ spec:
     keepHistory: false
   values:
     controller:
+      ingressClassResource:
+        name: nginx-internal
+      ingressClass: nginx-internal
       extraEnvs:
         - name: TZ
           value: "${SECRET_TIMEZONE}"
       service:
         annotations:
-          io.cilium/lb-ipam-ips: "${SVC_INGRESS_ADDR}"
-        externalTrafficPolicy: Local
+          io.cilium/lb-ipam-ips: "${SVC_INGRESS_INTERNAL_ADDR}"
+        internalTrafficPolicy: Local
       publishService:
         enabled: true
-      ingressClassResource:
-        default: true
       config:
         client-header-timeout: 120
         client-body-buffer-size: "100M"
         client-body-timeout: 120
         custom-http-errors: 400,401,403,404,500,502,503,504
         enable-brotli: "true"
-        forwarded-for-header: "CF-Connecting-IP"
         hsts-max-age: "31449600"
         keep-alive: 120
         keep-alive-requests: 10000
         proxy-body-size: "100M"
-        ssl-protocols: "TLSv1.3 TLSv1.2"
-        use-forwarded-headers: "true"
+        ssl-protocols: "TLSv1.3"
         log-format-escape-json: "true"
-        log-format-upstream: >-
-          {"time": "$time_iso8601", "remote_addr": "$proxy_protocol_addr",
-          "x_forwarded_for": "$proxy_add_x_forwarded_for", "request_id": "$req_id",
-          "remote_user": "$remote_user", "bytes_sent": $bytes_sent, "request_time": $request_time,
-          "status": $status, "vhost": "$host", "request_proto": "$server_protocol",
-          "path": "$uri", "request_query": "$args", "request_length": $request_length,
-          "duration": $request_time,"method": "$request_method", "http_referrer": "$http_referer",
-          "http_user_agent": "$http_user_agent"}
       metrics:
         enabled: false
       extraArgs:
         default-ssl-certificate: "networking/${SECRET_DOMAIN/./-}-wildcard-tls"
+        ingress-class: nginx-internal
       topologySpreadConstraints:
         - maxSkew: 2
           topologyKey: kubernetes.io/hostname
           whenUnsatisfiable: DoNotSchedule
           labelSelector:
             matchLabels:
-              app.kubernetes.io/instance: ingress-nginx
+              app.kubernetes.io/instance: ingress-nginx-internal
               app.kubernetes.io/component: controller
-      podAnnotations:
-        configmap.reloader.stakater.com/reload: cloudflare-networks
       resources:
         requests:
           cpu: 10m
@@ -87,13 +77,6 @@ spec:
         tag: 2.23.0
       extraEnvs:
         - name: TEMPLATE_NAME
-          value: lost-in-space
+          value: hacker-terminal
         - name: SHOW_DETAILS
           value: "false"
-  valuesFrom:
-    # Cloudflare Networks
-    # https://www.cloudflare.com/ips/
-    - targetPath: controller.config.proxy-real-ip-cidr
-      kind: ConfigMap
-      name: cloudflare-networks
-      valuesKey: cloudflare-networks.txt

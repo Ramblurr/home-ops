@@ -49,7 +49,7 @@ spec:
         annotations:
           external-dns.alpha.kubernetes.io/target: ipv4.${SECRET_DOMAIN}
           hajimari.io/enable: "false"
-        ingressClassName: nginx
+        ingressClassName: nginx-external
         hosts:
           - host: &host tinker-webhook.${SECRET_DOMAIN}
             paths:

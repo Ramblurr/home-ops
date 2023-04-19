@@ -167,7 +167,7 @@ spec:
     ingress:
       main:
         enabled: true
-        ingressClassName: nginx
+        ingressClassName: nginx-external
         annotations:
           external-dns.home.arpa/enabled: "true"
           hajimari.io/enable: "true"

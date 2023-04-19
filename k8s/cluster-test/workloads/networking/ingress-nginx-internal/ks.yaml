@@ -3,12 +3,12 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization
 metadata:
-  name: cluster-workloads-ingress-nginx
+  name: cluster-workloads-ingress-nginx-internal
   namespace: flux-system
 spec:
   dependsOn:
     - name: cluster-workloads-cert-manager-issuers
-  path: ./k8s/cluster-test/workloads/networking/ingress-nginx/app
+  path: ./k8s/cluster-test/workloads/networking/ingress-nginx-internal/app
   prune: true
   sourceRef:
     kind: GitRepository
