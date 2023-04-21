@@ -163,6 +163,8 @@ set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-map
 set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-mapping rorty mac-address '1c:83:41:30:a8:bd'
 set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-mapping aquinas ip-address '192.168.1.243'
 set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-mapping aquinas mac-address 'a4:4c:c8:a9:3c:bf'
+set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-mapping quine-2-5g ip-address '192.168.1.83'
+set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-mapping quine-2-5g mac-address 'c8:7f:54:6f:77:02'
 ##set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-mapping mill-lan ip-address '192.168.1.13'
 ##set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-mapping mill-lan mac-address ''
 ##set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-mapping witt-lan ip-address '192.168.1.11'
@@ -264,6 +266,8 @@ set service dhcp-server shared-network-name DATA subnet 10.9.10.0/23 name-server
 set service dhcp-server shared-network-name DATA subnet 10.9.10.0/23 range 0 start '10.9.11.200'
 set service dhcp-server shared-network-name DATA subnet 10.9.10.0/23 range 0 stop '10.9.11.254'
 
+set service dhcp-server shared-network-name DATA subnet 10.9.10.0/23 static-mapping quine-10g ip-address '10.9.10.5'
+set service dhcp-server shared-network-name DATA subnet 10.9.10.0/23 static-mapping quine-10g mac-address 'c8:7f:54:6f:71:3f'
 #set service dhcp-server shared-network-name DATA subnet 10.9.10.0/23 static-mapping witt-data ip-address '10.9.10.11'
 #set service dhcp-server shared-network-name DATA subnet 10.9.10.0/23 static-mapping witt-data mac-address ''
 #set service dhcp-server shared-network-name DATA subnet 10.9.10.0/23 static-mapping mali-data ip-address '10.9.10.10'

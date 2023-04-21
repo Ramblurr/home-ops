@@ -95,6 +95,7 @@ set firewall group address-group vyos_chronyd address '10.5.0.5'
 set firewall group address-group wall-dashboards address '10.8.50.10'
 
 set firewall group address-group admin address '192.168.1.82'
+set firewall group address-group admin address '192.168.1.83'
 set firewall group address-group admin address '192.168.1.243'
 set firewall group address-group admin address '10.9.6.14'
 
