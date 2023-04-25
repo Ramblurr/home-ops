@@ -219,6 +219,9 @@ set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-ma
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping pixel-6a mac-address '82:0b:5a:5d:57:cc'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping galaxy-s21 ip-address '10.9.6.14'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping galaxy-s21 mac-address 'c6:1c:79:b2:75:8b'
+set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping ipad-personal ip-address '10.9.6.15'
+set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping ipad-personal mac-address '32:39:a9:ab:34:38'
+
 
 #container0
 #net1

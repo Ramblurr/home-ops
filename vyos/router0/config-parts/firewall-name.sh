@@ -460,6 +460,18 @@ set firewall name lan-primary rule 7 destination port '9100'
 set firewall name lan-primary rule 7 protocol 'tcp_udp'
 set firewall name lan-primary rule 7 source group address-group 'admin'
 
+set firewall name lan-primary rule 8 action 'accept'
+set firewall name lan-primary rule 8 description 'Rule: accept_kde_connect'
+set firewall name lan-primary rule 8 destination group port-group 'kde-connect'
+set firewall name lan-primary rule 8 protocol 'tcp_udp'
+set firewall name lan-primary rule 8 source group address-group 'kde-connect-devices'
+
+set firewall name lan-primary rule 9 action 'accept'
+set firewall name lan-primary rule 9 description 'Rule: accept_syncthing'
+set firewall name lan-primary rule 9 destination group port-group 'syncthing'
+set firewall name lan-primary rule 9 protocol 'tcp_udp'
+set firewall name lan-primary rule 9 source group address-group 'kde-connect-devices'
+
 # From LAN to DATA
 set firewall name lan-data default-action 'drop'
 set firewall name lan-data description 'From LAN to DATA'
@@ -848,6 +860,18 @@ set firewall name primary-lan rule 1 description 'Rule: accept_dns'
 set firewall name primary-lan rule 1 destination port 'domain,domain-s'
 set firewall name primary-lan rule 1 destination group address-group 'local-dns-servers'
 set firewall name primary-lan rule 1 protocol 'tcp_udp'
+
+set firewall name primary-lan rule 2 action 'accept'
+set firewall name primary-lan rule 2 description 'Rule: accept_kde_connect'
+set firewall name primary-lan rule 2 destination group port-group 'kde-connect'
+set firewall name primary-lan rule 2 protocol 'tcp_udp'
+set firewall name primary-lan rule 2 source group address-group 'kde-connect-devices'
+
+set firewall name primary-lan rule 3 action 'accept'
+set firewall name primary-lan rule 3 description 'Rule: accept_syncthing'
+set firewall name primary-lan rule 3 destination group port-group 'syncthing'
+set firewall name primary-lan rule 3 protocol 'tcp_udp'
+set firewall name primary-lan rule 3 source group address-group 'kde-connect-devices'
 
 # From PRIMARY to LOCAL
 set firewall name primary-local default-action 'drop'

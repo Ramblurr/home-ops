@@ -99,6 +99,12 @@ set firewall group address-group admin address '192.168.1.83'
 set firewall group address-group admin address '192.168.1.243'
 set firewall group address-group admin address '10.9.6.14'
 
+set firewall group address-group kde-connect-devices address '192.168.1.83'
+set firewall group address-group kde-connect-devices address '192.168.1.82'
+set firewall group address-group kde-connect-devices address '192.168.1.243'
+set firewall group address-group kde-connect-devices address '10.9.6.15'
+set firewall group address-group kde-connect-devices address '10.9.6.14'
+
 set firewall group address-group mali address '10.9.4.10'
 set firewall group address-group mali address '10.9.10.10'
 
@@ -166,4 +172,9 @@ set firewall group port-group octoprint port '443'
 set firewall group port-group homeassistant port '8123'
 set firewall group port-group k8s-api port '6443'
 
+set firewall group port-group syncthing port '22000'
+set firewall group port-group syncthing port '21027'
+
 set firewall group port-group zigbee2mqtt port '8080'
+
+set firewall group port-group kde-connect port '1714-1764'
