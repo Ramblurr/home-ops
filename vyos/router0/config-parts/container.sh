@@ -95,3 +95,15 @@ set container name udp-broadcast-relay-roon image 'ghcr.io/onedr0p/udp-broadcast
 set container name udp-broadcast-relay-roon memory '0'
 set container name udp-broadcast-relay-roon restart 'on-failure'
 set container name udp-broadcast-relay-roon shared-memory '0'
+
+# udp-broadcast-relay-syncthing
+set container name udp-broadcast-relay-syncthing allow-host-networks
+set container name udp-broadcast-relay-syncthing cap-add 'net-raw'
+set container name udp-broadcast-relay-syncthing environment CFG_DEV value 'eth3.4;eth3'
+set container name udp-broadcast-relay-syncthing environment CFG_ID value '3'
+set container name udp-broadcast-relay-syncthing environment CFG_PORT value '21027'
+set container name udp-broadcast-relay-syncthing environment SEPARATOR value ';'
+set container name udp-broadcast-relay-syncthing image 'ghcr.io/onedr0p/udp-broadcast-relay-redux:1.0.27'
+set container name udp-broadcast-relay-syncthing memory '0'
+set container name udp-broadcast-relay-syncthing restart 'on-failure'
+set container name udp-broadcast-relay-syncthing shared-memory '0'
