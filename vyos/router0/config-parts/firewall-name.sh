@@ -382,9 +382,8 @@ set firewall name lan-mgmt rule 1 description 'Rule: accept_icmp'
 set firewall name lan-mgmt rule 1 protocol 'icmp'
 
 set firewall name lan-mgmt rule 2 action 'accept'
-set firewall name lan-mgmt rule 2 description 'Rule: accept_k8s_ingress_from_admin'
-set firewall name lan-mgmt rule 2 destination port 'http,https'
-set firewall name lan-mgmt rule 2 destination group address-group 'k8s_cluster_test_ingress_all'
+set firewall name lan-mgmt rule 2 description 'Rule: accept_http_from_admin'
+set firewall name lan-mgmt rule 2 destination port 'http,https,8006'
 set firewall name lan-mgmt rule 2 protocol 'tcp_udp'
 set firewall name lan-mgmt rule 2 source group address-group 'admin'
 
