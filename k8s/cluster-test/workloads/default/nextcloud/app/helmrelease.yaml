@@ -78,7 +78,7 @@ spec:
           subPath: redis-session.ini
       extraInitContainers:
         - name: redis-session-fixer
-          image: docker.io/library/nextcloud:26.0.0-fpm-alpine
+          image: docker.io/library/nextcloud:26.0.1-fpm-alpine
           volumeMounts:
             - name: nextcloud-php-conf-d
               mountPath: /output
@@ -99,7 +99,7 @@ spec:
             - -c
             - (apk update && apk add gettext && cat /input/redis-session.ini && env && ls -al /input && ls /output -al && cat /input/redis-session.ini | envsubst > /output/redis-session.ini )
         - name: nfs-fixer
-          image: docker.io/library/nextcloud:26.0.0-fpm-alpine
+          image: docker.io/library/nextcloud:26.0.1-fpm-alpine
           securityContext:
             runAsUser: 2000
           volumeMounts:
