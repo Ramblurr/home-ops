@@ -98,6 +98,7 @@ set firewall group address-group admin address '192.168.1.82'
 set firewall group address-group admin address '192.168.1.83'
 set firewall group address-group admin address '192.168.1.243'
 set firewall group address-group admin address '10.9.6.14'
+set firewall group address-group admin address '10.9.6.15'
 
 set firewall group address-group kde-connect-devices address '192.168.1.83'
 set firewall group address-group kde-connect-devices address '192.168.1.82'
