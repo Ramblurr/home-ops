@@ -872,6 +872,12 @@ set firewall name primary-lan rule 3 destination group port-group 'syncthing'
 set firewall name primary-lan rule 3 protocol 'tcp_udp'
 set firewall name primary-lan rule 3 source group address-group 'kde-connect-devices'
 
+set firewall name primary-lan rule 4 action 'accept'
+set firewall name primary-lan rule 4 description 'Rule: accept_admin_ssh'
+set firewall name primary-lan rule 4 destination port 'ssh'
+set firewall name primary-lan rule 4 protocol 'tcp_udp'
+set firewall name primary-lan rule 4 source group address-group 'admin'
+
 # From PRIMARY to LOCAL
 set firewall name primary-local default-action 'drop'
 set firewall name primary-local description 'From PRIMARY to LOCAL'
@@ -948,6 +954,13 @@ set firewall name primary-mgmt rule 5 destination group port-group 'k8s-api'
 set firewall name primary-mgmt rule 5 destination group address-group 'k8s_cluster_test_api'
 set firewall name primary-mgmt rule 5 protocol 'tcp_udp'
 set firewall name primary-mgmt rule 5 source group address-group 'admin'
+
+set firewall name primary-mgmt rule 6 action 'accept'
+set firewall name primary-mgmt rule 6 description 'Rule: accept_admin_ssh'
+set firewall name primary-mgmt rule 6 destination port 'ssh'
+set firewall name primary-mgmt rule 6 protocol 'tcp_udp'
+set firewall name primary-mgmt rule 6 source group address-group 'admin'
+
 
 
 # From PRIMARY to SERVICES
