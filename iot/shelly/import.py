@@ -8,7 +8,7 @@ else:
 
 # url = "http://10.8.50.55"
 ssid = "SoCozy-not"
-key = "***REMOVED***"
+key = os.environ["WLAN_NOT_PASS"]
 
 
 def fetch(path):

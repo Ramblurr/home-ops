@@ -5,7 +5,7 @@ import os
 
 ha_ip = "10.9.4.25"
 ssid = "SoCozy-not"
-key = "***REMOVED***"
+key = os.environ["WLAN_NOT_PASS"]
 netmask = "255.255.254.0"
 gateway = "10.8.60.1"
 dns = "10.9.4.4"
