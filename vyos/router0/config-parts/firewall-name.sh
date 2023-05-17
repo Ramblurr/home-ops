@@ -455,6 +455,18 @@ set firewall name lan-primary rule 9 destination group port-group 'syncthing'
 set firewall name lan-primary rule 9 protocol 'tcp_udp'
 set firewall name lan-primary rule 9 source group address-group 'kde-connect-devices'
 
+set firewall name lan-primary rule 10 action 'accept'
+set firewall name lan-primary rule 10 description 'Rule: accept_admin_to_offsite'
+set firewall name lan-primary rule 10 protocol all
+set firewall name lan-primary rule 10 destination group network-group 'offsite1'
+set firewall name lan-primary rule 10 source group address-group 'admin'
+
+set firewall name lan-primary rule 11 action 'accept'
+set firewall name lan-primary rule 11 description 'Rule: accept_admin_all'
+set firewall name lan-primary rule 11 destination port '1-65535'
+set firewall name lan-primary rule 11 protocol 'tcp_udp'
+set firewall name lan-primary rule 11 source group address-group 'admin'
+
 # From LAN to DATA
 set firewall name lan-data default-action 'drop'
 set firewall name lan-data description 'From LAN to DATA'
