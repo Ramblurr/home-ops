@@ -7,7 +7,7 @@ collections:
   - name: community.general
     version: 7.0.0
   - name: ansible.posix
-    version: 1.5.2
+    version: 1.5.4
   - type: git
     name: https://github.com/Ramblurr/ramblurr.freenas.git
     version: main
