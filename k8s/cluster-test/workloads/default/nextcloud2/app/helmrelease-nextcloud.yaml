@@ -23,7 +23,7 @@ spec:
     remediation:
       retries: 0
   dependsOn:
-    - name: nextcloud-redis
+    - name: nextcloud-redis2
       namespace: default
   values:
     image:
@@ -66,7 +66,7 @@ spec:
           secretKeyRef:
             name: database-nextcloud2-user
             key: PASSWORD
-      REDIS_HOST: nextcloud-redis.default.svc.cluster.local
+      REDIS_HOST: nextcloud-redis2.default.svc.cluster.local
       REDIS_HOST_PORT: 6379
       REDIS_HOST_PASSWORD:
         valueFrom:

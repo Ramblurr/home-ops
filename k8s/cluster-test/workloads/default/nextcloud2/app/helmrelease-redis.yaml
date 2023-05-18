@@ -2,7 +2,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: nextcloud-redis
+  name: nextcloud2-redis
   namespace: default
 spec:
   interval: 15m
