@@ -21,7 +21,6 @@ resources:
   - kubernetes-replicator-charts.yaml
   - kustomization.yaml
   - metrics-server-charts.yaml
-  - nextcloud.yaml
   - piraeus.yaml
   - prometheus-community-charts.yaml
   - rook-ceph-charts.yaml
