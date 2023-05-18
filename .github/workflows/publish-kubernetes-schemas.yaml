@@ -1,3 +1,4 @@
+# shellcheck disable=all
 ---
 name: "Publish Kubernetes Schemas"
 
