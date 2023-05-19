@@ -44,4 +44,4 @@ data:
         protocol: bgp
         avoid-buggy-ips: true
         addresses:
-          - 10.10.10.1-10.10.11.254
+          - 10.10.12.1-10.10.13.254
