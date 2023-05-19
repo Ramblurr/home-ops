@@ -1,6 +1,6 @@
 #!/bin/vbash
 #
-# Ansible managed: system-generated.sh.j2 modified on 2023-03-22 15:11:00 by ramblurr on toolbox
+# Ansible managed: system-generated.sh.j2 modified on 2023-03-22 15:11:00 by ramblurr on quine
 #
 # shellcheck shell=bash
 
@@ -11,5 +11,7 @@ set system login user vyos authentication public-keys JuiceSSH key 'AAAAE2VjZHNh
 set system login user vyos authentication public-keys JuiceSSH type 'ecdsa-sha2-nistp384'
 set system login user vyos authentication public-keys casey@ipad key 'AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBJ6XVIQ8DU60p0cjBti+kJgd/UqM1tV4M5gFIoR+I0tQ5XmWU65V91uxfeJMBG0Owoweod2q1qKhH3xic9tIHHA='
 set system login user vyos authentication public-keys casey@ipad type 'ecdsa-sha2-nistp256'
+set system login user vyos authentication public-keys casey-ipad-new key 'AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBBkONauJo6DuKW6F49400J5r7HTDf8jPrcmm2CrRFN7FDEfJ8uS6+FJykOobOnBBzkJqSAy2F08TRaovU4eBYNg='
+set system login user vyos authentication public-keys casey-ipad-new type 'ecdsa-sha2-nistp256'
 set system login user vyos authentication public-keys disaster key 'AAAAC3NzaC1lZDI1NTE5AAAAIF7TTPusOHuyKotZBcwWqIH3B+cRRDQM46+lvATGNAWO'
 set system login user vyos authentication public-keys disaster type 'ssh-ed25519'

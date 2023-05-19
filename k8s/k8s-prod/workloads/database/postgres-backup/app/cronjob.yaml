@@ -1,0 +1,74 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: postgres-backup
+  namespace: database
+spec:
+  schedule: "0 4 * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          automountServiceAccountToken: false
+          enableServiceLinks: false
+          securityContext:
+            runAsUser: 2000
+            runAsGroup: 2000
+            fsGroup: 2000
+            supplementalGroups:
+              - 65541
+          initContainers:
+            - name: nfs-fixer
+              image: docker.io/library/alpine:20230329
+              securityContext:
+                runAsUser: 2000
+              volumeMounts:
+                - name: postgres-backup-nfs
+                  mountPath: /mnt/nfs-fix
+              command:
+                - sh
+                - -c
+                - (mkdir -p /mnt/nfs-fix/postgres && chmod  0770 /mnt/nfs-fix && chmod 0770 /mnt/nfs-fix/postgres && chgrp 2000 /mnt/nfs-fix /mnt/nfs-fix/postgres && ls -al /mnt/nfs-fix && touch /mnt/nfs-fix/postgres/hello)
+          containers:
+            - name: zalando-postgres-backup
+              image: docker.io/prodrigestivill/postgres-backup-local:15@sha256:b3905c58ab8c1fb7596e2f90f059c65d61c2a813232e6eca4a3f5ce019bfbd61
+              imagePullPolicy: IfNotPresent
+              command:
+                - "/backup.sh"
+              env:
+                # Put database names to backup here
+                - name: POSTGRES_DB
+                  value: "postgres,nextcloud,nextcloud2"
+                - name: BACKUP_KEEP_DAYS
+                  value: "7"
+                - name: BACKUP_KEEP_WEEKS
+                  value: "4"
+                - name: BACKUP_KEEP_MONTHS
+                  value: "6"
+                - name: POSTGRES_EXTRA_OPTS
+                  value: "-n public -Z6"
+                - name: POSTGRES_HOST
+                  value: postgres.database.svc.cluster.local
+                - name: POSTGRES_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: postgres.postgres.credentials.postgresql.acid.zalan.do
+                      key: username
+                - name: POSTGRES_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: postgres.postgres.credentials.postgresql.acid.zalan.do
+                      key: password
+              volumeMounts:
+                - name: postgres-backup-nfs
+                  mountPath: /backups
+                  subPath: postgres
+
+          restartPolicy: OnFailure
+
+          volumes:
+            - name: postgres-backup-nfs
+              persistentVolumeClaim:
+                claimName: postgres-backup-nfs

@@ -1,28 +1,193 @@
 ---
-cluster_name: cluster-prod
-cluster_domain: cluster-prod.mgmt.socozy.casa
-cluster_id: 1
-cluster_ntp_server: time.cloudflare.com
+cluster_name: k8s-prod
+cluster_domain: k8s-prod.mgmt.socozy.casa
+cluster_id: 0
+cluster_ntp_server: 192.168.1.1
 cluster_nameservers: "{{ local_nameservers | split (' ') }}"
-cluster_node_vlan_cidr_suffix: "{{ cidr_mgmt_suffix }}"
-cluster_node_vlan_gateway: "{{ mgmt_gateway }}"
+cluster_node_vlan_cidr_suffix: "{{ cidr_data_suffix }}"
+cluster_node_vlan_tag: "{{ data_id }}"
+cluster_node_vlan_gateway: "{{ data_gateway }}"
+cluster_node_bgp_peer: 192.168.1.1
+cluster_networks:
+  - data
+  - mgmt
+
+_data_net: &data_net
+  tag: "{{ data_id }}"
+  network_name: data
+  network_bridge: vmbr0
+  mtu: 9000
+  routeMetric: 2048
+
+_mgmt_net: &mgmt_net
+  tag: "{{ mgmt_id }}"
+  network_name: mgmt
+  network_bridge: vmbr1
+  mtu: 1500
+
+cluster_guest_agent_enabled: 0
 cluster_control_plane_nodes:
-  # ibnsina
-  - addr: 10.9.8.113
-  # mill
-  - addr: 10.9.8.114
-  # peirce
-  - addr: 10.9.8.115
-  # witt
-  - addr: 10.9.8.116
-  # debord
-  - addr: 10.9.8.117
-cluster_apiserver_addr: 10.9.8.112
-cluster_net_pod_cidr: 10.42.0.0/16
-cluster_net_svc_cidr: 10.43.0.0/16
-cluster_net_lb_ext_cidr: 10.11.10.0/23
+  cp0:
+    idx: 0
+    vmid: 401
+    target_node: ibnsina
+    ifaces:
+      data:
+        <<: *data_net
+        ip: 10.9.10.121
+        macaddr: "1a:10:50:00:01:00"
+      mgmt:
+        <<: *mgmt_net
+        ip: 10.9.9.121
+        macaddr: "1a:10:50:00:11:00"
+  cp1:
+    idx: 1
+    vmid: 402
+    target_node: debord
+    ifaces:
+      data:
+        <<: *data_net
+        ip: 10.9.10.122
+        macaddr: "1a:10:50:00:01:01"
+      mgmt:
+        <<: *mgmt_net
+        ip: 10.9.9.122
+        macaddr: "1a:10:50:00:11:01"
+  cp2:
+    idx: 2
+    vmid: 403
+    target_node: peirce
+    ifaces:
+      data:
+        <<: *data_net
+        ip: 10.9.10.123
+        macaddr: "1a:10:50:00:01:02"
+      mgmt:
+        <<: *mgmt_net
+        ip: 10.9.9.123
+        macaddr: "1a:10:50:00:11:02"
+#  cp3:
+#    idx: 3
+#    vmid: 404
+#    target_node: mill
+#    ifaces:
+#      data:
+#        <<: *data_net
+#        ip: 10.9.10.124
+#        macaddr: "1a:10:50:00:01:03"
+#      mgmt:
+#        <<: *mgmt_net
+#        ip: 10.9.9.124
+#        macaddr: "1a:10:50:00:11:03"
+#  cp4:
+#    idx: 4
+#    vmid: 405
+#    target_node: witt
+#    ifaces:
+#      data:
+#        <<: *data_net
+#        ip: 10.9.10.125
+#        macaddr: "1a:10:50:00:01:04"
+#      mgmt:
+#        <<: *mgmt_net
+#        ip: 10.9.9.125
+#        macaddr: "1a:10:50:00:11:04"
+cluster_worker_nodes:
+  wrk0:
+    idx: 0
+    vmid: 410
+    target_node: ibnsina
+    ifaces:
+      data:
+        <<: *data_net
+        ip: 10.9.10.130
+        macaddr: "1a:10:50:00:01:05"
+      mgmt:
+        <<: *mgmt_net
+        ip: 10.9.9.130
+        macaddr: "1a:10:50:00:11:05"
+  wrk1:
+    idx: 1
+    vmid: 411
+    target_node: debord
+    ifaces:
+      data:
+        <<: *data_net
+        ip: 10.9.10.131
+        macaddr: "1a:10:50:00:01:06"
+      mgmt:
+        <<: *mgmt_net
+        ip: 10.9.9.131
+        macaddr: "1a:10:50:00:11:06"
+  wrk2:
+    idx: 2
+    vmid: 412
+    target_node: peirce
+    ifaces:
+      data:
+        <<: *data_net
+        ip: 10.9.10.132
+        macaddr: "1a:10:50:00:01:07"
+      mgmt:
+        <<: *mgmt_net
+        ip: 10.9.9.132
+        macaddr: "1a:10:50:00:11:07"
+  wrk3:
+    idx: 3
+    vmid: 413
+    target_node: mill
+    ifaces:
+      data:
+        <<: *data_net
+        ip: 10.9.10.133
+        macaddr: "1a:10:50:00:01:08"
+      mgmt:
+        <<: *mgmt_net
+        ip: 10.9.9.133
+        macaddr: "1a:10:50:00:11:08"
+#  wrk4:
+#    idx: 4
+#    vmid: 414
+#    target_node: witt
+#    ifaces:
+#      data:
+#        <<: *data_net
+#        ip: 10.9.10.134
+#        macaddr: "1a:10:50:00:01:09"
+#      mgmt:
+#        <<: *mgmt_net
+#        ip: 10.9.9.134
+#        macaddr: "1a:10:50:00:11:09"
+cluster_apiserver_addr: 10.9.9.120
+cluster_node_cidr: "{{ cidr_mgmt }}"
+cluster_net_pod_cidr: 10.44.0.0/16
+cluster_net_svc_cidr: 10.45.0.0/16
+cluster_net_lb_ext_cidr: 10.10.12.0/23
 cluster_net_lb_ext_usable_range: "{{  ( cluster_net_lb_ext_cidr | ansible.utils.usable_range).usable_ips[1:-1] }}"
 cluster_net_lb_ext_range: "{{ cluster_net_lb_ext_usable_range | first }}-{{ cluster_net_lb_ext_usable_range | last }}"
-cluster_svc_ingress_addr: 10.11.10.1
-cluster_svc_k8s_gateway_dns_addr: 10.11.10.53
-cluster_default_storage_class: ceph-block-testpool
+cluster_svc_ingress_addr: 10.10.12.1
+cluster_svc_ingress_internal_addr: 10.10.12.3
+cluster_svc_postgress_addr: 10.10.12.2
+cluster_svc_k8s_gateway_dns_addr: 10.10.12.53
+cluster_default_storage_class: prod-k8s-storage
+cluster_default_storage_class_cephfs: prod-k8s-cephfs
+cluster_control_plane_node_boot_disk_storage_pool: local-zfs
+cluster_control_plane_node_boot_disk_size: 20G
+cluster_control_plane_disk_selector: ">= 19GB"
+cluster_worker_node_boot_disk_storage_pool: local-zfs
+cluster_worker_node_boot_disk_size: 150G
+cluster_worker_disk_selector: ">= 149GB"
+cluster_node_network_bridge: vmbr0
+cluster_node_iso_image_location: "mali-tank2:iso/talos-amd64.iso"
+control_plane_ifaces_mgmt: >-
+  {{ cluster_control_plane_nodes | dict2items | map(attribute='value') | map(attribute='ifaces') | map(attribute='mgmt') }}
+control_plane_ips_mgmt: >-
+  {{ control_plane_ifaces_mgmt | map(attribute='ip') }}
+control_plane_ifaces_data: >-
+  {{ cluster_control_plane_nodes | dict2items | map(attribute='value') | map(attribute='ifaces') | map(attribute='data') }}
+control_plane_ips_data: >-
+  {{ control_plane_ifaces_data | map(attribute='ip') }}
+cluster_all_nodes: "{{ cluster_control_plane_nodes | combine(cluster_worker_nodes) }}"
+cluster_talos_version: v1.4.4
+cluster_k8s_version: v1.26.4
+cluster_allow_schedluing_on_masters: false

@@ -1,0 +1,35 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: "${SECRET_DOMAIN/./-}-wildcard-tls"
+  namespace: networking
+spec:
+  secretName: "${SECRET_DOMAIN/./-}-wildcard-tls"
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  secretTemplate:
+    annotations:
+      replicator.v1.mittwald.de/replicate-to: "kube-system,monitoring,flux-system,default"
+  commonName: "*.${SECRET_DOMAIN}"
+  dnsNames:
+    - "*.${SECRET_DOMAIN}"
+    - "*.${SECRET_DOMAIN_INTERNAL}"
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: "${SECRET_DOMAIN_WORK/./-}-wildcard-tls"
+  namespace: networking
+spec:
+  secretName: "${SECRET_DOMAIN_WORK/./-}-wildcard-tls"
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  secretTemplate:
+    annotations:
+      replicator.v1.mittwald.de/replicate-to: "work"
+  commonName: "*.${SECRET_DOMAIN_WORK}"
+  dnsNames:
+    - "*.${SECRET_DOMAIN_WORK}"

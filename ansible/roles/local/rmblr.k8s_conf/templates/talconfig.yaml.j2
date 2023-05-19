@@ -2,10 +2,10 @@
 ---
 # {{ ansible_managed }}
 clusterName: "{{ cluster_name }}"
-talosVersion: v1.3.6
-kubernetesVersion: v1.26.0
+talosVersion: "{{ cluster_talos_version }}"
+kubernetesVersion: "{{ cluster_k8s_version }}"
 endpoint: https://{{ cluster_apiserver_addr }}:6443
-allowSchedulingOnMasters: true
+allowSchedulingOnMasters: {{ cluster_allow_schedluing_on_masters | default(false) | to_json }}
 cniConfig:
   name: none
 additionalApiServerCertSans:
@@ -24,7 +24,7 @@ nodes:
     disableSearchDomain: true
     ipAddress: {{ node.value.ifaces.mgmt.ip }}
     installDiskSelector:
-      size: ">= 99GB"
+      size: "{{ cluster_control_plane_disk_selector }}"
     controlPlane: true
     nodeLabels:
       peering: "yes"
@@ -52,16 +52,45 @@ nodes:
 {% endfor %}
 {% endfor %}
 
+{% for node in cluster_worker_nodes |  dict2items %}
+  - hostname: wrk{{ node.value.idx }}.{{ cluster_domain }}
+    disableSearchDomain: true
+    ipAddress: {{ node.value.ifaces.mgmt.ip }}
+    installDiskSelector:
+      size: "{{ cluster_worker_disk_selector }}"
+    controlPlane: false
+    nodeLabels:
+      peering: "yes"
+    kernelModules:
+      - name: br_netfilter
+        parameters:
+          - nf_conntrack_max=131072
+    nameservers:
+{% for ns in cluster_nameservers %}
+      - {{ ns }}
+{% endfor %}
+    networkInterfaces:
+{% for iface in node.value.ifaces | dict2items %}
+      - interface: eth{{ loop.index - 1 }}
+        dhcp: true
+        mtu: {{ iface.value.mtu }}
+{% if iface.value.routeMetric is defined %}
+        dhcpOptions:
+          routeMetric: {{ iface.value.routeMetric }}
+{% endif %}
+{% endfor %}
+{% endfor %}
+
 controlPlane:
   patches:
-    #- |-
-    #  - op: add
-    #    path: /cluster/apiServer/admissionControl/0/configuration/exemptions
-    #    value:
-    #      namespaces:
-    #        - kube-system
-    #        - cilium-test
-    #        - rook-ceph
+    # - |-
+    #   - op: add
+    #     path: /cluster/apiServer/admissionControl/0/configuration/exemptions
+    #     value:
+    #       namespaces:
+    #         - kube-system
+    #         - cilium-test
+    #         - rook-ceph
     - |-
       - op: remove
         path: /cluster/apiServer/admissionControl
@@ -119,17 +148,19 @@ controlPlane:
             rotate-server-certificates: "false"
             #rotate-server-certificates: "true"
 worker:
-  patches:
-    - |-
-      - op: add
-        path: /machine/kubelet/extraArgs
-        value:
-          feature-gates: GracefulNodeShutdown=false,MixedProtocolLBService=false,CronJobTimeZone=true
-          rotate-server-certificates: "false"
-          #rotate-server-certificates: "true"
-    - |-
-      machine:
-        time:
-          disabled: false
-          servers:
-            - "{{ cluster_ntp_server }}"
+  configPatches:
+    - op: add
+      path: /machine/kubelet/extraArgs
+      value:
+        feature-gates: GracefulNodeShutdown=true,MixedProtocolLBService=true,ServerSideApply=true
+        # rotate-server-certificates: "true"
+  inlinePatch:
+    machine:
+      kubelet:
+        nodeIP:
+          validSubnets:
+            - {{ cluster_node_cidr }}
+      time:
+        disabled: false
+        servers:
+          - "{{ cluster_ntp_server }}"

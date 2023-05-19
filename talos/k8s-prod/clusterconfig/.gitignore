@@ -1,0 +1,8 @@
+k8s-prod-cp0.k8s-prod.mgmt.socozy.casa.yaml
+k8s-prod-cp1.k8s-prod.mgmt.socozy.casa.yaml
+k8s-prod-cp2.k8s-prod.mgmt.socozy.casa.yaml
+k8s-prod-wrk0.k8s-prod.mgmt.socozy.casa.yaml
+k8s-prod-wrk1.k8s-prod.mgmt.socozy.casa.yaml
+k8s-prod-wrk2.k8s-prod.mgmt.socozy.casa.yaml
+k8s-prod-wrk3.k8s-prod.mgmt.socozy.casa.yaml
+talosconfig

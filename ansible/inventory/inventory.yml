@@ -90,6 +90,7 @@ all:
     k8s:
       hosts:
         cluster-test.mgmt.socozy.casa:
+        cluster-prod.mgmt.socozy.casa:
     truenas:
       hosts:
         mali.int.socozy.casa:

@@ -6,7 +6,7 @@ creation_rules:
         - age1ggz2hwet3042wxzw5dk6q58s0fv7tv6ugzgg3h6spugtfm3qnfeqpakprz
       pgp:
         - 978C4D08058BA26EB97CB51820782DBCACFAACDA
-    path_regex: 'k8s/cluster-test/.*\.sops.ya?ml$'
+    path_regex: 'k8s/cluster-test/.*(global-secrets|\.sops)\.ya?ml'
     encrypted_regex: '((?i)(pass|secret($|[^N])|key|token|^data$|^stringData$|caBundle))'
   - key_groups:
     - age:
@@ -14,7 +14,7 @@ creation_rules:
         - age1nycs7ku5cpcn44dwmft5zd7lvhh5sfpnu86ztd4wsdd9edxx4esq9wlsd3
       pgp:
         - 978C4D08058BA26EB97CB51820782DBCACFAACDA
-    path_regex: 'k8s/cluster-prod/.*\.sops.ya?ml$'
+    path_regex: 'k8s/cluster-prod/.*(global-secrets|\.sops)\.ya?ml'
     encrypted_regex: '((?i)(pass|secret($|[^N])|key|token|^data$|^stringData$|caBundle))'
   - key_groups:
     - age:

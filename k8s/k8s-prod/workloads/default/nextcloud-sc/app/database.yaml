@@ -1,0 +1,20 @@
+---
+apiVersion: db.movetokube.com/v1alpha1
+kind: Postgres
+metadata:
+  name: nextcloud-sc-db
+  namespace: default
+spec:
+  database: nextcloud-sc
+  dropOnDelete: true
+---
+apiVersion: db.movetokube.com/v1alpha1
+kind: PostgresUser
+metadata:
+  name: nextcloud-sc-user
+  namespace: default
+spec:
+  role: nextcloud-sc
+  database: nextcloud-sc-db
+  secretName: database
+  privileges: OWNER

@@ -2,15 +2,18 @@
 {{ ansible_managed | comment }}
 # shellcheck shell=bash
 
-# k8s dhcp reservations
 {% for host in groups['k8s'] %}
 ## {{ hostvars[host].cluster_name }}
-{% for node in (hostvars[host].cluster_control_plane_nodes | dict2items) %}
+{% for node in ( hostvars[host].cluster_all_nodes | dict2items) %}
 
 set service dhcp-server shared-network-name DATA subnet {{ cidr_data }} static-mapping {{ hostvars[host].cluster_name }}-{{ node.key }}-data ip-address '{{  node.value.ifaces.data.ip  }}'
 set service dhcp-server shared-network-name DATA subnet {{ cidr_data }} static-mapping {{ hostvars[host].cluster_name }}-{{ node.key }}-data mac-address '{{  node.value.ifaces.data.macaddr }}'
 set service dhcp-server shared-network-name MGMT subnet {{ cidr_mgmt }} static-mapping {{ hostvars[host].cluster_name }}-{{ node.key }}-mgmt ip-address '{{  node.value.ifaces.mgmt.ip  }}'
 set service dhcp-server shared-network-name MGMT subnet {{ cidr_mgmt }} static-mapping {{ hostvars[host].cluster_name }}-{{ node.key }}-mgmt mac-address '{{  node.value.ifaces.mgmt.macaddr }}'
+
+set protocols bgp neighbor {{  node.value.ifaces.mgmt.ip  }} address-family ipv4-unicast
+set protocols bgp neighbor {{  node.value.ifaces.mgmt.ip  }} description '{{ hostvars[host].cluster_name }}-{{ node.key }}'
+set protocols bgp neighbor {{  node.value.ifaces.mgmt.ip  }} remote-as '64512'
 
 {% endfor %}
 {% endfor %}

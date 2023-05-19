@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -e
 
 eval "$(sops -d env.sops.sh)"
@@ -164,3 +164,10 @@ echo "---" >> secrets.sops.yaml
 importCsiCephFSNodeSecret
 echo "---" >> secrets.sops.yaml
 importCsiCephFSProvisionerSecret
+
+
+echo ""
+echo " !! WARNING !!"
+echo ""
+echo "Encrypt secrets.sops.yaml!! It is now in plaintext."
+echo "   sops -e -i secrets.sops.yaml"

@@ -1,0 +1,43 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: nextcloud-sc-redis
+  namespace: default
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: app-template
+      version: 1.5.0
+      interval: 15m
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  values:
+    controller:
+      strategy: RollingUpdate
+    image:
+      repository: docker.io/library/redis
+      tag: "7"
+    command: ["redis-server", "--requirepass", "$(REDIS_PASSWORD)"]
+    env:
+      REDIS_REPLICATION_MODE: master
+      REDIS_PASSWORD:
+        valueFrom:
+          secretKeyRef:
+            name: nextcloud-sc-secret
+            key: REDIS_PASSWORD
+    persistence:
+      data:
+        enabled: true
+        path: /data
+        existingClaim: nextcloud-sc-redis-ceph
+    service:
+      main:
+        ports:
+          http:
+            port: 6379
+    podAnnotations:
+      reloader.stakater.com/auto: "true"

@@ -37,3 +37,4 @@ venv
 xanmanning.k3s*
 *.xz
 .python-version
+*.pyc

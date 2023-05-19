@@ -7,9 +7,12 @@ cluster:
 
 autoDirectNodeRoutes: true
 bgp:
-  enabled: false
-bgpControlPlane:
   enabled: true
+  announce:
+    loadbalancerIP: true
+    podCIDR: false
+bgpControlPlane:
+  enabled: false
 containerRuntime:
   integration: containerd
 endpointRoutes:

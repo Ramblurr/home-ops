@@ -1,16 +1,15 @@
 ---
-- name: VyOS local config generation
-  hosts: localhost
-  gather_facts: false
-  tags: [k8s-config]
-  tasks:
-    - ansible.builtin.include_role:
-        name: rmblr.vyos_config_generate
-
 - name: Template k8s config
-  hosts: cluster-test.mgmt.socozy.casa
+  hosts: k8s
   become: false
   gather_facts: false
   tags: [k8s-config]
-  roles:
-    - name: rmblr.k8s_conf
+  tasks:
+    - name: VyOS local config generation
+      ansible.builtin.import_role:
+        name: rmblr.vyos_config_generate
+      delegate_to: localhost
+    - name: k8s cluster config
+      ansible.builtin.import_role:
+        name: rmblr.k8s_conf
+      delegate_to: localhost

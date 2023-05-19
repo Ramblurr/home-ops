@@ -67,6 +67,22 @@ set firewall group address-group k8s_cluster_test_ingress_all address '10.10.10.
 set firewall group address-group k8s_cluster_test_ingress_all address '10.10.10.3'
 set firewall group address-group k8s_cluster_test_postgres address '10.10.10.2'
 
+set firewall group address-group k8s_cluster_prod_api address '10.9.9.120'
+set firewall group address-group k8s_cluster_prod_nodes address '10.9.9.121'
+set firewall group address-group k8s_cluster_prod_nodes address '10.9.9.122'
+set firewall group address-group k8s_cluster_prod_nodes address '10.9.9.123'
+set firewall group address-group k8s_cluster_prod_nodes address '10.9.9.124'
+set firewall group address-group k8s_cluster_prod_nodes address '10.9.9.125'
+set firewall group address-group k8s_cluster_prod_nodes address '10.9.9.130'
+set firewall group address-group k8s_cluster_prod_nodes address '10.9.9.131'
+set firewall group address-group k8s_cluster_prod_nodes address '10.9.9.132'
+set firewall group address-group k8s_cluster_prod_nodes address '10.9.9.133'
+set firewall group address-group k8s_cluster_prod_ingress_external address '10.10.12.1'
+set firewall group address-group k8s_cluster_prod_ingress_internal address '10.10.12.3'
+set firewall group address-group k8s_cluster_prod_ingress_all address '10.10.12.1'
+set firewall group address-group k8s_cluster_prod_ingress_all address '10.10.12.3'
+set firewall group address-group k8s_cluster_prod_postgres address '10.10.12.2'
+
 set firewall group address-group nas-prim address '10.9.4.10'
 
 set firewall group address-group printers address '10.8.50.52'
@@ -138,8 +154,6 @@ set firewall group network-group cloudflare-ipv4 network '104.16.0.0/13'
 set firewall group network-group cloudflare-ipv4 network '104.24.0.0/14'
 set firewall group network-group cloudflare-ipv4 network '172.64.0.0/13'
 set firewall group network-group cloudflare-ipv4 network '131.0.72.0/22'
-
-set firewall group network-group k8s_services network '10.45.0.0/16'
 
 # Port groups
 set firewall group port-group minio port '9100'

@@ -12,7 +12,6 @@
     owner: ramblurr
     group: ramblurr
     mode: 0600
-  delegate_to: localhost
 
 - name: Makefile template
   ansible.builtin.template:
@@ -21,7 +20,6 @@
     owner: ramblurr
     group: ramblurr
     mode: 0600
-  delegate_to: localhost
 
 - name: CNI config
   ansible.builtin.template:
@@ -30,7 +28,6 @@
     owner: ramblurr
     group: ramblurr
     mode: 0600
-  delegate_to: localhost
 
 - name: Global auto vars
   ansible.builtin.template:
@@ -39,7 +36,6 @@
     owner: ramblurr
     group: ramblurr
     mode: 0600
-  delegate_to: localhost
 
 - name: Terraform vars
   ansible.builtin.template:
@@ -48,17 +44,19 @@
     owner: ramblurr
     group: ramblurr
     mode: 0600
-  delegate_to: localhost
   vars:
     terraform_inputs:
       cluster_name: "{{ cluster_name }}"
       cluster_networks: "{{ cluster_networks }}"
-      boot_disk_size: "{{ cluster_node_boot_disk_size }}"
-      boot_disk_storage_pool: "{{ cluster_node_boot_disk_storage_pool }}"
+      control_plane_boot_disk_storage_pool: "{{ cluster_control_plane_node_boot_disk_storage_pool }}"
+      control_plane_boot_disk_size: "{{ cluster_control_plane_node_boot_disk_size }}"
       control_plane_nodes: "{{ cluster_control_plane_nodes }}"
+      worker_boot_disk_storage_pool: "{{ cluster_worker_node_boot_disk_storage_pool }}"
+      worker_boot_disk_size: "{{ cluster_worker_node_boot_disk_size }}"
+      worker_nodes: "{{ cluster_worker_nodes }}"
       iso_image_location: "{{ cluster_node_iso_image_location }}"
       guest_agent_enabled: "{{ cluster_guest_agent_enabled }}"
-      #node_cidr_suffix: "{{ cluster_node_vlan_cidr_suffix }}"
-      #node_gateway: "{{ cluster_node_vlan_gateway }}"
-      #node_vlan_tag: "{{ cluster_node_vlan_tag }}"
+      # node_cidr_suffix: "{{ cluster_node_vlan_cidr_suffix }}"
+      # node_gateway: "{{ cluster_node_vlan_gateway }}"
+      # node_vlan_tag: "{{ cluster_node_vlan_tag }}"
 ...

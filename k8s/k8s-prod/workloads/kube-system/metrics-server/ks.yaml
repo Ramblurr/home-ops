@@ -1,0 +1,20 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: cluster-workloads-metrics-server
+  namespace: flux-system
+spec:
+  path: ./k8s/k8s-prod/workloads/kube-system/metrics-server/app
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  healthChecks:
+    - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+      kind: HelmRelease
+      name: metrics-server
+      namespace: kube-system
+  interval: 30m
+  retryInterval: 1m
+  timeout: 3m

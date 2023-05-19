@@ -1,0 +1,40 @@
+---
+# Ansible managed: cilium-values.yaml.j2 modified on 2023-05-19 09:08:16 by ramblurr on quine
+cluster:
+  name: "k8s-prod"
+  id: "0"
+
+autoDirectNodeRoutes: true
+bgp:
+  enabled: true
+  announce:
+    loadbalancerIP: true
+    podCIDR: false
+bgpControlPlane:
+  enabled: false
+containerRuntime:
+  integration: containerd
+endpointRoutes:
+  enabled: true
+hubble:
+  enabled: false
+ipam:
+  mode: kubernetes
+ipv4NativeRoutingCIDR: 10.44.0.0/16
+k8sServiceHost: 10.9.9.120
+k8sServicePort: 6443
+# kubeProxyReplacement enables kube-proxy replacement in Cilium BPF datapath
+kubeProxyReplacement: strict
+loadBalancer:
+  algorithm: maglev
+  mode: dsr
+localRedirectPolicy: true
+operator:
+  rollOutPods: true
+rollOutCiliumPods: true
+securityContext:
+  privileged: true
+# direct routing
+tunnel: disabled
+ipv6:
+  enabled: false

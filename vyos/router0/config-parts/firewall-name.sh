@@ -957,7 +957,19 @@ set firewall name primary-mgmt rule 6 destination port 'ssh'
 set firewall name primary-mgmt rule 6 protocol 'tcp_udp'
 set firewall name primary-mgmt rule 6 source group address-group 'admin'
 
+set firewall name primary-mgmt rule 7 action 'accept'
+set firewall name primary-mgmt rule 7 description 'Rule: accept_k8s_prod_ingress_from_admin'
+set firewall name primary-mgmt rule 7 destination port 'http,https'
+set firewall name primary-mgmt rule 7 destination group address-group 'k8s_cluster_prod_ingress_all'
+set firewall name primary-mgmt rule 7 protocol 'tcp_udp'
+set firewall name primary-mgmt rule 7 source group address-group 'admin'
 
+set firewall name primary-mgmt rule 8 action 'accept'
+set firewall name primary-mgmt rule 8 description 'Rule: accept_k8s_prod_api_from_admin'
+set firewall name primary-mgmt rule 8 destination group port-group 'k8s-api'
+set firewall name primary-mgmt rule 8 destination group address-group 'k8s_cluster_prod_api'
+set firewall name primary-mgmt rule 8 protocol 'tcp_udp'
+set firewall name primary-mgmt rule 8 source group address-group 'admin'
 
 # From PRIMARY to SERVICES
 set firewall name primary-services default-action 'accept'
@@ -1099,6 +1111,13 @@ set firewall name wan-mgmt rule 2 description 'Rule: accept_ingress_to_container
 set firewall name wan-mgmt rule 2 destination address '10.9.8.30'
 set firewall name wan-mgmt rule 2 destination port 'http,https'
 set firewall name wan-mgmt rule 2 protocol 'tcp'
+
+set firewall name wan-mgmt rule 3 action 'accept'
+set firewall name wan-mgmt rule 3 description 'Rule: accept_k8s_prod_ingress_from_cloudflare'
+set firewall name wan-mgmt rule 3 destination group address-group 'k8s_cluster_prod_ingress_external'
+set firewall name wan-mgmt rule 3 destination port 'http,https'
+set firewall name wan-mgmt rule 3 protocol 'tcp'
+set firewall name wan-mgmt rule 3 source group network-group 'cloudflare-ipv4'
 
 # From WAN to SERVICES
 set firewall name wan-services default-action 'drop'

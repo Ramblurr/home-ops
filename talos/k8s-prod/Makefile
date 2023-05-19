@@ -1,0 +1,95 @@
+.ONESHELL:
+.SHELLFLAGS += -e -o pipefail
+
+export ROOT := $(realpath /home/ramblurr/src/home-ops/ansible/..)
+export CLUSTER := "k8s-prod"
+export TALOS_DIR := $(realpath /home/ramblurr/src/home-ops/ansible/../talos/k8s-prod)
+export K8S_DIR := $(realpath /home/ramblurr/src/home-ops/ansible/../k8s/k8s-prod)
+export TALOSCONFIG := ${TALOS_DIR}/clusterconfig/talosconfig
+export KUBECONFIG := ${TALOS_DIR}/kubeconfig
+
+TC := talosctl --talosconfig ${TALOSCONFIG}
+KC := kubectl
+CP_IPS = 10.9.9.121 10.9.9.122 10.9.9.123
+CP_ARGS = $(addprefix -n ,$(CP_IPS))
+CP_ENDPOINT = 10.9.9.121
+ARGS ?=
+
+dist-clean:
+	rm -rf clusterconfig/*.yaml clusterconfig/talosconfig kubeconfig talsecret.sops.yaml
+
+talsecret.sops.yaml:
+	talhelper gensecret > talsecret.sops.yaml
+	sops -e -i talsecret.sops.yaml
+
+gen: talsecret.sops.yaml
+	talhelper genconfig
+
+reset:
+	${TC} reset --endpoints $(CP_ENDPOINT) --graceful=false $(CP_ARGS) --reboot --wait=false
+	$(MAKE) dist-clean
+
+first-apply:
+
+
+	${TC} apply-config --insecure --nodes 10.9.9.121 --file clusterconfig/k8s-prod-cp0.k8s-prod.mgmt.socozy.casa.yaml
+	${TC} apply-config --insecure --nodes 10.9.9.122 --file clusterconfig/k8s-prod-cp1.k8s-prod.mgmt.socozy.casa.yaml
+	${TC} apply-config --insecure --nodes 10.9.9.123 --file clusterconfig/k8s-prod-cp2.k8s-prod.mgmt.socozy.casa.yaml
+	${TC} apply-config --insecure --nodes 10.9.9.130 --file clusterconfig/k8s-prod-wrk0.k8s-prod.mgmt.socozy.casa.yaml
+	${TC} apply-config --insecure --nodes 10.9.9.131 --file clusterconfig/k8s-prod-wrk1.k8s-prod.mgmt.socozy.casa.yaml
+	${TC} apply-config --insecure --nodes 10.9.9.132 --file clusterconfig/k8s-prod-wrk2.k8s-prod.mgmt.socozy.casa.yaml
+	${TC} apply-config --insecure --nodes 10.9.9.133 --file clusterconfig/k8s-prod-wrk3.k8s-prod.mgmt.socozy.casa.yaml
+bootstrap:
+	${TC} bootstrap --nodes 10.9.9.121
+
+kubeconf:
+	${TC} kubeconfig --nodes 10.9.9.121 -f .
+
+reboot:
+
+	${TC} reboot --nodes 10.9.9.121 --wait  $(ARGS)
+	${TC} reboot --nodes 10.9.9.122 --wait  $(ARGS)
+	${TC} reboot --nodes 10.9.9.123 --wait  $(ARGS)
+	${TC} reboot --nodes 10.9.9.130 --wait  $(ARGS)
+	${TC} reboot --nodes 10.9.9.131 --wait  $(ARGS)
+	${TC} reboot --nodes 10.9.9.132 --wait  $(ARGS)
+	${TC} reboot --nodes 10.9.9.133 --wait  $(ARGS)
+reboot-now:
+
+	${TC} reboot --nodes 10.9.9.121 $(ARGS)
+	${TC} reboot --nodes 10.9.9.122 $(ARGS)
+	${TC} reboot --nodes 10.9.9.123 $(ARGS)
+	${TC} reboot --nodes 10.9.9.130 $(ARGS)
+	${TC} reboot --nodes 10.9.9.131 $(ARGS)
+	${TC} reboot --nodes 10.9.9.132 $(ARGS)
+	${TC} reboot --nodes 10.9.9.133 $(ARGS)
+reapply:
+
+	${TC} apply-config --nodes 10.9.9.121 --file clusterconfig/k8s-prod-cp0.k8s-prod.mgmt.socozy.casa.yaml $(ARGS)
+	${TC} apply-config --nodes 10.9.9.122 --file clusterconfig/k8s-prod-cp1.k8s-prod.mgmt.socozy.casa.yaml $(ARGS)
+	${TC} apply-config --nodes 10.9.9.123 --file clusterconfig/k8s-prod-cp2.k8s-prod.mgmt.socozy.casa.yaml $(ARGS)
+	${TC} apply-config --nodes 10.9.9.130 --file clusterconfig/k8s-prod-wrk0.k8s-prod.mgmt.socozy.casa.yaml $(ARGS)
+	${TC} apply-config --nodes 10.9.9.131 --file clusterconfig/k8s-prod-wrk1.k8s-prod.mgmt.socozy.casa.yaml $(ARGS)
+	${TC} apply-config --nodes 10.9.9.132 --file clusterconfig/k8s-prod-wrk2.k8s-prod.mgmt.socozy.casa.yaml $(ARGS)
+	${TC} apply-config --nodes 10.9.9.133 --file clusterconfig/k8s-prod-wrk3.k8s-prod.mgmt.socozy.casa.yaml $(ARGS)
+apply-bootstrap-cni:
+	${KC} kustomize --enable-helm ./cni | kubectl apply -f -
+apply-bootstrap-csr-approver:
+	${KC} kustomize --enable-helm ./kubelet-csr-approver | kubectl apply -f -
+
+apply-extras: apply-bootstrap-csr-approver apply-bootstrap-ci
+
+bootstrap-flux:
+	cd $(K8S_DIR)
+	$(KC) apply --server-side --kustomize ./bootstrap
+	sops -d ./bootstrap/age-key.sops.yaml | $(KC) apply -f -
+	sops -d ./bootstrap/github-deploy-key.sops.yaml | $(KC) apply -f -
+	sops -d ./flux/vars/global-secrets.yaml | $(KC) apply -f -
+	$(KC) apply -f ./flux/vars/global-vars.yaml
+	$(KC) apply -f ./flux/vars/global-auto-vars.yaml
+	$(KC) get pods -n flux-system
+	sleep 10
+	$(KC) apply --server-side --kustomize ./flux/config
+	sleep 10
+	flux reconcile -n flux-system source git flux-system
+	flux reconcile -n flux-system kustomization cluster

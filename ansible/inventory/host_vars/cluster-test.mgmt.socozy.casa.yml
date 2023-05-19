@@ -26,6 +26,7 @@ _mgmt_net: &mgmt_net
   mtu: 1500
 
 cluster_guest_agent_enabled: 0
+cluster_worker_nodes: {}
 cluster_control_plane_nodes:
   cp0:
     idx: 0
@@ -79,8 +80,12 @@ cluster_svc_postgress_addr: 10.10.10.2
 cluster_svc_k8s_gateway_dns_addr: 10.10.10.53
 cluster_default_storage_class: test-k8s-storage
 cluster_default_storage_class_cephfs: test-k8s-cephfs
-cluster_node_boot_disk_storage_pool: test-vms
-cluster_node_boot_disk_size: 100G
+cluster_control_plane_node_boot_disk_storage_pool: local-zfs
+cluster_control_plane_node_boot_disk_size: 20G
+cluster_control_plane_disk_selector: ">= 19GB"
+cluster_worker_node_boot_disk_storage_pool: local-zfs
+cluster_worker_node_boot_disk_size: 150G
+cluster_worker_disk_selector: ">= 149GB"
 cluster_node_network_bridge: vmbr0
 cluster_node_iso_image_location: "mali-tank2:iso/talos-amd64.iso"
 control_plane_ifaces_mgmt: >-
@@ -91,3 +96,7 @@ control_plane_ifaces_data: >-
   {{ cluster_control_plane_nodes | dict2items | map(attribute='value') | map(attribute='ifaces') | map(attribute='data') }}
 control_plane_ips_data: >-
   {{ control_plane_ifaces_data | map(attribute='ip') }}
+cluster_all_nodes: "{{ cluster_control_plane_nodes | combine(cluster_worker_nodes) }}"
+cluster_talos_version: v1.4.4
+cluster_k8s_version: v1.26.4
+cluster_allow_schedluing_on_masters: true
