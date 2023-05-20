@@ -18,7 +18,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   nfs:
     server: "${SECRET_NFS_SERVER}"
-    path: /mnt/tank2/services/drive.${SECRET_DOMAIN}
+    path: /mnt/tank2/services/drive.${SECRET_DOMAIN}-2
   mountOptions:
     - vers=3
     - rw
