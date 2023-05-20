@@ -139,6 +139,8 @@ set firewall group address-group minio address '10.9.10.10'
 
 set firewall group address-group filebrowser address '10.9.6.60'
 
+set firewall group address-group borgbackup-hosts address '10.9.4.21'
+
 # Network groups
 set firewall group network-group cloudflare-ipv4 network '173.245.48.0/20'
 set firewall group network-group cloudflare-ipv4 network '103.21.244.0/22'

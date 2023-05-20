@@ -693,11 +693,13 @@ set firewall name mgmt-primary enable-default-log
 set firewall name mgmt-primary rule 1 action 'accept'
 set firewall name mgmt-primary rule 1 description 'Rule: accept_icmp'
 set firewall name mgmt-primary rule 1 protocol 'icmp'
+
 set firewall name mgmt-primary rule 2 action 'accept'
 set firewall name mgmt-primary rule 2 description 'Rule: accept_dns'
 set firewall name mgmt-primary rule 2 destination port 'domain,domain-s'
 set firewall name mgmt-primary rule 2 destination group address-group 'local-dns-servers'
 set firewall name mgmt-primary rule 2 protocol 'tcp_udp'
+
 set firewall name mgmt-primary rule 3 action 'accept'
 set firewall name mgmt-primary rule 3 description 'Rule: accept_container0_to_homeassistant'
 set firewall name mgmt-primary rule 3 destination group port-group 'homeassistant'
@@ -710,6 +712,12 @@ set firewall name mgmt-primary rule 4 destination group port-group 'zigbee2mqtt'
 set firewall name mgmt-primary rule 4 destination group address-group 'zigbee2mqtt'
 set firewall name mgmt-primary rule 4 source group address-group 'admin'
 set firewall name mgmt-primary rule 4 protocol 'tcp_udp'
+
+set firewall name mgmt-primary rule 5 action 'accept'
+set firewall name mgmt-primary rule 5 description 'Rule: accept_ssh_to_borgbackup'
+set firewall name mgmt-primary rule 5 destination port 'ssh'
+set firewall name mgmt-primary rule 5 destination group address-group 'borgbackup-hosts'
+set firewall name mgmt-primary rule 5 protocol 'tcp_udp'
 
 # From MGMT to DATA
 set firewall name mgmt-data default-action 'drop'

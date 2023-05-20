@@ -246,8 +246,8 @@ data:
   post-start.sh: |-
     #!/bin/sh
     set -e
-    exec > /tmp/postStart-$(date +"%s").log
-    exec 2> /tmp/postStart-$(date +"%s")_error.log
+    #exec > /tmp/postStart-$(date +"%s").log
+    #exec 2> /tmp/postStart-$(date +"%s")_error.log
 
     # Copied from the NC docker entrypoint to run OCC commands
     if [ "$(id -u)" = 0 ]; then
