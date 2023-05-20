@@ -25,7 +25,9 @@ _mgmt_net: &mgmt_net
   network_bridge: vmbr1
   mtu: 1500
 
-cluster_guest_agent_enabled: 0
+# When bootstrapping the cluster this must be 0
+# After it's working, set it to 1
+cluster_guest_agent_enabled: 1
 cluster_control_plane_nodes:
   cp0:
     idx: 0
