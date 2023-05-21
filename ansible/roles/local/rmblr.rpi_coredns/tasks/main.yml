@@ -88,6 +88,16 @@
   set_fact:
     zone2_data: "{{ lookup('community.sops.sops', coredns_config_dir +  '/zones/' + coredns_zone2_sops) }}"
 
+- name: decrypt zone3
+  tags: [dns-config-only]
+  set_fact:
+    zone3_data: "{{ lookup('community.sops.sops', coredns_config_dir +  '/zones/' + coredns_zone3_sops) }}"
+
+- name: decrypt secret.conf
+  tags: [dns-config-only]
+  set_fact:
+    secret_conf_data: "{{ lookup('community.sops.sops', coredns_config_dir +  '/secret.conf.sops') }}"
+
 - debug:
     var: zone1_data
   tags: [dns-config-only]
@@ -112,10 +122,30 @@
     mode: 0650
   notify: reload coredns
 
+- name: copy zone3
+  tags: [dns-config-only]
+  ansible.builtin.copy:
+    content: "{{ zone3_data }}\n"
+    dest: /etc/coredns/zones/{{ coredns_zone3_name }}
+    owner: root
+    group: coredns
+    mode: 0650
+  notify: reload coredns
+
+- name: copy secret-config
+  tags: [dns-config-only]
+  ansible.builtin.copy:
+    content: "{{ secret_conf_data }}\n"
+    dest: /etc/coredns/secret.conf
+    owner: root
+    group: coredns
+    mode: 0650
+  notify: reload coredns
+
 - name: add self to /etc/hosts
   ansible.builtin.lineinfile:
     dest: /etc/hosts
-    regexp: '.*{{ inventory_hostname }}$'
+    regexp: ".*{{ inventory_hostname }}$"
     line: "{{ ansible_host }} {{ inventory_hostname }} "
     state: present
 
@@ -167,7 +197,7 @@
   tags: disable
   ansible.builtin.lineinfile:
     dest: /etc/dhcpcd.conf
-    regexp: '.*wpa_supplicant$'
+    regexp: ".*wpa_supplicant$"
     line: "nohook wpa_supplicant"
     state: present
   notify: restart dhcpcd
@@ -191,4 +221,3 @@
       blacklist bcm2835_codec
       blacklist bcm2835_isp
       blacklist bcm2835_v4l2
-...

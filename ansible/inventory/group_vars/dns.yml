@@ -6,4 +6,5 @@ coredns_zone1_sops: db.socozy.casa.sops
 coredns_zone1_name: db.socozy.casa
 coredns_zone2_sops: db.outskirtslabs.com.sops
 coredns_zone2_name: db.outskirtslabs.com
-...
+coredns_zone3_sops: db.other.sops
+coredns_zone3_name: db.other
