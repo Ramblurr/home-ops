@@ -246,8 +246,51 @@ data:
   post-start.sh: |-
     #!/bin/sh
     set -e
-    #exec > /tmp/postStart-$(date +"%s").log
-    #exec 2> /tmp/postStart-$(date +"%s")_error.log
+    exec > /tmp/postStart-$(date +"%s").log
+    exec 2> /tmp/postStart-$(date +"%s")_error.log
+
+    # Write a simple status (errors or no errors) to a file, to be served to
+    # prometheus by a sidecar container.
+    report_metrics() {
+      errors=$1
+      outfile=/srv/metrics/status
+      truncate -s 0 $outfile
+      echo '# HELP nextcloud_poststart_errors Whether the nextcloud postStart script has encountered errors.' >> $outfile
+      echo '# TYPE nextcloud_poststart_errors gauge' >> $outfile
+      echo "nextcloud_poststart_errors $errors" >> $outfile
+    }
+    # We just started, so no errors yet!
+    report_metrics "0"
+
+    exception_handler() {
+        signal=$1
+        exitCode=$2
+        lineNumber=$3
+        echo "setup-apps.sh received $signal (code $exitCode) on line $lineNumber"
+        if [ $signal == "EXIT" ] && [ $exitCode -eq 0 ]
+        then
+          # No problem, this is regular EXIT at the end of the script.
+          report_metrics "0"
+          echo "That's all good, exiting normally."
+        else
+          # Report to prometheus that we have an error.
+          report_metrics "1"
+          echo "Still exiting with status 0 to allow nextcloud to start."
+        fi
+        # Remove the handler for `EXIT` so we don't run that as well. If we're
+        # currently handling `EXIT` already then this is not necessary because
+        # bash treats an `exit` specially if it happens in the `EXIT` handler.
+        # If we're handling another signal though, then we want to prevent that
+        # the call to `exit` also triggers the `EXIT` handler.
+        trap '' EXIT
+        exit 0
+    }
+
+    trap 'exception_handler ERR $? $LINENO' ERR
+    trap 'exception_handler EXIT $? $LINENO' EXIT
+    trap 'exception_handler SIGINT $? $LINENO' SIGINT
+    trap 'exception_handler SIGTERM $? $LINENO' SIGTERM
+
 
     # Copied from the NC docker entrypoint to run OCC commands
     if [ "$(id -u)" = 0 ]; then
@@ -272,7 +315,7 @@ data:
 
     count=0
 
-    # As soon as the $occ command exist, we know that we can run occ, but
+    # As soon as the $occ command exists, we know that we can run occ, but
     # Nextcloud might still be initializing, we use `occ` to find out whether
     # the installation process has finished, and then we continue.
     until [[ $(php /var/www/html/occ status --output json) =~ '"installed":true' ]] || [ "$count" -gt "$limit" ]
