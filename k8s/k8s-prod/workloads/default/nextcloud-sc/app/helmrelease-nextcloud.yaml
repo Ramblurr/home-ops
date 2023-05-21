@@ -75,6 +75,16 @@ spec:
             key: REDIS_PASSWORD
       NEXTCLOUD_DATA_DIR: /data
     additionalContainers:
+      poststart-metrics:
+        name: poststart-metrics
+        image: docker.io/weibeld/file-exporter:0.0.2
+        volumeMounts:
+          - name: poststart-metrics
+            mountPath: /srv/metrics
+        ports:
+          - containerPort: 9872
+            name: http-metrics
+            protocol: TCP
       nginx:
         name: nextcloud-sc-nginx
         image: docker.io/nginxinc/nginx-unprivileged:1-alpine
@@ -99,8 +109,13 @@ spec:
     lifecycle:
       postStart:
         exec:
-          command: [/bin/sh, -c, /usr/local/bin/post-start.sh]
+          command: [/bin/bash, -c, /usr/local/bin/post-start.sh]
     persistence:
+      poststart-metrics:
+        enabled: true
+        name: poststart-metrics
+        mountPath: /srv/metrics
+        medium: Memory
       app-config:
         enabled: true
         existingClaim: nextcloud-sc-ceph
