@@ -107,9 +107,9 @@ spec:
       runAsGroup: 2000
       fsGroup: 2000
     lifecycle:
-      postStart:
-        exec:
-          command: [/bin/bash, -c, /usr/local/bin/post-start.sh]
+      #postStart:
+      #  exec:
+      #    command: [/bin/bash, -c, /usr/local/bin/post-start.sh]
     persistence:
       poststart-metrics:
         enabled: true
