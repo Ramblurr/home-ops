@@ -116,8 +116,8 @@ spec:
         name: poststart-metrics
         mountPath: /srv/metrics
         medium: Memory
-        size: 10Mi
         accessMode: ReadWriteMany
+        type: emptyDir
       app-config:
         enabled: true
         existingClaim: nextcloud-sc-ceph
