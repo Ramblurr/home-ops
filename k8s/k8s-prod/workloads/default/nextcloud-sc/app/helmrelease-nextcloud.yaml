@@ -403,7 +403,7 @@ data:
       'mail_smtpport' => getenv('SMTP_PORT') ?: (getenv('SMTP_SECURE') ? 465 : 25),
       'mail_smtpsecure' => getenv('SMTP_SECURE') ?: '',
       'mail_smtpauth' => '',
-      'mail_smtpauthtype' => '',
+      'mail_smtpauthtype' => 'PLAIN',
       'mail_smtppassword' => '',
       'mail_smtpname' => '',
       'mail_from_address' => getenv('MAIL_FROM_ADDRESS'),
