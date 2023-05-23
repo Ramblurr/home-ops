@@ -8,6 +8,7 @@ resources:
   - externalsecret.yaml
   - helmrelease-invoiceninja.yaml
   - volsync.yaml
+  - backup-cronjob.yaml
 commonLabels:
   app.kubernetes.io/name: invoiceninja
   app.kubernetes.io/instance: invoiceninja
