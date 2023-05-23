@@ -23,7 +23,7 @@ spec:
     remediation:
       retries: 0
   values:
-    debug: true
+    debug: false
     existingSecret: invoiceninja-secret
     appURL: "https://clients.${SECRET_DOMAIN_WORK}"
     userEmail: "${SECRET_WORK_EMAIL}"
