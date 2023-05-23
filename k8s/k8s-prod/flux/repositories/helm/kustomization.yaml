@@ -17,6 +17,7 @@ resources:
   - ext-postgres-operator.yaml
   - hajimari.yaml
   - ingress-nginx.yaml
+  - invoiceninja.yaml
   - jetstack.yaml
   - kubernetes-replicator-charts.yaml
   - kustomization.yaml
