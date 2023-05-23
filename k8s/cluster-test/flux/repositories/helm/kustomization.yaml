@@ -27,3 +27,4 @@ resources:
   - stakater.yaml
   - weave-gitops.yaml
   - zalando-postgres-operator.yaml
+  - invoiceninja.yaml

@@ -1,0 +1,34 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.26.1-standalone-strict/persistentvolumeclaim-v1.json
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: &name invoiceninja-ceph-public
+  namespace: work
+  labels:
+    app.kubernetes.io/name: *name
+    app.kubernetes.io/instance: *name
+    snapshot.home.arpa/enabled: "true"
+spec:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: "${DEFAULT_STORAGE_CLASS}"
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.26.1-standalone-strict/persistentvolumeclaim-v1.json
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: &name invoiceninja-ceph-storage
+  namespace: work
+  labels:
+    app.kubernetes.io/name: *name
+    app.kubernetes.io/instance: *name
+    snapshot.home.arpa/enabled: "true"
+spec:
+  storageClassName: "${DEFAULT_CEPHFS_STORAGE_CLASS}"
+  accessModes: ["ReadWriteMany"]
+  resources:
+    requests:
+      storage: 2Gi

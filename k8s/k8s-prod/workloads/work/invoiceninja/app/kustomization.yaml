@@ -1,0 +1,13 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: work
+resources:
+  - pvc.yaml
+  - externalsecret.yaml
+  - helmrelease-invoiceninja.yaml
+  - volsync.yaml
+commonLabels:
+  app.kubernetes.io/name: invoiceninja
+  app.kubernetes.io/instance: invoiceninja

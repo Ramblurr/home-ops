@@ -358,6 +358,8 @@ data:
     # remove nextcloud advertisements for new users
     rm -rf /var/www/html/core/skeleton/*
 
+    exit 0
+
   extra.config.php: |-
     <?php
     $CONFIG = array(
