@@ -8,7 +8,7 @@ resources:
   - database.yaml
   - externalsecret.yaml
   - nginx-config.yaml
-  - helmrelease-redis.yaml
+  #- helmrelease-redis.yaml
   - helmrelease-nextcloud.yaml
   - cronjob.yaml
   - volsync.yaml

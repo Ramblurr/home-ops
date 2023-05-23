@@ -66,7 +66,7 @@ spec:
           secretKeyRef:
             name: database-nextcloud-ol-user
             key: PASSWORD
-      REDIS_HOST: nextcloud-ol-redis.work.svc.cluster.local
+      REDIS_HOST: localhost
       REDIS_HOST_PORT: 6379
       REDIS_HOST_PASSWORD:
         valueFrom:
@@ -123,6 +123,17 @@ spec:
           - mountPath: /etc/nginx/nginx.conf
             name: nginx-config
             subPath: nginx.conf
+      redis:
+        name: nextcloud-ol-redis
+        image: docker.io/library/redis:7
+        command: ["redis-server", "--requirepass", "$(REDIS_PASSWORD)"]
+        env:
+          REDIS_REPLICATION_MODE: master
+          REDIS_PASSWORD:
+            valueFrom:
+              secretKeyRef:
+                name: nextcloud-ol-secret
+                key: REDIS_PASSWORD
     podSecurityContext:
       runAsUser: 2000
       runAsGroup: 2000
