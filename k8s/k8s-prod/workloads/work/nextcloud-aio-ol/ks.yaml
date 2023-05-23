@@ -1,0 +1,25 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: cluster-workloads-nextcloud-aio-ol
+  namespace: flux-system
+spec:
+  dependsOn:
+    - name: cluster-workloads-cert-manager-issuers
+    - name: cluster-workloads-rook-ceph-cluster
+    - name: cluster-workloads-ext-postgres-operator
+  path: ./k8s/k8s-prod/workloads/work/nextcloud-aio-ol/app
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  healthChecks:
+    - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+      kind: HelmRelease
+      name: nextcloud-aio-ol
+      namespace: work
+  interval: 30m
+  retryInterval: 1m
+  timeout: 3m

@@ -1,0 +1,11 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: work
+resources:
+  - externalsecret.yaml
+  - helmrelease-nextcloud-aio.yaml
+commonLabels:
+  app.kubernetes.io/name: nextcloud-ol
+  app.kubernetes.io/instance: nextcloud-ol
