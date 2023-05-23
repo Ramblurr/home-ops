@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: nextcloud-aio-helm-chart
-      version: 5.10.0
+      version: 5.1.0
       sourceRef:
         kind: HelmRepository
         name: nextcloud-all-in-one
@@ -39,7 +39,7 @@ spec:
     NEXTCLOUD_ADDITIONAL_APKS: imagemagick # This allows to add additional packages to the Nextcloud container permanently. Default is imagemagick but can be overwritten by modifying this value.
     NEXTCLOUD_ADDITIONAL_PHP_EXTENSIONS: imagick # This allows to add additional php extensions to the Nextcloud container permanently. Default is imagick but can be overwritten by modifying this value.
     NEXTCLOUD_MAX_TIME: 3600 # This allows to change the upload time limit of the Nextcloud container
-    NEXTCLOUD_MEMORY_LIMIT: 512M # This allows to change the PHP memory limit of the Nextcloud container
+    NEXTCLOUD_MEMORY_LIMIT: 2G # This allows to change the PHP memory limit of the Nextcloud container
     #NEXTCLOUD_PASSWORD: # TODO! This is the password of the initially created Nextcloud admin with username admin.
     NEXTCLOUD_STARTUP_APPS: deck twofactor_totp tasks calendar contacts # Allows to modify the Nextcloud apps that are installed on starting AIO the first time
     NEXTCLOUD_TRUSTED_CACERTS_DIR: # Setting this to any value allows to automatically import root certificates into the Nextcloud container
@@ -60,33 +60,33 @@ spec:
     DATABASE_STORAGE_SIZE: 1Gi # You can change the size of the database volume that default to 1Gi with this value
     DATABASE_DUMP_STORAGE_SIZE: 1Gi # You can change the size of the database-dump volume that default to 1Gi with this value
     ELASTICSEARCH_STORAGE_SIZE: 1Gi # You can change the size of the elasticsearch volume that default to 1Gi with this value
-    NEXTCLOUD_STORAGE_SIZE: 1Gi # You can change the size of the nextcloud volume that default to 1Gi with this value
-    NEXTCLOUD_DATA_STORAGE_SIZE: 1Gi # You can change the size of the nextcloud-data volume that default to 1Gi with this value
+    NEXTCLOUD_STORAGE_SIZE: 2Gi # You can change the size of the nextcloud volume that default to 1Gi with this value
+    NEXTCLOUD_DATA_STORAGE_SIZE: 2Gi # You can change the size of the nextcloud-data volume that default to 1Gi with this value
     NEXTCLOUD_TRUSTED_CACERTS_STORAGE_SIZE: 1Gi # You can change the size of the nextcloud-trusted-cacerts volume that default to 1Gi with this value
     ONLYOFFICE_STORAGE_SIZE: 1Gi # You can change the size of the onlyoffice volume that default to 1Gi with this value
     REDIS_STORAGE_SIZE: 500Mi # You can change the size of the redis volume that default to 1Gi with this value
   valuesFrom:
     - kind: Secret
       name: nextcloud-ol-secret
-      valuesKey:
+      valuesKey: DATABASE_PASSWORD
       targetPath: DATABASE_PASSWORD
     - kind: Secret
       name: nextcloud-ol-secret
-      valuesKey:
+      valuesKey: NEXTCLOUD_PASSWORD
       targetPath: NEXTCLOUD_PASSWORD
     - kind: Secret
       name: nextcloud-ol-secret
-      valuesKey:
+      valuesKey: ONLYOFFICE_SECRET
       targetPath: ONLYOFFICE_SECRET
     - kind: Secret
       name: nextcloud-ol-secret
-      valuesKey:
+      valuesKey: REDIS_PASSWORD
       targetPath: REDIS_PASSWORD
     - kind: Secret
       name: nextcloud-ol-secret
-      valuesKey:
+      valuesKey: SIGNALING_SECRET
       targetPath: SIGNALING_SECRET
     - kind: Secret
       name: nextcloud-ol-secret
-      valuesKey:
+      valuesKey: TURN_SECRET
       targetPath: TURN_SECRET
