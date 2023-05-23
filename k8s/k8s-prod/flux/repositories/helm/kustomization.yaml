@@ -28,3 +28,4 @@ resources:
   - stakater.yaml
   - weave-gitops.yaml
   - zalando-postgres-operator.yaml
+  - nextcloud-all-in-one.yaml
