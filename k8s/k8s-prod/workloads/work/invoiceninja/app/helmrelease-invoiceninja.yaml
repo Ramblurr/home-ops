@@ -25,6 +25,8 @@ spec:
   values:
     debug: false
     existingSecret: invoiceninja-secret
+    updateStrategy:
+      type: Recreate
     appURL: "https://clients.${SECRET_DOMAIN_WORK}"
     userEmail: "${SECRET_WORK_EMAIL}"
     mariadb:
