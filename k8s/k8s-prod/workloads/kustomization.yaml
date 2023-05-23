@@ -13,3 +13,4 @@ resources:
   - qemu-guest-agent
   - rook-ceph
   - volsync
+  - work
