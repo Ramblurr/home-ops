@@ -5,4 +5,4 @@ resources:
   - namespace.yaml
   - ./invoiceninja/ks.yaml
     #- ./nextcloud-aio-ol/ks.yaml
-    #- ./nextcloud-ol/ks.yaml
+  - ./nextcloud-ol/ks.yaml
