@@ -74,6 +74,22 @@ spec:
             name: nextcloud-ol-secret
             key: REDIS_PASSWORD
       NEXTCLOUD_DATA_DIR: /data
+    initContainers:
+      init-chmod-pvc:
+        name: init-chmod-pvc
+        image: docker.io/library/alpine:20230329
+        command:
+          - /bin/sh
+          - -ec
+          - |
+            mkdir -p /var/www/html/config && chmod 0700 /var/www/html/config
+        volumeMounts:
+          - mountPath: /var/www/html
+            name: app-config
+            subPath: nextcloud/html
+            readOnly: false
+        securityContext:
+          runAsGroup: 2000
     additionalContainers:
       poststart-metrics:
         name: poststart-metrics
