@@ -193,6 +193,8 @@ spec:
           hajimari.io/group: tools
           nginx.ingress.kubernetes.io/proxy-body-size: 10G
           nginx.ingress.kubernetes.io/enable-global-auth: "false"
+          nginx.ingress.kubernetes.io/enable-cors: "true"
+          nginx.ingress.kubernetes.io/cors-allow-headers: "X-Forwarded-For"
         hosts:
           - host: &host "drive.${SECRET_DOMAIN}"
             paths:
@@ -360,12 +362,14 @@ data:
     <?php
     $CONFIG = array(
       'overwriteprotocol' => 'https',
+      'overwrite.cli.url' => 'https://drive.${SECRET_DOMAIN}',
       'trusted_domains' => array(
          'localhost',
          'drive.${SECRET_DOMAIN}',
       ),
       'trusted_proxies' => array(
-          0 => '${NET_POD_CIDR}'
+          0 => '127.0.0.1',
+          1 => '${NET_POD_CIDR}'
       ),
       'forwarded_for_headers' => array(
         0 => 'HTTP_X_FORWARDED_FOR',
