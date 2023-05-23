@@ -20,18 +20,6 @@ spec:
             fsGroup: 2000
             supplementalGroups:
               - 65541
-          initContainers:
-            - name: nfs-fixer
-              image: docker.io/library/alpine:20230329
-              securityContext:
-                runAsUser: 2000
-              volumeMounts:
-                - name: invoiceninja-db-backup-nfs
-                  mountPath: /mnt/nfs-fix/backups
-              command:
-                - sh
-                - -c
-                - (mkdir -p /mnt/nfs-fix/backups && chmod  0770 /mnt/nfs-fix && chmod 0770 /mnt/nfs-fix/backups && chgrp 2000 /mnt/nfs-fix /mnt/nfs-fix/backups && ls -al /mnt/nfs-fix && touch /mnt/nfs-fix/backups/hello)
           containers:
             - name: invoiceninja-db-backup
               image: docker.io/databack/mysql-backup:latest
