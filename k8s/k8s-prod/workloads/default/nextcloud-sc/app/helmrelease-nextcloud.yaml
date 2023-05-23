@@ -28,7 +28,7 @@ spec:
   values:
     image:
       repository: docker.io/library/nextcloud
-      tag: 26.0.0-fpm-alpine
+      tag: 26.0.1-fpm-alpine
     env:
       TZ: "${SECRET_TIMEZONE}"
       NEXTCLOUD_ADMIN_USER:
@@ -399,15 +399,24 @@ data:
 
       // SMTP without authentication
       'mail_smtpmode' => 'smtp',
+      'mail_smtptimeout' => 30,
+      'mail_sendmailmode' => 'smtp',
       'mail_smtphost' => getenv('SMTP_HOST'),
-      'mail_smtpport' => getenv('SMTP_PORT') ?: (getenv('SMTP_SECURE') ? 465 : 25),
-      'mail_smtpsecure' => getenv('SMTP_SECURE') ?: '',
-      'mail_smtpauth' => '',
-      'mail_smtpauthtype' => 'PLAIN',
+      'mail_smtpport' => 25,
+      'mail_smtpsecure' => '',
+      'mail_smtpauth' => 0,
+      'mail_smtpauthtype' => '',
       'mail_smtppassword' => '',
       'mail_smtpname' => '',
       'mail_from_address' => getenv('MAIL_FROM_ADDRESS'),
       'mail_domain' => getenv('MAIL_DOMAIN'),
+      'mail_smtpstreamoptions' => array(
+        'ssl' => array(
+          'allow_self_signed' => true,
+          'verify_peer' => false,
+          'verify_peer_name' => false
+        )
+      ),
 
        // Circumvention for client freezes - https://github.com/nextcloud/desktop/issues/5094
       'bulkupload.enabled' => false,
