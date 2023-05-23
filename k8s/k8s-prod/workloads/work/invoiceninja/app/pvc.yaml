@@ -32,3 +32,39 @@ spec:
   resources:
     requests:
       storage: 2Gi
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.26.1-standalone-strict/persistentvolume-v1.json
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: invoiceninja-db-backup-nfs
+  namespace: work
+spec:
+  capacity:
+    storage: 1Mi # Size does not matter
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  storageClassName: invoiceninja-db-backup-nfs
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    server: "${SECRET_NFS_SERVER}"
+    path: /mnt/tank2/backups/k8s-prod/invoiceninja-db
+  mountOptions:
+    - vers=3
+    - rw
+    - nolock # TODO https://github.com/siderolabs/talos/issues/6582
+    - noatime
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.26.1-standalone-strict/persistentvolumeclaim-v1.json
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: invoiceninja-db-backup-nfs
+  namespace: work
+spec:
+  accessModes: ["ReadWriteMany"]
+  storageClassName: invoiceninja-db-backup-nfs
+  resources:
+    requests:
+      storage: 1Mi # Size does not matter

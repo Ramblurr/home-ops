@@ -1,0 +1,67 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: invoiceninja-db-backup
+  namespace: work
+spec:
+  schedule: "0 4 * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          automountServiceAccountToken: false
+          enableServiceLinks: false
+          securityContext:
+            runAsUser: 2000
+            runAsGroup: 2000
+            fsGroup: 2000
+            supplementalGroups:
+              - 65541
+          initContainers:
+            - name: nfs-fixer
+              image: docker.io/library/alpine:20230329
+              securityContext:
+                runAsUser: 2000
+              volumeMounts:
+                - name: invoiceninja-db-backup-nfs
+                  mountPath: /mnt/nfs-fix/backups
+              command:
+                - sh
+                - -c
+                - (mkdir -p /mnt/nfs-fix/backups && chmod  0770 /mnt/nfs-fix && chmod 0770 /mnt/nfs-fix/backups && chgrp 2000 /mnt/nfs-fix /mnt/nfs-fix/backups && ls -al /mnt/nfs-fix && touch /mnt/nfs-fix/backups/hello)
+          containers:
+            - name: invoiceninja-db-backup
+              image: docker.io/databack/mysql-backup:latest
+              imagePullPolicy: IfNotPresent
+              env:
+                - name: DB_DUMP_TARGET
+                  value: /backups
+                - name: RUN_ONCE
+                  value: "1"
+                - name: NICE
+                  value: "1"
+                - name: DB_USER
+                  value: invoiceninja
+                - name: DB_SERVER
+                  value: invoiceninja-mariadb
+                - name: DB_PORT
+                  value: "3306"
+                - name: DB_PASS
+                  valuefrom:
+                    secretkeyref:
+                      name: invoiceninja-secret
+                      key: mariadb-password
+                - name: DB_NAMES
+                  value: "invoiceninja"
+              volumeMounts:
+                - name: invoiceninja-db-backup-nfs
+                  mountPath: /backups
+
+          restartPolicy: OnFailure
+
+          volumes:
+            - name: invoiceninja-db-backup-nfs
+              persistentVolumeClaim:
+                claimName: invoiceninja-db-backup-nfs

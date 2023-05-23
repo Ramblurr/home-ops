@@ -38,3 +38,4 @@ xanmanning.k3s*
 *.xz
 .python-version
 *.pyc
+tmp/
