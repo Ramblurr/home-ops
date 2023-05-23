@@ -38,10 +38,12 @@ spec:
               env:
                 - name: DB_DUMP_TARGET
                   value: /backups
+                - name: SINGLE_DATABASE
+                  value: "true"
                 - name: RUN_ONCE
-                  value: "1"
+                  value: "true"
                 - name: NICE
-                  value: "1"
+                  value: "true"
                 - name: DB_USER
                   value: invoiceninja
                 - name: DB_SERVER
