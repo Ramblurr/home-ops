@@ -57,5 +57,6 @@ spec:
       tls:
         - hosts:
             - *host
+          secretName: "${SECRET_DOMAIN_WORK_CERT_SECRET}"
     podAnnotations:
       reloader.stakater.com/auto: "true"
