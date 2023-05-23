@@ -57,3 +57,5 @@ spec:
       tls:
         - hosts:
             - *host
+    podAnnotations:
+      reloader.stakater.com/auto: "true"
