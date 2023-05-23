@@ -32,6 +32,13 @@ spec:
         database: invoiceninja
         username: invoiceninja
         existingSecret: invoiceninja-secret
+    redis:
+      sentinel:
+        enabled: false
+      master:
+        count: 1
+        persistence:
+          enabled: false
     persistence:
       public:
         existingClaim: invoiceninja-ceph-public
