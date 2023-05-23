@@ -76,6 +76,11 @@ spec:
       NEXTCLOUD_DATA_DIR: /data
     initContainers:
       init-chmod-pvc:
+        # This is necessary because the configmap mounted
+        # at /var/www/html/config/extra.config.php will be created by k8s
+        # but the config dir itself will be root owned
+        # So this container pre-empts that by mounting just the volume
+        # and creating the container with the privs of the user
         name: init-chmod-pvc
         image: docker.io/library/alpine:20230329
         command:
