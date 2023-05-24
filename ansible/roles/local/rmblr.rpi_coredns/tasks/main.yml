@@ -45,6 +45,7 @@
     group: root
     mode: 0644
   notify: restart coredns
+  tags: [dns-config-only]
 
 - name: install tmpfiles
   ansible.builtin.copy:
@@ -54,6 +55,7 @@
     group: root
     mode: 0644
   notify: restart coredns
+  tags: [dns-config-only]
 
 - name: create config location
   ansible.builtin.file:
@@ -63,6 +65,7 @@
     group: coredns
     mode: 0750
   notify: restart coredns
+  tags: [dns-config-only]
 
 - name: install config
   tags: [dns-config-only]
