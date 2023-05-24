@@ -22,9 +22,9 @@ spec:
   upgrade:
     remediation:
       retries: 0
-  dependsOn:
-    - name: nextcloud-ol-redis
-      namespace: work
+  # dependsOn:
+  # - name: nextcloud-ol-redis
+  #  namespace: work
   values:
     image:
       repository: docker.io/library/nextcloud
@@ -126,7 +126,18 @@ spec:
       redis:
         name: nextcloud-ol-redis
         image: docker.io/library/redis:7
-        command: ["redis-server", "--requirepass", "$(REDIS_PASSWORD)"]
+        # yamllint disable rule:indentation
+        command:
+          [
+            "redis-server",
+            "--requirepass",
+            "$(REDIS_PASSWORD)",
+            "--save",
+            "",
+            "--appendonly",
+            "no",
+          ]
+        # yamllint enable rule:indentation
         env:
           REDIS_REPLICATION_MODE: master
           REDIS_PASSWORD:
