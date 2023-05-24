@@ -246,6 +246,7 @@ spec:
         tls:
           - hosts:
               - *host
+            secretName: "${SECRET_DOMAIN_WORK_CERT_SECRET}"
     service:
       main:
         ports:

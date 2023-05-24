@@ -66,6 +66,20 @@ spec:
       tls:
         - hosts:
             - *host
-          secretName: "${SECRET_DOMAIN_WORK_CERT_SECRET}"
+          # https://github.com/invoiceninja/dockerfiles/issues/515
+          # secretName: "${SECRET_DOMAIN_WORK_CERT_SECRET}"
     podAnnotations:
       reloader.stakater.com/auto: "true"
+  postRenderers:
+    - kustomize:
+        patchesStrategicMerge:
+          - kind: Ingress
+            apiVersion: networking.k8s.io/v1
+            metadata:
+              name: invoiceninja
+              namespace: work
+            spec:
+              tls:
+                - hosts:
+                    - *host
+                  secretName: "${SECRET_DOMAIN_WORK_CERT_SECRET}"
