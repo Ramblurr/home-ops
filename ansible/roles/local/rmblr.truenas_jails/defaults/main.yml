@@ -1,6 +1,6 @@
 ---
 jail_release: 13.1-RELEASE
-jails_resolver: "search {{ subdomain_int }} {{ socozy_tld }} ;nameserver {{ local_nameservers }}"
+jails_resolver: "search {{ subdomain_int }} {{ personal_tld }} ;nameserver {{ local_nameservers }}"
 jail_packages:
   - python3
   - ca_root_nss

@@ -6,7 +6,7 @@ jobs:
 #  type: push
 #  connect:
 #    type: tls
-#    address: "{{ socozy_public_host }}:3478"
+#    address: "{{ personal_public_host }}:3478"
 #    ca: /usr/local/etc/zrepl/mali.int.socozy.casa.crt
 #    cert: /usr/local/etc/zrepl/ludwig.int.socozy.casa.crt
 #    key:  /usr/local/etc/zrepl/ludwig.int.socozy.casa.key
@@ -45,7 +45,7 @@ jobs:
   type: pull
   connect:
     type: tls
-    address: "{{ socozy_public_host }}:3478"
+    address: "{{ personal_public_host }}:3478"
     ca: /usr/local/etc/zrepl/mali.int.socozy.casa.crt
     cert: /usr/local/etc/zrepl/ludwig.int.socozy.casa.crt
     key:  /usr/local/etc/zrepl/ludwig.int.socozy.casa.key

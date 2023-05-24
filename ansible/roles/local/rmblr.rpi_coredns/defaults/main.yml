@@ -9,6 +9,8 @@ coredns_systemd_unit: |
   StartLimitIntervalSec=0
 
   [Service]
+  Environment="SECRET_DOMAIN={{ personal_tld }}"
+  Environment="SECRET_DOMAIN_WORK={{ work_tld }}"
   Environment="DNS_IP={{ ansible_host }}"
   Environment="DNS_DHCP_RESOLVER={{ dns_local_dhcp_resolver }}"
   Environment="DNS_UPSTREAM1={{ upstream_nameserver1 }}"
@@ -34,4 +36,3 @@ coredns_tmpfiles: >-
   d /var/lib/coredns 0755 coredns coredns -
 coredns_sysusers: >-
   u coredns - "CoreDNS is a DNS server that chains plugins" /var/lib/coredns
-...

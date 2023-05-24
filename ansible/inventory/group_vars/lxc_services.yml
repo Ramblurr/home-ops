@@ -7,7 +7,7 @@ service_local_data_dir: /srv/services
 service_role_owner: root
 service_role_group: root
 
-cloudflare_public_ip: "{{ socozy_public_ip }}"
+cloudflare_public_ip: "{{ personal_public_ip }}"
 
 service_exposed_presets:
   internal-https:

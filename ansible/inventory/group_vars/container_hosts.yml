@@ -8,6 +8,6 @@ cifs_host: "{{ mali_data_domain }}"
 
 container_node_mgmt_ip: "{{ container_node_mgmt_cidr | ansible.netcommon.ipaddr('address') }}"
 container_node_prim_ip: "{{ container_node_prim_cidr | ansible.netcommon.ipaddr('address') }}"
-cloudflare_public_ip: "{{ socozy_public_ip }}"
+cloudflare_public_ip: "{{ personal_public_ip }}"
 traefik_redis_bind_ip: "{{ container_node_mgmt_ip }}"
 traefik_redis_bind_port: 6379

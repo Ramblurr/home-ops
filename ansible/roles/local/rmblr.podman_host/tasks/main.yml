@@ -27,7 +27,7 @@
   ansible.builtin.lineinfile:
     path: /etc/systemd/resolved.conf
     regexp: '^#?\s*Domains='
-    line: "Domains=~{{ socozy_tld }}"
+    line: "Domains=~{{ personal_tld }}"
   notify: restart systemd-resolved
 
 - name: setup resolv.conf

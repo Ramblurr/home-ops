@@ -22,7 +22,7 @@ packer_cache
 .pio*
 .private/
 server/ansible/inventory/e2e/hosts.yml
-pki/certs
+pki/
 !pki/certs/.gitkeep
 talos/*/*/charts
 talosconfig
@@ -39,3 +39,4 @@ xanmanning.k3s*
 .python-version
 *.pyc
 tmp/
+bin/pki

@@ -18,7 +18,7 @@ set service dhcp-server shared-network-name GUEST subnet 10.8.3.0/24 range 0 sto
 set service dhcp-server shared-network-name IOT authoritative
 set service dhcp-server shared-network-name IOT ping-check
 set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 default-router '10.8.50.1'
-set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 domain-name 'socozy.casa'
+set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 domain-name "${SECRET_DOMAIN}"
 set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 lease '86400'
 set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 name-server '10.5.0.4'
 set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 range 0 start '10.8.50.100'
@@ -39,7 +39,7 @@ set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mappi
 set service dhcp-server shared-network-name NOT authoritative
 set service dhcp-server shared-network-name NOT ping-check
 set service dhcp-server shared-network-name NOT subnet 10.8.60.0/23 default-router '10.8.60.1'
-set service dhcp-server shared-network-name NOT subnet 10.8.60.0/23 domain-name 'socozy.casa'
+set service dhcp-server shared-network-name NOT subnet 10.8.60.0/23 domain-name "${SECRET_DOMAIN}"
 set service dhcp-server shared-network-name NOT subnet 10.8.60.0/23 lease '86400'
 set service dhcp-server shared-network-name NOT subnet 10.8.60.0/23 name-server '10.5.0.4'
 set service dhcp-server shared-network-name NOT subnet 10.8.60.0/23 range 0 start '10.8.60.100'
@@ -181,7 +181,7 @@ set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-map
 set service dhcp-server shared-network-name PRIMARY authoritative
 set service dhcp-server shared-network-name PRIMARY ping-check
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 default-router '10.9.4.1'
-set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 domain-name 'socozy.casa'
+set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 domain-name "${SECRET_DOMAIN}"
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 lease '86400'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 name-server '10.9.4.4'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 name-server '192.168.1.3'
@@ -233,7 +233,7 @@ set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-ma
 set service dhcp-server shared-network-name MGMT authoritative
 set service dhcp-server shared-network-name MGMT ping-check
 set service dhcp-server shared-network-name MGMT subnet 10.9.8.0/23 default-router '10.9.8.1'
-set service dhcp-server shared-network-name MGMT subnet 10.9.8.0/23 domain-name 'socozy.casa'
+set service dhcp-server shared-network-name MGMT subnet 10.9.8.0/23 domain-name "${SECRET_DOMAIN}"
 set service dhcp-server shared-network-name MGMT subnet 10.9.8.0/23 lease '86400'
 set service dhcp-server shared-network-name MGMT subnet 10.9.8.0/23 name-server '10.9.4.4'
 set service dhcp-server shared-network-name MGMT subnet 10.9.8.0/23 name-server '192.168.1.3'
@@ -262,7 +262,7 @@ set service dhcp-server shared-network-name MGMT subnet 10.9.8.0/23 static-mappi
 set service dhcp-server shared-network-name DATA authoritative
 set service dhcp-server shared-network-name DATA ping-check
 set service dhcp-server shared-network-name DATA subnet 10.9.10.0/23 default-router '10.9.10.1'
-set service dhcp-server shared-network-name DATA subnet 10.9.10.0/23 domain-name 'socozy.casa'
+set service dhcp-server shared-network-name DATA subnet 10.9.10.0/23 domain-name "${SECRET_DOMAIN}"
 set service dhcp-server shared-network-name DATA subnet 10.9.10.0/23 lease '86400'
 set service dhcp-server shared-network-name DATA subnet 10.9.10.0/23 name-server '10.9.4.4'
 set service dhcp-server shared-network-name DATA subnet 10.9.10.0/23 name-server '192.168.1.3'

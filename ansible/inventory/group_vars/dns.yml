@@ -2,9 +2,9 @@
 ansible_python_interpreter: /usr/bin/python3
 dns_local_dhcp_resolver: 192.168.1.1
 coredns_config_dir: "{{ playbook_dir }}/../dns"
-coredns_zone1_sops: db.socozy.casa.sops
-coredns_zone1_name: db.socozy.casa
-coredns_zone2_sops: db.outskirtslabs.com.sops
-coredns_zone2_name: db.outskirtslabs.com
+coredns_zone1_sops: db.personal.sops
+coredns_zone1_name: db.personal
+coredns_zone2_sops: db.work.sops
+coredns_zone2_name: db.work
 coredns_zone3_sops: db.other.sops
 coredns_zone3_name: db.other

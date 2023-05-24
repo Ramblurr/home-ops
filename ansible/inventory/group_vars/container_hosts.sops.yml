@@ -1,5 +1,4 @@
 container_hosts_admin_password: ENC[AES256_GCM,data:6D06VZCt7CYrG1CKcaPzNr0ZXkJ3EkI0XiKHtFhTV40=,iv:Ccaq2pXyucD5Rx77UchUgNjmY9ojxRuJlvVk89XkxIU=,tag:BBAL7RiB44ptCedSlqO1Ag==,type:str]
-nextcloud_socozy_redis_password: ENC[AES256_GCM,data:65IX99V0GbAZYrHBfQzi3+I+87RRLUIhkFNiaOR3tko=,iv:JxoOQV5X3gWHSbGAzfd/493kFywazLRR5jJLau+RIDg=,tag:P3VXF5xs1xXq/62u+o++1g==,type:str]
 proxmox_prometheus_username: ENC[AES256_GCM,data:ax5gDQcBM4n4Cb1v3w4=,iv:oCyKQmc9b8slFbeRpisVRLk8xCJJrrIXr1eYnBOKY+A=,tag:lus5X+oaS1GcZuRfPjJmhg==,type:str]
 proxmox_prometheus_password: ENC[AES256_GCM,data:/JZq41ySI1jubkg+7IY4pV1prKFDavlLxUGbjfuDuWDOPaaegmq+c4Gj/9k7Ffqkkg==,iv:pujwOUM7Me5TgmvF5D2ebfL1+PTj1WG2E1Mk4dbPj3k=,tag:aG7DqXyhDkWg8YoZHjTsVA==,type:str]
 sops:
@@ -17,8 +16,8 @@ sops:
             UkppY0dURk8vbjgzQVZZb2pOZTY4dmcKlOeCCYiMftguYUw06vkyiUWJOoYTrpRH
             9IyR6mLCEmON6YhgRrzahkUu9bFzcI1T+L8oSiv29bI1sWeFHWdbhg==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2022-10-07T07:16:38Z"
-    mac: ENC[AES256_GCM,data:33zjtEssn7gWMU87emClnYhAGi/xWZrE03oBG7vhDe4bdgRCEaaCbe3rmZ1rBmq4wlbEI1kzvrHTk5SyMAES00q4kTRLhU4yqhNilLQCuLKOnFPiC5t5povupSzEpshDxt/Le2W1Psgg8P9Rt1yLgMNIooOLjbdm7uX5LaCcSgA=,iv:Zaghfz7dvCkkQd7Q6y7O/wShQVJLw3nZhEsNtz3/ssA=,tag:zWlsyC910cS9lWncGajnGQ==,type:str]
+    lastmodified: "2023-05-24T09:31:15Z"
+    mac: ENC[AES256_GCM,data:GmQuJOxehs+QtV7gP4wCWdA6tDdQONlQs60TUmiAvOYml00/6ixGMKp3K0ilz+hVG8YpCwhrdmhSTQjrPQ37fwtVpqvy8TQc9WbS+4PCYUx2XuRXaGWBrBF0cLZtelfRLFn2VGyobqX5cI8i/vZxDA8rKwbds+SpUH5h1BqnBNE=,iv:fGyKSxlLby8wTBHT0PlCrlUZ5hX1JB5Zb94p77grLg4=,tag:DpBWvH5taw7aCrM2wbSpZg==,type:str]
     pgp:
         - created_at: "2022-04-22T16:04:51Z"
           enc: |-

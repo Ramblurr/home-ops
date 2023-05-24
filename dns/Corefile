@@ -1,23 +1,23 @@
-socozy.casa:53 {
+{$SECRET_DOMAIN}:53 {
     import /etc/coredns/common.conf
     forward . {$DNS_IP}:54
     alternate original NXDOMAIN,SERVFAIL,REFUSED . {$DNS_IP}:55
 }
 
-socozy.casa:54 {
+{$SECRET_DOMAIN}:54 {
     import /etc/coredns/common.conf
-    file /etc/coredns/zones/db.socozy.casa socozy.casa
+    file /etc/coredns/zones/db.personal {$SECRET_DOMAIN}
 }
 
-outskirtslabs.com:53 {
+{$SECRET_DOMAIN_WORK}:53 {
     import /etc/coredns/common.conf
     forward . {$DNS_IP}:54
     alternate original NXDOMAIN,SERVFAIL,REFUSED . {$DNS_IP}:55
 }
 
-outskirtslabs.com:54 {
+{$SECRET_DOMAIN_WORK}:54 {
     import /etc/coredns/common.conf
-    file /etc/coredns/zones/db.outskirtslabs.com outskirtslabs.com
+    file /etc/coredns/zones/db.work {$SECRET_DOMAIN_WORK}
 }
 
 import /etc/coredns/secret.conf
