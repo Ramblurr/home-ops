@@ -1,0 +1,120 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: cloudflared-work-domain
+  namespace: networking
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 1.5.0
+      interval: 30m
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+
+  values:
+    controller:
+      replicas: 2
+      strategy: RollingUpdate
+      annotations:
+        reloader.stakater.com/auto: "true"
+
+    image:
+      repository: docker.io/cloudflare/cloudflared
+      tag: 2023.5.1
+
+    env:
+      NO_AUTOUPDATE: "true"
+      TUNNEL_CRED_FILE: /etc/cloudflared/creds/credentials.json
+      TUNNEL_METRICS: 0.0.0.0:8080
+      TUNNEL_TRANSPORT_PROTOCOL: auto
+    args:
+      - tunnel
+      - --config
+      - /etc/cloudflared/config/config.yaml
+      - run
+      - "${SECRET_CLOUDFLARE_TUNNEL_ID_WORK}"
+
+    service:
+      main:
+        ports:
+          http:
+            port: 8080
+
+    serviceMonitor:
+      main:
+        enabled: true
+        endpoints:
+          - port: http
+            scheme: http
+            path: /metrics
+            interval: 1m
+            scrapeTimeout: 30s
+
+    probes:
+      liveness:
+        enabled: true
+        custom: true
+        spec:
+          httpGet:
+            path: /ready
+            port: http
+          initialDelaySeconds: 0
+          periodSeconds: 10
+          timeoutSeconds: 1
+          failureThreshold: 3
+      readiness:
+        enabled: true
+        custom: true
+        spec:
+          httpGet:
+            path: /ready
+            port: http
+          initialDelaySeconds: 0
+          periodSeconds: 10
+          timeoutSeconds: 1
+          failureThreshold: 3
+      startup:
+        enabled: true
+        custom: true
+        spec:
+          httpGet:
+            path: /ready
+            port: http
+          failureThreshold: 30
+          periodSeconds: 10
+
+    persistence:
+      config:
+        enabled: true
+        type: configMap
+        name: cloudflared-configmap-work-domain
+        subPath: config.yaml
+        mountPath: /etc/cloudflared/config/config.yaml
+        readOnly: true
+      creds:
+        enabled: true
+        type: secret
+        name: cloudflared-secret-work-domain
+        subPath: credentials.json
+        mountPath: /etc/cloudflared/creds/credentials.json
+        readOnly: true
+
+    topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: kubernetes.io/hostname
+        whenUnsatisfiable: DoNotSchedule
+        labelSelector:
+          matchLabels:
+            app.kubernetes.io/name: cloudflared-work-domain
+
+    resources:
+      requests:
+        cpu: 6m
+        memory: 105Mi
+      limits:
+        memory: 105Mi

@@ -1,0 +1,13 @@
+---
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: cloudflared-tunnel-work-domain
+  namespace: networking
+  # annotations:
+  # external-dns.alpha.kubernetes.io/target: "ingress.${SECRET_DOMAIN_WORK}"
+spec:
+  endpoints:
+    - dnsName: "ingress.${SECRET_DOMAIN_WORK}"
+      recordType: CNAME
+      targets: ["${SECRET_CLOUDFLARE_TUNNEL_ID_WORK}.cfargotunnel.com"]

@@ -158,8 +158,4 @@
     - role: rmblr.baseline
     - role: rmblr.podman_host
     - role: prometheus.prometheus.node_exporter
-
-- ansible.builtin.import_playbook: apps.yml
-
 # END: LXCs
-...

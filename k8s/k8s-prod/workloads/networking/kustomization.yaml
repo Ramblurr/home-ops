@@ -8,7 +8,8 @@ resources:
   # Flux-Kustomizations
   - ./external-dns/ks.yaml
   - ./ingress-nginx-internal/ks.yaml
-  - ./ingress-nginx-external/ks.yaml
+  #- ./ingress-nginx-external/ks.yaml
   - ./k8s-gateway/ks.yaml
+  - ./cloudflared/ks.yaml
   # Standard Resources
   - wildcard-certificate
