@@ -126,9 +126,11 @@ controlPlane:
                   enable_unprivileged_icmp = true
             path: /etc/cri/conf.d/20-customization.part
             op: create
-        sysctls:
+        sysctls: &sysctls
           fs.inotify.max_user_watches: "1048576"
           fs.inotify.max_user_instances: "8192"
+          net.core.rmem_max: "4136960"
+          net.core.wmem_max: "4136960"
         time:
           disabled: false
           servers:
@@ -160,6 +162,8 @@ worker:
         nodeIP:
           validSubnets:
             - {{ cluster_node_cidr }}
+      sysctls:
+        <<: *sysctls
       time:
         disabled: false
         servers:
