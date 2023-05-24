@@ -238,7 +238,7 @@ spec:
           nginx.ingress.kubernetes.io/enable-global-auth: "false"
           nginx.ingress.kubernetes.io/enable-cors: "true"
           nginx.ingress.kubernetes.io/cors-allow-headers: "X-Forwarded-For"
-          external-dns.alpha.kubernetes.io/target: "ipv4.${SECRET_DOMAIN_WORK}"
+          external-dns.alpha.kubernetes.io/target: "ingress.${SECRET_DOMAIN_WORK}"
         hosts:
           - host: &host "data.${SECRET_DOMAIN_WORK}"
             paths:
