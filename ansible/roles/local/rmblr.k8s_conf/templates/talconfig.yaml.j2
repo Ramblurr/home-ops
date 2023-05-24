@@ -10,17 +10,17 @@ cniConfig:
   name: none
 additionalApiServerCertSans:
   - {{ cluster_apiserver_addr }}
-  - {{ cluster_domain }}
+  - {{ cluster_domain_with_env }}
 additionalMachineCertSans:
   - {{ cluster_apiserver_addr }}
-  - {{ cluster_domain }}
+  - {{ cluster_domain_with_env }}
 clusterPodNets:
   - {{ cluster_net_pod_cidr }}
 clusterSvcNets:
   - {{ cluster_net_svc_cidr }}
 nodes:
 {% for node in cluster_control_plane_nodes |  dict2items %}
-  - hostname: cp{{ node.value.idx }}.{{ cluster_domain }}
+  - hostname: cp{{ node.value.idx }}
     disableSearchDomain: true
     ipAddress: {{ node.value.ifaces.mgmt.ip }}
     installDiskSelector:
@@ -53,7 +53,7 @@ nodes:
 {% endfor %}
 
 {% for node in cluster_worker_nodes |  dict2items %}
-  - hostname: wrk{{ node.value.idx }}.{{ cluster_domain }}
+  - hostname: wrk{{ node.value.idx }}
     disableSearchDomain: true
     ipAddress: {{ node.value.ifaces.mgmt.ip }}
     installDiskSelector:
@@ -137,7 +137,7 @@ controlPlane:
           extraHostEntries:
             - ip: {{ cluster_apiserver_addr }}
               aliases:
-                - {{ cluster_domain }}
+                - {{ cluster_domain_with_env }}
         kubelet:
           nodeIP:
             validSubnets:

@@ -1,6 +1,7 @@
 ---
 cluster_name: k8s-prod
-cluster_domain: k8s-prod.mgmt.socozy.casa
+cluster_domain: k8s-prod.mgmt.{{ personal_tld }}
+cluster_domain_with_env: k8s-prod.mgmt.${SECRET_DOMAIN}
 cluster_id: 0
 cluster_ntp_server: 192.168.1.1
 cluster_nameservers: "{{ local_nameservers | split (' ') }}"

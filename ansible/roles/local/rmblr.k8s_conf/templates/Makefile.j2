@@ -33,10 +33,10 @@ first-apply:
 
 {% for node in cluster_control_plane_nodes | dict2items %}
 
-	${TC} apply-config --insecure --nodes {{ node.value.ifaces.mgmt.ip }} --file clusterconfig/{{ cluster_name }}-cp{{ node.value.idx }}.{{ cluster_domain }}.yaml{% endfor %}
+	${TC} apply-config --insecure --nodes {{ node.value.ifaces.mgmt.ip }} --file clusterconfig/{{ cluster_name }}-cp{{ node.value.idx }}.yaml{% endfor %}
 {% for node in cluster_worker_nodes | dict2items %}
 
-	${TC} apply-config --insecure --nodes {{ node.value.ifaces.mgmt.ip }} --file clusterconfig/{{ cluster_name }}-wrk{{ node.value.idx }}.{{ cluster_domain }}.yaml{% endfor %}
+	${TC} apply-config --insecure --nodes {{ node.value.ifaces.mgmt.ip }} --file clusterconfig/{{ cluster_name }}-wrk{{ node.value.idx }}.yaml{% endfor %}
 
 bootstrap:
 	${TC} bootstrap --nodes {{ control_plane_ips_mgmt[0] }}
@@ -57,10 +57,10 @@ reboot-now:
 reapply:
 {% for node in cluster_control_plane_nodes | dict2items %}
 
-	${TC} apply-config --nodes {{ node.value.ifaces.mgmt.ip }} --file clusterconfig/{{ cluster_name }}-cp{{ node.value.idx }}.{{ cluster_domain }}.yaml $(ARGS){% endfor %}
+	${TC} apply-config --nodes {{ node.value.ifaces.mgmt.ip }} --file clusterconfig/{{ cluster_name }}-cp{{ node.value.idx }}.yaml $(ARGS){% endfor %}
 {% for node in cluster_worker_nodes | dict2items %}
 
-	${TC} apply-config --nodes {{ node.value.ifaces.mgmt.ip }} --file clusterconfig/{{ cluster_name }}-wrk{{ node.value.idx }}.{{ cluster_domain }}.yaml $(ARGS){% endfor %}
+	${TC} apply-config --nodes {{ node.value.ifaces.mgmt.ip }} --file clusterconfig/{{ cluster_name }}-wrk{{ node.value.idx }}.yaml $(ARGS){% endfor %}
 
 apply-bootstrap-cni:
 	${KC} kustomize --enable-helm ./cni | kubectl apply -f -
