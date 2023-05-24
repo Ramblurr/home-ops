@@ -40,3 +40,4 @@ xanmanning.k3s*
 *.pyc
 tmp/
 bin/pki
+k8s/cluster-test
