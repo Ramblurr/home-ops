@@ -24,6 +24,10 @@ spec:
       retries: 0
   values:
     debug: false
+    image:
+      registry: docker.io
+      repository: invoiceninja/invoiceninja
+      tag: 5.5.120
     existingSecret: invoiceninja-secret
     updateStrategy:
       type: Recreate
