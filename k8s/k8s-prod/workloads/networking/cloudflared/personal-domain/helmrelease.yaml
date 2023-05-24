@@ -34,8 +34,6 @@ spec:
       TUNNEL_TRANSPORT_PROTOCOL: auto
     args:
       - tunnel
-      - --loglevel
-      - debug
       - --config
       - /etc/cloudflared/config/config.yaml
       - run

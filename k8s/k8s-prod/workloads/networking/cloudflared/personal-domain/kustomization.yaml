@@ -9,11 +9,9 @@ resources:
 configMapGenerator:
   - name: cloudflared-configmap
     files:
-      - config/config.yaml
+      - ./config/config.yaml
 generatorOptions:
   disableNameSuffixHash: true
-  annotations:
-    kustomize.toolkit.fluxcd.io/substitute: disabled
 commonLabels:
   app.kubernetes.io/name: cloudflared
   app.kubernetes.io/instance: cloudflared
