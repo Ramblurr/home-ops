@@ -1,0 +1,60 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.26.1-standalone-strict/service-v1.json
+apiVersion: v1
+kind: Service
+metadata:
+  name: external-home-assistant
+  namespace: default
+spec:
+  ports:
+    - name: http
+      port: 8123
+      protocol: TCP
+      targetPort: http
+  clusterIP: None
+  type: ClusterIP
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.26.1-standalone-strict/endpoints-v1.json
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: external-home-assistant
+  namespace: default
+subsets:
+  - addresses:
+      - ip: "${SECRET_HOME_ASSISTANT_IP}"
+    ports:
+      - name: http
+        port: 8123
+        protocol: TCP
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.26.1-standalone-strict/ingress-networking-v1.json
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: &host home.${SECRET_DOMAIN}
+  namespace: default
+  labels:
+    app.kubernetes.io/name: external-home-assistant
+  annotations:
+    external-dns.alpha.kubernetes.io/target: ipv4.${SECRET_DOMAIN}
+    external-dns.home.arpa/enabled: "true"
+    nginx.ingress.kubernetes.io/cors-allow-headers: X-Forwarded-For
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/enable-global-auth: "false"
+spec:
+  ingressClassName: nginx-external
+  rules:
+    - host: *host
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: external-home-assistant
+                port:
+                  number: 8123
+  tls:
+    - hosts:
+        - *host
