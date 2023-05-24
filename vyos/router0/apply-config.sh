@@ -102,8 +102,8 @@ else
     read -p "Do you want to apply the changes? [yes/no] " answer
     case $answer in
       yes ) echo "Proceeding..." && execute_commit;;
-      no ) echo "Aborting without commit."&& exit;;
-      * ) echo "Only 'yes' or 'no' is accepted. Aborting";;
+      no ) echo "Aborting without commit." && exit;;
+      * ) echo "Only 'yes' or 'no' is accepted. Aborting" && exit;;
     esac
   fi
 fi

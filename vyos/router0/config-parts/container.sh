@@ -21,6 +21,11 @@ set container name smtp-relay environment SMTP_PASSWORD value "${SECRET_SMTP_PAS
 set container name smtp-relay environment SMTP_PORT value "${SECRET_SMTP_PORT}"
 set container name smtp-relay environment SMTP_SERVER value "${SECRET_SMTP_HOST}"
 set container name smtp-relay environment SMTP_USERNAME value "${SECRET_SMTP_USERNAME}"
+set container name smtp-relay environment SMTP_DOMAIN_WORK value "${SECRET_SMTP_FROM_DOMAIN_WORK}"
+set container name smtp-relay environment SMTP_PASSWORD_WORK value "${SECRET_SMTP_PASSWORD_WORK}"
+set container name smtp-relay environment SMTP_PORT_WORK value "${SECRET_SMTP_PORT_WORK}"
+set container name smtp-relay environment SMTP_SERVER_WORK value "${SECRET_SMTP_HOST_WORK}"
+set container name smtp-relay environment SMTP_USERNAME_WORK value "${SECRET_SMTP_USERNAME_WORK}"
 set container name smtp-relay restart 'on-failure'
 set container name smtp-relay memory '0'
 set container name smtp-relay network services address '10.5.0.3'
