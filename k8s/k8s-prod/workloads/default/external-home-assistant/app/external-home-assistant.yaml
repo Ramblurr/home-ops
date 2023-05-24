@@ -43,7 +43,7 @@ metadata:
     nginx.ingress.kubernetes.io/enable-cors: "true"
     nginx.ingress.kubernetes.io/enable-global-auth: "false"
 spec:
-  ingressClassName: nginx-external
+  ingressClassName: nginx-internal
   rules:
     - host: *host
       http:
