@@ -9,3 +9,4 @@ resources:
   - ./external-home-assistant/ks.yaml
   - ./photoprism/ks.yaml
   - ./calibre-web/ks.yaml
+  - ./paperless/ks.yaml
