@@ -96,7 +96,7 @@ spec:
         type: emptyDir
     nodeSelector:
       node-role.kubernetes.io/worker: "true"
-      intel.feature.node.kubernetes.io/gpu: "true"
+      #intel.feature.node.kubernetes.io/gpu: "true"
     resources:
       requests:
         #gpu.intel.com/i915: 1
