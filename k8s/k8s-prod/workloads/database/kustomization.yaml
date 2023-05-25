@@ -8,3 +8,4 @@ resources:
   - ./ext-postgres-operator/ks.yaml
   - ./postgres-backup/ks.yaml
   - ./zalando-postgres/ks.yaml
+  - ./redis/ks.yaml
