@@ -54,12 +54,12 @@ jobs:
         env:
           KUBECONFIG: ${{ steps.kubeconfig.outputs.filePath }}
         run: |
-          unzip -j $GITHUB_WORKSPACE/crd-extractor.zip -d $GITHUB_WORKSPACE
-          bash $GITHUB_WORKSPACE/crd-extractor.sh
+          unzip -j "$GITHUB_WORKSPACE/crd-extractor.zip" -d "$GITHUB_WORKSPACE"
+          bash "$GITHUB_WORKSPACE/crd-extractor.sh"
 
       - name: Publish schemas as OCI
         run: |
-          flux push artifact oci://ghcr.io/${{ github.repository_owner }}/kubernetes-schemas-oci:$(git rev-parse --short HEAD) \
+          flux push artifact "oci://ghcr.io/${{ github.repository_owner }}/kubernetes-schemas-oci:$(git rev-parse --short HEAD)" \
               --path="/home/runner/.datree/crdSchemas" \
               --source="${{ github.repositoryUrl }}" \
               --revision="${{ github.ref_name }}@sha1:$(git rev-parse HEAD)"
@@ -88,7 +88,7 @@ jobs:
       - name: Pull schemas as OCI
         run: |
           mkdir -p /home/runner/crdSchemas
-          flux pull artifact oci://ghcr.io/${{ github.repository_owner }}/kubernetes-schemas-oci:$(git rev-parse --short HEAD) --output /home/runner/crdSchemas
+          flux pull artifact "oci://ghcr.io/${{ github.repository_owner }}/kubernetes-schemas-oci:$(git rev-parse --short HEAD)" --output /home/runner/crdSchemas
 
       - name: Write nginx-unprivileged Dockerfile
         run: |
