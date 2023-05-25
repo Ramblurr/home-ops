@@ -1,0 +1,45 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: photoprism-mariadb
+  namespace: default
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: mariadb
+      version: 12.2.4
+      sourceRef:
+        kind: HelmRepository
+        name: bitnami-charts
+        namespace: flux-system
+      interval: 5m
+  targetNamespace: default
+  install:
+    createNamespace: true
+    remediation:
+      retries: 0
+  upgrade:
+    remediation:
+      retries: 0
+  values:
+    fullnameOverride: photoprism-mariadb
+    auth:
+      database: photoprism
+      username: photoprism
+      existingSecret: photoprism-config-secret
+    primary:
+      persistence:
+        enabled: true
+        existingClaim: photoprism-mariadb-ceph
+      livenessProbe:
+        enabled: true
+      readinessProbe:
+        enabled: true
+    volumePermissions:
+      enabled: true
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true

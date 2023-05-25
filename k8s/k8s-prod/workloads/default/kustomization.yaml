@@ -7,3 +7,4 @@ resources:
   - ./hajimari/ks.yaml
   - ./nextcloud-sc/ks.yaml
   - ./external-home-assistant/ks.yaml
+  - ./photoprism/ks.yaml
