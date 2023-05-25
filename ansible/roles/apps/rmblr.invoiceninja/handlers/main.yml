@@ -1,8 +1,0 @@
----
-- name: restart service
-  ansible.builtin.systemd:
-    name: pod-{{ container_name }}
-    state: restarted
-    enabled: true
-    daemon_reload: true
-...

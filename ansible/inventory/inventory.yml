@@ -31,27 +31,6 @@ all:
         tailscale0.int.socozy.casa:
         matrix.int.socozy.casa:
           ip_address_prim: 10.9.4.28
-    lxc_services:
-      hosts:
-        photos-viki.lxc.socozy.casa:
-          ip_address_mgmt: 10.9.8.100
-        photos-casey.lxc.socozy.casa:
-          ip_address_mgmt: 10.9.8.101
-        books.lxc.socozy.casa:
-          ip_address_mgmt: 10.9.8.102
-        inventree.lxc.socozy.casa:
-          ip_address_mgmt: 10.9.8.111
-        nextcloud-sc.lxc.socozy.casa:
-          ip_address_mgmt: 10.9.8.103
-        nextcloud-ol.lxc.socozy.casa:
-          ip_address_mgmt: 10.9.8.104
-        invoiceninja.lxc.socozy.casa:
-          ip_address_mgmt: 10.9.8.105
-        paperless-ng.lxc.socozy.casa:
-          ip_address_mgmt: 10.9.8.107
-        grafana.lxc.socozy.casa:
-          ip_address_mgmt: 10.9.8.108
-          ip_address_prim: 10.9.4.35
     proxmox_creds:
       hosts:
         localhost:
@@ -145,7 +124,6 @@ all:
       children:
         proxmox:
         container_hosts:
-        lxc_services:
     tailscale_router:
       hosts:
         tailscale0.int.socozy.casa:
@@ -156,4 +134,3 @@ all:
       hosts:
         router0.int.socozy.casa:
           ansible_host: 192.168.1.1
-...
