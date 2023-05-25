@@ -8,6 +8,7 @@ resources:
   - ./nextcloud-sc/ks.yaml
   - ./external-home-assistant/ks.yaml
   - ./lldap/ks.yaml
+  - ./authelia/ks.yaml
   - ./photoprism/ks.yaml
   - ./calibre-web/ks.yaml
   - ./paperless/ks.yaml
