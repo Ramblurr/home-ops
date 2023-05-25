@@ -8,3 +8,4 @@ resources:
   - ./nextcloud-sc/ks.yaml
   - ./external-home-assistant/ks.yaml
   - ./photoprism/ks.yaml
+  - ./calibre-web/ks.yaml
