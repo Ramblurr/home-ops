@@ -1,0 +1,20 @@
+---
+apiVersion: db.movetokube.com/v1alpha1
+kind: Postgres
+metadata:
+  name: lldap-db
+  namespace: work
+spec:
+  database: lldap
+  dropOnDelete: false
+---
+apiVersion: db.movetokube.com/v1alpha1
+kind: PostgresUser
+metadata:
+  name: lldap-user
+  namespace: work
+spec:
+  role: lldap
+  database: lldap-db
+  secretName: database
+  privileges: OWNER
