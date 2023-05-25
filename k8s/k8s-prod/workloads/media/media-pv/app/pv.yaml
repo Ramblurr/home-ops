@@ -1,0 +1,26 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.26.1-standalone-strict/persistentvolume-v1.json
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: &name mali-media-nfs
+  namespace: media
+  labels:
+    app.kubernetes.io/name: *name
+    app.kubernetes.io/instance: *name
+spec:
+  capacity:
+    storage: 1Mi # Size does not matter
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  storageClassName: *name
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    server: "${SECRET_NFS_SERVER}"
+    path: /mnt/tank2/media
+  mountOptions:
+    - vers=3
+    - rw
+    - nolock # TODO https://github.com/siderolabs/talos/issues/6582
+    - noatime

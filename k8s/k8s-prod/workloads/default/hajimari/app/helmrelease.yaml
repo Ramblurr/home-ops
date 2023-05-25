@@ -40,6 +40,7 @@ spec:
       namespaceSelector:
         matchNames:
           - default
+          - media
     ingress:
       main:
         enabled: true

@@ -1,0 +1,29 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cluster-workloads-jellyfin
+  namespace: flux-system
+spec:
+  dependsOn:
+    - name: cluster-workloads-cert-manager-issuers
+    - name: cluster-workloads-rook-ceph-cluster
+    - name: cluster-workloads-ext-postgres-operator
+    - name: cluster-workloads-volsync
+    - name: cluster-workloads-media-pv
+    #- name: cluster-workloads-intel-device-plugin-gpu
+  path: ./k8s/k8s-prod/workloads/media/jellyfin/app
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  healthChecks:
+    - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+      kind: HelmRelease
+      name: jellyfun
+      namespace: media
+  wait: true
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m

@@ -1,0 +1,107 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/helm.toolkit.fluxcd.io/helmrelease_v2beta1.json
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: jellyfin
+  namespace: media
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: app-template
+      version: 1.5.0
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  maxHistory: 2
+  install:
+    createNamespace: true
+    remediation:
+      retries: 0
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 0
+  uninstall:
+    keepHistory: false
+  values:
+    controller:
+      type: statefulset
+    image:
+      repository: ghcr.io/onedr0p/jellyfin
+      tag: 10.8.10@sha256:1ef614db6a4c589777eb48bc9004d573b9c09f0d6d573a509041c6060f3a956b
+    env:
+      TZ: Europe/Berlin
+    service:
+      main:
+        type: LoadBalancer
+        externalIPs: ["10.10.12.4"]
+        externalTrafficPolicy: Local
+        ports:
+          http:
+            port: &port 8096
+    # serviceMonitor:
+    #   main:
+    #     enabled: true
+    probes:
+      liveness: &probes
+        enabled: true
+        custom: true
+        spec:
+          httpGet:
+            path: /health
+            port: *port
+          initialDelaySeconds: 0
+          periodSeconds: 10
+          timeoutSeconds: 1
+          failureThreshold: 3
+      readiness: *probes
+      startup:
+        enabled: false
+    ingress:
+      main:
+        enabled: true
+        ingressClassName: nginx-internal
+        annotations:
+          hajimari.io/icon: simple-icons:jellyfin
+        hosts:
+          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - hosts:
+              - *host
+    podSecurityContext:
+      runAsUser: 2000
+      runAsGroup: 2000
+      fsGroup: 2000
+      fsGroupChangePolicy: OnRootMismatch
+    volumeClaimTemplates:
+      - name: config
+        mountPath: /config
+        accessMode: ReadWriteOnce
+        size: 50Gi
+        storageClass: "${DEFAULT_CEPHFS_STORAGE_CLASS}"
+    persistence:
+      media:
+        enabled: true
+        existingClaim: jellyfin-mali-media-nfs
+        mountPath: /media
+        readOnly: true
+      transcode:
+        enabled: true
+        type: emptyDir
+    nodeSelector:
+      node-role.kubernetes.io/worker: "true"
+      intel.feature.node.kubernetes.io/gpu: "true"
+    resources:
+      requests:
+        #gpu.intel.com/i915: 1
+        cpu: 100m
+        memory: 1000Mi
+      limits:
+        #gpu.intel.com/i915: 1
+        memory: 4000Mi
