@@ -4,6 +4,9 @@ kind: DNSEndpoint
 metadata:
   name: cloudflared-tunnel
   namespace: networking
+  annotations:
+    # https://github.com/kubernetes-sigs/external-dns/issues/3634
+    external-dns.alpha.kubernetes.io/target: "true"
 spec:
   endpoints:
     - dnsName: "ingress.${SECRET_DOMAIN}"

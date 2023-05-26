@@ -5,7 +5,8 @@ metadata:
   name: cloudflared-tunnel-work-domain
   namespace: networking
   annotations:
-    external-dns.alpha.kubernetes.io/target: "ingress.${SECRET_DOMAIN_WORK}"
+    # https://github.com/kubernetes-sigs/external-dns/issues/3634
+    external-dns.alpha.kubernetes.io/target: "true"
 spec:
   endpoints:
     - dnsName: "ingress.${SECRET_DOMAIN_WORK}"
