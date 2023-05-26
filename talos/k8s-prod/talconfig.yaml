@@ -1,5 +1,5 @@
 ---
-# Ansible managed: talconfig.yaml.j2 modified on 2023-05-26 09:32:26 by ramblurr on quine
+# Ansible managed: talconfig.yaml.j2 modified on 2023-05-26 12:40:00 by ramblurr on quine
 clusterName: "k8s-prod"
 talosVersion: "v1.4.4"
 kubernetesVersion: "v1.26.4"
@@ -271,6 +271,17 @@ controlPlane:
             rotate-server-certificates: "false"
             #rotate-server-certificates: "true"
 worker:
+  patches:
+    - |-
+      machine:
+        files:
+          - content: |
+              [plugins]
+                [plugins."io.containerd.grpc.v1.cri"]
+                  enable_unprivileged_ports = true
+                  enable_unprivileged_icmp = true
+            path: /etc/cri/conf.d/20-customization.part
+            op: create
   configPatches:
     - op: add
       path: /machine/kubelet/extraArgs

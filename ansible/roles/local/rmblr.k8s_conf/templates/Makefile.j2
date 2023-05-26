@@ -30,13 +30,12 @@ reset:
 	$(MAKE) dist-clean
 
 first-apply:
-
 {% for node in cluster_control_plane_nodes | dict2items %}
-
-	${TC} apply-config --insecure --nodes {{ node.value.ifaces.mgmt.ip }} --file clusterconfig/{{ cluster_name }}-cp{{ node.value.idx }}.yaml{% endfor %}
+	${TC} apply-config --insecure --nodes {{ node.value.ifaces.mgmt.ip }} --file clusterconfig/{{ cluster_name }}-cp{{ node.value.idx }}.yaml
+{% endfor %}
 {% for node in cluster_worker_nodes | dict2items %}
-
-	${TC} apply-config --insecure --nodes {{ node.value.ifaces.mgmt.ip }} --file clusterconfig/{{ cluster_name }}-wrk{{ node.value.idx }}.yaml{% endfor %}
+	${TC} apply-config --insecure --nodes {{ node.value.ifaces.mgmt.ip }} --file clusterconfig/{{ cluster_name }}-wrk{{ node.value.idx }}.yaml
+{% endfor %}
 
 bootstrap:
 	${TC} bootstrap --nodes {{ control_plane_ips_mgmt[0] }}
@@ -44,23 +43,35 @@ bootstrap:
 kubeconf:
 	${TC} kubeconfig --nodes {{ control_plane_ips_mgmt[0] }} -f .
 
-reboot:
-{% for node in cluster_all_nodes | dict2items %}
+# Reboots all cps right away
+reboot-all-cp:
+	${TC} reboot --wait \
+	{% for node in cluster_control_plane_nodes | dict2items %} --nodes {{ node.value.ifaces.mgmt.ip }}{% endfor %}
 
-	${TC} reboot --nodes {{ node.value.ifaces.mgmt.ip }} --wait  $(ARGS){% endfor %}
+# Reboots all workers right away
+reboot-all-workers:
+	${TC} reboot --wait \
+	{% for node in cluster_worker_nodes | dict2items %} --nodes {{ node.value.ifaces.mgmt.ip }}{% endfor %}
 
-reboot-now:
-{% for node in cluster_all_nodes | dict2items %}
+# Reboots cp nodes one at a time
+reboot-cp:
+{% for node in cluster_control_plane_nodes | dict2items %}
+	${TC} reboot --wait --nodes {{ node.value.ifaces.mgmt.ip }}
+{% endfor %}
 
-	${TC} reboot --nodes {{ node.value.ifaces.mgmt.ip }} $(ARGS){% endfor %}
+# Reboots worker nodes one at a time
+reboot-workers:
+{% for node in cluster_worker_nodes | dict2items %}
+	${TC} reboot --wait --nodes {{ node.value.ifaces.mgmt.ip }}
+{% endfor %}
 
 reapply:
 {% for node in cluster_control_plane_nodes | dict2items %}
-
-	${TC} apply-config --nodes {{ node.value.ifaces.mgmt.ip }} --file clusterconfig/{{ cluster_name }}-cp{{ node.value.idx }}.yaml $(ARGS){% endfor %}
+	${TC} apply-config --mode staged --nodes {{ node.value.ifaces.mgmt.ip }} --file clusterconfig/{{ cluster_name }}-cp{{ node.value.idx }}.yaml $(ARGS)
+{% endfor %}
 {% for node in cluster_worker_nodes | dict2items %}
-
-	${TC} apply-config --nodes {{ node.value.ifaces.mgmt.ip }} --file clusterconfig/{{ cluster_name }}-wrk{{ node.value.idx }}.yaml $(ARGS){% endfor %}
+	${TC} apply-config --mode staged --nodes {{ node.value.ifaces.mgmt.ip }} --file clusterconfig/{{ cluster_name }}-wrk{{ node.value.idx }}.yaml $(ARGS)
+{% endfor %}
 
 apply-bootstrap-cni:
 	${KC} kustomize --enable-helm ./cni | kubectl apply -f -

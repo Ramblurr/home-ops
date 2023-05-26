@@ -30,8 +30,6 @@ reset:
 	$(MAKE) dist-clean
 
 first-apply:
-
-
 	${TC} apply-config --insecure --nodes 10.9.9.121 --file clusterconfig/k8s-prod-cp0.yaml
 	${TC} apply-config --insecure --nodes 10.9.9.122 --file clusterconfig/k8s-prod-cp1.yaml
 	${TC} apply-config --insecure --nodes 10.9.9.123 --file clusterconfig/k8s-prod-cp2.yaml
@@ -39,39 +37,28 @@ first-apply:
 	${TC} apply-config --insecure --nodes 10.9.9.131 --file clusterconfig/k8s-prod-wrk1.yaml
 	${TC} apply-config --insecure --nodes 10.9.9.132 --file clusterconfig/k8s-prod-wrk2.yaml
 	${TC} apply-config --insecure --nodes 10.9.9.133 --file clusterconfig/k8s-prod-wrk3.yaml
+
 bootstrap:
 	${TC} bootstrap --nodes 10.9.9.121
 
 kubeconf:
 	${TC} kubeconfig --nodes 10.9.9.121 -f .
 
-reboot:
-
-	${TC} reboot --nodes 10.9.9.121 --wait  $(ARGS)
-	${TC} reboot --nodes 10.9.9.122 --wait  $(ARGS)
-	${TC} reboot --nodes 10.9.9.123 --wait  $(ARGS)
-	${TC} reboot --nodes 10.9.9.130 --wait  $(ARGS)
-	${TC} reboot --nodes 10.9.9.131 --wait  $(ARGS)
-	${TC} reboot --nodes 10.9.9.132 --wait  $(ARGS)
-	${TC} reboot --nodes 10.9.9.133 --wait  $(ARGS)
-reboot-now:
-
-	${TC} reboot --nodes 10.9.9.121 $(ARGS)
-	${TC} reboot --nodes 10.9.9.122 $(ARGS)
-	${TC} reboot --nodes 10.9.9.123 $(ARGS)
-	${TC} reboot --nodes 10.9.9.130 $(ARGS)
-	${TC} reboot --nodes 10.9.9.131 $(ARGS)
-	${TC} reboot --nodes 10.9.9.132 $(ARGS)
-	${TC} reboot --nodes 10.9.9.133 $(ARGS)
+reboot-cp:
+	${TC} reboot --wait \
+	 --nodes 10.9.9.121 --nodes 10.9.9.122 --nodes 10.9.9.123
+reboot-workers:
+	${TC} reboot --wait \
+	 --nodes 10.9.9.130 --nodes 10.9.9.131 --nodes 10.9.9.132 --nodes 10.9.9.133
 reapply:
+	${TC} apply-config --mode staged --nodes 10.9.9.121 --file clusterconfig/k8s-prod-cp0.yaml $(ARGS)
+	${TC} apply-config --mode staged --nodes 10.9.9.122 --file clusterconfig/k8s-prod-cp1.yaml $(ARGS)
+	${TC} apply-config --mode staged --nodes 10.9.9.123 --file clusterconfig/k8s-prod-cp2.yaml $(ARGS)
+	${TC} apply-config --mode staged --nodes 10.9.9.130 --file clusterconfig/k8s-prod-wrk0.yaml $(ARGS)
+	${TC} apply-config --mode staged --nodes 10.9.9.131 --file clusterconfig/k8s-prod-wrk1.yaml $(ARGS)
+	${TC} apply-config --mode staged --nodes 10.9.9.132 --file clusterconfig/k8s-prod-wrk2.yaml $(ARGS)
+	${TC} apply-config --mode staged --nodes 10.9.9.133 --file clusterconfig/k8s-prod-wrk3.yaml $(ARGS)
 
-	${TC} apply-config --nodes 10.9.9.121 --file clusterconfig/k8s-prod-cp0.yaml $(ARGS)
-	${TC} apply-config --nodes 10.9.9.122 --file clusterconfig/k8s-prod-cp1.yaml $(ARGS)
-	${TC} apply-config --nodes 10.9.9.123 --file clusterconfig/k8s-prod-cp2.yaml $(ARGS)
-	${TC} apply-config --nodes 10.9.9.130 --file clusterconfig/k8s-prod-wrk0.yaml $(ARGS)
-	${TC} apply-config --nodes 10.9.9.131 --file clusterconfig/k8s-prod-wrk1.yaml $(ARGS)
-	${TC} apply-config --nodes 10.9.9.132 --file clusterconfig/k8s-prod-wrk2.yaml $(ARGS)
-	${TC} apply-config --nodes 10.9.9.133 --file clusterconfig/k8s-prod-wrk3.yaml $(ARGS)
 apply-bootstrap-cni:
 	${KC} kustomize --enable-helm ./cni | kubectl apply -f -
 apply-bootstrap-csr-approver:
