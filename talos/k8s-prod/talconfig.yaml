@@ -1,5 +1,5 @@
 ---
-# Ansible managed: talconfig.yaml.j2 modified on 2023-05-19 14:27:56 by ramblurr on quine
+# Ansible managed: talconfig.yaml.j2 modified on 2023-05-26 09:32:26 by ramblurr on quine
 clusterName: "k8s-prod"
 talosVersion: "v1.4.4"
 kubernetesVersion: "v1.26.4"
@@ -9,16 +9,16 @@ cniConfig:
   name: none
 additionalApiServerCertSans:
   - 10.9.9.120
-  - k8s-prod.mgmt.socozy.casa
+  - k8s-prod.mgmt.${SECRET_DOMAIN}
 additionalMachineCertSans:
   - 10.9.9.120
-  - k8s-prod.mgmt.socozy.casa
+  - k8s-prod.mgmt.${SECRET_DOMAIN}
 clusterPodNets:
   - 10.44.0.0/16
 clusterSvcNets:
   - 10.45.0.0/16
 nodes:
-  - hostname: cp0.k8s-prod.mgmt.socozy.casa
+  - hostname: cp0
     disableSearchDomain: true
     ipAddress: 10.9.9.121
     installDiskSelector:
@@ -44,7 +44,7 @@ nodes:
         mtu: 1500
         vip:
           ip: 10.9.9.120
-  - hostname: cp1.k8s-prod.mgmt.socozy.casa
+  - hostname: cp1
     disableSearchDomain: true
     ipAddress: 10.9.9.122
     installDiskSelector:
@@ -70,7 +70,7 @@ nodes:
         mtu: 1500
         vip:
           ip: 10.9.9.120
-  - hostname: cp2.k8s-prod.mgmt.socozy.casa
+  - hostname: cp2
     disableSearchDomain: true
     ipAddress: 10.9.9.123
     installDiskSelector:
@@ -97,7 +97,7 @@ nodes:
         vip:
           ip: 10.9.9.120
 
-  - hostname: wrk0.k8s-prod.mgmt.socozy.casa
+  - hostname: wrk0
     disableSearchDomain: true
     ipAddress: 10.9.9.130
     installDiskSelector:
@@ -105,6 +105,8 @@ nodes:
     controlPlane: false
     nodeLabels:
       peering: "yes"
+      # https://github.com/siderolabs/talos/issues/6750
+      rmblr.role/worker: "true"
     kernelModules:
       - name: br_netfilter
         parameters:
@@ -121,7 +123,7 @@ nodes:
       - interface: eth1
         dhcp: true
         mtu: 1500
-  - hostname: wrk1.k8s-prod.mgmt.socozy.casa
+  - hostname: wrk1
     disableSearchDomain: true
     ipAddress: 10.9.9.131
     installDiskSelector:
@@ -129,6 +131,8 @@ nodes:
     controlPlane: false
     nodeLabels:
       peering: "yes"
+      # https://github.com/siderolabs/talos/issues/6750
+      rmblr.role/worker: "true"
     kernelModules:
       - name: br_netfilter
         parameters:
@@ -145,7 +149,7 @@ nodes:
       - interface: eth1
         dhcp: true
         mtu: 1500
-  - hostname: wrk2.k8s-prod.mgmt.socozy.casa
+  - hostname: wrk2
     disableSearchDomain: true
     ipAddress: 10.9.9.132
     installDiskSelector:
@@ -153,6 +157,8 @@ nodes:
     controlPlane: false
     nodeLabels:
       peering: "yes"
+      # https://github.com/siderolabs/talos/issues/6750
+      rmblr.role/worker: "true"
     kernelModules:
       - name: br_netfilter
         parameters:
@@ -169,7 +175,7 @@ nodes:
       - interface: eth1
         dhcp: true
         mtu: 1500
-  - hostname: wrk3.k8s-prod.mgmt.socozy.casa
+  - hostname: wrk3
     disableSearchDomain: true
     ipAddress: 10.9.9.133
     installDiskSelector:
@@ -177,6 +183,8 @@ nodes:
     controlPlane: false
     nodeLabels:
       peering: "yes"
+      # https://github.com/siderolabs/talos/issues/6750
+      rmblr.role/worker: "true"
     kernelModules:
       - name: br_netfilter
         parameters:
@@ -242,6 +250,8 @@ controlPlane:
         sysctls:
           fs.inotify.max_user_watches: "1048576"
           fs.inotify.max_user_instances: "8192"
+          net.core.rmem_max: "4136960"
+          net.core.wmem_max: "4136960"
         time:
           disabled: false
           servers:
@@ -250,7 +260,7 @@ controlPlane:
           extraHostEntries:
             - ip: 10.9.9.120
               aliases:
-                - k8s-prod.mgmt.socozy.casa
+                - k8s-prod.mgmt.${SECRET_DOMAIN}
         kubelet:
           nodeIP:
             validSubnets:
@@ -269,10 +279,16 @@ worker:
         # rotate-server-certificates: "true"
   inlinePatch:
     machine:
+      type: worker
       kubelet:
         nodeIP:
           validSubnets:
             - 10.9.8.0/23
+      sysctls:
+        fs.inotify.max_user_watches: "1048576"
+        fs.inotify.max_user_instances: "8192"
+        net.core.rmem_max: "4136960"
+        net.core.wmem_max: "4136960"
       time:
         disabled: false
         servers:

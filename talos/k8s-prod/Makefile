@@ -32,13 +32,13 @@ reset:
 first-apply:
 
 
-	${TC} apply-config --insecure --nodes 10.9.9.121 --file clusterconfig/k8s-prod-cp0.k8s-prod.mgmt.socozy.casa.yaml
-	${TC} apply-config --insecure --nodes 10.9.9.122 --file clusterconfig/k8s-prod-cp1.k8s-prod.mgmt.socozy.casa.yaml
-	${TC} apply-config --insecure --nodes 10.9.9.123 --file clusterconfig/k8s-prod-cp2.k8s-prod.mgmt.socozy.casa.yaml
-	${TC} apply-config --insecure --nodes 10.9.9.130 --file clusterconfig/k8s-prod-wrk0.k8s-prod.mgmt.socozy.casa.yaml
-	${TC} apply-config --insecure --nodes 10.9.9.131 --file clusterconfig/k8s-prod-wrk1.k8s-prod.mgmt.socozy.casa.yaml
-	${TC} apply-config --insecure --nodes 10.9.9.132 --file clusterconfig/k8s-prod-wrk2.k8s-prod.mgmt.socozy.casa.yaml
-	${TC} apply-config --insecure --nodes 10.9.9.133 --file clusterconfig/k8s-prod-wrk3.k8s-prod.mgmt.socozy.casa.yaml
+	${TC} apply-config --insecure --nodes 10.9.9.121 --file clusterconfig/k8s-prod-cp0.yaml
+	${TC} apply-config --insecure --nodes 10.9.9.122 --file clusterconfig/k8s-prod-cp1.yaml
+	${TC} apply-config --insecure --nodes 10.9.9.123 --file clusterconfig/k8s-prod-cp2.yaml
+	${TC} apply-config --insecure --nodes 10.9.9.130 --file clusterconfig/k8s-prod-wrk0.yaml
+	${TC} apply-config --insecure --nodes 10.9.9.131 --file clusterconfig/k8s-prod-wrk1.yaml
+	${TC} apply-config --insecure --nodes 10.9.9.132 --file clusterconfig/k8s-prod-wrk2.yaml
+	${TC} apply-config --insecure --nodes 10.9.9.133 --file clusterconfig/k8s-prod-wrk3.yaml
 bootstrap:
 	${TC} bootstrap --nodes 10.9.9.121
 
@@ -65,13 +65,13 @@ reboot-now:
 	${TC} reboot --nodes 10.9.9.133 $(ARGS)
 reapply:
 
-	${TC} apply-config --nodes 10.9.9.121 --file clusterconfig/k8s-prod-cp0.k8s-prod.mgmt.socozy.casa.yaml $(ARGS)
-	${TC} apply-config --nodes 10.9.9.122 --file clusterconfig/k8s-prod-cp1.k8s-prod.mgmt.socozy.casa.yaml $(ARGS)
-	${TC} apply-config --nodes 10.9.9.123 --file clusterconfig/k8s-prod-cp2.k8s-prod.mgmt.socozy.casa.yaml $(ARGS)
-	${TC} apply-config --nodes 10.9.9.130 --file clusterconfig/k8s-prod-wrk0.k8s-prod.mgmt.socozy.casa.yaml $(ARGS)
-	${TC} apply-config --nodes 10.9.9.131 --file clusterconfig/k8s-prod-wrk1.k8s-prod.mgmt.socozy.casa.yaml $(ARGS)
-	${TC} apply-config --nodes 10.9.9.132 --file clusterconfig/k8s-prod-wrk2.k8s-prod.mgmt.socozy.casa.yaml $(ARGS)
-	${TC} apply-config --nodes 10.9.9.133 --file clusterconfig/k8s-prod-wrk3.k8s-prod.mgmt.socozy.casa.yaml $(ARGS)
+	${TC} apply-config --nodes 10.9.9.121 --file clusterconfig/k8s-prod-cp0.yaml $(ARGS)
+	${TC} apply-config --nodes 10.9.9.122 --file clusterconfig/k8s-prod-cp1.yaml $(ARGS)
+	${TC} apply-config --nodes 10.9.9.123 --file clusterconfig/k8s-prod-cp2.yaml $(ARGS)
+	${TC} apply-config --nodes 10.9.9.130 --file clusterconfig/k8s-prod-wrk0.yaml $(ARGS)
+	${TC} apply-config --nodes 10.9.9.131 --file clusterconfig/k8s-prod-wrk1.yaml $(ARGS)
+	${TC} apply-config --nodes 10.9.9.132 --file clusterconfig/k8s-prod-wrk2.yaml $(ARGS)
+	${TC} apply-config --nodes 10.9.9.133 --file clusterconfig/k8s-prod-wrk3.yaml $(ARGS)
 apply-bootstrap-cni:
 	${KC} kustomize --enable-helm ./cni | kubectl apply -f -
 apply-bootstrap-csr-approver:
