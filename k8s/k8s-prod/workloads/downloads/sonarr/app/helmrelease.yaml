@@ -47,6 +47,8 @@ spec:
       main:
         enabled: true
         ingressClassName: nginx-internal
+        annotations:
+          hajimari.io/icon: mdi:television-classic
         hosts:
           - host: &host "sonarr.${SECRET_DOMAIN_INTERNAL}"
             paths:

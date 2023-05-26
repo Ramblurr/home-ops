@@ -59,6 +59,8 @@ spec:
       main:
         enabled: true
         ingressClassName: nginx-internal
+        annotations:
+          hajimari.io/icon: mdi:movie-search
         hosts:
           - host: &host "prowlarr.${SECRET_DOMAIN_INTERNAL}"
             paths:
