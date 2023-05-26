@@ -44,12 +44,27 @@ bootstrap:
 kubeconf:
 	${TC} kubeconfig --nodes 10.9.9.121 -f .
 
-reboot-cp:
+# Reboots all cps right away
+reboot-all-cp:
 	${TC} reboot --wait \
 	 --nodes 10.9.9.121 --nodes 10.9.9.122 --nodes 10.9.9.123
-reboot-workers:
+# Reboots all workers right away
+reboot-all-workers:
 	${TC} reboot --wait \
 	 --nodes 10.9.9.130 --nodes 10.9.9.131 --nodes 10.9.9.132 --nodes 10.9.9.133
+# Reboots cp nodes one at a time
+reboot-cp:
+	${TC} reboot --wait --nodes 10.9.9.121
+	${TC} reboot --wait --nodes 10.9.9.122
+	${TC} reboot --wait --nodes 10.9.9.123
+
+# Reboots worker nodes one at a time
+reboot-workers:
+	${TC} reboot --wait --nodes 10.9.9.130
+	${TC} reboot --wait --nodes 10.9.9.131
+	${TC} reboot --wait --nodes 10.9.9.132
+	${TC} reboot --wait --nodes 10.9.9.133
+
 reapply:
 	${TC} apply-config --mode staged --nodes 10.9.9.121 --file clusterconfig/k8s-prod-cp0.yaml $(ARGS)
 	${TC} apply-config --mode staged --nodes 10.9.9.122 --file clusterconfig/k8s-prod-cp1.yaml $(ARGS)

@@ -1,6 +1,6 @@
 #!/bin/vbash
 #
-# Ansible managed: system-generated-k8s.sh.j2 modified on 2023-05-19 14:39:08 by ramblurr on quine
+# Ansible managed: system-generated-k8s.sh.j2 modified on 2023-05-26 13:05:29 by ramblurr on quine
 #
 # shellcheck shell=bash
 
