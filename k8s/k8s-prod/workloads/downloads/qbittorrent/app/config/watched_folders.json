@@ -1,12 +1,12 @@
 {
-  "/data/nas-media/Downloads/Dirscan/Torrent/Movies": {
+  "/downloads/qbittorrent/blackhole/movies": {
       "add_torrent_params": {
           "category": "",
           "download_limit": -1,
           "download_path": "",
           "operating_mode": "AutoManaged",
           "ratio_limit": -2,
-          "save_path": "/data/nas-media/Downloads/Complete/Movies",
+          "save_path": "/downloads/qbittorrent/complete/movies",
           "seeding_time_limit": -2,
           "skip_checking": false,
           "tags": [
@@ -16,14 +16,14 @@
       },
       "recursive": false
   },
-  "/data/nas-media/Downloads/Dirscan/Torrent/Series": {
+  "/downloads/qbittorrent/blackhole/tv": {
       "add_torrent_params": {
           "category": "",
           "download_limit": -1,
           "download_path": "",
           "operating_mode": "AutoManaged",
           "ratio_limit": -2,
-          "save_path": "/data/nas-media/Downloads/Complete/Series",
+          "save_path": "/downloads/qbittorrent/complete/tv",
           "seeding_time_limit": -2,
           "skip_checking": false,
           "tags": [
@@ -33,14 +33,14 @@
       },
       "recursive": false
   },
-  "/data/nas-media/Downloads/Dirscan/Torrent/Special": {
+  "/downloads/qbittorrent/blackhole/special": {
       "add_torrent_params": {
           "category": "",
           "download_limit": -1,
           "download_path": "",
           "operating_mode": "AutoManaged",
           "ratio_limit": -2,
-          "save_path": "/data/nas-media/Downloads/Complete/Special",
+          "save_path": "/downloads/qbittorrent/complete/special",
           "seeding_time_limit": -2,
           "skip_checking": false,
           "tags": [

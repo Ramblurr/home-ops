@@ -87,10 +87,10 @@ spec:
         size: 1Gi
         storageClass: "${DEFAULT_STORAGE_CLASS}"
     persistence:
-      media:
+      downloads:
         enabled: true
-        existingClaim: mali-downloads-media-nfs
-        mountPath: /data/nas-media
+        existingClaim: mali-downloads-nfs
+        mountPath: /downloads
       config:
         enabled: true
         type: emptyDir

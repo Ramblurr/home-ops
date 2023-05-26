@@ -1,17 +1,17 @@
 {
-  "Movies": {
-      "save_path": "/data/nas-media/downloads/complete/Movies"
+  "movies": {
+      "save_path": "/downloads/qbittorrent/complete/movies"
   },
-  "Music": {
-      "save_path": "/data/nas-media/downloads/complete/Music"
+  "music": {
+      "save_path": "/downloads/qbittorrent/complete/music"
   },
-  "Seeding": {
-      "save_path": "/data/nas-media/downloads/complete/Seeding"
+  "seeding": {
+      "save_path": "/downloads/qbittorrent/complete/seeding"
   },
-  "Series": {
-      "save_path": "/data/nas-media/downloads/complete/Series"
+  "tv": {
+      "save_path": "/downloads/qbittorrent/complete/tv"
   },
-  "Special": {
-      "save_path": "/data/nas-media/downloads/complete/Special"
+  "special": {
+      "save_path": "/downloads/qbittorrent/complete/special"
   }
 }

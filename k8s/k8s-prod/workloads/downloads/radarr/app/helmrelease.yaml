@@ -105,6 +105,10 @@ spec:
         enabled: true
         existingClaim: mali-downloads-media-nfs
         mountPath: /media
+      downloads:
+        enabled: true
+        existingClaim: mali-downloads-nfs
+        mountPath: /downloads
     resources:
       requests:
         cpu: 10m
