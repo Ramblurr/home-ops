@@ -70,7 +70,7 @@ spec:
     ingress:
       main:
         enabled: true
-        ingressClassName: nginx
+        ingressClassName: nginx-internal
         annotations:
           hajimari.io/icon: mdi:download
         hosts:
