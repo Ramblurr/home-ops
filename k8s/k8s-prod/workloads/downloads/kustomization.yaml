@@ -8,7 +8,7 @@ resources:
   - ./downloads-pv/ks.yaml
   #- ./prowlarr/ks.yaml
   #- ./qbittorrent/ks.yaml
-  #- ./radarr/ks.yaml
   #- ./recyclarr/ks.yaml
   #- ./nzbget/ks.yaml
+  - ./radarr/ks.yaml
   - ./sonarr/ks.yaml

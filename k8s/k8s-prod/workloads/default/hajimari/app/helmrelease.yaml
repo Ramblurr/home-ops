@@ -41,6 +41,7 @@ spec:
         matchNames:
           - default
           - media
+          - downloads
     ingress:
       main:
         enabled: true
