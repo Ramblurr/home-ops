@@ -26,6 +26,8 @@ spec:
   uninstall:
     keepHistory: false
   values:
+    env:
+      TZ: Europe/Berlin
     hajimari:
       title: Apps
       darkTheme: espresso
@@ -42,6 +44,9 @@ spec:
           - default
           - media
           - downloads
+          - monitoring
+          - flux-system
+          - networking
     ingress:
       main:
         enabled: true
