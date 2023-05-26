@@ -28,7 +28,7 @@ metadata:
   name: sonarr
   namespace: downloads
 spec:
-  sourcePVC: sonarr-config
+  sourcePVC: config-sonarr-0
   trigger:
     schedule: "0 */12 * * *"
   restic:

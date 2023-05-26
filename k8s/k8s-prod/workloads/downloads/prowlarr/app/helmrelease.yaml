@@ -2,7 +2,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: sonarr
+  name: prowlarr
   namespace: downloads
 spec:
   interval: 30m
@@ -22,19 +22,31 @@ spec:
         reloader.stakater.com/auto: "true"
 
     image:
-      repository: ghcr.io/onedr0p/sonarr-develop
-      tag: 4.0.0.520@sha256:1879baff5b1155fc1dc40cadc0aa509a26d2c5afc3b234473d878e5573579f08
+      repository: ghcr.io/onedr0p/prowlarr-nightly
+      tag: 1.5.1.3400@sha256:6f9edbbc10ded7f5ad2322e73307e5c2712050538856c71f7059b6a3790c7aa3
+
+    podAnnotations:
+      setGateway: "true"
+
+    podSecurityContext:
+      runAsUser: 2000
+      runAsGroup: 2000
+      fsGroup: 2000
+      fsGroupChangePolicy: "OnRootMismatch"
 
     env:
-      SONARR__INSTANCE_NAME: Sonarr
-      SONARR__PORT: &port 8989
-      SONARR__APPLICATION_URL: "https://sonarr.${SECRET_DOMAIN_INTERNAL}"
-      SONARR__LOG_LEVEL: info
-      SONARR__API_KEY:
+      PROWLARR__INSTANCE_NAME: Prowlarr
+      PROWLARR__PORT: &port 9696
+      PROWLARR__LOG_LEVEL: info
+      PROWLARR__ANALYTICS_ENABLED: "False"
+      PROWLARR__AUTHENTICATION_METHOD: External
+      PROWLARR__API_KEY:
         valueFrom:
           secretKeyRef:
-            name: sonarr-secret
+            name: prowlarr-secret
             key: api_key
+
+    hostname: prowlarr
 
     service:
       main:
@@ -47,32 +59,22 @@ spec:
         enabled: true
         ingressClassName: nginx-internal
         hosts:
-          - host: &host "sonarr.${SECRET_DOMAIN_INTERNAL}"
+          - host: &host "prowlarr.${SECRET_DOMAIN_INTERNAL}"
             paths:
               - path: /
         tls:
           - hosts:
               - *host
 
-    podSecurityContext:
-      runAsUser: 2000
-      runAsGroup: 2000
-      fsGroup: 2000
-      fsGroupChangePolicy: OnRootMismatch
     volumeClaimTemplates:
       - name: config
         mountPath: /config
         accessMode: ReadWriteOnce
         size: 1Gi
         storageClass: "${DEFAULT_CEPHFS_STORAGE_CLASS}"
-    persistence:
-      media:
-        enabled: true
-        existingClaim: mali-downloads-media-nfs
-        mountPath: /media
     resources:
       requests:
-        cpu: 20m
-        memory: 323M
+        cpu: 18m
+        memory: 160Mi
       limits:
-        memory: 323M
+        memory: 160Mi
