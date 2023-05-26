@@ -14,6 +14,7 @@ CP_IPS = {{ control_plane_ips_mgmt | join (" ") }}
 CP_ARGS = $(addprefix -n ,$(CP_IPS))
 CP_ENDPOINT = {{ control_plane_ips_mgmt[0] }}
 ARGS ?=
+REAPPLY_MODE ?= staged
 
 dist-clean:
 	rm -rf clusterconfig/*.yaml clusterconfig/talosconfig kubeconfig talsecret.sops.yaml
@@ -67,10 +68,10 @@ reboot-workers:
 
 reapply:
 {% for node in cluster_control_plane_nodes | dict2items %}
-	${TC} apply-config --mode staged --nodes {{ node.value.ifaces.mgmt.ip }} --file clusterconfig/{{ cluster_name }}-cp{{ node.value.idx }}.yaml $(ARGS)
+	${TC} apply-config --mode ${REAPPLY_MODE} --nodes {{ node.value.ifaces.mgmt.ip }} --file clusterconfig/{{ cluster_name }}-cp{{ node.value.idx }}.yaml $(ARGS)
 {% endfor %}
 {% for node in cluster_worker_nodes | dict2items %}
-	${TC} apply-config --mode staged --nodes {{ node.value.ifaces.mgmt.ip }} --file clusterconfig/{{ cluster_name }}-wrk{{ node.value.idx }}.yaml $(ARGS)
+	${TC} apply-config --mode ${REAPPLY_MODE} --nodes {{ node.value.ifaces.mgmt.ip }} --file clusterconfig/{{ cluster_name }}-wrk{{ node.value.idx }}.yaml $(ARGS)
 {% endfor %}
 
 apply-bootstrap-cni:

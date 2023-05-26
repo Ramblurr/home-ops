@@ -104,7 +104,8 @@ spec:
         type: configMap
         name: qbittorrent-configmap
         mountPath: "-"
-
+    nodeSelector:
+      rmblr.role/worker: "true"
     resources:
       requests:
         cpu: 29m

@@ -14,6 +14,7 @@ CP_IPS = 10.9.9.121 10.9.9.122 10.9.9.123
 CP_ARGS = $(addprefix -n ,$(CP_IPS))
 CP_ENDPOINT = 10.9.9.121
 ARGS ?=
+REAPPLY_MODE ?= staged
 
 dist-clean:
 	rm -rf clusterconfig/*.yaml clusterconfig/talosconfig kubeconfig talsecret.sops.yaml
@@ -66,13 +67,13 @@ reboot-workers:
 	${TC} reboot --wait --nodes 10.9.9.133
 
 reapply:
-	${TC} apply-config --mode staged --nodes 10.9.9.121 --file clusterconfig/k8s-prod-cp0.yaml $(ARGS)
-	${TC} apply-config --mode staged --nodes 10.9.9.122 --file clusterconfig/k8s-prod-cp1.yaml $(ARGS)
-	${TC} apply-config --mode staged --nodes 10.9.9.123 --file clusterconfig/k8s-prod-cp2.yaml $(ARGS)
-	${TC} apply-config --mode staged --nodes 10.9.9.130 --file clusterconfig/k8s-prod-wrk0.yaml $(ARGS)
-	${TC} apply-config --mode staged --nodes 10.9.9.131 --file clusterconfig/k8s-prod-wrk1.yaml $(ARGS)
-	${TC} apply-config --mode staged --nodes 10.9.9.132 --file clusterconfig/k8s-prod-wrk2.yaml $(ARGS)
-	${TC} apply-config --mode staged --nodes 10.9.9.133 --file clusterconfig/k8s-prod-wrk3.yaml $(ARGS)
+	${TC} apply-config --mode ${REAPPLY_MODE} --nodes 10.9.9.121 --file clusterconfig/k8s-prod-cp0.yaml $(ARGS)
+	${TC} apply-config --mode ${REAPPLY_MODE} --nodes 10.9.9.122 --file clusterconfig/k8s-prod-cp1.yaml $(ARGS)
+	${TC} apply-config --mode ${REAPPLY_MODE} --nodes 10.9.9.123 --file clusterconfig/k8s-prod-cp2.yaml $(ARGS)
+	${TC} apply-config --mode ${REAPPLY_MODE} --nodes 10.9.9.130 --file clusterconfig/k8s-prod-wrk0.yaml $(ARGS)
+	${TC} apply-config --mode ${REAPPLY_MODE} --nodes 10.9.9.131 --file clusterconfig/k8s-prod-wrk1.yaml $(ARGS)
+	${TC} apply-config --mode ${REAPPLY_MODE} --nodes 10.9.9.132 --file clusterconfig/k8s-prod-wrk2.yaml $(ARGS)
+	${TC} apply-config --mode ${REAPPLY_MODE} --nodes 10.9.9.133 --file clusterconfig/k8s-prod-wrk3.yaml $(ARGS)
 
 apply-bootstrap-cni:
 	${KC} kustomize --enable-helm ./cni | kubectl apply -f -

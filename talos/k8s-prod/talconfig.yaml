@@ -1,5 +1,5 @@
 ---
-# Ansible managed: talconfig.yaml.j2 modified on 2023-05-26 12:40:00 by ramblurr on quine
+# Ansible managed: talconfig.yaml.j2 modified on 2023-05-26 17:26:18 by ramblurr on quine
 clusterName: "k8s-prod"
 talosVersion: "v1.4.4"
 kubernetesVersion: "v1.26.4"
@@ -217,7 +217,6 @@ controlPlane:
         path: /cluster/apiServer/admissionControl
     - |-
       cluster:
-        allowSchedulingOnMasters: true
         apiServer:
           admissionControl: []
           extraArgs:

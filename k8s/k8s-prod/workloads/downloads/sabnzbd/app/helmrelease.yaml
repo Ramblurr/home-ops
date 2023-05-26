@@ -101,6 +101,8 @@ spec:
       incomplete:
         enabled: true
         type: emptyDir
+    nodeSelector:
+      rmblr.role/worker: "true"
     resources:
       requests:
         cpu: 10m
