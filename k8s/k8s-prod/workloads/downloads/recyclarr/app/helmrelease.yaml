@@ -75,4 +75,4 @@ spec:
         mountPath: /config
         accessMode: ReadWriteOnce
         size: 1Gi
-        storageClass: ceph-block
+        storageClass: "${DEFAULT_STORAGE_CLASS}"
