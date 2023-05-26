@@ -10,7 +10,7 @@ spec:
     - name: cluster-workloads-external-secrets-stores
     - name: cluster-workloads-rook-ceph-cluster
     - name: cluster-workloads-volsync
-  path: ./k8s/k8s-prod/downloads/sabnzbd/app
+  path: ./k8s/k8s-prod/workloads/downloads/sabnzbd/app
   prune: true
   sourceRef:
     kind: GitRepository
