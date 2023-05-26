@@ -84,7 +84,7 @@ spec:
         mountPath: /config
         accessMode: ReadWriteOnce
         size: 50Gi
-        storageClass: "${DEFAULT_CEPHFS_STORAGE_CLASS}"
+        storageClass: "${DEFAULT_STORAGE_CLASS}"
     persistence:
       media:
         enabled: true
