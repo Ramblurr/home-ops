@@ -1,15 +1,15 @@
 {
-  "movies": {
-      "save_path": "/downloads/qbittorrent/complete/movies"
+  "radarr": {
+      "save_path": "/downloads/qbittorrent/complete/radarr"
   },
-  "music": {
-      "save_path": "/downloads/qbittorrent/complete/music"
+  "lidarr": {
+      "save_path": "/downloads/qbittorrent/complete/lidarr"
   },
   "seeding": {
       "save_path": "/downloads/qbittorrent/complete/seeding"
   },
-  "tv": {
-      "save_path": "/downloads/qbittorrent/complete/tv"
+  "sonarr": {
+      "save_path": "/downloads/qbittorrent/complete/sonarr"
   },
   "special": {
       "save_path": "/downloads/qbittorrent/complete/special"

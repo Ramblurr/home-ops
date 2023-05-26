@@ -1,12 +1,12 @@
 {
-  "/downloads/qbittorrent/blackhole/movies": {
+  "/downloads/qbittorrent/blackhole/radarr": {
       "add_torrent_params": {
           "category": "",
           "download_limit": -1,
           "download_path": "",
           "operating_mode": "AutoManaged",
           "ratio_limit": -2,
-          "save_path": "/downloads/qbittorrent/complete/movies",
+          "save_path": "/downloads/qbittorrent/complete/radarr",
           "seeding_time_limit": -2,
           "skip_checking": false,
           "tags": [
@@ -16,14 +16,31 @@
       },
       "recursive": false
   },
-  "/downloads/qbittorrent/blackhole/tv": {
+  "/downloads/qbittorrent/blackhole/sonarr": {
       "add_torrent_params": {
           "category": "",
           "download_limit": -1,
           "download_path": "",
           "operating_mode": "AutoManaged",
           "ratio_limit": -2,
-          "save_path": "/downloads/qbittorrent/complete/tv",
+          "save_path": "/downloads/qbittorrent/complete/sonarr",
+          "seeding_time_limit": -2,
+          "skip_checking": false,
+          "tags": [
+          ],
+          "upload_limit": -1,
+          "use_auto_tmm": false
+      },
+      "recursive": false
+  },
+  "/downloads/qbittorrent/blackhole/books": {
+      "add_torrent_params": {
+          "category": "",
+          "download_limit": -1,
+          "download_path": "",
+          "operating_mode": "AutoManaged",
+          "ratio_limit": -2,
+          "save_path": "/downloads/qbittorrent/complete/books",
           "seeding_time_limit": -2,
           "skip_checking": false,
           "tags": [

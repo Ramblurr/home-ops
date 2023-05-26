@@ -96,9 +96,9 @@ spec:
       - IP: 10
         hostname: qbittorrent
         ports:
-          - port: 56202
+          - port: ${SECRET_QBITTORRENT_PORT}
             type: udp
-          - port: 56202
+          - port: ${SECRET_QBITTORRENT_PORT}
             type: tcp
 
     routed_namespaces:

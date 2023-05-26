@@ -42,6 +42,9 @@ spec:
       repository: ghcr.io/recyclarr/recyclarr
       tag: edge@sha256:feac4ae572839588f5cf2e1dcffe33f4f97294d206a75be61f726ec0161e83aa
 
+    env:
+      TZ: Europe/Berlin
+      CRON_SCHEDULE: "@daily"
     envFrom:
       - secretRef:
           name: recyclarr-secret
@@ -61,10 +64,10 @@ spec:
 
     resources:
       requests:
-        cpu: 5m
-        memory: 36M
+        cpu: 15m
+        memory: 100M
       limits:
-        memory: 36M
+        memory: 100M
 
     service:
       main:
