@@ -1,0 +1,33 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cluster-workloads-intel-device-plugins-operator
+  namespace: flux-system
+spec:
+  path: "./k8s/k8s-prod/workloads/kube-system/intel-device-plugins/operator"
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  interval: 10m
+  prune: true
+  wait: true
+  dependsOn:
+    - name: cluster-workloads-cert-manager
+    - name: cluster-workloads-node-feature-discovery-rules
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cluster-workloads-intel-device-plugins-gpu
+  namespace: flux-system
+spec:
+  path: "./k8s/k8s-prod/workloads/kube-system/intel-device-plugins/gpu"
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  interval: 30m
+  prune: true
+  wait: true
+  dependsOn:
+    - name: cluster-workloads-intel-device-plugins-operator

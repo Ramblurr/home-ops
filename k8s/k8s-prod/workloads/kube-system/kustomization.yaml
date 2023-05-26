@@ -4,13 +4,12 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - ./cilium/ks.yaml
-  # - ./descheduler/ks.yaml
-  # - ./external-secrets/ks.yaml
-  # - ./intel-device-plugin/ks.yaml
+  - ./descheduler/ks.yaml
+  - ./intel-device-plugins/ks.yaml
   # - ./kube-cleanup-operator/ks.yaml
   - ./kubernetes-replicator/ks.yaml
   - ./metrics-server/ks.yaml
-  # - ./node-feature-discovery/ks.yaml
+  - ./node-feature-discovery/ks.yaml
   - ./reloader/ks.yaml
   - ./snapshot-controller/ks.yaml
   - ./external-secrets/ks.yaml
