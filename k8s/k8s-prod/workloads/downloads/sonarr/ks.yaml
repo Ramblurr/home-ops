@@ -2,11 +2,11 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: cluster-workloads-radarr
+  name: cluster-workloads-sonarr
   namespace: flux-system
 spec:
   interval: 10m
-  path: "./k8s/k8s-prod/workloads/media/radarr/app"
+  path: "./k8s/k8s-prod/workloads/downloads/sonarr/app"
   prune: true
   sourceRef:
     kind: GitRepository
@@ -16,6 +16,4 @@ spec:
     - name: cluster-workloads-external-secrets-stores
     - name: cluster-workloads-cert-manager-issuers
     - name: cluster-workloads-rook-ceph-cluster
-    - name: cluster-workloads-ext-postgres-operator
-    - name: cluster-workloads-volsync
-    - name: cluster-workloads-media-pv
+    - name: cluster-workloads-downloads-pv
