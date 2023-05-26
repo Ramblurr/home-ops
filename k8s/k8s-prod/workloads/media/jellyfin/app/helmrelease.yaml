@@ -67,7 +67,7 @@ spec:
         annotations:
           hajimari.io/icon: simple-icons:jellyfin
         hosts:
-          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
+          - host: &host "jelly.${SECRET_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix
