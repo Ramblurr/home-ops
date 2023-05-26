@@ -60,13 +60,16 @@ spec:
           - hosts:
               - *host
 
+    volumeClaimTemplates:
+      - name: config
+        mountPath: /config
+        accessMode: ReadWriteOnce
+        size: 1Gi
+        storageClass: "${DEFAULT_CEPHFS_STORAGE_CLASS}"
     persistence:
-      config:
-        enabled: true
-        existingClaim: sonarr-config
       media:
         enabled: true
-        existingClaim: jellyfin-mali-media-nfs
+        existingClaim: mali-media-nfs
         mountPath: /media
     resources:
       requests:

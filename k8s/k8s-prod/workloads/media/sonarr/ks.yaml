@@ -16,3 +16,4 @@ spec:
     - name: cluster-workloads-external-secrets-stores
     - name: cluster-workloads-cert-manager-issuers
     - name: cluster-workloads-rook-ceph-cluster
+    - name: cluster-workloads-media-pv

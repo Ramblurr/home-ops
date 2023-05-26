@@ -11,8 +11,8 @@ spec:
     - name: cluster-workloads-rook-ceph-cluster
     - name: cluster-workloads-ext-postgres-operator
     - name: cluster-workloads-volsync
+    - name: cluster-workloads-intel-device-plugins-gpu
     - name: cluster-workloads-media-pv
-    #- name: cluster-workloads-intel-device-plugin-gpu
   path: ./k8s/k8s-prod/workloads/media/jellyfin/app
   prune: true
   sourceRef:

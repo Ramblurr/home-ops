@@ -93,7 +93,7 @@ spec:
       - name: config
         mountPath: /config
         accessMode: ReadWriteOnce
-        size: 15Gi
+        size: 1Gi
         storageClass: "${DEFAULT_CEPHFS_STORAGE_CLASS}"
     persistence:
       media:

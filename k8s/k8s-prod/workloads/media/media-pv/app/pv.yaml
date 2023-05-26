@@ -5,17 +5,13 @@ kind: PersistentVolume
 metadata:
   name: &name mali-media-nfs
   namespace: media
-  labels:
-    app.kubernetes.io/name: *name
-    app.kubernetes.io/instance: *name
 spec:
+  storageClassName: *name
   capacity:
     storage: 1Mi # Size does not matter
-  volumeMode: Filesystem
-  accessModes:
-    - ReadWriteMany
-  storageClassName: *name
-  persistentVolumeReclaimPolicy: Retain
+  #volumeMode: Filesystem
+  accessModes: ["ReadWriteMany"]
+  persistentVolumeReclaimPolicy: Recycle
   nfs:
     server: "${SECRET_NFS_SERVER}"
     path: /mnt/tank2/media
@@ -24,3 +20,16 @@ spec:
     - rw
     - nolock # TODO https://github.com/siderolabs/talos/issues/6582
     - noatime
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.26.1-standalone-strict/persistentvolumeclaim-v1.json
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mali-media-nfs
+  namespace: media
+spec:
+  accessModes: ["ReadWriteMany"]
+  storageClassName: mali-media-nfs
+  resources:
+    requests:
+      storage: 1Mi # Size does not matter
