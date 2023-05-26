@@ -88,7 +88,7 @@ spec:
     repository: invoiceninja-storage-restic-secret
     cacheCapacity: 2Gi
     volumeSnapshotClassName: csi-ceph-blockpool
-    storageClassName: "${DEFAULT_STORAGE_CLASS}"
+    storageClassName: "${DEFAULT_CEPHFS_STORAGE_CLASS}"
     moverSecurityContext:
       runAsUser: 568
       runAsGroup: 568
