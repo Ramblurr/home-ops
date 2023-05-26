@@ -45,7 +45,7 @@ spec:
         valueFrom:
           secretKeyRef:
             name: prowlarr-secret
-            key: api_key
+            key: PROWLARR__API_KEY
 
     hostname: prowlarr
 
