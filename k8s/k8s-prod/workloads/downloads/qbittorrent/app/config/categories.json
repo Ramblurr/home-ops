@@ -1,0 +1,17 @@
+{
+  "Movies": {
+      "save_path": "/data/nas-media/downloads/complete/Movies"
+  },
+  "Music": {
+      "save_path": "/data/nas-media/downloads/complete/Music"
+  },
+  "Seeding": {
+      "save_path": "/data/nas-media/downloads/complete/Seeding"
+  },
+  "Series": {
+      "save_path": "/data/nas-media/downloads/complete/Series"
+  },
+  "Special": {
+      "save_path": "/data/nas-media/downloads/complete/Special"
+  }
+}

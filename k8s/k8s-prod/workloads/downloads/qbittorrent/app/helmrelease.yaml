@@ -1,0 +1,113 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: qbittorrent
+  namespace: downloads
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 1.5.0
+      interval: 30m
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+
+  values:
+    controller:
+      type: statefulset
+      annotations:
+        reloader.stakater.com/auto: "true"
+
+    image:
+      repository: ghcr.io/onedr0p/qbittorrent
+      tag: 4.5.2@sha256:0efdd8d3ef3964d658d78ea7789efa285e9c01d1d436da2903cfde462a7fe67a
+
+    podAnnotations:
+      setGateway: "true"
+
+    podSecurityContext:
+      runAsUser: 2000
+      runAsGroup: 2000
+      fsGroup: 2000
+      fsGroupChangePolicy: "OnRootMismatch"
+
+    initContainers:
+      copy-config:
+        image: busybox:latest@sha256:560af6915bfc8d7630e50e212e08242d37b63bd5c1ccf9bd4acccf116e262d5b
+        command:
+          - "/bin/sh"
+          - -c
+        args:
+          - cp /data/configfiles/* /data/config/
+        volumeMounts:
+          - name: config
+            mountPath: /data/config
+          - name: configfiles
+            mountPath: /data/configfiles
+
+    env:
+      UMASK: "022"
+      QBITTORRENT__PORT: &port 8080
+      QBITTORRENT__USE_PROFILE: "true"
+
+    hostname: qbittorrent
+
+    service:
+      main:
+        ports:
+          http:
+            port: *port
+
+    ingress:
+      main:
+        enabled: true
+        ingressClassName: nginx-internal
+        nginx.ingress.kubernetes.io/auth-method: GET
+        nginx.ingress.kubernetes.io/auth-url: http://authelia.default.svc.cluster.local:8000/api/verify
+        nginx.ingress.kubernetes.io/auth-signin: https://auth.${SECRET_DOMAIN}?rm=$request_method
+        nginx.ingress.kubernetes.io/auth-response-headers: Remote-User,Remote-Name,Remote-Groups,Remote-Email
+        nginx.ingress.kubernetes.io/auth-snippet: proxy_set_header X-Forwarded-Method $request_method;
+        annotations:
+        hosts:
+          - host: &host "qbittorrent.${SECRET_DOMAIN_INTERNAL}"
+            paths:
+              - path: /
+        tls:
+          - hosts:
+              - *host
+
+    volumeClaimTemplates:
+      - name: data
+        mountPath: /config/qBittorrent/data
+        accessMode: ReadWriteOnce
+        size: 1Gi
+        storageClass: "${DEFAULT_STORAGE_CLASS}"
+    persistence:
+      media:
+        enabled: true
+        existingClaim: mali-downloads-media-nfs
+        mountPath: /data/nas-media
+      config:
+        enabled: true
+        type: emptyDir
+        mountPath: /config/qBittorrent/config
+      cache:
+        enabled: true
+        type: emptyDir
+        mountPath: /config/qBittorrent/cache
+      configfiles:
+        enabled: true
+        type: configMap
+        name: qbittorrent-configmap
+        mountPath: "-"
+
+    resources:
+      requests:
+        cpu: 29m
+        memory: 1227M
+      limits:
+        memory: 1227M
