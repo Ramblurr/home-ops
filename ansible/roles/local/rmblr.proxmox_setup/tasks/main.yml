@@ -139,4 +139,6 @@
   ansible.builtin.import_tasks: ./ceph.yml
   when: proxmox_ceph_enabled
 
-...
+- name: configure intel gvt-g
+  ansible.builtin.import_tasks: ./intel-igpu.yml
+  when: proxmox_intel_gvt_enabled
