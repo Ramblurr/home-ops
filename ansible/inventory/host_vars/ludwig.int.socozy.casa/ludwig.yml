@@ -1,8 +1,8 @@
 ---
 truenas_rootfs_backup_dest: /mnt/tank/backups/ludwig-truenas/rootfs
 truenas_config_backup_dest: /mnt/tank/backups/ludwig-truenas/config
- "{{ truenas_zrepl_cert_ludwig }}"
+  "{{ truenas_zrepl_cert_ludwig }}"
+truenase_zrepl_my_config: ludwig
 truenas_zrepl_peers:
-  - mali.int.socozy.casa
+  - mali
 truenas_udr_ssh_host: root@192.168.8.1
-...

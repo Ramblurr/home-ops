@@ -22,8 +22,9 @@ packer_cache
 .pio*
 .private/
 server/ansible/inventory/e2e/hosts.yml
-pki/
-!pki/certs/.gitkeep
+/pki/
+!/pki/certs/.gitkeep
+!/pki/truenas/*.sops
 talos/*/*/charts
 talosconfig
 .task/

@@ -1,26 +1,27 @@
 ---
 # {{ ansible_managed }}
 jobs:
-- name: socozy_source
+- name: mali_source
   type: source
   serve:
     type: tls
     listen: "{{ mali_prim_ip }}:3478"
-    ca: /usr/local/etc/zrepl/ludwig.int.socozy.casa.crt
-    cert: /usr/local/etc/zrepl/mali.int.socozy.casa.crt
-    key:  /usr/local/etc/zrepl/mali.int.socozy.casa.key
+    ca: /usr/local/etc/zrepl/ludwig.crt
+    cert: /usr/local/etc/zrepl/mali.crt
+    key:  /usr/local/etc/zrepl/mali.key
     client_cns:
     - ludwig
   filesystems: {
-    "tank<": true,
+    "tank/iocage/backup<": true,
+    "tank/iocage/jails<": true,
     "tank/.system<": false,
     "tank2<": true,
-    "tank2/media/music/other<": false,
+    "tank2/media/<": false,
     "tank2/replication<": false,
   }
   snapshotting:
     type: periodic
-    interval: 60m
+    interval: 6h
     prefix: zrepl_
 
 #- name: ludwig_sink
@@ -29,9 +30,9 @@ jobs:
 #  serve:
 #    type: tls
 #    listen: "{{ mali_prim_ip }}:3478"
-#    ca: /usr/local/etc/zrepl/ludwig.int.socozy.casa.crt
-#    cert: /usr/local/etc/zrepl/mali.int.socozy.casa.crt
-#    key:  /usr/local/etc/zrepl/mali.int.socozy.casa.key
+#    ca: /usr/local/etc/zrepl/ludwig.crt
+#    cert: /usr/local/etc/zrepl/mali.crt
+#    key:  /usr/local/etc/zrepl/mali.key
 #    client_cns:
 #      - ludwig
 #  recv:

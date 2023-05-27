@@ -1,7 +1,3 @@
 ---
 - name: restart zrepl
-  ansible.builtin.service:
-    name: zrepl
-    state: restarted
-    enabled: true
-...
+  ansible.builtin.command: iocage exec {{ zrepl_jail_name }} service zrepl restart

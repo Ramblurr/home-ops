@@ -5,8 +5,9 @@ wireguard_address: "{{ mali_wireguard_ip }}/24"
 wireguard_endpoint: "{{ mali_domain }}"
 truenas_rootfs_backup_dest: /mnt/tank2/backups/mali-truenas/rootfs
 truenas_config_backup_dest: /mnt/tank2/backups/mali-truenas/config
+truenase_zrepl_my_config: mali
 truenas_zrepl_peers:
-  - ludwig.int.socozy.casa
+  - ludwig
 truenas_jails_path: /mnt/tank/iocage/jails
 truenas_jails:
   - name: pgtest
@@ -29,7 +30,6 @@ truenas_jails:
       - { key: bpf, val: "on" }
     network: mgmt
     vnet0: "{{ hostvars['pg.int.socozy.casa'].jail_cidr }}"
-
 # - name: mysql
 #  network: mgmt
 #  vnet0: "{{ hostvars['mysql.mgmt.socozy.casa'].jail_cidr }}"

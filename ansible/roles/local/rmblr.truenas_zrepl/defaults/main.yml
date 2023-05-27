@@ -1,3 +1,3 @@
 ---
 zrepl_force_install: false
-...
+zrepl_jail_name: zrepl
