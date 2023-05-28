@@ -28,6 +28,9 @@ access_control:
     - domain: ["books.${SECRET_DOMAIN}"]
       resources: ["^/kobo([/?].*)?$"]
       policy: bypass
+    - domain: ["jelly.${SECRET_DOMAIN}"]
+      resources: ["^/metrics.*$"]
+      policy: deny
 
 identity_providers:
   oidc:
