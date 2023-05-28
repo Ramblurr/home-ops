@@ -517,6 +517,12 @@ set firewall name local-iot rule 4 source group address-group roon
 set firewall name local-iot rule 5 action 'accept'
 set firewall name local-iot rule 5 description 'Rule: accept_icmp'
 set firewall name local-iot rule 5 protocol 'icmp'
+set firewall name local-iot rule 6 action 'accept'
+set firewall name local-iot rule 6 description 'Rule: accept_mdns'
+set firewall name local-iot rule 6 destination port '5353'
+set firewall name local-iot rule 6 protocol 'tcp_udp'
+set firewall name local-iot rule 6 destination address '224.0.0.251'
+
 
 # From LOCAL to NOT
 set firewall name local-not default-action 'drop'
@@ -652,8 +658,8 @@ set firewall name mgmt-lan rule 3 destination group address-group 'local-dns-ser
 set firewall name mgmt-lan rule 3 protocol 'tcp_udp'
 
 set firewall name mgmt-lan rule 4 action 'accept'
-set firewall name mgmt-lan rule 4 description 'Rule: accept_prometheus_unpoller'
-set firewall name mgmt-lan rule 4 destination port '9130'
+set firewall name mgmt-lan rule 4 description 'Rule: accept_prometheus_unpoller_to_cloudkey'
+set firewall name mgmt-lan rule 4 destination port '443'
 set firewall name mgmt-lan rule 4 destination group address-group 'unifi-cloudkey'
 set firewall name mgmt-lan rule 4 protocol 'tcp'
 
@@ -661,6 +667,7 @@ set firewall name mgmt-lan rule 5 action 'accept'
 set firewall name mgmt-lan rule 5 description 'Rule: accept_node_exporter'
 set firewall name mgmt-lan rule 5 destination port '9100'
 set firewall name mgmt-lan rule 5 protocol 'tcp'
+
 
 # From MGMT to LOCAL
 set firewall name mgmt-local default-action 'drop'
