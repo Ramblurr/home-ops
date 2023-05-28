@@ -52,7 +52,7 @@ spec:
         ssl-protocols: "TLSv1.3"
         log-format-escape-json: "true"
       metrics:
-        enabled: false
+        enabled: true
       extraArgs:
         default-ssl-certificate: "networking/${SECRET_DOMAIN/./-}-wildcard-tls"
         ingress-class: nginx-internal
