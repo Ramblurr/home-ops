@@ -657,6 +657,11 @@ set firewall name mgmt-lan rule 4 destination port '9130'
 set firewall name mgmt-lan rule 4 destination group address-group 'unifi-cloudkey'
 set firewall name mgmt-lan rule 4 protocol 'tcp'
 
+set firewall name mgmt-lan rule 5 action 'accept'
+set firewall name mgmt-lan rule 5 description 'Rule: accept_node_exporter'
+set firewall name mgmt-lan rule 5 destination port '9100'
+set firewall name mgmt-lan rule 5 protocol 'tcp'
+
 # From MGMT to LOCAL
 set firewall name mgmt-local default-action 'drop'
 set firewall name mgmt-local description 'From MGMT to LOCAL'
@@ -954,6 +959,12 @@ set firewall name primary-local rule 9 description 'Rule: accept_discovery_from_
 set firewall name primary-local rule 9 destination group port-group 'roon'
 set firewall name primary-local rule 9 protocol 'tcp_udp'
 set firewall name primary-local rule 9 source group address-group 'roon'
+
+set firewall name primary-local rule 10 action 'accept'
+set firewall name primary-local rule 10 description 'Rule: accept_mdns'
+set firewall name primary-local rule 10 destination port '5353'
+set firewall name primary-local rule 10 protocol 'tcp_udp'
+set firewall name primary-local rule 10 destination address '224.0.0.251'
 
 # From PRIMARY to MGMT
 set firewall name primary-mgmt default-action 'drop'
