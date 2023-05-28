@@ -16,6 +16,7 @@ resources:
   - external-dns.yaml
   - external-secrets.yaml
   - ext-postgres-operator.yaml
+  - grafana.yaml
   - hajimari.yaml
   - ingress-nginx.yaml
   - intel.yaml

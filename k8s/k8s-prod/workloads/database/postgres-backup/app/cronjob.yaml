@@ -41,7 +41,7 @@ spec:
               env:
                 # Put database names to backup here
                 - name: POSTGRES_DB
-                  value: "postgres,nextcloud-ol,nextcloud-sc,authelia,lldap,paperless,radarr_main,radarr_log"
+                  value: "postgres,grafana,nextcloud-ol,nextcloud-sc,authelia,lldap,paperless,radarr_main,radarr_log"
                 - name: BACKUP_KEEP_DAYS
                   value: "7"
                 - name: BACKUP_KEEP_WEEKS
