@@ -638,11 +638,24 @@ set firewall name mgmt-lan enable-default-log
 set firewall name mgmt-lan rule 1 action 'accept'
 set firewall name mgmt-lan rule 1 description 'Rule: accept_icmp'
 set firewall name mgmt-lan rule 1 protocol 'icmp'
+
 set firewall name mgmt-lan rule 2 action 'accept'
 set firewall name mgmt-lan rule 2 description 'Rule: accept_dns'
 set firewall name mgmt-lan rule 2 destination port 'domain,domain-s'
 set firewall name mgmt-lan rule 2 destination group address-group 'local-dns-servers'
 set firewall name mgmt-lan rule 2 protocol 'tcp_udp'
+
+set firewall name mgmt-lan rule 3 action 'accept'
+set firewall name mgmt-lan rule 3 description 'Rule: accept_dns_prometheus'
+set firewall name mgmt-lan rule 3 destination port '9253'
+set firewall name mgmt-lan rule 3 destination group address-group 'local-dns-servers'
+set firewall name mgmt-lan rule 3 protocol 'tcp_udp'
+
+set firewall name mgmt-lan rule 4 action 'accept'
+set firewall name mgmt-lan rule 4 description 'Rule: accept_prometheus_unpoller'
+set firewall name mgmt-lan rule 4 destination port '9130'
+set firewall name mgmt-lan rule 4 destination group address-group 'unifi-cloudkey'
+set firewall name mgmt-lan rule 4 protocol 'tcp'
 
 # From MGMT to LOCAL
 set firewall name mgmt-local default-action 'drop'
@@ -681,10 +694,16 @@ set firewall name mgmt-services rule 1 action 'accept'
 set firewall name mgmt-services rule 1 description 'Rule: accept_dns'
 set firewall name mgmt-services rule 1 destination port 'domain,domain-s'
 set firewall name mgmt-services rule 1 protocol 'tcp_udp'
+
 set firewall name mgmt-services rule 2 action 'accept'
 set firewall name mgmt-services rule 2 description 'Rule: accept_smtp_from_mgmt'
 set firewall name mgmt-services rule 2 destination port 'smtp'
 set firewall name mgmt-services rule 2 protocol 'tcp'
+
+set firewall name mgmt-services rule 3 action 'accept'
+set firewall name mgmt-services rule 3 description 'Rule: accept_prometheus_node_exporter'
+set firewall name mgmt-services rule 3 destination port '9100'
+set firewall name mgmt-services rule 3 protocol 'tcp'
 
 # From MGMT to PRIMARY
 set firewall name mgmt-primary default-action 'drop'
@@ -718,6 +737,17 @@ set firewall name mgmt-primary rule 5 description 'Rule: accept_ssh_to_borgbacku
 set firewall name mgmt-primary rule 5 destination port 'ssh'
 set firewall name mgmt-primary rule 5 destination group address-group 'borgbackup-hosts'
 set firewall name mgmt-primary rule 5 protocol 'tcp_udp'
+
+set firewall name mgmt-primary rule 6 action 'accept'
+set firewall name mgmt-primary rule 6 description 'Rule: accept_prometheus_node_exporter'
+set firewall name mgmt-primary rule 6 destination port '9100'
+set firewall name mgmt-primary rule 6 protocol 'tcp'
+
+set firewall name mgmt-primary rule 7 action 'accept'
+set firewall name mgmt-primary rule 7 description 'Rule: accept_dns_prometheus'
+set firewall name mgmt-primary rule 7 destination port '9253'
+set firewall name mgmt-primary rule 7 destination group address-group 'local-dns-servers'
+set firewall name mgmt-primary rule 7 protocol 'tcp'
 
 # From MGMT to DATA
 set firewall name mgmt-data default-action 'drop'

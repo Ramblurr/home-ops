@@ -249,6 +249,16 @@ spec:
               - targets:
                   - ns1.${SECRET_DOMAIN}:9253
                   - ns2.${SECRET_DOMAIN}:9253
+          - job_name: ceph-exporter
+            scrape_interval: 1m
+            scrape_timeout: 10s
+            honor_timestamps: true
+            static_configs:
+              - targets:
+                  - debord.mgmt.${SECRET_DOMAIN}:9283
+                  - mill.mgmt.${SECRET_DOMAIN}:9283
+                  - peirce.mgmt.${SECRET_DOMAIN}:9283
+                  - ibnsina.mgmt.${SECRET_DOMAIN}:9283
           - job_name: node-exporter
             scrape_interval: 2m
             scrape_timeout: 10s

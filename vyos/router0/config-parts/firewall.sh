@@ -142,6 +142,8 @@ set firewall group address-group minio address '10.9.10.10'
 
 set firewall group address-group filebrowser address '10.9.6.60'
 
+set firewall group address-group unifi-cloudkey address '192.168.1.2'
+
 set firewall group address-group borgbackup-hosts address '10.9.4.21'
 
 # Network groups
