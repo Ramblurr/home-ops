@@ -39,10 +39,10 @@ wireguard_interface: wg0
 mali_wireguard_ip: 10.73.73.1
 mali_prim_ip: 10.9.4.10
 etcd_hosts_with_scheme: "{{ etcd_hosts_list_with_scheme | join(',') }}"
-etcd_cacert_file: "{{ REPO_ROOT }}/state/pki/root-ca.pem"
-pki_certs_dir: "{{ REPO_ROOT }}/state/pki/certs"
+etcd_cacert_file: "{{ REPO_ROOT }}/pki/root-ca.pem"
+pki_certs_dir: "{{ REPO_ROOT }}/pki/certs"
 pki_ca_pem: "{{ pki_certs_dir }}/root-ca.pem"
-pki_truenas_certs_dir: "{{ REPO_ROOT }}/state/pki/truenas"
+pki_truenas_certs_dir: "{{ REPO_ROOT }}/pki/truenas"
 borg_retention_policy:
   keep_hourly: 6
   keep_daily: 7

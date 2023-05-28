@@ -6,10 +6,10 @@ jobs:
   type: pull
   connect:
     type: tls
-    address: "{{ personal_public_host }}:3478"
-    ca: /usr/local/etc/zrepl/mali.crt
-    cert: /usr/local/etc/zrepl/ludwig.crt
-    key:  /usr/local/etc/zrepl/ludwig.key
+    address: "{{ personal_public_ip }}:3478"
+    ca: "{{ zrepl_config_dir }}/mali.crt"
+    cert: "{{ zrepl_config_dir }}/ludwig.crt"
+    key:  "{{ zrepl_config_dir }}/ludwig.key"
     server_cn: "mali"
   recv:
     properties:
@@ -64,7 +64,7 @@ jobs:
 #  type: push
 #  connect:
 #    type: tls
-#    address: "{{ personal_public_host }}:3478"
+#    address: "{{ personal_public_ip }}:3478"
 #    ca: /usr/local/etc/zrepl/mali.crt
 #    cert: /usr/local/etc/zrepl/ludwig.crt
 #    key:  /usr/local/etc/zrepl/ludwig.key
@@ -99,6 +99,11 @@ jobs:
 #      regex: "^ludwigzrepl_.*"
 
 global:
+  control:
+    sockpath: "{{ zrepl_control_sockpath }}"
+  serve:
+    stdinserver:
+      sockdir: "{{ zrepl_stdinserver_sockdir }}"
   monitoring:
     - type: prometheus
       listen: ':9811'

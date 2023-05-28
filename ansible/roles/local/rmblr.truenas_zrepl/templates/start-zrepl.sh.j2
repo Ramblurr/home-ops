@@ -1,0 +1,8 @@
+#!/bin/bash
+set -ex
+
+if tmux has-session -t zrepl > /dev/null 2>&1; then
+    :
+else
+    tmux new-session -d -s zrepl -n zrepl {{ zrepl_bin }} daemon --config {{ zrepl_config_dir }}/zrepl.yml
+fi

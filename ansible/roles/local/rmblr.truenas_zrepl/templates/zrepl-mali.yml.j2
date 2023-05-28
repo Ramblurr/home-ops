@@ -5,19 +5,17 @@ jobs:
   type: source
   serve:
     type: tls
-    listen: "{{ mali_prim_ip }}:3478"
-    ca: /usr/local/etc/zrepl/ludwig.crt
-    cert: /usr/local/etc/zrepl/mali.crt
-    key:  /usr/local/etc/zrepl/mali.key
+    listen: "{{ truenas_zrepl_ip }}:3478"
+    ca: "{{ zrepl_config_dir }}/ludwig.crt"
+    cert: "{{ zrepl_config_dir }}/mali.crt"
+    key:  "{{ zrepl_config_dir }}/mali.key"
     client_cns:
     - ludwig
   filesystems: {
-    "tank/iocage/backup<": true,
-    "tank/iocage/jails<": true,
-    "tank/.system<": false,
+    "tank/backup<": false,
     "tank2<": true,
-    "tank2/media/<": false,
-    "tank2/replication<": false,
+    "tank2/media<": false,
+    "tank2/replication<": false
   }
   snapshotting:
     type: periodic
@@ -45,6 +43,11 @@ jobs:
 #      encryption: inherit
 
 global:
+  control:
+    sockpath: "{{ zrepl_control_sockpath }}"
+  serve:
+    stdinserver:
+      sockdir: "{{ zrepl_stdinserver_sockdir }}"
   monitoring:
     - type: prometheus
       listen: ':9811'

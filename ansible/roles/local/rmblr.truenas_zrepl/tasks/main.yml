@@ -1,7 +1,10 @@
 ---
 - name: set jail config dir
   set_fact:
-    zrepl_config_dir: "{{ truenas_jails_path }}/{{ zrepl_jail_name }}/root//usr/local/etc/zrepl"
+    zrepl_bin: "{{ truenas_jails_path }}/{{ zrepl_jail_name }}/root/usr/local/bin/zrepl"
+    zrepl_config_dir: "{{ truenas_jails_path }}/{{ zrepl_jail_name }}/root/usr/local/etc/zrepl"
+    zrepl_control_sockpath: "{{ truenas_jails_path }}/{{ zrepl_jail_name }}/root/var/run/zrepl/control"
+    zrepl_stdinserver_sockdir: "{{ truenas_jails_path }}/{{ zrepl_jail_name }}/root/var/run/zrepl/stdinserver"
 
 - name: install config file
   ansible.builtin.template:
@@ -21,16 +24,16 @@
     group: wheel
     mode: 0750
   loop:
-    - content: "{{ truenas_zrepl_key }}"
-      name: "{{ inventory_hostname }}.key"
-    - content: "{{ truenas_zrepl_cert }}"
-      name: "{{ inventory_hostname }}.crt"
+    - content: "{{ lookup('community.sops.sops', pki_truenas_certs_dir + '/' + truenas_zrepl_my_config + '.key.sops') }}\n"
+      name: "{{ truenas_zrepl_my_config }}.key"
+    - content: "{{ lookup('community.sops.sops', pki_truenas_certs_dir + '/' + truenas_zrepl_my_config + '.crt.sops') }}\n"
+      name: "{{ truenas_zrepl_my_config }}.crt"
   notify:
     - restart zrepl
 
 - name: install peer key
   ansible.builtin.copy:
-    content: "{{ hostvars[item].truenas_zrepl_cert }}"
+    content: "{{ lookup('community.sops.sops', pki_truenas_certs_dir + '/' + item + '.crt.sops') }}\n"
     dest: "{{ zrepl_config_dir }}/{{ item }}.crt"
     owner: root
     group: wheel
@@ -39,5 +42,10 @@
   notify:
     - restart zrepl
 
-- name: flush handlers
-  ansible.builtin.meta: flush_handlers
+- name: startup script
+  ansible.builtin.template:
+    src: start-zrepl.sh.j2
+    dest: "/root/bin/start-zrepl.sh"
+    owner: root
+    group: wheel
+    mode: 0750

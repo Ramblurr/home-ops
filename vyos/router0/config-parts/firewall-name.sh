@@ -1146,13 +1146,15 @@ set firewall name wan-primary rule 2 description 'Rule: accept_ingress_for_roon_
 set firewall name wan-primary rule 2 destination group address-group 'roon-server'
 set firewall name wan-primary rule 2 destination group port-group 'roon-arc'
 set firewall name wan-primary rule 2 protocol 'udp'
-set firewall name wan-primary rule 3 action 'accept'
-set firewall name wan-primary rule 3 description 'Rule: accept_ingress_for_mali_zrepl_replication'
-set firewall name wan-primary rule 3 destination group address-group 'mali'
-set firewall name wan-primary rule 3 destination group port-group 'mali-replication'
-set firewall name wan-primary rule 3 protocol 'tcp'
 
 # From WAN to DATA
 set firewall name wan-data default-action 'drop'
 set firewall name wan-data description 'From WAN to DATA'
 set firewall name wan-data enable-default-log
+
+set firewall name wan-data rule 1 action 'accept'
+set firewall name wan-data rule 1 description 'Rule: accept_ingress_for_mali_zrepl_replication'
+set firewall name wan-data rule 1 source group address-group 'ludwig-wan'
+set firewall name wan-data rule 1 destination group address-group 'mali'
+set firewall name wan-data rule 1 destination group port-group 'mali-replication'
+set firewall name wan-data rule 1 protocol 'tcp_udp'

@@ -112,7 +112,8 @@ set nat destination rule 113 description 'mali zrepl replication'
 set nat destination rule 113 destination port '3478'
 set nat destination rule 113 inbound-interface 'eth0'
 set nat destination rule 113 protocol 'tcp'
-set nat destination rule 113 translation address '10.9.4.10'
+set nat destination rule 113 translation address '10.9.10.10'
+#set nat destination rule 113 translation address '10.9.10.17'
 set nat destination rule 113 translation port '3478'
 
 # LAN -> WAN masquerade

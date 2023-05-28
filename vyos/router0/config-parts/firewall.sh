@@ -124,6 +124,9 @@ set firewall group address-group kde-connect-devices address '10.9.6.14'
 
 set firewall group address-group mali address '10.9.4.10'
 set firewall group address-group mali address '10.9.10.10'
+set firewall group address-group mali address '10.9.10.10'
+
+set firewall group address-group ludwig-wan address '${SECRET_LUDWIG_WAN_IP}'
 
 set firewall group address-group local-dns-servers address '10.9.4.4'
 set firewall group address-group local-dns-servers address '192.168.1.3'
