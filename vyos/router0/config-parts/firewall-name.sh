@@ -140,6 +140,12 @@ set firewall name iot-local rule 8 action 'accept'
 set firewall name iot-local rule 8 description 'Rule: accept_icmp'
 set firewall name iot-local rule 8 protocol 'icmp'
 
+set firewall name iot-local rule 9 action 'accept'
+set firewall name iot-local rule 9 description 'Rule: accept_mdns'
+set firewall name iot-local rule 9 destination port '5353'
+set firewall name iot-local rule 9 protocol 'tcp_udp'
+set firewall name iot-local rule 9 destination address '224.0.0.251'
+
 # From IOT to MGMT
 set firewall name iot-mgmt default-action 'drop'
 set firewall name iot-mgmt description 'From IOT to MGMT'
