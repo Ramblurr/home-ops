@@ -4,6 +4,7 @@ proxmox_acme_plugin_hostname: ibnsina.mgmt.socozy.casa
 proxmox_acme_enabled: true
 proxmox_borg_enabled: true
 proxmox_wireguard_enabled: false
+proxmox_pve_exporter_enabled: true
 proxmox_setup_network_interfaces_enabled: true
 ansible_python_interpreter: /usr/bin/python3
 ansible_user: root
@@ -11,3 +12,4 @@ gateway: 10.9.8.1
 cidr_suffix: 23
 proxmox_10gbe_iface: enp6s0
 proxmox_1gbe_iface: eno1
+node_exporter_version: latest

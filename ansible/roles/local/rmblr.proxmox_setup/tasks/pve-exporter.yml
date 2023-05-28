@@ -1,0 +1,71 @@
+---
+- name: Install packages
+  ansible.builtin.apt:
+    name:
+      - python3-pip
+      - python3-venv
+    state: present
+  tags: [pve-exporter]
+
+- name: Create Proxmox VE API User
+  when: inventory_hostname == hostvars[groups['proxmox'][0]]['inventory_hostname']
+  block:
+    - name: Create User
+      ansible.builtin.command: pveum user add pve-exporter@pve -password {{ pve_exporter_password }}
+      ignore_errors: true
+      notify: [restart pve-exporter]
+      tags: [pve-exporter]
+    - name: Add Auditor Role
+      ansible.builtin.command: pveum acl modify / -user pve-exporter@pve -role PVEAuditor
+      ignore_errors: true
+      tags: [pve-exporter]
+      notify: [restart pve-exporter]
+
+- name: Create Linux User
+  ansible.builtin.shell: useradd -s /bin/false pve-exporter
+  ignore_errors: true
+  notify: [restart pve-exporter]
+  tags: [pve-exporter]
+
+# - name: Create Virtual Environment
+#   ansible.builtin.shell: python3 -m venv /opt/prometheus-pve-exporter
+#   notify: [restart pve-exporter]
+#   tags: [pve-exporter]
+
+- name: Install Prometheus PVE Exporter
+  ansible.builtin.pip:
+    name: prometheus-pve-exporter
+    virtualenv: "/opt/prometheus-pve-exporter"
+    virtualenv_command: /usr/bin/python3 -m venv
+  notify: [restart pve-exporter]
+  tags: [pve-exporter]
+
+- name: Create Prometheus directory
+  ansible.builtin.file:
+    path: /etc/prometheus
+    state: directory
+    mode: 755
+    recurse: yes
+  notify: [restart pve-exporter]
+  tags: [pve-exporter]
+
+- name: Configure PVE Exporter
+  ansible.builtin.template:
+    src: pve.yaml.j2
+    dest: /etc/prometheus/pve.yml
+    mode: 0666
+    owner: pve-exporter
+    group: pve-exporter
+  notify: [restart pve-exporter]
+  tags: [pve-exporter]
+
+- name: Create Systemd Service
+  ansible.builtin.copy:
+    src: prometheus-pve-exporter.service
+    dest: /etc/systemd/system/prometheus-pve-exporter.service
+    mode: 640
+  notify: [restart pve-exporter]
+  tags: [pve-exporter]
+
+- meta: flush_handlers
+  tags: [pve-exporter]

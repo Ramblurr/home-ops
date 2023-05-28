@@ -1,3 +1,4 @@
+pve_exporter_password: ENC[AES256_GCM,data:q5PaC6HW4U3ch1qhy3cVKFucuQ==,iv:jVCiumSdsJOFm4I+erPY5qb+s6vOEvD+6PL+IZfIU28=,tag:TZjBOcWjHmFm1cGwPvarkA==,type:str]
 proxmox_zfs_encryption_key_guest_data: ENC[AES256_GCM,data:ww2G9GXMz/qH55ffI9Q46OXfBaNedOYpTSsuiXeH+EpwG/zwNmUmlJt4SLKHHbEK0Ip1Q7Ndtvgoz2ANk1rabA==,iv:uoPOzVwQYt1f3FM5u9zZa/w3zwlaVE4fnwmQuce2oAQ=,tag:msJWEBXwJsVmGFVFX3F6pg==,type:str]
 proxmox_ceph_dashboard_user_password: ENC[AES256_GCM,data:xp7CeNav2Au/Ya/OIYLUGjMNsQOEs8+WmE8d6E7ejl7yM9sM3TvVKc8vSBj5yGRBg/8syXFFvmGcWF6DkCsgpT2nqQ==,iv:kRMfNiPy0FN84IqFPI4wUMv/YyWcrGxLmBNnZyj6Tjo=,tag:B1aVy90Uq+x8K2Hipu9mjg==,type:str]
 ansible_python_interpreter: ENC[AES256_GCM,data:SRhKGJ6q83R/SBRf/II8vg==,iv:wIKXnVgE9sXpJ48YPCbYoopCW0CmvK5pIg0rhpmTgqk=,tag:us91F8yvqVc8Wzxrez80tw==,type:str]
@@ -95,8 +96,8 @@ sops:
             enFpTG9JQmZKSlNhK0ZrclRSOGdoQ1UKYTv/OUYk0ojImBmUraXlM2t3PxF2LfYR
             78mlGvKFkfppbupnUgbQOAjF0QJNyyoPM8d3EAFozGaA8lS3Qd4sWA==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2023-02-28T12:38:33Z"
-    mac: ENC[AES256_GCM,data:OJCnRZQo8HTc8JB9aRlipMHrPO4SR5FSsfHWE1qtgud3qU76LvgffkA8u1NGls8RGwUsU8tBjKIIBoxtA4g5li5arbypLpDvuL5zj1v2O4F+SdW89ERzp5TDnRygFUvY7L0Pc+5hfZP9HeynQkRGHuJrNZUT2s0CR8l15tuWWm8=,iv:m5xIO0k4DtvRlx9yhquDkvHPOLNcRVWYQlEIk6bgkNc=,tag:z+aJy/y+c0aL4XTUEZA2jQ==,type:str]
+    lastmodified: "2023-05-28T18:10:03Z"
+    mac: ENC[AES256_GCM,data:P0Psl30Jz00gYBjKE3CNZLyBOfTWRC8Kzj175U7Dq9oz8Ji0LIY+HpwCTOJ8jiwlSyWyjdRIF3mMffOJvKBgRRlqgSCl9u0/hZ/w0N52ZiuFcghKZ4fU88QXN1EjwtSFHmKeHqqW/SubrSECFEOuUOtxF6YF8moSDR83gcrBBr8=,iv:R17hFmVgn9mXdCMIZA+ijmxMCAEAEft7rtLgAyXjeaA=,tag:1zaFTmnDUIwM5Xgft/hvPw==,type:str]
     pgp:
         - created_at: "2021-08-18T15:21:28Z"
           enc: |-

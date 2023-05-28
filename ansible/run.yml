@@ -25,9 +25,15 @@
 - name: Proxmox nodes setup
   hosts: proxmox
   become: true
+  gather_facts: true
   tags: [proxmox-setup]
+  pre_tasks:
+    - ansible.builtin.setup:
+      tags: [always]
   roles:
     - role: rmblr.proxmox_setup
+    - role: prometheus.prometheus.node_exporter
+      tags: [node_exporter]
 
 - name: Rasperry PI DNS build coredns
   # builds my flavor of coredns for arm systems
@@ -46,8 +52,11 @@
   pre_tasks:
     - ansible.builtin.import_tasks: tasks/wait-for-online-hosts.yml
     - setup:
+      tags: [always]
   roles:
     - role: rmblr.rpi_coredns
+    - role: prometheus.prometheus.node_exporter
+      tags: [node_exporter]
 
 # START: Jails
 

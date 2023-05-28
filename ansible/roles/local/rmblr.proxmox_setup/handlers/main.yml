@@ -12,6 +12,12 @@
     name: pveproxy.service
     state: restarted
 
-
 - name: rebuild initramfs
   ansible.builtin.command: update-initramfs -u
+
+- name: restart pve-exporter
+  ansible.builtin.systemd:
+    daemon_reload: true
+    name: prometheus-pve-exporter.service
+    state: restarted
+    enabled: true

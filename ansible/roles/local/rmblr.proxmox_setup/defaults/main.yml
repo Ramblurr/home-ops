@@ -19,3 +19,5 @@ proxmox_bluetooth_enabled: false
 
 proxmox_ceph_enabled: false
 proxmox_ceph_version: quincy
+
+proxmox_pve_exporter_enabled: false

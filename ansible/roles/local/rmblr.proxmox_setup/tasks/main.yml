@@ -142,3 +142,7 @@
 - name: configure intel gvt-g
   ansible.builtin.import_tasks: ./intel-igpu.yml
   when: proxmox_intel_gvt_enabled
+
+- name: configure pve-exporter
+  ansible.builtin.import_tasks: ./pve-exporter.yml
+  when: proxmox_pve_exporter_enabled

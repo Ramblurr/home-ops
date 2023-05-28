@@ -15,8 +15,8 @@ collections:
     version: 1.6.1
   - name: community.healthchecksio
     version: 1.3.0
-  - name: git+https://github.com/prometheus-community/ansible.git
-    version: main
+  - name: prometheus.prometheus
+    version: 0.5.1
   - name: vyos.vyos
     version: 4.0.2
 roles:
@@ -25,4 +25,3 @@ roles:
   - name: rmblr.traefik_redis_service
     src: git+https://github.com/Ramblurr/ansible-role-traefik-redis-service.git
     version: main
-...
