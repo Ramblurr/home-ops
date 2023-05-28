@@ -1000,7 +1000,7 @@ set firewall name primary-mgmt rule 3 destination group address-group 'local-dns
 set firewall name primary-mgmt rule 3 protocol 'tcp_udp'
 
 set firewall name primary-mgmt rule 4 action 'accept'
-set firewall name primary-mgmt rule 4 description 'Rule: accept_k8s_ingress_from_admin'
+set firewall name primary-mgmt rule 4 description 'Rule: accept_k8s_ingress'
 set firewall name primary-mgmt rule 4 destination port 'http,https'
 set firewall name primary-mgmt rule 4 destination group address-group 'k8s_cluster_test_ingress_all'
 set firewall name primary-mgmt rule 4 protocol 'tcp_udp'
@@ -1020,11 +1020,10 @@ set firewall name primary-mgmt rule 6 protocol 'tcp_udp'
 set firewall name primary-mgmt rule 6 source group address-group 'admin'
 
 set firewall name primary-mgmt rule 7 action 'accept'
-set firewall name primary-mgmt rule 7 description 'Rule: accept_k8s_prod_ingress_from_admin'
+set firewall name primary-mgmt rule 7 description 'Rule: accept_k8s_prod_ingress'
 set firewall name primary-mgmt rule 7 destination port 'http,https'
 set firewall name primary-mgmt rule 7 destination group address-group 'k8s_cluster_prod_ingress_all'
 set firewall name primary-mgmt rule 7 protocol 'tcp_udp'
-set firewall name primary-mgmt rule 7 source group address-group 'admin'
 
 set firewall name primary-mgmt rule 8 action 'accept'
 set firewall name primary-mgmt rule 8 description 'Rule: accept_k8s_prod_api_from_admin'
