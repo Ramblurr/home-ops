@@ -25,8 +25,6 @@ all:
       vars:
         ansible_user: root
         security_ssh_permit_root_login: "yes"
-      children:
-        lxc_services:
       hosts:
         tailscale0.int.socozy.casa:
         matrix.int.socozy.casa:
@@ -74,26 +72,12 @@ all:
       hosts:
         mali.int.socozy.casa:
         ludwig.int.socozy.casa:
-    mysql_dbs:
-      hosts:
-        mysql.mgmt.socozy.casa:
-    mariadb_standalone:
-      hosts:
-        mysql.mgmt.socozy.casa:
-    pg_standalone:
-      hosts:
-        pg.int.socozy.casa:
-        pgbak.svc.socozy.casa:
     jails:
       vars:
         ansible_user: ansible
       hosts:
-        pg.int.socozy.casa:
-          jail_cidr: 10.9.8.20/23
         borgbackup-host.int.socozy.casa:
           jail_cidr: 10.9.4.21/23
-        mysql.mgmt.socozy.casa:
-          jail_cidr: 10.9.8.33/23
     container_hosts:
       hosts:
         container0.mgmt.socozy.casa:
