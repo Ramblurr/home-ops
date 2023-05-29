@@ -6,5 +6,8 @@ metadata:
   name: global-vars
   namespace: flux-system
 data:
-  SMTP_RELAY_HOST: '10.5.0.3'
-  SMTP_RELAY_PORT: '25'
+  SMTP_RELAY_HOST: "10.5.0.3"
+  SMTP_RELAY_PORT: "25"
+  SVC_JELLYFIN: "10.10.12.4"
+  SVC_SHADOWSOCKS: "10.10.12.5"
+  SVC_TRUENAS_GRAPHITE: "10.10.12.6"

@@ -11,6 +11,7 @@ resources:
   - ./grafana/ks.yaml
   - ./kube-prometheus-stack/ks.yaml
   - ./nextdns-exporter/ks.yaml
+  - ./graphite-exporter/ks.yaml
   - ./unpoller/ks.yaml
     # - ./loki/ks.yaml
     # - ./thanos/ks.yaml

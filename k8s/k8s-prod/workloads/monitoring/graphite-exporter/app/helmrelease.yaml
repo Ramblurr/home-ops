@@ -1,0 +1,95 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/helmrelease_v2beta1.json
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: graphite-exporter
+  namespace: monitoring
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: app-template
+      version: 1.5.0
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  maxHistory: 3
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    global:
+      fullnameOverride: graphite-exporter
+    controller:
+      annotations:
+        secret.reloader.stakater.com/reload: graphite-exporter-tailscale-secret
+    image:
+      repository: quay.io/prometheus/graphite-exporter
+      tag: latest
+    command:
+      [
+        /bin/graphite_exporter,
+        "--graphite.listen-address=:2003",
+        --graphite.mapping-config=/config/graphite_mapping.yml,
+      ]
+    env:
+      TZ: Europe/Berlin
+    serviceAccount:
+      name: graphite-exporter-tailscale
+    sidecars:
+      tailscale:
+        image: ghcr.io/tailscale/tailscale:latest
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          capabilities:
+            add:
+              - NET_ADMIN
+        env:
+          - name: TS_KUBE_SECRET
+            value: graphite-exporter-tailscale-state
+          - name: TS_USERSPACE
+            value: "false"
+          - name: TS_AUTHKEY
+            valueFrom:
+              secretKeyRef:
+                name: graphite-exporter-tailscale-secret
+                key: TS_AUTHKEY
+                optional: true
+    persistence:
+      config:
+        enabled: true
+        type: configMap
+        name: graphite-exporter-configmap
+        subPath: graphite_mapping.yml
+        mountPath: /config/graphite_mapping.yml
+        readOnly: true
+    service:
+      main:
+        type: LoadBalancer
+        loadBalancerIP: "${SVC_TRUENAS_GRAPHITE}"
+        externalTrafficPolicy: Local
+        ports:
+          http:
+            enabled: false
+          metrics:
+            port: 9108
+          graphite:
+            port: 2003
+    serviceMonitor:
+      main:
+        enabled: true
+        endpoints:
+          - port: metrics
+            scheme: http
+            path: /metrics
+            interval: 2m
+            scrapeTimeout: 30s

@@ -37,7 +37,7 @@ spec:
     service:
       main:
         type: LoadBalancer
-        externalIPs: ["10.10.12.4"]
+        externalIPs: ["${SVC_JELLYFIN}"]
         externalTrafficPolicy: Local
         ports:
           http:

@@ -126,6 +126,9 @@ set firewall group address-group mali address '10.9.4.10'
 set firewall group address-group mali address '10.9.10.10'
 set firewall group address-group mali address '10.9.10.10'
 
+set firewall group address-group truenas address '10.9.4.10'
+set firewall group address-group truenas address '192.168.8.4'
+
 set firewall group address-group ludwig-wan address '${SECRET_LUDWIG_WAN_IP}'
 
 set firewall group address-group local-dns-servers address '10.9.4.4'

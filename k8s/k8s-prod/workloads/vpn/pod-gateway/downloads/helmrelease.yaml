@@ -28,7 +28,7 @@ spec:
         enabled: true
         type: LoadBalancer
         externalTrafficPolicy: Local
-        externalIPs: ["10.10.12.5"]
+        externalIPs: ["${SVC_SHADOWSOCKS}"]
         ports:
           shadowsocks:
             enabled: true
