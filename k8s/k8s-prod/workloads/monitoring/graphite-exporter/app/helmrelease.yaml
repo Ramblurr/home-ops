@@ -29,9 +29,6 @@ spec:
   values:
     global:
       fullnameOverride: graphite-exporter
-    controller:
-      annotations:
-        secret.reloader.stakater.com/reload: graphite-exporter-tailscale-secret
     image:
       repository: quay.io/prometheus/graphite-exporter
       tag: latest
@@ -43,27 +40,6 @@ spec:
       ]
     env:
       TZ: Europe/Berlin
-    serviceAccount:
-      name: graphite-exporter-tailscale
-    sidecars:
-      tailscale:
-        image: ghcr.io/tailscale/tailscale:latest
-        imagePullPolicy: IfNotPresent
-        securityContext:
-          capabilities:
-            add:
-              - NET_ADMIN
-        env:
-          - name: TS_KUBE_SECRET
-            value: graphite-exporter-tailscale-state
-          - name: TS_USERSPACE
-            value: "false"
-          - name: TS_AUTHKEY
-            valueFrom:
-              secretKeyRef:
-                name: graphite-exporter-tailscale-secret
-                key: TS_AUTHKEY
-                optional: true
     persistence:
       config:
         enabled: true
