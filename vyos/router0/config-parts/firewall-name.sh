@@ -711,7 +711,7 @@ set firewall name mgmt-local rule 7 protocol 'udp'
 
 set firewall name mgmt-local rule 8 action 'accept'
 set firewall name mgmt-local rule 8 description 'Rule: accept_tailscale_udp_in'
-set firewall name mgmt-local rule 8 destination port '41641,3478'
+set firewall name mgmt-local rule 8 destination port '41641,3478,5351,1900'
 set firewall name mgmt-local rule 8 protocol 'udp'
 
 # From MGMT to SERVICES
@@ -1013,7 +1013,7 @@ set firewall name primary-local rule 11 protocol 'udp'
 
 set firewall name primary-local rule 12 action 'accept'
 set firewall name primary-local rule 12 description 'Rule: accept_tailscale_udp_in'
-set firewall name primary-local rule 12 destination port '41641,3478'
+set firewall name primary-local rule 12 destination port '41641,3478,5351,1900'
 set firewall name primary-local rule 12 protocol 'udp'
 
 # From PRIMARY to MGMT
@@ -1072,9 +1072,19 @@ set firewall name primary-mgmt rule 8 source group address-group 'admin'
 set firewall name primary-mgmt rule 9 action 'accept'
 set firewall name primary-mgmt rule 9 description 'Rule: accept_truenas_graphite'
 set firewall name primary-mgmt rule 9 destination port '2003'
-set firewall name primary-mgmt rule 9 destination group address-group '10.10.12.6'
+set firewall name primary-mgmt rule 9 destination address '10.10.12.6'
 set firewall name primary-mgmt rule 9 protocol 'tcp_udp'
-set firewall name primary-mgmt rule 9 source group address-group 'truenas'
+
+set firewall name primary-mgmt rule 10 action 'accept'
+set firewall name primary-mgmt rule 10 description 'Rule: accept_truenas_to_node'
+set firewall name primary-mgmt rule 10 source group address-group 'truenas'
+set firewall name primary-mgmt rule 10 destination group address-group 'k8s_cluster_prod_nodes'
+set firewall name primary-mgmt rule 10 protocol 'tcp_udp'
+
+set firewall name primary-mgmt rule 11 action 'accept'
+set firewall name primary-mgmt rule 11 description 'Rule: accept_traceroute'
+set firewall name primary-mgmt rule 11 destination port '33434-34000'
+set firewall name primary-mgmt rule 11 protocol 'udp'
 
 # From PRIMARY to SERVICES
 set firewall name primary-services default-action 'accept'
