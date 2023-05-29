@@ -8,6 +8,7 @@ resources:
   - pvc.yaml
   - helmrelease-mariadb.yaml
   - helmrelease-photoprism.yaml
+  - cronjob.yaml
 commonLabels:
   app.kubernetes.io/name: photoprism
   app.kubernetes.io/instance: photoprism

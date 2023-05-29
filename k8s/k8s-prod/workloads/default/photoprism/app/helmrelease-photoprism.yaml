@@ -49,6 +49,7 @@ spec:
         mountPath: /photoprism/config/options.yml
         readOnly: true
         subPath: options.yml
+
     service:
       main:
         ports:
