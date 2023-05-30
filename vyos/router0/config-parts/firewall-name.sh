@@ -732,6 +732,11 @@ set firewall name mgmt-services rule 3 description 'Rule: accept_prometheus_node
 set firewall name mgmt-services rule 3 destination port '9100'
 set firewall name mgmt-services rule 3 protocol 'tcp'
 
+set firewall name mgmt-services rule 4 action 'accept'
+set firewall name mgmt-services rule 4 description 'Rule: accept_prometheus_snmp_exporter'
+set firewall name mgmt-services rule 4 destination port '9116'
+set firewall name mgmt-services rule 4 protocol 'tcp'
+
 # From MGMT to PRIMARY
 set firewall name mgmt-primary default-action 'drop'
 set firewall name mgmt-primary description 'From MGMT to PRIMARY'
