@@ -244,7 +244,7 @@ spec:
           - job_name: vyos-snmp
             static_configs:
               - targets:
-                  - vyos.mgmt.${SECRET_DOMAIN}
+                  - 10.9.8.1
             metrics_path: /snmp
             params:
               module: [if_mib]
