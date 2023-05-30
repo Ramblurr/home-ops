@@ -247,7 +247,7 @@ spec:
             honor_timestamps: true
             static_configs:
               - targets:
-                  - mali.int.${SECRET_DOMAIN}:9811
+                  - mali.mgmt.${SECRET_DOMAIN}:9811
                   - ludwig.int.${SECRET_DOMAIN}:9811
           - job_name: coredns
             scrape_interval: 2m
