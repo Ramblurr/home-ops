@@ -1,4 +1,5 @@
 #!/bin/vbash
+# shellcheck shell=bash
 
 # NTP server
 delete service ntp allow-client
@@ -15,3 +16,9 @@ set service ssh port '22'
 
 # Prometheus exporter
 set service monitoring telegraf prometheus-client
+
+# SNMP server
+set service snmp community public authorization ro
+set service snmp community public network 10.9.8.0/23
+set service snmp community public client  10.5.0.9
+set service snmp listen-address 10.9.8.1 port 161

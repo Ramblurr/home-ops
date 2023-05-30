@@ -241,6 +241,20 @@ spec:
         enableAdminAPI: true
         walCompression: true
         additionalScrapeConfigs:
+          - job_name: vyos-snmp
+            static_configs:
+              - targets:
+                  - vyos.mgmt.${SECRET_DOMAIN}
+            metrics_path: /snmp
+            params:
+              module: [if_mib]
+            relabel_configs:
+              - source_labels: [__address__]
+                target_label: __param_target
+              - source_labels: [__param_target]
+                target_label: instance
+              - target_label: __address__
+                replacement: snmp.vyos.${SECRET_DOMAIN}:9116
           - job_name: zrepl
             scrape_interval: 5m
             scrape_timeout: 20s

@@ -13,7 +13,6 @@ resources:
   - ./nextdns-exporter/ks.yaml
   - ./graphite-exporter/ks.yaml
   - ./unpoller/ks.yaml
-  - ./snmp-exporter/ks.yaml
     # - ./loki/ks.yaml
     # - ./thanos/ks.yaml
     # - ./vector/ks.yaml

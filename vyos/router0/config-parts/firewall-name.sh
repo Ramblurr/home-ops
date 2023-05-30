@@ -845,6 +845,13 @@ set firewall name services-local rule 2 destination port '67,68'
 set firewall name services-local rule 2 protocol 'udp'
 set firewall name services-local rule 2 source port '67,68'
 
+set firewall name services-local rule 3 action 'accept'
+set firewall name services-local rule 3 description 'Rule: accept_snmp_from_snmp-exporter'
+set firewall name services-local rule 3 source address '10.5.0.9'
+set firewall name services-local rule 3 destination address '10.9.8.1'
+set firewall name services-local rule 3 protocol 'tcp_udp'
+set firewall name services-local rule 3 destination port '161'
+
 # From SERVICES to MGMT
 set firewall name services-mgmt default-action 'accept'
 set firewall name services-mgmt description 'From SERVICES to MGMT'
