@@ -665,7 +665,7 @@ set firewall name mgmt-lan rule 3 protocol 'tcp_udp'
 
 set firewall name mgmt-lan rule 4 action 'accept'
 set firewall name mgmt-lan rule 4 description 'Rule: accept_prometheus_unpoller_to_cloudkey'
-set firewall name mgmt-lan rule 4 destination port '443'
+set firewall name mgmt-lan rule 4 destination port '8443'
 set firewall name mgmt-lan rule 4 destination group address-group 'unifi-cloudkey'
 set firewall name mgmt-lan rule 4 protocol 'tcp'
 
@@ -673,7 +673,6 @@ set firewall name mgmt-lan rule 5 action 'accept'
 set firewall name mgmt-lan rule 5 description 'Rule: accept_node_exporter'
 set firewall name mgmt-lan rule 5 destination port '9100'
 set firewall name mgmt-lan rule 5 protocol 'tcp'
-
 
 # From MGMT to LOCAL
 set firewall name mgmt-local default-action 'drop'

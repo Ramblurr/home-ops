@@ -33,7 +33,7 @@ spec:
     env:
       TZ: Europe/Berlin
       UP_UNIFI_DEFAULT_ROLE: home-ops
-      UP_UNIFI_DEFAULT_URL: https://unifi.int.${SECRET_DOMAIN}
+      UP_UNIFI_DEFAULT_URL: https://unifi.int.${SECRET_DOMAIN}:8443
       UP_UNIFI_DEFAULT_VERIFY_SSL: false
       UP_UNIFI_DEFAULT_USER:
         valueFrom:
