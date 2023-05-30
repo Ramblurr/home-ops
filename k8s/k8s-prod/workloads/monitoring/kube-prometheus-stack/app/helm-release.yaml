@@ -242,8 +242,8 @@ spec:
         walCompression: true
         additionalScrapeConfigs:
           - job_name: zrepl
-            scrape_interval: 2m
-            scrape_timeout: 10s
+            scrape_interval: 5m
+            scrape_timeout: 20s
             honor_timestamps: true
             static_configs:
               - targets:
@@ -264,9 +264,6 @@ spec:
             static_configs:
               - targets:
                   - debord.mgmt.${SECRET_DOMAIN}:9283
-                  - mill.mgmt.${SECRET_DOMAIN}:9283
-                  - peirce.mgmt.${SECRET_DOMAIN}:9283
-                  - ibnsina.mgmt.${SECRET_DOMAIN}:9283
           - job_name: node-exporter
             scrape_interval: 2m
             scrape_timeout: 10s
