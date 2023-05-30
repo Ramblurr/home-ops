@@ -117,6 +117,21 @@ spec:
           gnetId: 11312
           revision: 9
           datasource: Prometheus
+        # Ref: https://grafana.com/grafana/dashboards/11314-unifi-poller-uap-insights-prometheus/
+        unifi-uap:
+          gnetId: 11314
+          revision: 10
+          datasource: Prometheus
+        # Ref: https://grafana.com/grafana/dashboards/11315-unifi-poller-client-insights-prometheus/
+        unifi-clients:
+          gnetId: 11315
+          revision: 9
+          datasource: Prometheus
+        # Ref: https://grafana.com/grafana/dashboards/11311-unifi-poller-network-sites-prometheus/
+        unifi-site:
+          gnetId: 11311
+          revision: 5
+          datasource: Prometheus
         # Ref: https://grafana.com/grafana/dashboards/7845-zfs/
         zfs:
           gnetId: 7845
