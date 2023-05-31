@@ -1057,7 +1057,6 @@ set firewall name primary-mgmt rule 4 description 'Rule: accept_k8s_ingress'
 set firewall name primary-mgmt rule 4 destination port 'http,https'
 set firewall name primary-mgmt rule 4 destination group address-group 'k8s_cluster_test_ingress_all'
 set firewall name primary-mgmt rule 4 protocol 'tcp_udp'
-set firewall name primary-mgmt rule 4 source group address-group 'admin'
 
 set firewall name primary-mgmt rule 5 action 'accept'
 set firewall name primary-mgmt rule 5 description 'Rule: accept_k8s_api_from_admin'
