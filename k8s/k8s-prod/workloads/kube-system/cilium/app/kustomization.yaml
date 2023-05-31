@@ -9,3 +9,5 @@ labels:
   - pairs:
       app.kubernetes.io/name: cilium
       app.kubernetes.io/instance: cilium
+commonLabels:
+  app.kubernetes.io/managed-by: Helm
