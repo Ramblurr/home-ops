@@ -44,6 +44,12 @@ bootstrap:
 kubeconf:
 	${TC} kubeconfig --nodes {{ control_plane_ips_mgmt[0] }} -f .
 
+# Shutdown all cps right away
+shutdown-all:
+	${TC} shutdown --wait \
+	{% for node in cluster_control_plane_nodes | dict2items %} --nodes {{ node.value.ifaces.mgmt.ip }}{% endfor %} \
+	{% for node in cluster_worker_nodes | dict2items %} --nodes {{ node.value.ifaces.mgmt.ip }}{% endfor %}
+
 # Reboots all cps right away
 reboot-all-cp:
 	${TC} reboot --wait \

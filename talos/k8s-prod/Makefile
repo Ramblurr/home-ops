@@ -45,6 +45,10 @@ bootstrap:
 kubeconf:
 	${TC} kubeconfig --nodes 10.9.9.121 -f .
 
+shutdown-all:
+	${TC} shutdown --wait \
+	 --nodes 10.9.9.121 --nodes 10.9.9.122 --nodes 10.9.9.123 \
+	 --nodes 10.9.9.130 --nodes 10.9.9.131 --nodes 10.9.9.132 --nodes 10.9.9.133
 # Reboots all cps right away
 reboot-all-cp:
 	${TC} reboot --wait \
