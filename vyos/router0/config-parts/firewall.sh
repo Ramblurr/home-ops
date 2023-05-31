@@ -67,6 +67,7 @@ set firewall group address-group k8s_cluster_test_ingress_all address '10.10.10.
 set firewall group address-group k8s_cluster_test_ingress_all address '10.10.10.3'
 set firewall group address-group k8s_cluster_test_postgres address '10.10.10.2'
 
+set firewall group address-group k8s_vector_aggregator address '10.10.12.7'
 set firewall group address-group k8s_cluster_prod_api address '10.9.9.120'
 set firewall group address-group k8s_cluster_prod_nodes address '10.9.9.121'
 set firewall group address-group k8s_cluster_prod_nodes address '10.9.9.122'
@@ -103,8 +104,8 @@ set firewall group address-group roon address '10.9.6.23'
 
 set firewall group address-group roon-server address '10.9.6.23'
 
-#set firewall group address-group vector_journald_allowed address '10.1.3.56'
-#set firewall group address-group vector_journald_allowed address '10.1.3.60'
+set firewall group address-group vector_journald_allowed address '10.1.3.56'
+set firewall group address-group vector_journald_allowed address '10.1.3.60'
 
 set firewall group address-group vyos_chronyd address '10.5.0.5'
 

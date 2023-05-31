@@ -15,7 +15,7 @@ resources:
   - ./unpoller/ks.yaml
   - ./loki/ks.yaml
     # - ./thanos/ks.yaml
-    # - ./vector/ks.yaml
+  - ./vector/ks.yaml
     # - ./vpa/ks.yaml
     # Standard Resources
     # - ./miscellaneous

@@ -1,0 +1,33 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cluster-workloads-vector-aggregator
+  namespace: flux-system
+spec:
+  interval: 10m
+  path: "./k8s/k8s-prod/workloads/monitoring/vector/aggregator"
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  wait: true
+  dependsOn:
+    - name: cluster-workloads-loki
+    - name: cluster-workloads-external-secrets-stores
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cluster-workloads-vector-agent
+  namespace: flux-system
+spec:
+  interval: 10m
+  path: "./k8s/k8s-prod/workloads/monitoring/vector/agent"
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  wait: true
+  dependsOn:
+    - name: cluster-workloads-vector-aggregator
