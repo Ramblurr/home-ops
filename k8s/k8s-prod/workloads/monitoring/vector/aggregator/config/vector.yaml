@@ -103,12 +103,9 @@ sinks:
     remove_label_fields: true
     remove_timestamp: true
     labels:
-      node: "{{ kubernetes.pod_node_name }}"
-      namespace: "{{ kubernetes.pod_namespace }}"
-      pod: "{{ kubernetes.pod_name }}"
       app: "{{ custom_app_name }}"
-      instance: '{{ kubernetes.pod_labels."app.kubernetes.io/instance" }}'
-      container: "{{ kubernetes.container_name }}"
+      namespace: "{{ kubernetes.pod_namespace }}"
+      node: "{{ kubernetes.pod_node_name }}"
 
   loki_vyos:
     type: loki
