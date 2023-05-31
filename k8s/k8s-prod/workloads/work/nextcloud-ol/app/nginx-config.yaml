@@ -53,6 +53,11 @@ data:
             default "immutable";
         }
 
+        map $http_user_agent $ignore_log_ua {
+          default                 1;
+          "~kube-probe.*"         0;
+        }
+
         server {
             listen 8080;
 
@@ -165,6 +170,8 @@ data:
             location ~ \.php(?:$|/) {
                 # Required for legacy support
                 rewrite ^/(?!index|remote|public|cron|core\/ajax\/update|status|ocs\/v[12]|updater\/.+|oc[ms]-provider\/.+|.+\/richdocumentscode\/proxy) /index.php$request_uri;
+
+                access_log /var/log/nginx/access.log main if=$ignore_log_ua;
 
                 fastcgi_split_path_info ^(.+?\.php)(/.*)$;
                 set $path_info $fastcgi_path_info;
