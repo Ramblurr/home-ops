@@ -1,0 +1,4 @@
+---
+providerRegex: ^(cp|wrk)\d\d?\.k8s-prod.*$
+bypassDnsResolution: false
+tolerations: {}
