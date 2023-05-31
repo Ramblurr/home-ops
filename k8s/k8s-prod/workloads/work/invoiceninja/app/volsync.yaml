@@ -87,8 +87,7 @@ spec:
     pruneIntervalDays: 7
     repository: invoiceninja-storage-restic-secret
     cacheCapacity: 2Gi
-    volumeSnapshotClassName: csi-ceph-blockpool
-    storageClassName: "${DEFAULT_STORAGE_CLASS}"
+    storageClassName: "${DEFAULT_CEPHFS_STORAGE_CLASS}"
     moverSecurityContext:
       runAsUser: 1500
       runAsGroup: 1500
