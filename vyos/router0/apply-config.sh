@@ -78,6 +78,9 @@ function execute_commit() {
       run delete container image "${image_id}"
     fi
   done
+
+  # Clean annoying overlay* folders
+  sudo find "/config" -name "overlay*" -type d -prune -exec rm -rf "{}" \;
 }
 
 # Load all config files
