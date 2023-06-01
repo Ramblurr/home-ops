@@ -36,6 +36,8 @@ spec:
     dendrite_config:
       global:
         server_name: "${SECRET_DOMAIN_WORK}"
+        well_known_server_name: "matrix.${SECRET_DOMAIN_WORK}:443"
+        well_known_client_name: "matrix.${SECRET_DOMAIN_WORK}:443"
         trusted_third_party_id_servers: []
         database:
           # Set in valuesFrom
