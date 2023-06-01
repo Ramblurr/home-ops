@@ -12,7 +12,7 @@ spec:
       version: 1.5.0
       sourceRef:
         kind: HelmRepository
-        name: bjw-s-charts
+        name: bjw-s
         namespace: flux-system
       interval: 5m
   install:
@@ -53,7 +53,7 @@ spec:
             add_header Referrer-Policy "no-referrer-when-downgrade";
             add_header X-Content-Type-Options "nosniff";
         hosts:
-          - host: "warrior.${SECRET_DOMAIN}"
+          - host: "warrior.${SECRET_DOMAIN_INTERNAL}"
             paths:
               - path: /
                 pathType: Prefix
