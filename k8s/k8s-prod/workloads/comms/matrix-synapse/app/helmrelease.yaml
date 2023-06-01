@@ -29,16 +29,16 @@ spec:
         - key: node-role.kubernetes.io/master
           effect: NoSchedule
     workers:
-      enabled: true
+      enabled: false
       tolerations:
         - key: node-role.kubernetes.io/master
           effect: NoSchedule
 
       generic_worker:
-        enabled: true
+        enabled: false
 
       federation_sender:
-        enabled: true
+        enabled: false
 
       media_repository:
         enabled: false
