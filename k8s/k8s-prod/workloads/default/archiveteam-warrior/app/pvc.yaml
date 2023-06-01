@@ -1,0 +1,13 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: archiveteam-warrior
+  namespace: default
+spec:
+  storageClassName: "${DEFAULT_STORAGE_CLASS}"
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi

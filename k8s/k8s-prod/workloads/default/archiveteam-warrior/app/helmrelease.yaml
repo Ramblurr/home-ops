@@ -1,0 +1,75 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: archiveteam-warrior
+  namespace: default
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: app-template
+      version: 1.5.0
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s-charts
+        namespace: flux-system
+      interval: 5m
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  values:
+    fullnameOverride: archiveteam-warrior
+    podSecurityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
+      fsGroupChangePolicy: "OnRootMismatch"
+    image:
+      repository: atdr.meo.ws/archiveteam/warrior-dockerfile
+      tag: latest@sha256:044e9ca7d38cb8f59192534541a25ca3d3b1e3bcd2b0753ba7cc537efe4098c4
+    service:
+      main:
+        ports:
+          http:
+            port: 8001
+    ingress:
+      main:
+        enabled: true
+        annotations:
+          external-dns.home.arpa/enabled: "true"
+          hajimari.io/enable: "true"
+          hajimari.io/icon: mdi:chess-knight
+          hajimari.io/info: The Archive Team Warrior virtual archiving appliance.
+          hajimari.io/group: tools
+          nginx.ingress.kubernetes.io/whitelist-source-range: 10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+          nginx.ingress.kubernetes.io/configuration-snippet: |
+            add_header X-Frame-Options "DENY";
+            add_header X-XSS-Protection "1; mode=block";
+            add_header Referrer-Policy "no-referrer-when-downgrade";
+            add_header X-Content-Type-Options "nosniff";
+        hosts:
+          - host: "warrior.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                pathType: Prefix
+    env:
+      TZ: "${TIMEZONE}"
+      DOWNLOADER: "rmblr"
+      SELECTED_PROJECT: "auto"
+    persistence:
+      config:
+        enabled: true
+        existingClaim: archiveteam-warrior
+        mountPath: /projects
+    resources:
+      requests:
+        cpu: 100m
+        memory: 300Mi
+      limits:
+        cpu: 500m
+        memory: 600Mi
