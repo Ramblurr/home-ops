@@ -35,7 +35,7 @@ spec:
         existingClaim: dendrite-search
     dendrite_config:
       global:
-        server_name: &server_name "matrix.${SECRET_DOMAIN_WORK}"
+        server_name: "${SECRET_DOMAIN_WORK}"
         trusted_third_party_id_servers: []
         database:
           # Set in valuesFrom
@@ -76,11 +76,11 @@ spec:
     ingress:
       enabled: true
       className: nginx-internal
-      hostName: *server_name
+      hostName: &hostname "matrix.${SECRET_DOMAIN_WORK}"
       tls:
         - secretName: "${SECRET_DOMAIN_WORK_CERT_SECRET}"
           hosts:
-            - *server_name
+            - *hostname
       annotations:
         external-dns.home.arpa/enabled: "true"
         external-dns.alpha.kubernetes.io/target: "ingress.${SECRET_DOMAIN_WORK}"
