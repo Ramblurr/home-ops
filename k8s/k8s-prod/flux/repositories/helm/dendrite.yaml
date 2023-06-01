@@ -2,9 +2,9 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:
-  name: ananace-charts
+  name: dendrite
   namespace: flux-system
 spec:
   interval: 30m
-  url: https://ananace.gitlab.io/charts
+  url: https://matrix-org.github.io/dendrite/
   timeout: 3m
