@@ -64,11 +64,13 @@ spec:
 
       client_api:
         registration_disabled: true
-        turn: {}
         # Set in valuesFrom
-        # turn_shared_secret: ""
-        # turn_username: ""
-        # turn_password: ""
+        # registration_shared_secret:
+        # Set in valuesFrom
+        # turn: {}
+        #   turn_shared_secret: ""
+        #   turn_username: ""
+        #   turn_password: ""
     postgresql:
       enabled: false
     ingress:
@@ -106,3 +108,7 @@ spec:
       name: dendrite-secret
       valuesKey: turn-password
       targetPath: dendrite_config.client_api.turn.turn_password
+    - kind: Secret
+      name: dendrite-secret
+      valuesKey: registration-shared-secret
+      targetPath: dendrite_config.client_api.registration_shared_secret
