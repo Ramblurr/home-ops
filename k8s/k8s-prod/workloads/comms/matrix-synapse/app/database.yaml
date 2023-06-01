@@ -1,0 +1,20 @@
+---
+apiVersion: db.movetokube.com/v1alpha1
+kind: Postgres
+metadata:
+  name: matrix-synapse-db
+  namespace: comms
+spec:
+  database: matrix-synapse
+  dropOnDelete: false
+---
+apiVersion: db.movetokube.com/v1alpha1
+kind: PostgresUser
+metadata:
+  name: matrix-synapse-user
+  namespace: comms
+spec:
+  role: matrix-synapse
+  database: matrix-synapse-db
+  secretName: database
+  privileges: OWNER
