@@ -89,7 +89,7 @@ spec:
         nginx.ingress.kubernetes.io/proxy-body-size: 1G
         nginx.ingress.kubernetes.io/enable-global-auth: "false"
         nginx.ingress.kubernetes.io/enable-cors: "true"
-        nginx.ingress.kubernetes.io/cors-allow-headers: "X-Forwarded-For, X-Real-IP"
+        nginx.ingress.kubernetes.io/cors-allow-origin: "*"
     prometheus:
       servicemonitor:
         enabled: false
