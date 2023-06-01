@@ -29,14 +29,19 @@ spec:
         - key: node-role.kubernetes.io/master
           effect: NoSchedule
     workers:
-      media_repository:
-        enabled: false
+      enabled: true
       tolerations:
         - key: node-role.kubernetes.io/master
           effect: NoSchedule
 
-    federation_sender:
-      enabled: false
+      generic_worker:
+        enabled: true
+
+      federation_sender:
+        enabled: true
+
+      media_repository:
+        enabled: false
 
     extraConfig:
       email:
