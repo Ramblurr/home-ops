@@ -29,7 +29,7 @@ spec:
     kind: ClusterIssuer
   secretTemplate:
     annotations:
-      replicator.v1.mittwald.de/replicate-to: "work"
+      replicator.v1.mittwald.de/replicate-to: "work,comms"
   commonName: "*.${SECRET_DOMAIN_WORK}"
   dnsNames:
     - "*.${SECRET_DOMAIN_WORK}"

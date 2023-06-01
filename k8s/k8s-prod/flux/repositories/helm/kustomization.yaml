@@ -7,13 +7,13 @@ metadata:
   name: repositories
 resources:
   - actions-runner-controller-charts.yaml
-  - ananace-charts.yaml
   - angelnu.yaml
   - backube.yaml
   - bitnami-charts.yaml
   - bjw-s.yaml
   - cilium-charts.yaml
   - coredns-charts.yaml
+  - dendrite.yaml
   - external-dns.yaml
   - external-secrets.yaml
   - ext-postgres-operator.yaml

@@ -2,19 +2,19 @@
 apiVersion: db.movetokube.com/v1alpha1
 kind: Postgres
 metadata:
-  name: matrix-synapse-db
+  name: dendrite-db
   namespace: comms
 spec:
-  database: matrix-synapse
-  dropOnDelete: false
+  database: dendrite
+  dropOnDelete: true
 ---
 apiVersion: db.movetokube.com/v1alpha1
 kind: PostgresUser
 metadata:
-  name: matrix-synapse-user
+  name: dendrite-user
   namespace: comms
 spec:
-  role: matrix-synapse
-  database: matrix-synapse-db
+  role: dendrite
+  database: dendrite-db
   secretName: database
   privileges: OWNER
