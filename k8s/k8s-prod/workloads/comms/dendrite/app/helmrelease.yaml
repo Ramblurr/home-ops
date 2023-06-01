@@ -88,6 +88,8 @@ spec:
         external-dns.alpha.kubernetes.io/target: "ingress.${SECRET_DOMAIN_WORK}"
         nginx.ingress.kubernetes.io/proxy-body-size: 1G
         nginx.ingress.kubernetes.io/enable-global-auth: "false"
+        nginx.ingress.kubernetes.io/enable-cors: "true"
+        nginx.ingress.kubernetes.io/cors-allow-headers: "X-Forwarded-For, X-Real-IP"
     prometheus:
       servicemonitor:
         enabled: false
