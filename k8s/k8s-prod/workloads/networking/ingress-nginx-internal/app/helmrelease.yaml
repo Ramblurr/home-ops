@@ -40,6 +40,7 @@ spec:
       publishService:
         enabled: true
       config:
+        enable-real-ip: "true"
         client-header-timeout: 120
         client-body-buffer-size: "100M"
         client-body-timeout: 120

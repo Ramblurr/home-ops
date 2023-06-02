@@ -66,6 +66,7 @@ spec:
           hajimari.io/info: Photos
           hajimari.io/group: media
           nginx.ingress.kubernetes.io/proxy-body-size: 5G
+          nginx.ingress.kubernetes.io/proxy-buffering: "off"
         hosts:
           - host: &host photos.${SECRET_DOMAIN_INTERNAL}
             paths:
