@@ -56,11 +56,6 @@ all:
           ip_address_data: 10.9.10.14
           proxmox_10gbe_iface: enp6s0
           proxmox_1gbe_iface: eno1
-        #witt.mgmt.socozy.casa:
-        #  ip_address_mgmt: 10.9.8.11
-        #  ip_address_data: 10.9.10.11
-        #  proxmox_10gbe_iface: enp6s0
-        #  proxmox_1gbe_iface: eno1
         debord.mgmt.socozy.casa:
           ip_address_mgmt: 10.9.8.21
           ip_address_data: 10.9.10.21

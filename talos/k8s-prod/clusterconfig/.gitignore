@@ -13,3 +13,6 @@ k8s-prod-wrk0.yaml
 k8s-prod-wrk1.yaml
 k8s-prod-wrk2.yaml
 k8s-prod-wrk3.yaml
+k8s-prod-cp3.yaml
+k8s-prod-cp4.yaml
+k8s-prod-wrk4.yaml

@@ -2,22 +2,27 @@
 - name: set acme plugin name
   ansible.builtin.set_fact:
     acme_plugin_name: "{{ proxmox_acme_plugin_hostname | regex_replace('\\.', '-')}}"
+  tags: [acme-cert]
 
 - name: set acme default account
   ansible.builtin.command: pvenode config set --acme account={{ acme_plugin_name }}
+  tags: [acme-cert]
 
 - name: set acme domain info
   ansible.builtin.command: pvenode config set --acmedomain0 domain="{{ inventory_hostname }},plugin={{ acme_plugin_name }}"
+  tags: [acme-cert]
 
 - name: set the cluster domain info
   ansible.builtin.command: pvenode config set --acmedomain1 domain="proxmox.{{ subdomain_mgmt }},plugin={{ acme_plugin_name }}"
+  tags: [acme-cert]
 
 - name: pause to let the cluster settle
   ansible.builtin.pause:
     seconds: 3
+  tags: [acme-cert]
 
 - name: order the cert
   ansible.builtin.command: pvenode acme cert order
   register: cert_order
   failed_when: cert_order.rc != 0 and "Custom certificate exists" not in cert_order.stderr
-...
+  tags: [acme-cert]

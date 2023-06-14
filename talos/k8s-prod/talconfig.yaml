@@ -1,5 +1,5 @@
 ---
-# Ansible managed: talconfig.yaml.j2 modified on 2023-05-26 17:26:18 by ramblurr on quine
+# Ansible managed: talconfig.yaml.j2 modified on 2023-06-14 11:42:35 by ramblurr on quine
 clusterName: "k8s-prod"
 talosVersion: "v1.4.4"
 kubernetesVersion: "v1.26.4"
@@ -73,6 +73,58 @@ nodes:
   - hostname: cp2
     disableSearchDomain: true
     ipAddress: 10.9.9.123
+    installDiskSelector:
+      size: ">= 19GB"
+    controlPlane: true
+    nodeLabels:
+      peering: "yes"
+    kernelModules:
+      - name: br_netfilter
+        parameters:
+          - nf_conntrack_max=131072
+    nameservers:
+      - 192.168.1.3
+      - 10.9.9.4
+    networkInterfaces:
+      - interface: eth0
+        dhcp: true
+        mtu: 9000
+        dhcpOptions:
+          routeMetric: 2048
+      - interface: eth1
+        dhcp: true
+        mtu: 1500
+        vip:
+          ip: 10.9.9.120
+  - hostname: cp3
+    disableSearchDomain: true
+    ipAddress: 10.9.9.124
+    installDiskSelector:
+      size: ">= 19GB"
+    controlPlane: true
+    nodeLabels:
+      peering: "yes"
+    kernelModules:
+      - name: br_netfilter
+        parameters:
+          - nf_conntrack_max=131072
+    nameservers:
+      - 192.168.1.3
+      - 10.9.9.4
+    networkInterfaces:
+      - interface: eth0
+        dhcp: true
+        mtu: 9000
+        dhcpOptions:
+          routeMetric: 2048
+      - interface: eth1
+        dhcp: true
+        mtu: 1500
+        vip:
+          ip: 10.9.9.120
+  - hostname: cp4
+    disableSearchDomain: true
+    ipAddress: 10.9.9.125
     installDiskSelector:
       size: ">= 19GB"
     controlPlane: true
@@ -178,6 +230,32 @@ nodes:
   - hostname: wrk3
     disableSearchDomain: true
     ipAddress: 10.9.9.133
+    installDiskSelector:
+      size: ">= 149GB"
+    controlPlane: false
+    nodeLabels:
+      peering: "yes"
+      # https://github.com/siderolabs/talos/issues/6750
+      rmblr.role/worker: "true"
+    kernelModules:
+      - name: br_netfilter
+        parameters:
+          - nf_conntrack_max=131072
+    nameservers:
+      - 192.168.1.3
+      - 10.9.9.4
+    networkInterfaces:
+      - interface: eth0
+        dhcp: true
+        mtu: 9000
+        dhcpOptions:
+          routeMetric: 2048
+      - interface: eth1
+        dhcp: true
+        mtu: 1500
+  - hostname: wrk4
+    disableSearchDomain: true
+    ipAddress: 10.9.9.134
     installDiskSelector:
       size: ">= 149GB"
     controlPlane: false

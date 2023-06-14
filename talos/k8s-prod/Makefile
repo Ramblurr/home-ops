@@ -10,7 +10,7 @@ export KUBECONFIG := ${TALOS_DIR}/kubeconfig
 
 TC := talosctl --talosconfig ${TALOSCONFIG}
 KC := kubectl
-CP_IPS = 10.9.9.121 10.9.9.122 10.9.9.123
+CP_IPS = 10.9.9.121 10.9.9.122 10.9.9.123 10.9.9.124 10.9.9.125
 CP_ARGS = $(addprefix -n ,$(CP_IPS))
 CP_ENDPOINT = 10.9.9.121
 ARGS ?=
@@ -34,10 +34,13 @@ first-apply:
 	${TC} apply-config --insecure --nodes 10.9.9.121 --file clusterconfig/k8s-prod-cp0.yaml
 	${TC} apply-config --insecure --nodes 10.9.9.122 --file clusterconfig/k8s-prod-cp1.yaml
 	${TC} apply-config --insecure --nodes 10.9.9.123 --file clusterconfig/k8s-prod-cp2.yaml
+	${TC} apply-config --insecure --nodes 10.9.9.124 --file clusterconfig/k8s-prod-cp3.yaml
+	${TC} apply-config --insecure --nodes 10.9.9.125 --file clusterconfig/k8s-prod-cp4.yaml
 	${TC} apply-config --insecure --nodes 10.9.9.130 --file clusterconfig/k8s-prod-wrk0.yaml
 	${TC} apply-config --insecure --nodes 10.9.9.131 --file clusterconfig/k8s-prod-wrk1.yaml
 	${TC} apply-config --insecure --nodes 10.9.9.132 --file clusterconfig/k8s-prod-wrk2.yaml
 	${TC} apply-config --insecure --nodes 10.9.9.133 --file clusterconfig/k8s-prod-wrk3.yaml
+	${TC} apply-config --insecure --nodes 10.9.9.134 --file clusterconfig/k8s-prod-wrk4.yaml
 
 bootstrap:
 	${TC} bootstrap --nodes 10.9.9.121
@@ -45,23 +48,26 @@ bootstrap:
 kubeconf:
 	${TC} kubeconfig --nodes 10.9.9.121 -f .
 
+# Shutdown all cps right away
 shutdown-all:
 	${TC} shutdown --wait \
-	 --nodes 10.9.9.121 --nodes 10.9.9.122 --nodes 10.9.9.123 \
-	 --nodes 10.9.9.130 --nodes 10.9.9.131 --nodes 10.9.9.132 --nodes 10.9.9.133
+	 --nodes 10.9.9.121 --nodes 10.9.9.122 --nodes 10.9.9.123 --nodes 10.9.9.124 --nodes 10.9.9.125 \
+	 --nodes 10.9.9.130 --nodes 10.9.9.131 --nodes 10.9.9.132 --nodes 10.9.9.133 --nodes 10.9.9.134
 # Reboots all cps right away
 reboot-all-cp:
 	${TC} reboot --wait \
-	 --nodes 10.9.9.121 --nodes 10.9.9.122 --nodes 10.9.9.123
+	 --nodes 10.9.9.121 --nodes 10.9.9.122 --nodes 10.9.9.123 --nodes 10.9.9.124 --nodes 10.9.9.125
 # Reboots all workers right away
 reboot-all-workers:
 	${TC} reboot --wait \
-	 --nodes 10.9.9.130 --nodes 10.9.9.131 --nodes 10.9.9.132 --nodes 10.9.9.133
+	 --nodes 10.9.9.130 --nodes 10.9.9.131 --nodes 10.9.9.132 --nodes 10.9.9.133 --nodes 10.9.9.134
 # Reboots cp nodes one at a time
 reboot-cp:
 	${TC} reboot --wait --nodes 10.9.9.121
 	${TC} reboot --wait --nodes 10.9.9.122
 	${TC} reboot --wait --nodes 10.9.9.123
+	${TC} reboot --wait --nodes 10.9.9.124
+	${TC} reboot --wait --nodes 10.9.9.125
 
 # Reboots worker nodes one at a time
 reboot-workers:
@@ -69,15 +75,19 @@ reboot-workers:
 	${TC} reboot --wait --nodes 10.9.9.131
 	${TC} reboot --wait --nodes 10.9.9.132
 	${TC} reboot --wait --nodes 10.9.9.133
+	${TC} reboot --wait --nodes 10.9.9.134
 
 reapply:
 	${TC} apply-config --mode ${REAPPLY_MODE} --nodes 10.9.9.121 --file clusterconfig/k8s-prod-cp0.yaml $(ARGS)
 	${TC} apply-config --mode ${REAPPLY_MODE} --nodes 10.9.9.122 --file clusterconfig/k8s-prod-cp1.yaml $(ARGS)
 	${TC} apply-config --mode ${REAPPLY_MODE} --nodes 10.9.9.123 --file clusterconfig/k8s-prod-cp2.yaml $(ARGS)
+	${TC} apply-config --mode ${REAPPLY_MODE} --nodes 10.9.9.124 --file clusterconfig/k8s-prod-cp3.yaml $(ARGS)
+	${TC} apply-config --mode ${REAPPLY_MODE} --nodes 10.9.9.125 --file clusterconfig/k8s-prod-cp4.yaml $(ARGS)
 	${TC} apply-config --mode ${REAPPLY_MODE} --nodes 10.9.9.130 --file clusterconfig/k8s-prod-wrk0.yaml $(ARGS)
 	${TC} apply-config --mode ${REAPPLY_MODE} --nodes 10.9.9.131 --file clusterconfig/k8s-prod-wrk1.yaml $(ARGS)
 	${TC} apply-config --mode ${REAPPLY_MODE} --nodes 10.9.9.132 --file clusterconfig/k8s-prod-wrk2.yaml $(ARGS)
 	${TC} apply-config --mode ${REAPPLY_MODE} --nodes 10.9.9.133 --file clusterconfig/k8s-prod-wrk3.yaml $(ARGS)
+	${TC} apply-config --mode ${REAPPLY_MODE} --nodes 10.9.9.134 --file clusterconfig/k8s-prod-wrk4.yaml $(ARGS)
 
 apply-bootstrap-cni:
 	${KC} kustomize --enable-helm ./cni | kubectl apply -f -

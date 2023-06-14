@@ -34,6 +34,7 @@ cluster_control_plane_nodes:
     idx: 0
     vmid: 401
     target_node: ibnsina
+    agent: 1
     ifaces:
       data:
         <<: *data_net
@@ -47,6 +48,7 @@ cluster_control_plane_nodes:
     idx: 1
     vmid: 402
     target_node: debord
+    agent: 1
     ifaces:
       data:
         <<: *data_net
@@ -60,6 +62,7 @@ cluster_control_plane_nodes:
     idx: 2
     vmid: 403
     target_node: peirce
+    agent: 1
     ifaces:
       data:
         <<: *data_net
@@ -69,37 +72,41 @@ cluster_control_plane_nodes:
         <<: *mgmt_net
         ip: 10.9.9.123
         macaddr: "1a:10:50:00:11:02"
-#  cp3:
-#    idx: 3
-#    vmid: 404
-#    target_node: mill
-#    ifaces:
-#      data:
-#        <<: *data_net
-#        ip: 10.9.10.124
-#        macaddr: "1a:10:50:00:01:03"
-#      mgmt:
-#        <<: *mgmt_net
-#        ip: 10.9.9.124
-#        macaddr: "1a:10:50:00:11:03"
-#  cp4:
-#    idx: 4
-#    vmid: 405
-#    target_node: witt
-#    ifaces:
-#      data:
-#        <<: *data_net
-#        ip: 10.9.10.125
-#        macaddr: "1a:10:50:00:01:04"
-#      mgmt:
-#        <<: *mgmt_net
-#        ip: 10.9.9.125
-#        macaddr: "1a:10:50:00:11:04"
+  cp3:
+    idx: 3
+    vmid: 404
+    target_node: mill
+    agent: 0
+    ifaces:
+      data:
+        <<: *data_net
+        ip: 10.9.10.124
+        macaddr: "1a:10:50:00:01:03"
+      mgmt:
+        <<: *mgmt_net
+        ip: 10.9.9.124
+        macaddr: "1a:10:50:00:11:03"
+  cp4:
+    idx: 4
+    vmid: 405
+    target_node: dewey
+    agent: 0
+    cores: 2
+    ifaces:
+      data:
+        <<: *data_net
+        ip: 10.9.10.125
+        macaddr: "1a:10:50:00:01:04"
+      mgmt:
+        <<: *mgmt_net
+        ip: 10.9.9.125
+        macaddr: "1a:10:50:00:11:04"
 cluster_worker_nodes:
   wrk0:
     idx: 0
     vmid: 410
     target_node: ibnsina
+    agent: 1
     ifaces:
       data:
         <<: *data_net
@@ -113,6 +120,7 @@ cluster_worker_nodes:
     idx: 1
     vmid: 411
     target_node: debord
+    agent: 1
     ifaces:
       data:
         <<: *data_net
@@ -126,6 +134,7 @@ cluster_worker_nodes:
     idx: 2
     vmid: 412
     target_node: peirce
+    agent: 1
     ifaces:
       data:
         <<: *data_net
@@ -139,6 +148,8 @@ cluster_worker_nodes:
     idx: 3
     vmid: 413
     target_node: mill
+    agent: 1
+    memory: "35840"
     ifaces:
       data:
         <<: *data_net
@@ -148,19 +159,23 @@ cluster_worker_nodes:
         <<: *mgmt_net
         ip: 10.9.9.133
         macaddr: "1a:10:50:00:11:08"
-#  wrk4:
-#    idx: 4
-#    vmid: 414
-#    target_node: witt
-#    ifaces:
-#      data:
-#        <<: *data_net
-#        ip: 10.9.10.134
-#        macaddr: "1a:10:50:00:01:09"
-#      mgmt:
-#        <<: *mgmt_net
-#        ip: 10.9.9.134
-#        macaddr: "1a:10:50:00:11:09"
+  wrk4:
+    idx: 4
+    vmid: 414
+    target_node: dewey
+    agent: 0
+    memory: "35840"
+    # dewey is an i5
+    cores: 6
+    ifaces:
+      data:
+        <<: *data_net
+        ip: 10.9.10.134
+        macaddr: "1a:10:50:00:01:09"
+      mgmt:
+        <<: *mgmt_net
+        ip: 10.9.9.134
+        macaddr: "1a:10:50:00:11:09"
 cluster_apiserver_addr: 10.9.9.120
 cluster_node_cidr: "{{ cidr_mgmt }}"
 cluster_net_pod_cidr: 10.44.0.0/16

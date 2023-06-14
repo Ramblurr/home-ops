@@ -37,6 +37,10 @@ variable "control_plane_nodes" {
     idx         = number
     target_node = string
     vmid        = string
+    memory      = optional(string, "12288")
+    cores       = optional(number, 2)
+    sockets     = optional(number, 1)
+    agent       = optional(number, 1)
     ifaces = map(object({
       tag            = number
       macaddr        = string
@@ -52,6 +56,10 @@ variable "worker_nodes" {
     idx         = number
     target_node = string
     vmid        = string
+    memory      = optional(string, "40960")
+    cores       = optional(number, 10)
+    sockets     = optional(number, 1)
+    agent       = optional(number, 1)
     ifaces = map(object({
       tag            = number
       macaddr        = string

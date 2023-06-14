@@ -130,6 +130,7 @@
 - name: configure acme certs on all nodes
   ansible.builtin.import_tasks: ./acme-cert.yml
   when: proxmox_acme_enabled
+  tags: [acme-cert]
 
 - name: install borg backup
   ansible.builtin.import_tasks: ./borg-setup.yml

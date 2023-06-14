@@ -67,6 +67,26 @@ set protocols bgp neighbor 10.9.9.123 description 'k8s-prod-cp2'
 set protocols bgp neighbor 10.9.9.123 remote-as '64512'
 
 
+set service dhcp-server shared-network-name DATA subnet 10.9.10.0/23 static-mapping k8s-prod-cp3-data ip-address '10.9.10.124'
+set service dhcp-server shared-network-name DATA subnet 10.9.10.0/23 static-mapping k8s-prod-cp3-data mac-address '1a:10:50:00:01:03'
+set service dhcp-server shared-network-name MGMT subnet 10.9.8.0/23 static-mapping k8s-prod-cp3-mgmt ip-address '10.9.9.124'
+set service dhcp-server shared-network-name MGMT subnet 10.9.8.0/23 static-mapping k8s-prod-cp3-mgmt mac-address '1a:10:50:00:11:03'
+
+set protocols bgp neighbor 10.9.9.124 address-family ipv4-unicast
+set protocols bgp neighbor 10.9.9.124 description 'k8s-prod-cp3'
+set protocols bgp neighbor 10.9.9.124 remote-as '64512'
+
+
+set service dhcp-server shared-network-name DATA subnet 10.9.10.0/23 static-mapping k8s-prod-cp4-data ip-address '10.9.10.125'
+set service dhcp-server shared-network-name DATA subnet 10.9.10.0/23 static-mapping k8s-prod-cp4-data mac-address '1a:10:50:00:01:04'
+set service dhcp-server shared-network-name MGMT subnet 10.9.8.0/23 static-mapping k8s-prod-cp4-mgmt ip-address '10.9.9.125'
+set service dhcp-server shared-network-name MGMT subnet 10.9.8.0/23 static-mapping k8s-prod-cp4-mgmt mac-address '1a:10:50:00:11:04'
+
+set protocols bgp neighbor 10.9.9.125 address-family ipv4-unicast
+set protocols bgp neighbor 10.9.9.125 description 'k8s-prod-cp4'
+set protocols bgp neighbor 10.9.9.125 remote-as '64512'
+
+
 set service dhcp-server shared-network-name DATA subnet 10.9.10.0/23 static-mapping k8s-prod-wrk0-data ip-address '10.9.10.130'
 set service dhcp-server shared-network-name DATA subnet 10.9.10.0/23 static-mapping k8s-prod-wrk0-data mac-address '1a:10:50:00:01:05'
 set service dhcp-server shared-network-name MGMT subnet 10.9.8.0/23 static-mapping k8s-prod-wrk0-mgmt ip-address '10.9.9.130'
@@ -105,3 +125,13 @@ set service dhcp-server shared-network-name MGMT subnet 10.9.8.0/23 static-mappi
 set protocols bgp neighbor 10.9.9.133 address-family ipv4-unicast
 set protocols bgp neighbor 10.9.9.133 description 'k8s-prod-wrk3'
 set protocols bgp neighbor 10.9.9.133 remote-as '64512'
+
+
+set service dhcp-server shared-network-name DATA subnet 10.9.10.0/23 static-mapping k8s-prod-wrk4-data ip-address '10.9.10.134'
+set service dhcp-server shared-network-name DATA subnet 10.9.10.0/23 static-mapping k8s-prod-wrk4-data mac-address '1a:10:50:00:01:09'
+set service dhcp-server shared-network-name MGMT subnet 10.9.8.0/23 static-mapping k8s-prod-wrk4-mgmt ip-address '10.9.9.134'
+set service dhcp-server shared-network-name MGMT subnet 10.9.8.0/23 static-mapping k8s-prod-wrk4-mgmt mac-address '1a:10:50:00:11:09'
+
+set protocols bgp neighbor 10.9.9.134 address-family ipv4-unicast
+set protocols bgp neighbor 10.9.9.134 description 'k8s-prod-wrk4'
+set protocols bgp neighbor 10.9.9.134 remote-as '64512'

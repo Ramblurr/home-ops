@@ -27,27 +27,34 @@ locals {
   }
 }
 
-output "clients" {
-  value = local.clients
+output "controlplane" {
+  value     = proxmox_vm_qemu.controlplane
+  sensitive = true
+}
+
+output "worker" {
+  value     = proxmox_vm_qemu.controlplane
+  sensitive = true
 }
 
 resource "proxmox_vm_qemu" "controlplane" {
   for_each = var.control_plane_nodes
 
   name        = "${var.cluster_name}-cp-${each.value.idx}"
+  onboot      = true
   iso         = var.iso_image_location
   target_node = each.value.target_node
   full_clone  = false
-  agent       = var.guest_agent_enabled
+  agent       = each.value.agent
   vmid        = each.value.vmid
-  vga = {
+  vga {
     type   = "virtio"
     memory = 32
   }
   qemu_os = "l26" # Linux kernel type
-  memory  = "12288"
-  cores   = 2
-  sockets = 1
+  memory  = each.value.memory
+  cores   = each.value.cores
+  sockets = each.value.sockets
   numa    = true
   hotplug = "network,disk,usb"
 
@@ -65,6 +72,7 @@ resource "proxmox_vm_qemu" "controlplane" {
     type    = "virtio"
     size    = var.control_plane_boot_disk_size
     storage = var.control_plane_boot_disk_storage_pool
+    backup  = true
   }
 
 }
@@ -73,19 +81,20 @@ resource "proxmox_vm_qemu" "controlplane" {
 resource "proxmox_vm_qemu" "workers" {
   for_each    = var.worker_nodes
   name        = "${var.cluster_name}-wrk-${each.value.idx}"
+  onboot      = true
   iso         = var.iso_image_location
   target_node = each.value.target_node
   full_clone  = false
-  agent       = var.guest_agent_enabled
+  agent       = each.value.agent
   vmid        = each.value.vmid
-  vga = {
+  vga {
     type   = "virtio"
     memory = 32
   }
   qemu_os = "l26" # Linux kernel type
-  memory  = "40960"
-  cores   = 10
-  sockets = 1
+  memory  = each.value.memory
+  cores   = each.value.cores
+  sockets = each.value.sockets
   numa    = true
   hotplug = "network,disk,usb"
 
@@ -103,6 +112,7 @@ resource "proxmox_vm_qemu" "workers" {
     type    = "virtio"
     size    = var.worker_boot_disk_size
     storage = var.worker_boot_disk_storage_pool
+    backup  = true
   }
 
 }
