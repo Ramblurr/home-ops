@@ -86,8 +86,8 @@ set firewall group address-group k8s_cluster_prod_postgres address '10.10.12.2'
 
 set firewall group address-group nas-prim address '10.9.4.10'
 
-set firewall group address-group printers address '10.8.50.52'
-set firewall group address-group printers address '10.8.50.53'
+set firewall group address-group printers address '10.9.5.1'
+set firewall group address-group printers address '10.9.5.2'
 
 set firewall group address-group bluesound address '10.9.6.16'
 set firewall group address-group bluesound address '10.9.6.28'

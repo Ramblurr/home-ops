@@ -30,10 +30,6 @@ set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mappi
 set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping fire-tablet-dashboard mac-address '48:78:5e:d2:2f:53'
 set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping octoprint ip-address '10.8.50.52'
 set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping octoprint mac-address 'e4:5f:01:a3:5c:2a'
-set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping brother-label-printer ip-address '10.8.50.53'
-set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping brother-label-printer mac-address '30:c9:ab:e8:6c:af'
-set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping brother-printer ip-address '10.8.50.54'
-set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping brother-printer mac-address 'b4:22:00:40:d6:9a'
 
 # not VLAN
 set service dhcp-server shared-network-name NOT authoritative
@@ -223,6 +219,10 @@ set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-ma
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping galaxy-s21 mac-address 'c6:1c:79:b2:75:8b'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping ipad-personal ip-address '10.9.6.15'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping ipad-personal mac-address '32:39:a9:ab:34:38'
+set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping brother-label-printer ip-address '10.9.5.2'
+set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping brother-label-printer mac-address '30:c9:ab:e8:6c:af'
+set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping brother-printer ip-address '10.9.5.1'
+set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping brother-printer mac-address 'b4:22:00:40:d6:9a'
 
 
 #container0

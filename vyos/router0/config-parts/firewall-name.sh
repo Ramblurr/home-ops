@@ -5,16 +5,6 @@
 set firewall name guest-iot default-action 'drop'
 set firewall name guest-iot description 'From GUEST to IOT'
 set firewall name guest-iot enable-default-log
-set firewall name guest-iot rule 1 action 'accept'
-set firewall name guest-iot rule 1 description 'Rule: accept_tcp_printer_from_allowed_devices'
-set firewall name guest-iot rule 1 destination group address-group 'printers'
-set firewall name guest-iot rule 1 destination port 'http,9100'
-set firewall name guest-iot rule 1 protocol 'tcp'
-set firewall name guest-iot rule 2 action 'accept'
-set firewall name guest-iot rule 2 description 'Rule: accept_udp_printer_from_allowed_devices'
-set firewall name guest-iot rule 2 destination group address-group 'printers'
-set firewall name guest-iot rule 2 destination port '161'
-set firewall name guest-iot rule 2 protocol 'udp'
 
 # From GUEST to NOT
 set firewall name guest-not default-action 'drop'
