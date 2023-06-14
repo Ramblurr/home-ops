@@ -19,7 +19,7 @@
 
 # Force DNS
 set nat destination rule 102 description 'Force DNS for IoT'
-set nat destination rule 102 destination address '!10.8.50.1'
+set nat destination rule 102 destination address '!10.5.0.4'
 set nat destination rule 102 destination port '53'
 set nat destination rule 102 inbound-interface 'eth3.50'
 set nat destination rule 102 protocol 'tcp_udp'
@@ -27,7 +27,7 @@ set nat destination rule 102 translation address '10.5.0.4'
 set nat destination rule 102 translation port '53'
 
 set nat destination rule 103 description 'Force DNS for NoT'
-set nat destination rule 103 destination address '!10.8.60.1'
+set nat destination rule 103 destination address '!10.5.0.4'
 set nat destination rule 103 destination port '53'
 set nat destination rule 103 inbound-interface 'eth3.60'
 set nat destination rule 103 protocol 'tcp_udp'
