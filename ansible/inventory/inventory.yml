@@ -39,19 +39,21 @@ all:
         peirce.mgmt.socozy.casa:
           ip_address_mgmt: 10.9.8.18
           ip_address_data: 10.9.10.18
-          ip_address_prim: 10.9.4.16
           proxmox_10gbe_iface: enp6s0
           proxmox_1gbe_iface: eno1
         ibnsina.mgmt.socozy.casa:
           ip_address_mgmt: 10.9.8.16
           ip_address_data: 10.9.10.16
-          ip_address_prim: 10.9.4.17
           proxmox_10gbe_iface: enp6s0
           proxmox_1gbe_iface: eno1
         mill.mgmt.socozy.casa:
           ip_address_mgmt: 10.9.8.13
           ip_address_data: 10.9.10.13
-          ip_address_prim: 10.9.4.18
+          proxmox_10gbe_iface: enp6s0
+          proxmox_1gbe_iface: eno1
+        dewey.mgmt.socozy.casa:
+          ip_address_mgmt: 10.9.8.14
+          ip_address_data: 10.9.10.14
           proxmox_10gbe_iface: enp6s0
           proxmox_1gbe_iface: eno1
         #witt.mgmt.socozy.casa:
