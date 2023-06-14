@@ -579,6 +579,10 @@ set firewall name local-mgmt rule 5 description 'Rule: accept_vector_syslog'
 set firewall name local-mgmt rule 5 destination group address-group 'k8s_vector_aggregator'
 set firewall name local-mgmt rule 5 destination port '6001'
 set firewall name local-mgmt rule 5 protocol 'tcp'
+set firewall name local-mgmt rule 6 action 'accept'
+set firewall name local-mgmt rule 6 description 'Rule: accept_tailscale_udp_in'
+set firewall name local-mgmt rule 6 destination port '41641,3478,5351,1900'
+set firewall name local-mgmt rule 6 protocol 'udp'
 
 
 # From LOCAL to SERVICES
