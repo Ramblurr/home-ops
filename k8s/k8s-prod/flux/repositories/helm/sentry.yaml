@@ -1,0 +1,10 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: sentry
+  namespace: flux-system
+spec:
+  interval: 30m
+  url: https://sentry-kubernetes.github.io/charts
+  timeout: 3m

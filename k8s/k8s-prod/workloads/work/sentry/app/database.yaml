@@ -1,0 +1,20 @@
+---
+apiVersion: db.movetokube.com/v1alpha1
+kind: Postgres
+metadata:
+  name: sentry-db
+  namespace: work
+spec:
+  database: sentry
+  dropOnDelete: true
+---
+apiVersion: db.movetokube.com/v1alpha1
+kind: PostgresUser
+metadata:
+  name: sentry-user
+  namespace: work
+spec:
+  role: sentry
+  database: sentry-db
+  secretName: database
+  privileges: OWNER

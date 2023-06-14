@@ -1,0 +1,104 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: sentry
+  namespace: work
+spec:
+  interval: 1m
+  chart:
+    spec:
+      chart: sentry
+      version: 0.10.1
+      sourceRef:
+        kind: HelmRepository
+        name: sentry
+        namespace: flux-system
+      interval: 15m
+  install:
+    createNamespace: true
+    remediation:
+      retries: 0
+  upgrade:
+    remediation:
+      retries: 0
+  values:
+    user:
+      create: true
+      username: "${SECRET_WORK_EMAIL}"
+      existingSecret: sentry-secret
+      existingSecretKey: password
+      # this is required on the first installation, as sentry has to be initialized first
+      # recommended to set false for updating the helm chart afterwards,
+      # as you will have some downtime on each update if it's a hook
+      # deploys relay & snuba consumers as post hooks
+      asHook: true
+    sentry:
+      existingSecret: sentry-secret
+      existingSecretKey: sentry-secret-key
+    system:
+      url: "https://sentry.${SECRET_DOMAIN_WORK}"
+      adminEmail: "${SECRET_WORK_EMAIL}"
+      public: false
+      ## This will generate one for you (it's must be given upon updates)
+      # secretKey: "xx"
+    auth:
+      register: false
+    nginx:
+      enabled: false
+    ingress:
+      enabled: true
+      hostname: &host "sentry.${SECRET_DOMAIN_WORK}"
+      annotations:
+        kubernetes.io/ingress.class: nginx-internal
+        external-dns.home.arpa/enabled: "true"
+        hajimari.io/enable: "true"
+        hajimari.io/group: work
+        nginx.ingress.kubernetes.io/use-regex: "true"
+        nginx.ingress.kubernetes.io/proxy-body-size: 100M
+        nginx.ingress.kubernetes.io/enable-cors: "true"
+        nginx.ingress.kubernetes.io/cors-allow-headers: "X-Forwarded-For"
+        external-dns.alpha.kubernetes.io/target: "ingress.${SECRET_DOMAIN_WORK}"
+      tls:
+        - hosts:
+            - *host
+          secretName: "${SECRET_DOMAIN_WORK_CERT_SECRET}"
+    filestore:
+      filesystem:
+        persistence:
+          enabled: true
+          existingClaim: sentry-filestore
+
+    postgresql:
+      enabled: false
+    externalPostgresql:
+      enabled: true
+      port: 5432
+      sslMode: allow
+      existingSecret: database-sentry-user
+      existingSecretKey: PASSWORD
+      # provided by flux helm's valuesFrom
+      # host, username, database
+    rabbitmq:
+      enabled: false
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: false
+  valuesFrom:
+    - kind: Secret
+      name: database-sentry-user
+      valuesKey: HOST
+      targetPath: externalPostgresql.host
+    - kind: Secret
+      name: database-sentry-user
+      valuesKey: LOGIN
+      targetPath: externalPostgresql.username
+    - kind: Secret
+      name: database-sentry-user
+      valuesKey: DATABASE_NAME
+      targetPath: externalPostgresql.database
+    - kind: Secret
+      name: sentry-secret
+      valuesKey: sentry-secret-key
+      targetPath: system.secretKey
