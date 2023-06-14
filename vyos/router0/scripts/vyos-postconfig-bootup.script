@@ -3,6 +3,9 @@
 # applied. Any modifications required to work around unfixed bugs or use
 # services not available through the VyOS CLI system can be placed here.
 
+# Some problem with this script atm on latest Vyos 1.4 rolling (2023-06). Abort without error.
+exit 0
+
 # Add dotfiles for home directory
 tee /home/vyos/.gitconfig <<END >/dev/null
 [init]
