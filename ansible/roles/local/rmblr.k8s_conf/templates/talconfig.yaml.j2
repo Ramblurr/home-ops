@@ -103,6 +103,7 @@ controlPlane:
           extraArgs:
             feature-gates: MixedProtocolLBService=true,EphemeralContainers=True
         etcd:
+          # TODO(future): change to `advertisedSubnets`? ref: https://github.com/siderolabs/talos/pull/6073
           subnet: "{{ cluster_node_cidr }}"
         controllerManager:
           extraArgs:
