@@ -85,7 +85,7 @@ set firewall zone services from mgmt firewall name 'mgmt-services'
 set firewall zone services from primary firewall name 'primary-services'
 set firewall zone services from data firewall name 'data-services'
 set firewall zone services from wan firewall name 'wan-services'
-set firewall zone services interface 'cni-services'
+set firewall zone services interface 'pod-services'
 
 set firewall zone primary default-action 'drop'
 set firewall zone primary from guest firewall name 'guest-primary'
