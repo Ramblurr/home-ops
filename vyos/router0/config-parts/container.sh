@@ -38,13 +38,14 @@ set container name smtp-relay volume smtp-relay-config source '/config/container
 # dnsdist
 set container name dnsdist cap-add 'net-bind-service'
 set container name dnsdist environment TZ value 'Europe/Berlin'
-set container name dnsdist image 'docker.io/powerdns/dnsdist-17:1.7.4'
+set container name dnsdist image 'docker.io/powerdns/dnsdist-18:1.8.0'
+set container name dnsdist arguments '--log-timestamps'
 set container name dnsdist memory '0'
 set container name dnsdist network services address '10.5.0.4'
 set container name dnsdist restart 'on-failure'
 set container name dnsdist shared-memory '0'
-set container name dnsdist volume config destination '/etc/dnsdist/dnsdist.conf'
 set container name dnsdist volume config source '/config/containers/dnsdist/config/dnsdist.conf'
+set container name dnsdist volume config destination '/etc/dnsdist/dnsdist.conf'
 set container name dnsdist volume config mode 'ro'
 
 # node-exporter
