@@ -60,7 +60,7 @@ repos:
         exclude: (env.sops.sh)
 
   - repo: https://github.com/zricethezav/gitleaks
-    rev: v8.16.4
+    rev: v8.17.0
     hooks:
       - id: gitleaks
         args:
