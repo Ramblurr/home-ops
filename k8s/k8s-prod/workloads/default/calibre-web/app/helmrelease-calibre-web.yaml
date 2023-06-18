@@ -66,6 +66,11 @@ spec:
         annotations:
           external-dns.alpha.kubernetes.io/target: "ingress.${SECRET_DOMAIN}"
           hajimari.io/enable: "false"
+          nginx.ingress.kubernetes.io/proxy-buffering: "on"
+          nginx.ingress.kubernetes.io/proxy-buffers-number: "4"
+          nginx.ingress.kubernetes.io/proxy-buffer-size: "256k"
+          nginx.ingress.kubernetes.io/configuration-snippet: |
+            proxy_busy_buffers_size 256k;
         ingressClassName: nginx-internal
         hosts:
           - host: &host_kobo books-kobo.${SECRET_DOMAIN}
