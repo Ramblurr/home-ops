@@ -36,13 +36,13 @@ spec:
 
     ingress:
       main:
-        enabled: true
+        enabled: false
         annotations:
           hajimari.io/icon: simple-icons:plex
-          external-dns.alpha.kubernetes.io/target: "ingress.${SECRET_DOMAIN}"
+          #external-dns.alpha.kubernetes.io/target: "ingress.${SECRET_DOMAIN}"
         ingressClassName: nginx-internal
         hosts:
-          - host: &host "plex.${SECRET_DOMAIN}"
+          - host: &host "plex.${SECRET_DOMAIN_INTERNAL}"
             paths:
               - path: /
                 pathType: Prefix
