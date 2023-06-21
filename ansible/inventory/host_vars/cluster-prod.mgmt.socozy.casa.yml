@@ -76,7 +76,7 @@ cluster_control_plane_nodes:
     idx: 3
     vmid: 404
     target_node: mill
-    agent: 0
+    agent: 1
     ifaces:
       data:
         <<: *data_net
@@ -90,7 +90,7 @@ cluster_control_plane_nodes:
     idx: 4
     vmid: 405
     target_node: dewey
-    agent: 0
+    agent: 1
     cores: 2
     ifaces:
       data:
@@ -163,7 +163,7 @@ cluster_worker_nodes:
     idx: 4
     vmid: 414
     target_node: dewey
-    agent: 0
+    agent: 1
     memory: "35840"
     # dewey is an i5
     cores: 6
