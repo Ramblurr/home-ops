@@ -31,7 +31,7 @@ spec:
         ingressClassName: nginx-internal
         annotations:
         hosts:
-          - host: &host "tautulli.${SECRET_DOMAIN}"
+          - host: &host "tautulli.${SECRET_DOMAIN_INTERNAL}"
             paths:
               - path: /
                 pathType: Prefix
