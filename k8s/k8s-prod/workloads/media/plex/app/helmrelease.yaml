@@ -61,10 +61,12 @@ spec:
         type: emptyDir
 
     podSecurityContext:
-      runAsUser: 2000
-      runAsGroup: 2000
-      fsGroup: 2000
+      runAsUser: 568
+      runAsGroup: 568
+      fsGroup: 568
       fsGroupChangePolicy: OnRootMismatch
+      supplementalGroups:
+        - 2000
     nodeSelector:
       rmblr.role/worker: "true"
       intel.feature.node.kubernetes.io/gpu: "true"
