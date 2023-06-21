@@ -1,0 +1,50 @@
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: calibre-restic
+  namespace: media
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword-connect
+  target:
+    name: calibre-restic-secret
+    creationPolicy: Owner
+    template:
+      metadata:
+        annotations:
+          replicator.v1.mittwald.de/replicate-to: "volsync"
+      engineVersion: v2
+      data:
+        RESTIC_REPOSITORY: "{{ .REPOSITORY_TEMPLATE }}/calibre"
+        RESTIC_PASSWORD: "{{ .RESTIC_PASSWORD }}"
+        AWS_ACCESS_KEY_ID: "{{ .AWS_ACCESS_KEY_ID }}"
+        AWS_SECRET_ACCESS_KEY: "{{ .AWS_SECRET_ACCESS_KEY }}"
+  dataFrom:
+    - extract:
+        key: volsync-restic-template
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: calibre
+  namespace: media
+spec:
+  sourcePVC: calibre-config-0
+  trigger:
+    schedule: "0 4 * * *"
+  restic:
+    moverSecurityContext:
+      runAsUser: 568
+      runAsGroup: 568
+      fsGroup: 568
+    copyMethod: Snapshot
+    pruneIntervalDays: 10
+    repository: calibre-restic-secret
+    cacheCapacity: 2Gi
+    volumeSnapshotClassName: csi-ceph-blockpool
+    storageClassName: "${DEFAULT_STORAGE_CLASS}"
+    retain:
+      daily: 2
+      within: 3d

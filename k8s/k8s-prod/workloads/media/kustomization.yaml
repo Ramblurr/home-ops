@@ -8,3 +8,4 @@ resources:
   - ./plex/ks.yaml
   - ./overseerr/ks.yaml
   - ./tautulli/ks.yaml
+  - ./calibre/ks.yaml
