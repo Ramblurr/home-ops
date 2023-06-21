@@ -1095,6 +1095,12 @@ set firewall name primary-mgmt rule 11 description 'Rule: accept_traceroute'
 set firewall name primary-mgmt rule 11 destination port '33434-34000'
 set firewall name primary-mgmt rule 11 protocol 'udp'
 
+set firewall name primary-mgmt rule 12 action 'accept'
+set firewall name primary-mgmt rule 12 description 'Rule: accept_plex'
+set firewall name primary-mgmt rule 12 destination port '32400'
+set firewall name primary-mgmt rule 12 destination address '10.10.12.8'
+set firewall name primary-mgmt rule 12 protocol 'tcp'
+
 # From PRIMARY to SERVICES
 set firewall name primary-services default-action 'accept'
 set firewall name primary-services description 'From PRIMARY to SERVICES'
@@ -1231,9 +1237,9 @@ set firewall name wan-mgmt rule 1 protocol 'tcp'
 set firewall name wan-mgmt rule 1 source group network-group 'cloudflare-ipv4'
 
 set firewall name wan-mgmt rule 2 action 'accept'
-set firewall name wan-mgmt rule 2 description 'Rule: accept_ingress_to_container0'
-set firewall name wan-mgmt rule 2 destination address '10.9.8.30'
-set firewall name wan-mgmt rule 2 destination port 'http,https'
+set firewall name wan-mgmt rule 2 description 'Rule: accept_plex'
+set firewall name wan-mgmt rule 2 destination address '10.10.12.8'
+set firewall name wan-mgmt rule 2 destination port '32400'
 set firewall name wan-mgmt rule 2 protocol 'tcp'
 
 set firewall name wan-mgmt rule 3 action 'accept'
