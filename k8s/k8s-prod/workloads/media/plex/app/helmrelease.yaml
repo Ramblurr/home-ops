@@ -39,6 +39,7 @@ spec:
         enabled: true
         annotations:
           hajimari.io/icon: simple-icons:plex
+          external-dns.alpha.kubernetes.io/target: "ingress.${SECRET_DOMAIN}"
         ingressClassName: nginx-internal
         hosts:
           - host: &host "plex.${SECRET_DOMAIN}"
