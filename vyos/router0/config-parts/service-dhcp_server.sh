@@ -223,6 +223,8 @@ set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-ma
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping brother-label-printer mac-address '30:c9:ab:e8:6c:af'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping brother-printer ip-address '10.9.5.1'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping brother-printer mac-address 'b4:22:00:40:d6:9a'
+set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping phoniebox ip-address '10.9.6.26'
+set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping phoniebox mac-address 'dc:a6:32:40:33:ec'
 
 
 #container0
