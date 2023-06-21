@@ -1,0 +1,79 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: readarr
+  namespace: downloads
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 1.5.1
+      interval: 15m
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  interval: 15m
+  values:
+    image:
+      repository: ghcr.io/onedr0p/readarr-nightly
+      tag: 0.2.0.1908
+
+    env:
+      TZ: "${SECRET_TZ}"
+
+    service:
+      main:
+        ports:
+          http:
+            port: &port 8787
+
+    ingress:
+      main:
+        primary: true
+        enabled: true
+        ingressClassName: nginx-internal
+        hosts:
+          - host: &host "readarr.${SECRET_DOMAIN_INTERNAL}"
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - hosts:
+              - *host
+            secretName: wildcard-tls
+
+    podSecurityContext:
+      runAsUser: 568
+      runAsGroup: 568
+      fsGroup: 568
+      fsGroupChangePolicy: "OnRootMismatch"
+      supplementalGroups:
+        - 2000
+
+    persistence:
+      config:
+        enabled: true
+        existingClaim: readarr-config-0
+      media:
+        enabled: true
+        existingClaim: mali-downloads-media-nfs
+        mountPath: /media
+      downloads:
+        enabled: true
+        existingClaim: mali-downloads-nfs
+        mountPath: /downloads
+
+    resources:
+      requests:
+        memory: 250Mi
+        cpu: 500m
+      limits:
+        memory: 1500Mi
+
+    prometheus:
+      podMonitor:
+        enabled: true
+        interval: 10m
+        scrapeTimeout: 2m
