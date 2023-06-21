@@ -16,10 +16,12 @@ spec:
         namespace: flux-system
   maxHistory: 3
   install:
+    timeout: 20m
     createNamespace: true
     remediation:
       retries: 3
   upgrade:
+    timeout: 20m
     cleanupOnFail: true
     remediation:
       retries: 3
