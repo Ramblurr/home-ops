@@ -1,0 +1,16 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cluster-workloads-plex
+  namespace: flux-system
+spec:
+  interval: 10m
+  path: "./k8s/k8s-prod/workloads/media/plex/app"
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  wait: true
+  dependsOn:
+    - name: cluster-workloads-rook-ceph-cluster

@@ -5,6 +5,7 @@ resources:
   - ./namespace.yaml
   - ./media-pv/ks.yaml
   - ./jellyfin/ks.yaml
+  - ./plex/ks.yaml
   #- ./sonarr/ks.yaml
   #- ./radarr/ks.yaml
   #- ./prowlarr/ks.yaml
