@@ -116,6 +116,14 @@ set nat destination rule 113 translation address '10.9.10.10'
 #set nat destination rule 113 translation address '10.9.10.17'
 set nat destination rule 113 translation port '3478'
 
+# Plex external
+set nat destination rule 114 description 'Plex'
+set nat destination rule 114 destination port '32400'
+set nat destination rule 114 inbound-interface 'eth0'
+set nat destination rule 114 protocol 'tcp'
+set nat destination rule 114 translation address "10.10.12.8"
+set nat destination rule 114 translation port '32400'
+
 # LAN -> WAN masquerade
 set nat source rule 100 description 'LAN -> WAN'
 set nat source rule 100 destination address '0.0.0.0/0'
