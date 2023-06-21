@@ -1,0 +1,17 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cluster-workloads-tautulli
+  namespace: flux-system
+spec:
+  interval: 10m
+  path: "./k8s/k8s-prod/workloads/media/tautulli/app"
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  wait: true
+  dependsOn:
+    - name: cluster-workloads-plex
+    - name: cluster-workloads-rook-ceph-cluster
