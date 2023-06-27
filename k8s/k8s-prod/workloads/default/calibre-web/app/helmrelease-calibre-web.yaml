@@ -86,7 +86,7 @@ spec:
         existingClaim: calibre-web-config-ceph
       media:
         enabled: true
-        existingClaim: calibre-web-nfs
+        existingClaim: calibre-web-books-nfs
         subPath:
           - path: library
             mountPath: /data/media

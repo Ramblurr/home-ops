@@ -20,7 +20,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: &name calibre-web-nfs
+  name: &name calibre-web-books-nfs
   namespace: default
   labels:
     app.kubernetes.io/name: *name
@@ -31,11 +31,11 @@ spec:
   volumeMode: Filesystem
   accessModes:
     - ReadWriteMany
-  storageClassName: calibre-web-nfs
+  storageClassName: calibre-web-books-nfs
   persistentVolumeReclaimPolicy: Retain
   nfs:
     server: "${SECRET_NFS_SERVER}"
-    path: /mnt/tank2/services/books.${SECRET_DOMAIN}
+    path: /mnt/tank2/media/books
   mountOptions:
     - vers=3
     - rw
@@ -46,14 +46,14 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: &name calibre-web-nfs
+  name: &name calibre-web-books-nfs
   namespace: default
   labels:
     app.kubernetes.io/name: *name
     app.kubernetes.io/instance: *name
 spec:
   accessModes: ["ReadWriteMany"]
-  storageClassName: calibre-web-nfs
+  storageClassName: calibre-web-books-nfs
   resources:
     requests:
       storage: 1Mi # Size does not matter
