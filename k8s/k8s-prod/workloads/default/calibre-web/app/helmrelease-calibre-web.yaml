@@ -34,6 +34,7 @@ spec:
     enableServiceLinks: false
     env:
       CACHE_DIR: /cache
+      DOCKER_MODS: linuxserver/mods:universal-calibre
     service:
       main:
         ports:
