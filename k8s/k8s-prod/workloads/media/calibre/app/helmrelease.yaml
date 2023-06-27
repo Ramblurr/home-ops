@@ -48,7 +48,7 @@ spec:
         enabled: true
         existingClaim: mali-media-nfs
         mountPath: /media
-        readOnly: true
+        readOnly: false
 
     ingress:
       main:
