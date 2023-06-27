@@ -49,6 +49,10 @@ spec:
         existingClaim: mali-media-nfs
         mountPath: /media
         readOnly: false
+      downloads:
+        enabled: true
+        existingClaim: mali-media-downloads-nfs
+        mountPath: /downloads
 
     ingress:
       main:

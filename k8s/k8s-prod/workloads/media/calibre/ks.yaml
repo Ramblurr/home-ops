@@ -9,6 +9,7 @@ spec:
     - name: cluster-workloads-rook-ceph-cluster
     - name: cluster-workloads-external-secrets-stores
     - name: cluster-workloads-volsync
+    - name: cluster-workloads-media-pv
   path: ./k8s/k8s-prod/workloads/media/calibre/app
   prune: true
   sourceRef:

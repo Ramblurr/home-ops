@@ -5,6 +5,11 @@ metadata:
   name: cluster-workloads-plex
   namespace: flux-system
 spec:
+  dependsOn:
+    - name: cluster-workloads-rook-ceph-cluster
+    - name: cluster-workloads-volsync
+    - name: cluster-workloads-media-pv
+    - name: cluster-workloads-intel-device-plugins-gpu
   interval: 10m
   path: "./k8s/k8s-prod/workloads/media/plex/app"
   prune: true
@@ -12,5 +17,3 @@ spec:
     kind: GitRepository
     name: flux-system
   wait: true
-  dependsOn:
-    - name: cluster-workloads-rook-ceph-cluster
