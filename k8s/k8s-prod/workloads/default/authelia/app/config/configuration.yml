@@ -44,6 +44,25 @@ access_control:
         - "group:${SECRET_AUTHELIA_GROUP}"
     - domain: ["books.${SECRET_DOMAIN}"]
       policy: deny
+    # admin-only
+    - domain:
+        - "calibre.${SECRET_INTERNAL_DOMAIN}"
+        - "sonarr.${SECRET_INTERNAL_DOMAIN}"
+        - "radarr.${SECRET_INTERNAL_DOMAIN}"
+        - "prowlarr.${SECRET_INTERNAL_DOMAIN}"
+        - "readarr.${SECRET_INTERNAL_DOMAIN}"
+        - "readarr-audiobooks.${SECRET_INTERNAL_DOMAIN}"
+        - "qbittorrent.${SECRET_INTERNAL_DOMAIN}"
+        - "tautulli.${SECRET_INTERNAL_DOMAIN}"
+        - "warrior.${SECRET_INTERNAL_DOMAIN}"
+        - "sabnzbd.${SECRET_INTERNAL_DOMAIN}"
+        - "alertmanager.${SECRET_INTERNAL_DOMAIN}"
+        - "grafana.${SECRET_INTERNAL_DOMAIN}"
+        - "prometheus.${SECRET_INTERNAL_DOMAIN}"
+      policy: two_factor
+      subject:
+        - "group:admins"
+    # catch alls
     - domain: ["*.${SECRET_INTERNAL_DOMAIN}"]
       policy: one_factor
       subject:
