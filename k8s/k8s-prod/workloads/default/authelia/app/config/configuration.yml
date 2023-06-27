@@ -20,7 +20,7 @@ webauthn:
   timeout: 60s
 
 access_control:
-  default_policy: two_factor
+  default_policy: deny
   networks:
     - name: internal
       networks: ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"]
@@ -28,9 +28,32 @@ access_control:
     - domain: ["books.${SECRET_DOMAIN}"]
       resources: ["^/kobo([/?].*)?$"]
       policy: bypass
-    - domain: ["jelly.${SECRET_DOMAIN}"]
+    - domain: ["jelly"]
       resources: ["^/metrics.*$"]
       policy: deny
+    - domain:
+        - "requests.${SECRET_DOMAIN}"
+        - "books.${SECRET_DOMAIN}"
+      policy: one_factor
+      subject:
+        - "group:friends"
+    - domain: ["books.${SECRET_DOMAIN}"]
+      policy: one_factor
+      subject:
+        - "group:friends"
+        - "group:${SECRET_AUTHELIA_GROUP}"
+    - domain: ["books.${SECRET_DOMAIN}"]
+      policy: deny
+    - domain: ["*.${SECRET_INTERNAL_DOMAIN}"]
+      policy: one_factor
+      subject:
+        - "group:admins"
+        - "group:${SECRET_AUTHELIA_GROUP}"
+    - domain: ["*.${SECRET_DOMAIN}"]
+      policy: two_factor
+      subject:
+        - "group:admins"
+        - "group:${SECRET_AUTHELIA_GROUP}"
 
 identity_providers:
   oidc:
