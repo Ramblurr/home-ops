@@ -87,9 +87,7 @@ spec:
       media:
         enabled: true
         existingClaim: calibre-web-books-nfs
-        subPath:
-          - path: library
-            mountPath: /data/media
+        mountPath: /data/media
       cache:
         enabled: true
         type: emptyDir
