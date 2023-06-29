@@ -68,7 +68,7 @@ set container name node-exporter volume sysfs mode 'ro'
 set container name node-exporter volume sysfs source '/sys'
 
 # speedtest-exporter
-set container name speedtest-exporter image 'ghcr.io/miguelndecarvalho/speedtest-exporter:v3.5.3'
+set container name speedtest-exporter image 'ghcr.io/miguelndecarvalho/speedtest-exporter:v3.5.4'
 set container name speedtest-exporter memory '0'
 set container name speedtest-exporter network services address '10.5.0.8'
 set container name speedtest-exporter restart 'on-failure'
