@@ -18,7 +18,7 @@ spec:
   values:
     image:
       repository: ghcr.io/onedr0p/readarr-nightly
-      tag: 0.2.3.1953
+      tag: 0.2.4.1956
 
     env:
       TZ: "${SECRET_TZ}"
