@@ -1101,6 +1101,11 @@ set firewall name primary-mgmt rule 12 destination port '32400'
 set firewall name primary-mgmt rule 12 destination address '10.10.12.8'
 set firewall name primary-mgmt rule 12 protocol 'tcp'
 
+set firewall name primary-mgmt rule 13 action 'accept'
+set firewall name primary-mgmt rule 13 description 'Rule: accept_admin'
+set firewall name primary-mgmt rule 13 protocol 'tcp_udp'
+set firewall name primary-mgmt rule 13 source group address-group 'admin'
+
 # From PRIMARY to SERVICES
 set firewall name primary-services default-action 'accept'
 set firewall name primary-services description 'From PRIMARY to SERVICES'
@@ -1224,6 +1229,11 @@ set firewall name wan-local rule 1 action 'accept'
 set firewall name wan-local rule 1 description 'Rule: accept_wireguard'
 set firewall name wan-local rule 1 destination port '51820'
 set firewall name wan-local rule 1 protocol 'udp'
+
+set firewall name wan-local rule 2 action 'accept'
+set firewall name wan-local rule 2 description 'Rule: accept_tailscale'
+set firewall name wan-local rule 2 destination port '41641,42417'
+set firewall name wan-local rule 2 protocol 'udp'
 
 # From WAN to MGMT
 set firewall name wan-mgmt default-action 'drop'
