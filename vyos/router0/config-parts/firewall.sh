@@ -46,6 +46,7 @@ set firewall group address-group shellys address '10.8.60.41'
 set firewall group address-group shellys address '10.8.60.42'
 set firewall group address-group shellys address '10.8.60.43'
 set firewall group address-group shellys address '10.8.60.44'
+set firewall group address-group shellys address '10.8.60.49'
 set firewall group address-group esphome address '10.8.60.28' # bedroom-switch-esphome
 set firewall group address-group esphome address '10.8.60.29' # quinled-a-south
 set firewall group address-group esphome address '10.8.60.30' # quinled-b-north
@@ -200,6 +201,7 @@ set firewall group port-group octoprint port '80'
 set firewall group port-group octoprint port '5000'
 set firewall group port-group octoprint port '443'
 set firewall group port-group homeassistant port '8123'
+set firewall group port-group homeassistant-shelly port '8123'
 set firewall group port-group k8s-api port '6443'
 
 set firewall group port-group syncthing port '22000'
