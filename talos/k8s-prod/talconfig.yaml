@@ -1,7 +1,7 @@
 ---
 # Ansible managed: talconfig.yaml.j2 modified on 2023-06-14 11:42:35 by ramblurr on quine
 clusterName: "k8s-prod"
-talosVersion: "v1.4.4"
+talosVersion: "v1.4.6"
 kubernetesVersion: "v1.26.4"
 endpoint: https://10.9.9.120:6443
 allowSchedulingOnMasters: false
