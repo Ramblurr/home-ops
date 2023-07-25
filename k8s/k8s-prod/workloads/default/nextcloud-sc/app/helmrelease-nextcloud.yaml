@@ -153,7 +153,7 @@ spec:
             mountPath: /data
       paperless:
         enabled: true
-        existingClaim: nextcloud-sc-paperless-nfs
+        existingClaim: nextcloud-sc-paperless2-nfs
         mountPath: /paperless
         readOnly: true
       post-start-sh:

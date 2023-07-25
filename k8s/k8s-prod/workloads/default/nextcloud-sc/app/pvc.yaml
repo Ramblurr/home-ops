@@ -46,7 +46,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: &name nextcloud-sc-paperless-nfs
+  name: &name nextcloud-sc-paperless2-nfs
   namespace: default
   labels:
     app.kubernetes.io/name: *name
@@ -57,11 +57,11 @@ spec:
   volumeMode: Filesystem
   accessModes:
     - ReadWriteMany
-  storageClassName: nextcloud-sc-paperless-nfs
+  storageClassName: nextcloud-sc-paperless2-nfs
   persistentVolumeReclaimPolicy: Retain
   nfs:
     server: "${SECRET_NFS_SERVER}"
-    path: /mnt/tank2/services/paperless.${SECRET_DOMAIN_INTERNAL}/media/documents/originals
+    path: /mnt/tank2/services/paperless.${SECRET_DOMAIN_INTERNAL}
   mountOptions:
     - vers=3
     - ro
@@ -72,14 +72,14 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: &name nextcloud-sc-paperless-nfs
+  name: &name nextcloud-sc-paperless2-nfs
   namespace: default
   labels:
     app.kubernetes.io/name: *name
     app.kubernetes.io/instance: *name
 spec:
   accessModes: ["ReadWriteMany"]
-  storageClassName: nextcloud-sc-paperless-nfs
+  storageClassName: nextcloud-sc-paperless2-nfs
   resources:
     requests:
       storage: 1Mi # Size does not matter
