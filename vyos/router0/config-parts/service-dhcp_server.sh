@@ -123,6 +123,8 @@ set service dhcp-server shared-network-name NOT subnet 10.8.60.0/23 static-mappi
 set service dhcp-server shared-network-name NOT subnet 10.8.60.0/23 static-mapping wled-fairylights mac-address '78:21:84:4f:50:f4'
 set service dhcp-server shared-network-name NOT subnet 10.8.60.0/23 static-mapping shellyplusht-office ip-address '10.8.60.49'
 set service dhcp-server shared-network-name NOT subnet 10.8.60.0/23 static-mapping shellyplusht-office mac-address '80:64:6F:CB:D3:C0'
+set service dhcp-server shared-network-name NOT subnet 10.8.60.0/23 static-mapping shellyplusht-terrace ip-address '10.8.60.50'
+set service dhcp-server shared-network-name NOT subnet 10.8.60.0/23 static-mapping shellyplusht-terrace mac-address '80:64:6F:E1:63:50'
 
 
 # LAN
