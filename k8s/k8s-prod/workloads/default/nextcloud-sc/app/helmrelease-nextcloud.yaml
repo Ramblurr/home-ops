@@ -151,6 +151,11 @@ spec:
         subPath:
           - path: nextcloud/data
             mountPath: /data
+      paperless:
+        enabled: true
+        existingClaim: nextcloud-sc-paperless-nfs
+        mountPath: /paperless
+        readOnly: true
       post-start-sh:
         enabled: true
         type: configMap
