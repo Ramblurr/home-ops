@@ -79,6 +79,7 @@ spec:
       PAPERLESS_TIKA_ENDPOINT: http://localhost:9998
       PAPERLESS_TIME_ZONE: Europe/Berlin
       PAPERLESS_FILENAME_FORMAT: "{created_year}/{created_year}-{created_month}-{created_day} {title}"
+      PAPERLESS_FILENAME_DATE_ORDER: YMD
       PAPERLESS_URL: https://paperless.${SECRET_DOMAIN_INTERNAL}
       USERMAP_UID: 2000
       USERMAP_GID: 2000
