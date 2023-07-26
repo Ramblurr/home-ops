@@ -236,6 +236,7 @@ spec:
           hajimari.io/group: tools
           nginx.ingress.kubernetes.io/proxy-body-size: 10G
           nginx.ingress.kubernetes.io/enable-global-auth: "false"
+          nginx.ingress.kubernetes.io/custom-http-errors: "418" # dummy status code to disable custom http errors
           nginx.ingress.kubernetes.io/enable-cors: "true"
           nginx.ingress.kubernetes.io/cors-allow-headers: "X-Forwarded-For"
           external-dns.alpha.kubernetes.io/target: "ingress.${SECRET_DOMAIN_WORK}"
