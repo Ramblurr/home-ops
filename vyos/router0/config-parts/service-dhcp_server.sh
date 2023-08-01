@@ -118,7 +118,7 @@ set service dhcp-server shared-network-name NOT subnet 10.8.60.0/23 static-mappi
 set service dhcp-server shared-network-name NOT subnet 10.8.60.0/23 static-mapping bathroom-climate-sensor ip-address '10.8.60.45'
 set service dhcp-server shared-network-name NOT subnet 10.8.60.0/23 static-mapping bathroom-climate-sensor mac-address 'EC:FA:BC:59:42:9F'
 set service dhcp-server shared-network-name NOT subnet 10.8.60.0/23 static-mapping wled-childroom-nightlight ip-address '10.8.60.46'
-set service dhcp-server shared-network-name NOT subnet 10.8.60.0/23 static-mapping wled-childroom-nightlight mac-address 'ec:fa:bc:59:3c:51'
+set service dhcp-server shared-network-name NOT subnet 10.8.60.0/23 static-mapping wled-childroom-nightlight mac-address '08:b6:1f:38:38:44'
 set service dhcp-server shared-network-name NOT subnet 10.8.60.0/23 static-mapping wled-fairylights ip-address '10.8.60.47'
 set service dhcp-server shared-network-name NOT subnet 10.8.60.0/23 static-mapping wled-fairylights mac-address '78:21:84:4f:50:f4'
 set service dhcp-server shared-network-name NOT subnet 10.8.60.0/23 static-mapping shellyplusht-office ip-address '10.8.60.49'

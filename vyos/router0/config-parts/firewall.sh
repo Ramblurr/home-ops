@@ -203,6 +203,7 @@ set firewall group port-group octoprint port '5000'
 set firewall group port-group octoprint port '443'
 set firewall group port-group homeassistant port '8123'
 set firewall group port-group homeassistant-shelly port '8123'
+set firewall group port-group homeassistant-shelly port '5683'
 set firewall group port-group k8s-api port '6443'
 
 set firewall group port-group syncthing port '22000'
