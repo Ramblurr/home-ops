@@ -14,7 +14,7 @@ bathroom-mirror,shellyrgbw2,SHRGBW2,shellyrgbw2-bathroom-mirror-98CDAC264611,10.
 bed,shellyrgbw2,SHRGBW2,shellyrgbw2-bed-98CDAC265129,10.8.60.22,98CDAC265129
 kitchen-cabinets,shellyrgbw2,SHRGBW2,shellyrgbw2-kitchen-cabinets-E8DB84DDD06F,10.8.60.23,E8DB84DDD06F
 toilet,shellyswitch25,SHSW-25,shellyswitch25-toilet-E8DB84AA5A58,10.8.60.25,E8DB84AA5A58
-gr-switch,shellyswitch25,SHSW-25,shellyswitch25-gr-switch-E8DB84AABB8C,10.8.60.26,E8DB84AABB8C
+gr-switch,shellyswitch25,SHSW-25,shellyswitch25-gr-switch-E8DB84AABB8C,10.8.60.26,E8DB84AA4689
 bathroom-overhead-fan,shellyswitch25,SHSW-25,shellyswitch25-bathroom-overhead-fan-3C6105E4466A,10.8.60.24,3C6105E4466A
 hallway,shelly1pm,SHSW-PM,shelly1pm-hallway-E8DB84D7DAFF,10.8.60.27,E8DB84D7DAFF
 bedroom-switch-esphome,,,,10.8.60.28,e8:db:84:aa:8a:ab

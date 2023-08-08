@@ -78,7 +78,7 @@ set service dhcp-server shared-network-name NOT subnet 10.8.60.0/23 static-mappi
 set service dhcp-server shared-network-name NOT subnet 10.8.60.0/23 static-mapping shelly-toilet ip-address '10.8.60.25'
 set service dhcp-server shared-network-name NOT subnet 10.8.60.0/23 static-mapping shelly-toilet mac-address 'E8:DB:84:AA:5A:58'
 set service dhcp-server shared-network-name NOT subnet 10.8.60.0/23 static-mapping shelly-gr-switch ip-address '10.8.60.26'
-set service dhcp-server shared-network-name NOT subnet 10.8.60.0/23 static-mapping shelly-gr-switch mac-address 'E8:DB:84:AA:BB:8C'
+set service dhcp-server shared-network-name NOT subnet 10.8.60.0/23 static-mapping shelly-gr-switch mac-address 'E8:DB:84:AA:46:89'
 set service dhcp-server shared-network-name NOT subnet 10.8.60.0/23 static-mapping shelly-hallway ip-address '10.8.60.27'
 set service dhcp-server shared-network-name NOT subnet 10.8.60.0/23 static-mapping shelly-hallway mac-address 'E8:DB:84:D7:DA:FF'
 set service dhcp-server shared-network-name NOT subnet 10.8.60.0/23 static-mapping bedroom-switch-esphome ip-address '10.8.60.28'
