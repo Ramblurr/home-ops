@@ -22,3 +22,26 @@ spec:
               protocol: UDP
     - toEntities:
         - cluster
+
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: downloads-gateway-pod-gateway-dns
+  namespace: vpn
+  labels:
+    app.kubernetes.io/instance: downloads-gateway-dns
+    app.kubernetes.io/name: pod-gateway
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: pod-gateway
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            "k8s:io.kubernetes.pod.namespace": kube-system
+            "k8s:k8s-app": kube-dns
+    - toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
