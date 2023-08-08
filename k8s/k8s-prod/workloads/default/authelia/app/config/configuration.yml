@@ -28,6 +28,9 @@ access_control:
     - domain: ["books.${SECRET_DOMAIN}"]
       resources: ["^/kobo([/?].*)?$"]
       policy: bypass
+    - domain: ["search.${SECRET_DOMAIN}"]
+      resources: ["^/opensearch.xml([?].*)?$"]
+      policy: bypass
     - domain: ["jelly"]
       resources: ["^/metrics.*$"]
       policy: deny
