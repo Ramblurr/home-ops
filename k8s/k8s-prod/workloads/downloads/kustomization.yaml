@@ -14,3 +14,4 @@ resources:
   - ./sabnzbd/ks.yaml
   - ./readarr/ks.yaml
   - ./readarr-audiobooks/ks.yaml
+  - ./searxng/ks.yaml

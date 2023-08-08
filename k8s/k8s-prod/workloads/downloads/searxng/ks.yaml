@@ -1,0 +1,28 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cluster-workloads-searxng
+  namespace: flux-system
+spec:
+  path: ./k8s/k8s-prod/workloads/downloads/searxng/app
+  dependsOn:
+    - name: cluster-workloads-cert-manager-issuers
+    - name: cluster-workloads-rook-ceph-cluster
+    - name: cluster-workloads-external-secrets-stores
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  healthChecks:
+    - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+      kind: HelmRelease
+      name: searxng
+      namespace: downloads
+    - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+      kind: HelmRelease
+      name: searxng-redis
+      namespace: downloads
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m

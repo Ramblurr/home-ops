@@ -40,6 +40,8 @@ spec:
       FILE_DIR: /uploads
       MAX_FILE_SIZE: 5368709120
       MAX_EXPIRE_SECONDS: 2630000
+      DEFAULT_DOWNLOADS: 50
+      EXPIRE_TIMES_SECONDS: 3600,86400,604800,2592000,31536000
     envFrom:
       - secretRef:
           name: send-secret
