@@ -50,8 +50,10 @@ spec:
             value: wg0
           - name: SHADOWSOCKS
             value: "on"
+          # Currently need this in K8s to hit Cluster DNS for lookup
           - name: FIREWALL
             value: "off"
+          # Currently need this in K8s to hit Cluster DNS for lookup
           - name: DOT
             value: "off"
           - name: SERVER_CITIES
@@ -68,12 +70,6 @@ spec:
               secretKeyRef:
                 name: downloads-gateway-vpnconfig
                 key: WIREGUARD_ADDRESSES
-          # Currently need this in K8s to hit Cluster DNS for lookup
-          - name: FIREWALL
-            value: "off"
-          # Currently need this in K8s to hit Cluster DNS for lookup
-          - name: DOT
-            value: "off"
         resources:
           requests:
             cpu: 5m
