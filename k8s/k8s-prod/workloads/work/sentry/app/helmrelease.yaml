@@ -80,6 +80,11 @@ spec:
       # host, username, database
     rabbitmq:
       enabled: false
+    kafka:
+      zookeeper:
+        enabled: false
+      kraft:
+        enabled: true
     metrics:
       enabled: true
       serviceMonitor:
