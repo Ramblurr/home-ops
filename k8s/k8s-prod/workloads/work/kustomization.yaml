@@ -7,3 +7,4 @@ resources:
     #- ./nextcloud-aio-ol/ks.yaml
   - ./nextcloud-ol/ks.yaml
   - ./sentry/ks.yaml
+  - ./projectsend/ks.yaml
