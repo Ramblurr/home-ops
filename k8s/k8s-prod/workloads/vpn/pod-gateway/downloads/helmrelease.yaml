@@ -68,6 +68,12 @@ spec:
               secretKeyRef:
                 name: downloads-gateway-vpnconfig
                 key: WIREGUARD_ADDRESSES
+          # Currently need this in K8s to hit Cluster DNS for lookup
+          - name: FIREWALL
+            value: "off"
+          # Currently need this in K8s to hit Cluster DNS for lookup
+          - name: DOT
+            value: "off"
         resources:
           requests:
             cpu: 5m
@@ -100,7 +106,8 @@ spec:
             type: udp
           - port: ${SECRET_QBITTORRENT_PORT}
             type: tcp
-
+    # Needed to get CoreDNS IP listed in /etc/resolv.conf for NAS DNS lookup when mounting SMB share
+    DNSPolicy: ClusterFirst
     routed_namespaces:
       - downloads
 
