@@ -1,0 +1,54 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: send-redis
+  namespace: default
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: app-template
+      version: 1.5.1
+      interval: 15m
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  values:
+    controller:
+      strategy: RollingUpdate
+    image:
+      repository: public.ecr.aws/docker/library/redis
+      tag: "7"
+    # yamllint disable rule:indentation
+    command:
+      [
+        "redis-server",
+        "--requirepass",
+        "$(REDIS_PASSWORD)",
+        "--save",
+        "",
+        "--appendonly",
+        "yes",
+      ]
+    # yamllint enable rule:indentation
+    env:
+      REDIS_REPLICATION_MODE: master
+      REDIS_PASSWORD:
+        valueFrom:
+          secretKeyRef:
+            name: send-secret
+            key: REDIS_PASSWORD
+    persistence:
+      data:
+        enabled: true
+        path: /data
+        existingClaim: send-redis-ceph
+    service:
+      main:
+        ports:
+          http:
+            port: 6379
+    podAnnotations:
+      reloader.stakater.com/auto: "true"

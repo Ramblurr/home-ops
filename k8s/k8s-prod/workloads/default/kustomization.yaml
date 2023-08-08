@@ -13,3 +13,4 @@ resources:
   - ./photoprism/ks.yaml
   - ./calibre-web/ks.yaml
   - ./paperless/ks.yaml
+  - ./send/ks.yaml
