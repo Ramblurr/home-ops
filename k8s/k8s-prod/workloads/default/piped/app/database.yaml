@@ -1,0 +1,20 @@
+---
+apiVersion: db.movetokube.com/v1alpha1
+kind: Postgres
+metadata:
+  name: piped-db
+  namespace: default
+spec:
+  database: piped
+  dropOnDelete: true
+---
+apiVersion: db.movetokube.com/v1alpha1
+kind: PostgresUser
+metadata:
+  name: piped-user
+  namespace: default
+spec:
+  role: piped
+  database: piped-db
+  secretName: database
+  privileges: OWNER

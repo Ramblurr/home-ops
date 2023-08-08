@@ -35,5 +35,6 @@ resources:
   - rook-ceph-charts.yaml
   - sentry.yaml
   - stakater.yaml
+  - teampiped.yaml
   - weave-gitops.yaml
   - zalando-postgres-operator.yaml

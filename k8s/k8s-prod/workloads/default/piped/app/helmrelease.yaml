@@ -1,0 +1,102 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.kokoro.wtf/helm.toolkit.fluxcd.io/helmrelease_v2beta1.json
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: piped
+  namespace: default
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: piped
+      version: 3.0.3
+      sourceRef:
+        kind: HelmRepository
+        name: teampiped
+        namespace: flux-system
+  install:
+    createNamespace: true
+    remediation:
+      retries: 5
+  upgrade:
+    remediation:
+      retries: 5
+  valuesFrom:
+    - kind: Secret
+      name: database-piped-user
+      valuesKey: POSTGRES_JDBC_URL
+      targetPath: backend.config.database.connection_url
+    - kind: Secret
+      name: database-piped-user
+      valuesKey: LOGIN
+      targetPath: backend.config.database.username
+    - kind: Secret
+      name: database-piped-user
+      valuesKey: PASSWORD
+      targetPath: backend.config.database.password
+  values:
+    frontend:
+      env:
+        BACKEND_HOSTNAME: "pipedapi.${SECRET_DOMAIN}"
+
+    postgresql:
+      enabled: false
+    backend:
+      config:
+        PORT: 8080
+        NUM_WORKERS: 2
+        PROXY_PART: "https://ytproxy.${SECRET_DOMAIN}"
+        DISABLE_REGISTRATION: true
+        database:
+          driver_class: org.postgresql.Driver
+          dialect: org.hibernate.dialect.PostgreSQLDialect
+          # these are attached in valuesFrom
+          # connection_url:
+          # username:
+          # password:
+
+    ingress:
+      main:
+        enabled: true
+        ingressClassName: nginx-internal
+        annotations:
+          ingress.home.arpa/type: "internal"
+          hajimari.io/enable: "true"
+          external-dns.home.arpa/enabled: "true"
+          external-dns.alpha.kubernetes.io/target: "ingress.${SECRET_DOMAIN}"
+        hosts:
+          - host: &host "piped.${SECRET_DOMAIN}"
+            paths:
+              - path: "/"
+        tls:
+          - hosts:
+              - *host
+
+      backend:
+        enabled: true
+        ingressClassName: nginx-internal
+        annotations:
+          ingress.home.arpa/type: "internal"
+          hajimari.io/enable: "false"
+        hosts:
+          - host: &api_host "pipedapi.${SECRET_DOMAIN}"
+            paths:
+              - path: "/"
+        tls:
+          - hosts:
+              - *api_host
+
+      ytproxy:
+        enabled: true
+        ingressClassName: nginx-internal
+        annotations:
+          ingress.home.arpa/type: "internal"
+          hajimari.io/enable: "false"
+        hosts:
+          - host: &proxy "ytproxy.${SECRET_DOMAIN}"
+            paths:
+              - path: "/"
+        tls:
+          - hosts:
+              - *proxy

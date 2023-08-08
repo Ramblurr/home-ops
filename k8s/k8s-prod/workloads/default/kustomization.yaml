@@ -14,3 +14,4 @@ resources:
   - ./calibre-web/ks.yaml
   - ./paperless/ks.yaml
   - ./send/ks.yaml
+  - ./piped/ks.yaml
