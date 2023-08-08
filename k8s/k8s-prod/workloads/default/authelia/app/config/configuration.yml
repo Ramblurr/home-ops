@@ -29,7 +29,7 @@ access_control:
       resources: ["^/kobo([/?].*)?$"]
       policy: bypass
     - domain: ["search.${SECRET_DOMAIN}"]
-      resources: ["^/opensearch.xml([?].*)?$"]
+      resources: ["^/opensearch.xml([?].*)?$", "^/autocompleter([?].*)?$"]
       policy: bypass
     - domain: ["jelly"]
       resources: ["^/metrics.*$"]
