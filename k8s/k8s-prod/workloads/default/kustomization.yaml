@@ -17,3 +17,4 @@ resources:
   - ./piped/ks.yaml
   - ./snowflake-proxy/ks.yaml
   - ./quickshare/ks.yaml
+  - ./immich/ks.yaml

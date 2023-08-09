@@ -1,0 +1,105 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: immich-web
+  namespace: default
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 1.5.1
+      interval: 30m
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+
+  dependsOn:
+    - name: immich-server
+
+  values:
+    controller:
+      replicas: 1
+      strategy: RollingUpdate
+      annotations:
+        reloader.stakater.com/auto: "true"
+
+    image:
+      repository: ghcr.io/immich-app/immich-web
+      tag: v1.72.2@sha256:e50572dc3ec86dc0874ba7b06f8ba51bced3ce5de2fd84fc0fbba6999ab9bcef
+
+    command: /bin/sh
+    args:
+      - ./entrypoint.sh
+
+    env:
+      DB_HOSTNAME:
+        valueFrom:
+          secretKeyRef:
+            name: database-immich-user
+            key: HOST
+      DB_USERNAME:
+        valueFrom:
+          secretKeyRef:
+            name: database-immich-user
+            key: LOGIN
+      DB_PASSWORD:
+        valueFrom:
+          secretKeyRef:
+            name: database-immich-user
+            key: PASSWORD
+      DB_DATABASE_NAME:
+        valueFrom:
+          secretKeyRef:
+            name: database-immich-user
+            key: DATABASE_NAME
+
+    envFrom:
+      - secretRef:
+          name: immich-secret
+      - configMapRef:
+          name: immich-configmap
+
+    service:
+      main:
+        ports:
+          http:
+            port: 3000
+
+    ingress:
+      main:
+        enabled: true
+        ingressClassName: nginx-internal
+        annotations:
+          nginx.ingress.kubernetes.io/configuration-snippet: |
+            rewrite /api/(.*) /$1 break;
+          nignx.ingress.kubernetes.io/force-ssl-redirect: "true"
+          nginx.ingress.kubernetes.io/proxy-body-size: "0"
+        hosts:
+          - host: &host photos2.${SECRET_DOMAIN_INTERNAL}
+            paths:
+              - path: /
+                pathType: Prefix
+              - path: /api
+                pathType: Prefix
+                service:
+                  name: immich-server
+                  port: 3001
+        tls:
+          - hosts:
+              - *host
+
+    persistence:
+      library:
+        enabled: true
+        existingClaim: immich-nfs
+        mountPath: /usr/src/app/upload
+
+    resources:
+      requests:
+        cpu: 5m
+        memory: 64M
+      limits:
+        memory: 64M
