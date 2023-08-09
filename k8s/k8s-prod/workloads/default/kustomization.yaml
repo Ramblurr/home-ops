@@ -15,3 +15,4 @@ resources:
   - ./paperless/ks.yaml
   - ./send/ks.yaml
   - ./piped/ks.yaml
+  - ./snowflake-proxy/ks.yaml
