@@ -141,6 +141,13 @@ set firewall name iot-mgmt default-action 'drop'
 set firewall name iot-mgmt description 'From IOT to MGMT'
 set firewall name iot-mgmt enable-default-log
 
+set firewall name iot-mgmt rule 1 action 'accept'
+set firewall name iot-mgmt rule 1 description 'Rule: accept_wall_dashboard_to_k8s_ingress'
+set firewall name iot-mgmt rule 1 source group address-group 'wall-dashboards'
+set firewall name iot-mgmt rule 1 destination group address-group 'k8s_cluster_prod_ingress_all'
+set firewall name iot-mgmt rule 1 destination port 'http,https'
+set firewall name iot-mgmt rule 1 protocol 'tcp'
+
 # From IOT to SERVICES
 set firewall name iot-services default-action 'drop'
 set firewall name iot-services description 'From IOT to SERVICES'
