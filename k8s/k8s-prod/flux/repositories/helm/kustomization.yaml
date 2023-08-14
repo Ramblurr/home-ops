@@ -7,6 +7,7 @@ metadata:
   name: repositories
 resources:
   - actions-runner-controller-charts.yaml
+  - ananace.yaml
   - angelnu.yaml
   - backube.yaml
   - bitnami-charts.yaml

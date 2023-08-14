@@ -17,16 +17,16 @@ spec:
       kind: ClusterSecretStore
       name: onepassword-connect
 
-  target:
-    name: crunchy-postgres-s3-creds
-    creationPolicy: Owner
-    template:
-      engineVersion: v2
-      data:
-        s3.conf: |
-          [global]
-          repo1-s3-key='{{ .AWS_ACCESS_KEY_ID }}'
-          repo1-s3-key-secret='{{ .AWS_SECRET_ACCESS_KEY }}'
-  dataFrom:
-    - extract:
-        key: minio-crunchy-postgres
+    target:
+      name: crunchy-postgres-s3-creds
+      creationPolicy: Owner
+      template:
+        engineVersion: v2
+        data:
+          s3.conf: |
+            [global]
+            repo1-s3-key='{{ .AWS_ACCESS_KEY_ID }}'
+            repo1-s3-key-secret='{{ .AWS_SECRET_ACCESS_KEY }}'
+    dataFrom:
+      - extract:
+          key: minio-crunchy-postgres

@@ -1,0 +1,22 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  labels:
+    app: matrix-synapse
+  name: matrix-synapse
+  namespace: comms
+spec:
+  jobLabel: matrix-synapse
+  namespaceSelector:
+    matchNames:
+      - matrix
+  podMetricsEndpoints:
+    - honorLabels: true
+      path: "/_synapse/metrics"
+      port: metrics
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: synapse
+      app.kubernetes.io/instance: matrix-synapse
+      app.kubernetes.io/name: matrix-synapse

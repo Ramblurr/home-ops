@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - dendrite/ks.yaml
+  - matrix-synapse/ks.yaml

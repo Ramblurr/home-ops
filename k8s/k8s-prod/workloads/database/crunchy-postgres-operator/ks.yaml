@@ -12,3 +12,5 @@ spec:
     kind: GitRepository
     name: flux-system
   wait: true
+  dependsOn:
+    - name: cluster-workloads-external-secrets-cluster-secrets

@@ -1,0 +1,6 @@
+# NOTE: this isn't working in cruncy postgres > 5. See ../../../README.md
+---
+bootstrap:
+  initdb:
+    - encoding: C
+    - locale: C
