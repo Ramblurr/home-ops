@@ -48,10 +48,6 @@ sonarr:
           - eb3d5cc0a2be0db205fb823640db6a3c # Repack v2
           - 44e7c4de10ae50265753082e5dc76047 # Repack v3
           # HDR Metadata
-          - 7878c33f1963fefb3d6c8657d46c2f0a # DV HDR10
-          - 1f733af03141f068a540eec352589a89 # DV HLG
-          - 27954b0a80aab882522a88a4d9eae1cd # DV SDR
-          - 6d0d8de7b57e35518ac0308b0ddf404e # DV
           - bb019e1cd00f304f80971c965de064dc # HDR (undefined)
           - 3e2c4e748b64a1a1118e0ea3f4cf6875 # HDR
           - 3497799d29a085e2ac2df9d468413c94 # HDR10
@@ -72,6 +68,19 @@ sonarr:
           - name: HD-1080p
           - name: WEB-1080p
           - name: Ultra-HD
+
+      - trash_ids:
+          - 7878c33f1963fefb3d6c8657d46c2f0a # DV HDR10
+          - 1f733af03141f068a540eec352589a89 # DV HLG
+          - 27954b0a80aab882522a88a4d9eae1cd # DV SDR
+          - 6d0d8de7b57e35518ac0308b0ddf404e # DV
+        quality_profiles:
+          - name: HD-1080p
+            score: -10000
+          - name: WEB-1080p
+            score: -10000
+          - name: Ultra-HD
+            score: -10000
 
 # Configuration specific to Radarr.
 radarr:
@@ -104,10 +113,6 @@ radarr:
           - 1c1a4c5e823891c75bc50380a6866f73 # DTS
           - 240770601cc226190c367ef59aba7463 # ACC
           - c2998bd0d90ed5621d8df281e839436e # DD
-          - e23edd2482476e595fb990b12e7c609c # DV HDR10  HDR/DV Custom Formats
-          - 58d6a88f13e2db7f5059c41047876f00 # DV
-          - 55d53828b9d81cbe20b02efd00aa0efd # DV HLG  HDR/DV Custom Formats
-          - a3e19f8f627608af0211acd02bf89735 # DV SDR  HDR/DV Custom Formats
           - b974a6cd08c1066250f1f177d7aa1225 # HDR10Plus
           - dfb86d5941bc9075d6af23b09c2aeecd # HDR10
           - e61e28db95d22bedcadf030b8f156d96 # HDR
@@ -135,6 +140,10 @@ radarr:
       - trash_ids:
           - 4b900e171accbfb172729b63323ea8ca # Optional: Multi
           - 923b6abef9b17f937fab56cfcf89e1f1 # Optional: DV (WEBDL) without fallback to HDR, set to manual score 0 or -10000
+          - e23edd2482476e595fb990b12e7c609c # DV HDR10  HDR/DV Custom Formats
+          - 58d6a88f13e2db7f5059c41047876f00 # DV
+          - 55d53828b9d81cbe20b02efd00aa0efd # DV HLG  HDR/DV Custom Formats
+          - a3e19f8f627608af0211acd02bf89735 # DV SDR  HDR/DV Custom Formats
         quality_profiles:
           - name: HD-1080p
             score: -10000
