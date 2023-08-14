@@ -54,6 +54,11 @@ spec:
         log-format-escape-json: "true"
       metrics:
         enabled: true
+        serviceMonitor:
+          enabled: true
+          namespace: networking
+          namespaceSelector:
+            any: true
       extraArgs:
         default-ssl-certificate: "networking/${SECRET_DOMAIN/./-}-wildcard-tls"
         ingress-class: nginx-internal
