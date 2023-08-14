@@ -1,0 +1,32 @@
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ClusterExternalSecret
+metadata:
+  name: crunchy-postgres-s3-creds
+spec:
+  externalSecretName: crunchy-postgres-s3-creds
+
+  namespaceSelector:
+    matchLabels:
+      pgo-enabled-bjw-s.dev: "true"
+
+  refreshTime: "1m"
+
+  externalSecretSpec:
+    secretStoreRef:
+      kind: ClusterSecretStore
+      name: onepassword-connect
+
+  target:
+    name: crunchy-postgres-s3-creds
+    creationPolicy: Owner
+    template:
+      engineVersion: v2
+      data:
+        s3.conf: |
+          [global]
+          repo1-s3-key='{{ .AWS_ACCESS_KEY_ID }}'
+          repo1-s3-key-secret='{{ .AWS_SECRET_ACCESS_KEY }}'
+  dataFrom:
+    - extract:
+        key: minio-crunchy-postgres

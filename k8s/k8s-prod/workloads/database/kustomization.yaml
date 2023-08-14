@@ -9,3 +9,4 @@ resources:
   - ./postgres-backup/ks.yaml
   - ./zalando-postgres/ks.yaml
   - ./redis/ks.yaml
+  - ./crunchy-postgres-operator/ks.yaml
