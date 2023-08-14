@@ -15,7 +15,6 @@ resources:
   - cilium-charts.yaml
   - coredns-charts.yaml
   - crunchydata.yaml
-  - dendrite.yaml
   - external-dns.yaml
   - external-secrets.yaml
   - ext-postgres-operator.yaml
