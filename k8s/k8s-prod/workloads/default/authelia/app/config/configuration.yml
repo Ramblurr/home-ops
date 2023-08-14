@@ -45,6 +45,11 @@ access_control:
       subject:
         - "group:friends"
         - "group:${SECRET_AUTHELIA_GROUP}"
+    - domain: ["photos.${SECRET_DOMAIN}"]
+      policy: two_factor
+      subject:
+        - "group:friends"
+        - "group:${SECRET_AUTHELIA_GROUP}"
     - domain: ["books.${SECRET_DOMAIN}"]
       policy: deny
     # admin-only
@@ -92,4 +97,16 @@ identity_providers:
         scopes: ["openid", "profile", "groups", "email"]
         redirect_uris:
           ["https://grafana.${SECRET_DOMAIN_INTERNAL}/login/generic_oauth"]
+        userinfo_signing_algorithm: none
+      - id: immich
+        description: Immich
+        secret: "${IMMICH_OAUTH_CLIENT_SECRET_HASH}"
+        public: false
+        authorization_policy: two_factor
+        pre_configured_consent_duration: 1y
+        scopes: ["openid", "profile", "groups", "email"]
+        redirect_uris:
+          - "https://photos.${SECRET_DOMAIN}/auth/login"
+          - "https://photos.${SECRET_DOMAIN}/user-settings"
+          - "app.immich:/"
         userinfo_signing_algorithm: none

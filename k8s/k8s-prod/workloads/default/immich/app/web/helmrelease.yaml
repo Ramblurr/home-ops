@@ -73,12 +73,17 @@ spec:
         enabled: true
         ingressClassName: nginx-internal
         annotations:
+          external-dns.home.arpa/enabled: "true"
+          external-dns.alpha.kubernetes.io/target: "ingress.${SECRET_DOMAIN}"
           nginx.ingress.kubernetes.io/configuration-snippet: |
             rewrite /api/(.*) /$1 break;
           nignx.ingress.kubernetes.io/force-ssl-redirect: "true"
           nginx.ingress.kubernetes.io/proxy-body-size: "0"
+          hajimari.io/icon: arcticons:immich
+          hajimari.io/info: Photos
+          hajimari.io/group: media
         hosts:
-          - host: &host photos2.${SECRET_DOMAIN_INTERNAL}
+          - host: &host photos.${SECRET_DOMAIN}
             paths:
               - path: /
                 pathType: Prefix
