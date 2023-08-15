@@ -20,6 +20,7 @@ resources:
   - ext-postgres-operator.yaml
   - grafana.yaml
   - hajimari.yaml
+  - influxdata-charts.yaml
   - ingress-nginx.yaml
   - intel.yaml
   - invoiceninja.yaml

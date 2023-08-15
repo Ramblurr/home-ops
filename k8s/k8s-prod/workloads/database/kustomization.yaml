@@ -10,3 +10,4 @@ resources:
   - ./zalando-postgres/ks.yaml
   - ./redis/ks.yaml
   - ./crunchy-postgres-operator/ks.yaml
+  - ./influxdb/ks.yaml
