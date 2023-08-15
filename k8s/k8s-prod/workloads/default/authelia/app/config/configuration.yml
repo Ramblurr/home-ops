@@ -119,7 +119,7 @@ notifier:
     timeout: 5s
     sender: "${SECRET_SMTP_FROM_FULL}"
     identifier: localhost
-    subject: "[${SECRET_TITLE}] {title}"
+    subject: "[${SECRET_TITLE} ID] {title}"
     startup_check_address: "${SECRET_WORK_EMAIL}"
     disable_require_tls: true
     disable_starttls: true
