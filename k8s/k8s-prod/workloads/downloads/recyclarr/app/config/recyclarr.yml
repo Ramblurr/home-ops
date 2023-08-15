@@ -37,6 +37,13 @@ sonarr:
               - WEBDL-720p
               - WEBRip-720p
           - name: Bluray-720p
+          - name: LowQuality
+            qualities:
+              - DVD
+              - Bluray-480p
+              - WEBDL-480p
+              - WEBRip-480p
+              - SDTV
 
     custom_formats:
       - trash_ids:
