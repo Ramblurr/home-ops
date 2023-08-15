@@ -140,6 +140,16 @@ radarr:
               - WEBDL-1080p
               - WEBRip-1080p
           - name: Bluray-720p
+            qualities:
+              - WEBDL-720p
+              - WEBRip-720p
+          - name: LowQuality
+            qualities:
+              - DVD
+              - WEBRip-480p
+              - WEBDL-480p
+              - Bluray-480p
+
     custom_formats:
       - trash_ids:
           - ff5bc9e8ce91d46c997ca3ac6994d6f8 # UHD FraMeSToR (set to 0, 1 or 3200)
