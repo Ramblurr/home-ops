@@ -1,0 +1,60 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: influxdb-backup-script
+  namespace: database
+data:
+  backup.sh: |-
+    #!/bin/sh
+    influx backup /influxdb-backup/backup_sc_$(date '+%Y-%m-%d_%H-%M') --token $INFLUX_TOKEN
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.26.1-standalone-strict/cronjob-batch-v1.json
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: influxdb-backup
+  namespace: database
+spec:
+  schedule: "0 4 * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          automountServiceAccountToken: false
+          enableServiceLinks: false
+          securityContext:
+            runAsUser: 2000
+            runAsGroup: 2000
+            fsGroup: 2000
+            supplementalGroups:
+              - 65541
+          containers:
+            - name: influxdb-backup
+              image: docker.io/library/influxdb:2.7.1
+              imagePullPolicy: IfNotPresent
+              command: ["/bin/sh", "/scripts/backup.sh"]
+              env:
+                - name: INFLUX_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: influxdb-secret
+                      key: admin-token
+                - name: INFLUX_HOST
+                  value: https://influxdb.${SECRET_DOMAIN_INTERNAL}
+              volumeMounts:
+                - name: backup-script
+                  mountPath: /scripts
+                - name: influxdb-backup-nfs
+                  mountPath: /influxdb-backup
+
+          restartPolicy: OnFailure
+
+          volumes:
+            - name: backup-script
+              configMap:
+                name: influxdb-backup-script
+            - name: influxdb-backup-nfs
+              persistentVolumeClaim:
+                claimName: influxdb-backup-nfs3

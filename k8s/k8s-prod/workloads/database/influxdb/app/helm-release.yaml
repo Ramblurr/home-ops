@@ -19,8 +19,8 @@ spec:
   values:
     fullnameOverride: *app
     image:
-      repository: quay.io/influxdb/influxdb
-      tag: v2.2.0
+      repository: docker.io/library/influxdb
+      tag: 2.7.1
       pullPolicy: IfNotPresent
     adminUser:
       create: true
