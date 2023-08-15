@@ -110,3 +110,17 @@ identity_providers:
           - "https://photos.${SECRET_DOMAIN}/user-settings"
           - "app.immich:/"
         userinfo_signing_algorithm: none
+
+notifier:
+  disable_startup_check: false
+  smtp:
+    host: "${SMTP_RELAY_HOST}"
+    port: "${SMTP_RELAY_PORT}"
+    timeout: 5s
+    sender: "${SECRET_SMTP_FROM_FULL}"
+    identifier: localhost
+    subject: "[${SECRET_TITLE}] {title}"
+    startup_check_address: "${SECRET_WORK_EMAIL}"
+    disable_require_tls: true
+    disable_starttls: true
+    disable_html_emails: false
