@@ -14,7 +14,7 @@ sonarr:
       type: series
     quality_profiles:
       - name: Any
-        reset_unmatched_scores: true
+        reset_unmatched_scores: false
         upgrade:
           allowed: true
           until_quality: WEB 2160p
@@ -121,7 +121,7 @@ radarr:
       type: movie
     quality_profiles:
       - name: Any
-        reset_unmatched_scores: true
+        reset_unmatched_scores: false
         upgrade:
           allowed: true
           until_quality: Bluray-2160p
