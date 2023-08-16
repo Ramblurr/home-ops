@@ -4,17 +4,18 @@ kind: Kustomization
 resources:
   - ./namespace.yaml
   - ./archiveteam-warrior/ks.yaml
-  - ./echo-server/ks.yaml
-  - ./hajimari/ks.yaml
-  - ./nextcloud-sc/ks.yaml
-  - ./external-home-assistant/ks.yaml
-  - ./lldap/ks.yaml
   - ./authelia/ks.yaml
-  - ./photoprism/ks.yaml
   - ./calibre-web/ks.yaml
-  - ./paperless/ks.yaml
-  - ./send/ks.yaml
-  - ./piped/ks.yaml
-  - ./snowflake-proxy/ks.yaml
-  - ./quickshare/ks.yaml
+  - ./echo-server/ks.yaml
+  - ./external-home-assistant/ks.yaml
+  - ./hajimari/ks.yaml
   - ./immich/ks.yaml
+  - ./lldap/ks.yaml
+  - ./mimic3/ks.yaml
+  - ./nextcloud-sc/ks.yaml
+  - ./paperless/ks.yaml
+  - ./photoprism/ks.yaml
+  - ./piped/ks.yaml
+  - ./quickshare/ks.yaml
+  - ./send/ks.yaml
+  - ./snowflake-proxy/ks.yaml
