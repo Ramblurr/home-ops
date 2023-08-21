@@ -4,6 +4,7 @@
 export ROOT := $(realpath {{ playbook_dir }}/..)
 export CLUSTER := "{{ cluster_name }}"
 export TALOS_DIR := $(realpath {{ cluster_talos_dir }})
+export TALOS_IMAGE := "ghcr.io/siderolabs/installer:{{ cluster_talos_version }}"
 export K8S_DIR := $(realpath {{ cluster_k8s_dir }})
 export TALOSCONFIG := ${TALOS_DIR}/clusterconfig/talosconfig
 export KUBECONFIG := ${TALOS_DIR}/kubeconfig
@@ -101,3 +102,15 @@ bootstrap-flux:
 	sleep 10
 	flux reconcile -n flux-system source git flux-system
 	flux reconcile -n flux-system kustomization cluster
+
+
+upgrade:
+{% for node in cluster_control_plane_nodes | dict2items %}
+	${TC} upgrade --wait --nodes {{ node.value.ifaces.mgmt.ip }} --image ${TALOS_IMAGE}
+{% endfor %}
+{% for node in cluster_worker_nodes | dict2items %}
+	${TC} upgrade --wait --nodes {{ node.value.ifaces.mgmt.ip }} --image ${TALOS_IMAGE}
+{% endfor %}
+
+upgrade-k8s:
+	${TC} --nodes {{ cluster_apiserver_addr }}  upgrade-k8s --to {{ cluster_k8s_version | replace("v", "") }} --dry-run

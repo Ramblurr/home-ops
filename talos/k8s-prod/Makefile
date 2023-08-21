@@ -4,6 +4,7 @@
 export ROOT := $(realpath /home/ramblurr/src/home-ops/ansible/..)
 export CLUSTER := "k8s-prod"
 export TALOS_DIR := $(realpath /home/ramblurr/src/home-ops/ansible/../talos/k8s-prod)
+export TALOS_IMAGE := "ghcr.io/siderolabs/installer:v1.4.8"
 export K8S_DIR := $(realpath /home/ramblurr/src/home-ops/ansible/../k8s/k8s-prod)
 export TALOSCONFIG := ${TALOS_DIR}/clusterconfig/talosconfig
 export KUBECONFIG := ${TALOS_DIR}/kubeconfig
@@ -110,3 +111,19 @@ bootstrap-flux:
 	sleep 10
 	flux reconcile -n flux-system source git flux-system
 	flux reconcile -n flux-system kustomization cluster
+
+
+upgrade:
+	${TC} upgrade --wait --nodes 10.9.9.121 --image ${TALOS_IMAGE}
+	${TC} upgrade --wait --nodes 10.9.9.122 --image ${TALOS_IMAGE}
+	${TC} upgrade --wait --nodes 10.9.9.123 --image ${TALOS_IMAGE}
+	${TC} upgrade --wait --nodes 10.9.9.124 --image ${TALOS_IMAGE}
+	${TC} upgrade --wait --nodes 10.9.9.125 --image ${TALOS_IMAGE}
+	${TC} upgrade --wait --nodes 10.9.9.130 --image ${TALOS_IMAGE}
+	${TC} upgrade --wait --nodes 10.9.9.131 --image ${TALOS_IMAGE}
+	${TC} upgrade --wait --nodes 10.9.9.132 --image ${TALOS_IMAGE}
+	${TC} upgrade --wait --nodes 10.9.9.133 --image ${TALOS_IMAGE}
+	${TC} upgrade --wait --nodes 10.9.9.134 --image ${TALOS_IMAGE}
+
+upgrade-k8s:
+	${TC} --nodes 10.9.9.120  upgrade-k8s --to 1.27.4 --dry-run

@@ -206,6 +206,6 @@ control_plane_ifaces_data: >-
 control_plane_ips_data: >-
   {{ control_plane_ifaces_data | map(attribute='ip') }}
 cluster_all_nodes: "{{ cluster_control_plane_nodes | combine(cluster_worker_nodes) }}"
-cluster_talos_version: v1.4.6
-cluster_k8s_version: v1.26.4
+cluster_talos_version: v1.4.8
+cluster_k8s_version: v1.27.4
 cluster_allow_schedluing_on_masters: false
