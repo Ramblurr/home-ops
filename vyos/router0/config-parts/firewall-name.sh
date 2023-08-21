@@ -1036,6 +1036,11 @@ set firewall name primary-local rule 12 description 'Rule: accept_tailscale_udp_
 set firewall name primary-local rule 12 destination port '41641,3478,5351,1900'
 set firewall name primary-local rule 12 protocol 'udp'
 
+set firewall name primary-local rule 13 action 'accept'
+set firewall name primary-local rule 13 description 'Rule: accept_ingress_for_roon_arc'
+set firewall name primary-local rule 13 destination group port-group 'roon-arc'
+set firewall name primary-local rule 13 protocol 'tcp_udp'
+
 # From PRIMARY to MGMT
 set firewall name primary-mgmt default-action 'drop'
 set firewall name primary-mgmt description 'From PRIMARY to MGMT'
@@ -1187,6 +1192,13 @@ set firewall name data-mgmt default-action 'drop'
 set firewall name data-mgmt description 'From DATA to MGMT'
 set firewall name data-mgmt enable-default-log
 
+set firewall name data-mgmt rule 1 action 'accept'
+set firewall name data-mgmt rule 1 description 'Rule: accept_k8s_prod_api_from_admin'
+set firewall name data-mgmt rule 1 destination group port-group 'k8s-api'
+set firewall name data-mgmt rule 1 destination group address-group 'k8s_cluster_prod_api'
+set firewall name data-mgmt rule 1 protocol 'tcp_udp'
+set firewall name data-mgmt rule 1 source group address-group 'k8s_cluster_prod_nodes'
+
 # From DATA to SERVICES
 set firewall name data-services default-action 'accept'
 set firewall name data-services description 'From DATA to SERVICES'
@@ -1279,15 +1291,10 @@ set firewall name wan-primary default-action 'drop'
 set firewall name wan-primary description 'From WAN to PRIMARY'
 set firewall name wan-primary enable-default-log
 set firewall name wan-primary rule 1 action 'accept'
-set firewall name wan-primary rule 1 description 'Rule: accept_ingress_for_roon_arn_tcp'
+set firewall name wan-primary rule 1 description 'Rule: accept_ingress_for_roon_arc'
 set firewall name wan-primary rule 1 destination group address-group 'roon-server'
 set firewall name wan-primary rule 1 destination group port-group 'roon-arc'
-set firewall name wan-primary rule 1 protocol 'tcp'
-set firewall name wan-primary rule 2 action 'accept'
-set firewall name wan-primary rule 2 description 'Rule: accept_ingress_for_roon_arn_udp'
-set firewall name wan-primary rule 2 destination group address-group 'roon-server'
-set firewall name wan-primary rule 2 destination group port-group 'roon-arc'
-set firewall name wan-primary rule 2 protocol 'udp'
+set firewall name wan-primary rule 1 protocol 'tcp_udp'
 
 # From WAN to DATA
 set firewall name wan-data default-action 'drop'
