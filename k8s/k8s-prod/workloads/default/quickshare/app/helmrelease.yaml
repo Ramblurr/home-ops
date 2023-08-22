@@ -25,7 +25,7 @@ spec:
   values:
     image:
       repository: ghcr.io/nginxinc/nginx-unprivileged
-      tag: latest@sha256:32a2d766cd48f6d123f9694a817245bc05efb17d9e5d3a9c8abef1113ec4b4a2
+      tag: latest@sha256:01950387e60ad2a82364358b354b207798bfc2002d795bdb0195dbc73701756f
     podSecurityContext:
       runAsUser: 2000
       runAsGroup: 2000
