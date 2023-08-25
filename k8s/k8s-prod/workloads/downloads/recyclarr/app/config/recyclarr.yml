@@ -44,6 +44,26 @@ sonarr:
               - WEBDL-480p
               - WEBRip-480p
               - SDTV
+      - name: 1080p
+        reset_unmatched_scores: false
+        upgrade:
+          allowed: true
+          until_quality: WEB 1080p
+          until_score: 10000
+        min_format_score: 0
+        quality_sort: top
+        qualities:
+          - name: WEB 1080p
+            qualities:
+              - WEBDL-1080p
+              - WEBRip-1080p
+          - name: Bluray-1080p Remux
+          - name: Bluray-1080p
+          - name: WEB 720p
+            qualities:
+              - WEBDL-720p
+              - WEBRip-720p
+          - name: Bluray-720p
 
     custom_formats:
       - trash_ids:
