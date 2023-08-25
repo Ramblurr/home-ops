@@ -20,6 +20,7 @@
   "semanticCommits": "enabled",
   "dependencyDashboard": true,
   "platform": "github",
+  "ignorePaths": ["**/archive/**"],
   "dependencyDashboardTitle": "Renovate Dashboard",
   // do not notify on closed unmerged PRs
   "suppressNotifications": ["prIgnoreNotification"],
