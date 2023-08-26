@@ -12,15 +12,25 @@
       },
       "separateMinorPatch": true
     },
-    {
-      description: "Rook-Ceph image and chart",
-      groupName: "Rook Ceph",
-      matchPackagePatterns: ["rook.ceph"],
-      matchDatasources: ["docker", "helm"],
-      group: {
-        commitMessageTopic: "{{{groupName}}} group"
+      {
+      "description": "Rook-Ceph Group",
+      "groupName": "Rook-Ceph",
+      "matchPackagePatterns": ["rook.ceph"],
+      "matchDatasources": ["helm"],
+      "group": {
+        "commitMessageTopic": "{{{groupName}}} group"
       },
-      separateMinorPatch: true,
+      "separateMinorPatch": true
+    },
+      {
+      "description": "Immich Group",
+      "groupName": "Immich",
+      "matchPackagePatterns": ["immich"],
+      "matchDatasources": ["docker"],
+      "group": {
+        "commitMessageTopic": "{{{groupName}}} group"
+      },
+      "separateMinorPatch": true
     },
     {
       description: "Cilium image and chart",
@@ -36,13 +46,10 @@
       },
       separateMinorPatch: true,
     },
-    {
-      "description": "External Snapshotter charts",
+      {
+      "description": "External Snapshotter Group",
       "groupName": "External Snapshotter",
-      "matchPackageNames": [
-        "snapshot-controller",
-        "snapshot-validation-webhook"
-      ],
+      "matchPackageNames": ["snapshot-controller", "snapshot-validation-webhook"],
       "matchDatasources": ["helm"],
       "group": {
         "commitMessageTopic": "{{{groupName}}} group"
