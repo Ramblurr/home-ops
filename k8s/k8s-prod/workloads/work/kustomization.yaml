@@ -6,5 +6,5 @@ resources:
   - ./invoiceninja/ks.yaml
     #- ./nextcloud-aio-ol/ks.yaml
   - ./nextcloud-ol/ks.yaml
-  - ./sentry/ks.yaml
+  # - ./sentry/ks.yaml
   - ./projectsend/ks.yaml
