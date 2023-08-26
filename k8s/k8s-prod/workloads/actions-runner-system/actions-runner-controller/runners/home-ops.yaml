@@ -1,43 +1,52 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/actions.summerwind.dev/runnerdeployment_v1alpha1.json
-apiVersion: actions.summerwind.dev/v1alpha1
-kind: RunnerDeployment
+# yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/helm.toolkit.fluxcd.io/helmrelease_v2beta1.json
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
 metadata:
-  name: home-ops
+  name: arc-home-ops
   namespace: actions-runner-system
 spec:
-  template:
+  interval: 30m
+  chart:
     spec:
-      image: ghcr.io/actions/actions-runner-controller/actions-runner-dind:v2.299.1-ubuntu-22.04
-      imagePullPolicy: IfNotPresent
-      dockerdWithinRunnerContainer: true
-      ephemeral: true
-      repository: ramblurr/home-ops
-      labels: ["self-hosted"]
-      volumeMounts:
-        - name: cache-volume
-          mountPath: /cache
-      volumes:
-        - name: cache-volume
-          persistentVolumeClaim:
-            claimName: actions-runner-controller-cache
----
-# yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/actions.summerwind.dev/horizontalrunnerautoscaler_v1alpha1.json
-apiVersion: actions.summerwind.dev/v1alpha1
-kind: HorizontalRunnerAutoscaler
-metadata:
-  name: home-ops
-  namespace: actions-runner-system
-spec:
-  scaleTargetRef:
-    name: home-ops
-  scaleUpTriggers:
-    - githubEvent:
-        workflowJob: {}
-      amount: 1
-      duration: 30m
-  minReplicas: 1
-  maxReplicas: 3
-  metrics:
-    - type: TotalNumberOfQueuedAndInProgressWorkflowRuns
-      repositoryNames: ["home-ops"]
+      chart: gha-runner-scale-set
+      version: 0.5.0
+      sourceRef:
+        kind: HelmRepository
+        name: actions-runner-controller
+        namespace: flux-system
+  maxHistory: 2
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    runnerScaleSetName: arc-runner-set-home-ops
+    githubConfigUrl: https://github.com/ramblurr/home-ops
+    minRunners: 0
+    maxRunners: 2
+    containerMode:
+      type: dind
+    template:
+      spec:
+        containers:
+          - name: runner
+            image: ghcr.io/onedr0p/github-actions-runner:rolling@sha256:b595cf0735825bfb5f2da427da993b128b64f10cd3d8e5631a0e67546155f1eb
+  valuesFrom:
+    - kind: Secret
+      name: actions-runner-controller-auth-secret
+      valuesKey: github_app_id
+      targetPath: githubConfigSecret.github_app_id
+    - kind: Secret
+      name: actions-runner-controller-auth-secret
+      valuesKey: github_app_installation_id
+      targetPath: githubConfigSecret.github_app_installation_id
+    - kind: Secret
+      name: actions-runner-controller-auth-secret
+      valuesKey: github_app_private_key
+      targetPath: githubConfigSecret.github_app_private_key
