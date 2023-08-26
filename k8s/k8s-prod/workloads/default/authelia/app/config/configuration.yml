@@ -31,6 +31,10 @@ access_control:
     - domain: ["search.${SECRET_DOMAIN}"]
       resources: ["^/opensearch.xml([?].*)?$", "^/autocompleter([?].*)?$"]
       policy: bypass
+    - domain: ["search.${SECRET_DOMAIN}"]
+      networks:
+        - internal
+      policy: bypass
     - domain: ["jelly"]
       resources: ["^/metrics.*$"]
       policy: deny
