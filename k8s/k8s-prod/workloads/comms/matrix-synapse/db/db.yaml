@@ -48,8 +48,13 @@ spec:
       repos:
         - name: repo1
           schedules:
-            full: 0 */6 * * *
+            full: "0 */6 * * *"
+            differential: "0 1 * * 1-6"
           s3:
             bucket: k8s-prod-crunchy-postgres
             endpoint: ${SECRET_S3_ENDPOINT}
             region: us-east-1
+      manual:
+        repoName: repo1
+        options:
+          - --type=full
