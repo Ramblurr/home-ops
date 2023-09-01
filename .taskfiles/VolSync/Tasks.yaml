@@ -2,22 +2,24 @@
 version: "3"
 
 x-task-vars: &task-vars
-  rsrc: "{{.rsrc}}"
-  controller: "{{.controller}}"
-  namespace: "{{.namespace}}"
-  claim: "{{.claim}}"
-  ts: "{{.ts}}"
-  kustomization: "{{.kustomization}}"
+  rsrc: '{{.rsrc}}'
+  controller: '{{.controller}}'
+  namespace: '{{.namespace}}'
+  claim: '{{.claim}}'
+  ts: '{{.ts}}'
+  kustomization: '{{.kustomization}}'
+  previous: '{{.previous}}'
 
 vars:
-  destinationTemplate: "{{.PROJECT_DIR}}/.taskfiles/volsync/ReplicationDestination.tmpl.yaml"
-  wipeJobTemplate: "{{.PROJECT_DIR}}/.taskfiles/volsync/WipeJob.tmpl.yaml"
-  waitForJobScript: "{{.PROJECT_DIR}}/.taskfiles/_scripts/wait-for-k8s-job.sh"
-  listJobTemplate: "{{.PROJECT_DIR}}/.taskfiles/volsync/ListJob.tmpl.yaml"
-  unlockJobTemplate: "{{.PROJECT_DIR}}/.taskfiles/volsync/UnlockJob.tmpl.yaml"
+  destinationTemplate: "{{.ROOT_DIR}}/.taskfiles/VolSync/ReplicationDestination.tmpl.yaml"
+  wipeJobTemplate: "{{.ROOT_DIR}}/.taskfiles/VolSync/WipeJob.tmpl.yaml"
+  waitForJobScript: "{{.ROOT_DIR}}/.taskfiles/VolSync/wait-for-job.sh"
+  listJobTemplate: "{{.ROOT_DIR}}/.taskfiles/VolSync/ListJob.tmpl.yaml"
+  unlockJobTemplate: "{{.ROOT_DIR}}/.taskfiles/VolSync/UnlockJob.tmpl.yaml"
   ts: '{{now | date "150405"}}'
 
 tasks:
+
   list:
     desc: List all snapshots taken by restic for a given ReplicationSource (ex. task volsync:list rsrc=plex [namespace=default])
     silent: true
@@ -61,7 +63,8 @@ tasks:
       - kubectl -n {{.namespace}} patch replicationsources {{.rsrc}} --type merge -p '{"spec":{"trigger":{"manual":"{{.ts}}"}}}'
       - bash {{.waitForJobScript}} volsync-src-{{.rsrc}} {{.namespace}}
       - kubectl -n {{.namespace}} wait job/volsync-src-{{.rsrc}} --for condition=complete --timeout=120m
-      # TODO: Error from server (NotFound): jobs.batch "volsync-src-zzztest" not found
+      # TODO: Find a way to output logs
+      # Error from server (NotFound): jobs.batch "volsync-src-zzztest" not found
       # - kubectl -n {{.namespace}} logs job/volsync-src-{{.rsrc}}
     vars:
       rsrc: '{{ or .rsrc (fail "ReplicationSource `rsrc` is required") }}'
@@ -103,10 +106,12 @@ tasks:
       controller:
         sh: |
           app=$(kubectl -n {{.namespace}} get persistentvolumeclaim {{.claim}} -o jsonpath="{.metadata.labels.app\.kubernetes\.io/name}")
-          if [[ -n $(kubectl -n {{.namespace}} get deployment --no-headers -l "app.kubernetes.io/name=$app") ]]; then
-            echo "deployments.apps/$app" && exit 0
+          if kubectl -n {{ .namespace }} get deployment.apps/$app >/dev/null 2>&1 ; then
+            echo "deployment.apps/$app"
+          else
+            echo "statefulset.apps/$app"
           fi
-          echo "statefulsets.apps/$app"
+      previous: "{{.previous | default 2}}"
     env: *task-vars
     preconditions:
       - sh: test -f {{.wipeJobTemplate}}
