@@ -21,6 +21,8 @@ _... managed by Flux, Renovate and GitHub Actions_ :robot:
 
 👋 Welcome to my Home Operations repository. This is a mono repository for my home office infrastructure. I try to adhere to Infrastructure as Code (IaC) and GitOps practices using the tools like [Ansible](https://www.ansible.com/), [Terraform](https://www.terraform.io/), [Kubernetes](https://kubernetes.io/), [Flux](https://github.com/fluxcd/flux2), [Renovate](https://github.com/renovatebot/renovate) and [GitHub Actions](https://github.com/features/actions).
 
+Also check out [ramblurr/nixcfg](https://github.com/ramblurr/nixcfg) for my NixOS configuration for various hosts.
+
 ---
 
 ### 📖 Docs
