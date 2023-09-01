@@ -971,6 +971,10 @@ set firewall name primary-lan rule 4 destination port 'ssh'
 set firewall name primary-lan rule 4 protocol 'tcp_udp'
 set firewall name primary-lan rule 4 source group address-group 'admin'
 
+set firewall name primary-lan rule 5 action 'accept'
+set firewall name primary-lan rule 5 description 'Rule: accept_icmp'
+set firewall name primary-lan rule 5 protocol 'icmp'
+
 # From PRIMARY to LOCAL
 set firewall name primary-local default-action 'drop'
 set firewall name primary-local description 'From PRIMARY to LOCAL'

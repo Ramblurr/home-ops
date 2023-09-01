@@ -132,6 +132,9 @@ set firewall group address-group admin address '10.9.6.15'
 set firewall group address-group admin address '100.108.66.109'
 set firewall group address-group admin address '100.78.82.102'
 set firewall group address-group admin address '10.9.4.27'
+set firewall group address-group admin address '10.9.4.3' # quine-prim
+set firewall group address-group admin address '10.9.8.33' # quine-mgmt
+
 
 set firewall group address-group kde-connect-devices address '192.168.1.83'
 set firewall group address-group kde-connect-devices address '192.168.1.82'

@@ -191,6 +191,8 @@ set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 range 0 s
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 range 0 stop '10.9.7.254'
 
 
+set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping quine ip-address '10.9.4.3'
+set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping quine mac-address 'c8:7f:54:6f:77:02'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping dns2-rpi ip-address '10.9.4.4'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping dns2-rpi mac-address 'b8:27:eb:53:bc:5e'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping mali-prim ip-address '10.9.4.10'
@@ -248,6 +250,7 @@ set service dhcp-server shared-network-name MGMT subnet 10.9.8.0/23 name-server 
 set service dhcp-server shared-network-name MGMT subnet 10.9.8.0/23 range 0 start '10.9.9.200'
 set service dhcp-server shared-network-name MGMT subnet 10.9.8.0/23 range 0 stop '10.9.9.254'
 
+
 set service dhcp-server shared-network-name MGMT subnet 10.9.8.0/23 static-mapping mali-ipmi ip-address '10.9.8.2'
 set service dhcp-server shared-network-name MGMT subnet 10.9.8.0/23 static-mapping mali-ipmi mac-address '00:25:90:bb:79:e9'
 #set service dhcp-server shared-network-name MGMT subnet 10.9.8.0/23 static-mapping mali-mgmt ip-address '10.9.8.3'
@@ -264,6 +267,8 @@ set service dhcp-server shared-network-name MGMT subnet 10.9.8.0/23 static-mappi
 set service dhcp-server shared-network-name MGMT subnet 10.9.8.0/23 static-mapping peirce-mgmt mac-address 'a2:87:87:15:2c:f3'
 set service dhcp-server shared-network-name MGMT subnet 10.9.8.0/23 static-mapping debord-mgmt ip-address '10.9.8.21'
 set service dhcp-server shared-network-name MGMT subnet 10.9.8.0/23 static-mapping debord-mgmt mac-address 'ca:f3:05:c0:bc:6a'
+set service dhcp-server shared-network-name MGMT subnet 10.9.8.0/23 static-mapping quine-mgmt ip-address '10.9.8.83'
+set service dhcp-server shared-network-name MGMT subnet 10.9.8.0/23 static-mapping quine-mgmt mac-address 'c8:7f:54:6f:77:02'
 set service dhcp-server shared-network-name MGMT subnet 10.9.8.0/23 static-mapping pikvm ip-address '10.9.9.11'
 set service dhcp-server shared-network-name MGMT subnet 10.9.8.0/23 static-mapping pikvm mac-address 'dc:a6:32:b4:2b:5d'
 
