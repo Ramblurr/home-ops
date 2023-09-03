@@ -1,8 +1,0 @@
----
-pgbackrest_bin_dir: /usr/bin
-pgbackrest_conf_dir: /etc
-pgbackrest_log_dir: /var/log/pgbackrest
-pgbackrest_run_dir: /var/run/pgbackrest
-pgbackrest_lib_dir: /var/lib/pgbackrest
-pgbackrest_pg_socket_dir: /var/run/postgresql
-logrotate_dir: /etc/logrotate.d

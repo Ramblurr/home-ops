@@ -4,8 +4,8 @@ proxmox_ceph_dashboard_user_password: ENC[AES256_GCM,data:xp7CeNav2Au/Ya/OIYLUGj
 ansible_python_interpreter: ENC[AES256_GCM,data:SRhKGJ6q83R/SBRf/II8vg==,iv:wIKXnVgE9sXpJ48YPCbYoopCW0CmvK5pIg0rhpmTgqk=,tag:us91F8yvqVc8Wzxrez80tw==,type:str]
 ansible_user: ENC[AES256_GCM,data:pDNcIw==,iv:hmrsXiKk02B//awMEP8DYP3EGE/DRXbSgFrj+Hq+GZk=,tag:hKARfal3XV7Qv1wG/GHruA==,type:str]
 borg_encryption_passphrase: ENC[AES256_GCM,data:dRuwHJ77Drh6/shjJoo7WCcAMtUFAHjfPT//u8VLQ5wrQG0kAGBTh9bTVimByy4fwA==,iv:9MwJK1ijXA0SbsWR56kWjwZagC6L7btWBTJnAELjE2Y=,tag:TC3VO+lBTjolEsNBCY0UOw==,type:str]
-borg_repository: ENC[AES256_GCM,data:rT92UYycZyDyTMFJcuVSXSrPct5l6FYpR8DxbUdRJdbuqokos2NNaT9dbt4GST//QPeBmbRkPDAEjDR+gc2r3ylPowtJjjiU7Lf3Kos=,iv:ScLbAJWoRJ5f/7tc7PQRczjGziWty/odOfIxtYp+IMs=,tag:eEsDjFIsXG/btPoBpvHF4g==,type:str]
-borg_ssh_key_public: ENC[AES256_GCM,data:5fsGhRLB8yEUzD1xIODVi7I27YztFSH3M3mVdmkE9Y+pvyN5jGQtPFk/nHbzIehxmlaNmH0TEEJxUG7V4ksRUnfP9nm2Qat2FkvPx/phBYMTarIgW5EDOuNwsofv838iThlCT3bO8TeQdzUrBofamvdfucZMJ1ky,iv:6ZFY6GPBhB3b6c88KKaywdxovXNl5se8jWcHsC1dvt0=,tag:z6i568zbVbfC32lI0ORfaw==,type:str]
+borg_repository: ENC[AES256_GCM,data:wHtyJsfrfXXcI9fjNH/Mat86DSqvVQ6hVPuVS4W9PgZjGoRPUPA7RCPBW1SgZnMOa9tV7Ia9diXLNAzQigja8A==,iv:MSZCZ4FjXMnymEu9PDcUi3VLpeGCr+XWrTLJtxOYcnA=,tag:X1EvigC1CGnpdfu53RRqzA==,type:str]
+borg_ssh_key_public: ENC[AES256_GCM,data:2Tv+EQe3UCddzE623ufr7jRKNmXSGN2r7UfK4vsfRz69jg8Do9ujyhVe1L55pBQH179Q4kHm5QxwO+UizEbLLZk48ViC9MbK07fN7aVVqe5AFsHbX1pSAtrsuG5WBlLpCkgr42MR,iv:sBAz4B5W410ygbeYTySoqougGAEyfw/xg6mz6qD+8ys=,tag:HcPsx/n7yu7DtdyorulkaQ==,type:str]
 borg_source_directories:
     - ENC[AES256_GCM,data:kwAaOQ==,iv:gP903xGaYQ5AHhXt8aSDSL2jlHmVaKIpLSgenYHViVU=,tag:Zwzt/C/yE+KSZoLyz7JBkg==,type:str]
     - ENC[AES256_GCM,data:dR1RbDxJ0I7Ghhqx8lG56HrLO0somQ==,iv:jWSvmdNEdBZnZUN8OotH9qJj1FIQHgziwILAv5kROpw=,tag:vSD39S8XR7AX0kT7DTLz3Q==,type:str]
@@ -96,8 +96,8 @@ sops:
             enFpTG9JQmZKSlNhK0ZrclRSOGdoQ1UKYTv/OUYk0ojImBmUraXlM2t3PxF2LfYR
             78mlGvKFkfppbupnUgbQOAjF0QJNyyoPM8d3EAFozGaA8lS3Qd4sWA==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2023-05-28T18:10:03Z"
-    mac: ENC[AES256_GCM,data:P0Psl30Jz00gYBjKE3CNZLyBOfTWRC8Kzj175U7Dq9oz8Ji0LIY+HpwCTOJ8jiwlSyWyjdRIF3mMffOJvKBgRRlqgSCl9u0/hZ/w0N52ZiuFcghKZ4fU88QXN1EjwtSFHmKeHqqW/SubrSECFEOuUOtxF6YF8moSDR83gcrBBr8=,iv:R17hFmVgn9mXdCMIZA+ijmxMCAEAEft7rtLgAyXjeaA=,tag:1zaFTmnDUIwM5Xgft/hvPw==,type:str]
+    lastmodified: "2023-09-03T12:40:26Z"
+    mac: ENC[AES256_GCM,data:t3b+ePG3La3XVZRJTcayvcfZ09a+fbAePOENJ8xQh57RZnCO84USXjJTd+wwbSvIv6GXT1peT3uaQC/8CS06qmR0s5HW96eIWJM1tR3WP7gT08qxr16fZBMFCQpb0e4Udu/Dz3rdeZVhAs/Qc//kk27XVNY/Hif+DAGVOlWgdyM=,iv:+2kzCSIZ36UhpbOh+6rtKerlfVZumxxki9p3CVDpRYE=,tag:Silp46T/chz2TqyS6QB44Q==,type:str]
     pgp:
         - created_at: "2021-08-18T15:21:28Z"
           enc: |-

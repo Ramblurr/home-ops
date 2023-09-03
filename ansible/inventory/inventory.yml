@@ -5,30 +5,12 @@ all:
       children:
         truenas:
         jails:
-    centos:
-      vars:
-        ansible_user: admin
-      children:
-        container_hosts:
-    fedora:
-      vars:
-        ansible_user: fedora
-    debian:
-      vars:
-        ansible_user: debian
-      hosts:
-        matrix.int.socozy.casa:
-    ubuntu:
-      vars:
-        ansible_user: ubuntu
     lxc:
       vars:
         ansible_user: root
         security_ssh_permit_root_login: "yes"
       hosts:
         tailscale0.int.socozy.casa:
-        matrix.int.socozy.casa:
-          ip_address_prim: 10.9.4.28
     proxmox_creds:
       hosts:
         localhost:
@@ -67,25 +49,7 @@ all:
         cluster-prod.mgmt.socozy.casa:
     truenas:
       hosts:
-        mali.int.socozy.casa:
         ludwig.int.socozy.casa:
-    jails:
-      vars:
-        ansible_user: ansible
-      hosts:
-        borgbackup-host.int.socozy.casa:
-          jail_cidr: 10.9.4.21/23
-    container_hosts:
-      hosts:
-        container0.mgmt.socozy.casa:
-          ansible_ssh_host: 10.9.4.30
-          container_node_mgmt_cidr: 10.9.8.30/23
-          container_node_prim_cidr: 10.9.4.30/22
-          container_node_data_cidr: 10.9.10.30/23
-        container1.mgmt.socozy.casa:
-          container_node_mgmt_cidr: 10.9.8.31/23
-          container_node_prim_cidr: 10.9.4.31/22
-          container_node_data_cidr: 10.9.10.31/23
     rpi:
       vars:
         ansible_user: pi

@@ -13,3 +13,4 @@ cidr_suffix: 23
 proxmox_10gbe_iface: enp6s0
 proxmox_1gbe_iface: eno1
 node_exporter_version: latest
+borgmatic_relocated_repo_access_is_ok: true

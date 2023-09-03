@@ -30,6 +30,7 @@
     group: root
     content: |
       {{ borg_ssh_key_private }}
+
 - name: install known host
   ansible.builtin.known_hosts:
     path: /etc/ssh/ssh_known_hosts
@@ -51,5 +52,3 @@
   ansible.builtin.shell: borgmatic -v 1 init --encryption repokey-blake2
   register: borg_init
   when: borg_check.rc == 1
-
-...

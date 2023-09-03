@@ -135,6 +135,7 @@
 - name: install borg backup
   ansible.builtin.import_tasks: ./borg-setup.yml
   when: proxmox_borg_enabled
+  tags: [borg-setup]
 
 - name: configure ceph
   ansible.builtin.import_tasks: ./ceph.yml

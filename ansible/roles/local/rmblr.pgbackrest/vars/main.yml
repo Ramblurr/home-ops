@@ -1,2 +1,0 @@
----
-pgbackrest_conf_file: "{{ pgbackrest_conf_dir }}/pgbackrest.conf"
