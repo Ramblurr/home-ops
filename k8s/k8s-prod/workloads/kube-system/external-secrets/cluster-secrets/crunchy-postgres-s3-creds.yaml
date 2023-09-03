@@ -25,8 +25,8 @@ spec:
         data:
           s3.conf: |
             [global]
-            repo1-s3-key='{{ .AWS_ACCESS_KEY_ID }}'
-            repo1-s3-key-secret='{{ .AWS_SECRET_ACCESS_KEY }}'
+            repo1-s3-key={{ .AWS_ACCESS_KEY_ID }}
+            repo1-s3-key-secret={{ .AWS_SECRET_ACCESS_KEY }}
     dataFrom:
       - extract:
           key: minio-crunchy-postgres
