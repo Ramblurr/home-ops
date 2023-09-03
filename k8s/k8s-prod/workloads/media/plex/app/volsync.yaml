@@ -32,7 +32,7 @@ spec:
   trigger:
     schedule: "0 */12 * * *"
   restic:
-    cacheCapacity: 3G
+    cacheCapacity: 8G
     copyMethod: Snapshot
     pruneIntervalDays: 14
     repository: plex-restic-secret
