@@ -298,13 +298,13 @@ controlPlane:
         apiServer:
           admissionControl: []
           extraArgs:
-            feature-gates: MixedProtocolLBService=true,EphemeralContainers=True
+            feature-gates: MixedProtocolLBService=true
         etcd:
           # TODO(future): change to `advertisedSubnets`? ref: https://github.com/siderolabs/talos/pull/6073
           subnet: "10.9.8.0/23"
         controllerManager:
           extraArgs:
-            feature-gates: MixedProtocolLBService=true,EphemeralContainers=True
+            feature-gates: MixedProtocolLBService=true
         discovery:
           registries:
             service:
@@ -312,10 +312,10 @@ controlPlane:
         proxy:
           disabled: true
           extraArgs:
-            feature-gates: MixedProtocolLBService=true,EphemeralContainers=True
+            feature-gates: MixedProtocolLBService=true
         scheduler:
           extraArgs:
-            feature-gates: MixedProtocolLBService=true,EphemeralContainers=True
+            feature-gates: MixedProtocolLBService=true
       machine:
         files:
           - content: |

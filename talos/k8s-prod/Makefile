@@ -126,4 +126,4 @@ upgrade:
 	${TC} upgrade --wait --nodes 10.9.9.134 --image ${TALOS_IMAGE}
 
 upgrade-k8s:
-	${TC} --nodes 10.9.9.120  upgrade-k8s --to 1.27.4 --dry-run
+	${TC} --nodes 10.9.9.120  upgrade-k8s --to 1.27.4

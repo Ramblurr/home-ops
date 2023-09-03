@@ -113,4 +113,4 @@ upgrade:
 {% endfor %}
 
 upgrade-k8s:
-	${TC} --nodes {{ cluster_apiserver_addr }}  upgrade-k8s --to {{ cluster_k8s_version | replace("v", "") }} --dry-run
+	${TC} --nodes {{ cluster_apiserver_addr }}  upgrade-k8s --to {{ cluster_k8s_version | replace("v", "") }}
