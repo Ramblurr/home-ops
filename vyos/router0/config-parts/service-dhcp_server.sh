@@ -31,7 +31,11 @@ set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mappi
 set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping octoprint ip-address '10.8.50.52'
 set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping octoprint mac-address 'e4:5f:01:a3:5c:2a'
 set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping ovos-kitchen-sat ip-address '10.8.50.53'
-set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping ovos-kitchen-sat mac-address 'e4:5f:01:7e:3d:21'
+set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping ovos-kitchen-sat mac-address 'b8:27:eb:f3:e1:1d'
+set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping ovos-kitchen ip-address '10.8.50.54'
+set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping ovos-kitchen mac-address 'e4:5f:01:84:32:20'
+
+# rpizero2 with yellow headers 'e4:5f:01:7e:3d:21'
 
 
 # not VLAN
@@ -234,6 +238,10 @@ set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-ma
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping brother-printer mac-address 'b4:22:00:40:d6:9a'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping phoniebox ip-address '10.9.6.26'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping phoniebox mac-address 'dc:a6:32:40:33:ec'
+set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping ovos-kitchen-prim ip-address '10.9.6.27'
+set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping ovos-kitchen-prim mac-address 'e4:5f:01:84:32:20'
+set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping ovos-kitchen-sat-prim ip-address '10.9.6.29'
+set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping ovos-kitchen-sat-prim mac-address 'b8:27:eb:f3:e1:1d'
 
 
 #container0
