@@ -915,6 +915,10 @@ set firewall name primary-iot rule 4 destination group port-group 'octoprint'
 set firewall name primary-iot rule 4 destination group address-group 'octoprint'
 set firewall name primary-iot rule 4 protocol 'tcp_udp'
 set firewall name primary-iot rule 4 source group address-group 'homeassistant'
+set firewall name primary-iot rule 5 action 'accept'
+set firewall name primary-iot rule 5 description 'Rule: accept_admin_all'
+set firewall name primary-iot rule 5 protocol 'tcp_udp'
+set firewall name primary-iot rule 5 source group address-group 'admin'
 
 # From PRIMARY to NOT
 set firewall name primary-not default-action 'accept'

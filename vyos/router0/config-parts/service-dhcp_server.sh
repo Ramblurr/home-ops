@@ -30,6 +30,9 @@ set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mappi
 set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping fire-tablet-dashboard mac-address '48:78:5e:d2:2f:53'
 set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping octoprint ip-address '10.8.50.52'
 set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping octoprint mac-address 'e4:5f:01:a3:5c:2a'
+set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping ovos-kitchen-sat ip-address '10.8.50.53'
+set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping ovos-kitchen-sat mac-address 'e4:5f:01:7e:3d:21'
+
 
 # not VLAN
 set service dhcp-server shared-network-name NOT authoritative
