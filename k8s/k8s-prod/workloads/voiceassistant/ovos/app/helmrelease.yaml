@@ -35,33 +35,27 @@ spec:
       repository: docker.io/smartgic/ovos-messagebus
       tag: alpha
     env: &base-env
-      TZ: $TZ
-      XDG_RUNTIME_DIR: $XDG_RUNTIME_DIR
-    initContainers:
-      01-init-db:
-        image: docker.io/library/alpine:20230329
-        imagePullPolicy: IfNotPresent
-        command:
-          - /bin/sh
-          - -ec
-          - |
-            cd /home/ovos && mkdir -p ovos/config ovos/share ovos/tmp hivemind/config hivemind/share
-        volumeMounts:
-          - mountPath: /home/ovos
-            name: ovos-data
-            readOnly: false
+      TZ: Europe/Berlin
+      HOME: /home/ovos
+      #XDG_RUNTIME_DIR: $XDG_RUNTIME_DIR
     sidecars:
       ovos-core:
         image: docker.io/smartgic/ovos-core:alpha
         imagePullPolicy: IfNotPresent
         env: *base-env
         volumeMounts: &base-mount
-          - name: ovos-data
-            mountPath: /home/ovos
-            readOnly: false
+          - &mycroft-config
+            name: ovos-mycroft-config
+            mountPath: /home/ovos/.config/mycroft
+            subPath: mycroft/config
+          - &mycroft-share
+            name: ovos-mycroft-config
+            mountPath: /home/ovos/.local/share/mycroft
+            subPath: mycroft/share
           - name: ovos-tmp
             mountPath: /tmp/mycroft
-            readOnly: false
+          - name: ovos-nltk-data
+            mountPath: /home/ovos/nltk_data
       #ovos-phal:
       #  image: docker.io/smartgic/ovos-phal:alpha
       #  imagePullPolicy: IfNotPresent
@@ -78,25 +72,42 @@ spec:
         imagePullPolicy: IfNotPresent
         env: *base-env
         volumeMounts: *base-mount
-      hivemind_core:
+
+      hivemind-core:
         image: docker.io/smartgic/ovos-hivemind-listener:alpha
         imagePullPolicy: IfNotPresent
         env: *base-env
-        volumeMounts: *base-mount
-      hivemind_cli:
+        volumeMounts: &hivemind-mount
+          - name: ovos-mycroft-config
+            mountPath: /home/ovos/.config/hivemind
+            subPath: hivemind/config
+          - name: ovos-mycroft-config
+            mountPath: /home/ovos/.local/share/hivemind
+            subPath: hivemind/share
+          - name: ovos-tmp
+            mountPath: /tmp/mycroft
+      hivemind-cli:
         image: docker.io/smartgic/ovos-hivemind-cli:alpha
         imagePullPolicy: IfNotPresent
         env: *base-env
-        volumeMounts: *base-mount
+        volumeMounts: *hivemind-mount
     persistence:
-      ovos-data:
+      ovos-mycroft-config:
         enabled: true
-        existingClaim: ovos-data
-        mountPath: /home/ovos
+        existingClaim: ovos-data-nfs
+        subPath:
+          - path: ovos/config
+            mountPath: /home/ovos/.config/mycroft
+          - path: ovos/share
+            mountPath: /home/ovos/.local/share/mycroft
       ovos-tmp:
         enabled: true
         type: emptyDir
         mountPath: /tmp/mycroft
+      ovos-nltk-data:
+        enabled: true
+        type: emptyDir
+        mountPath: /home/ovos/nltk_data
     service:
       main:
         ports:
