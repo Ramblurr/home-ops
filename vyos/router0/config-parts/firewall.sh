@@ -97,6 +97,11 @@ set firewall group address-group k8s_cluster_prod_ingress_all address '10.10.12.
 set firewall group address-group k8s_cluster_prod_ingress_all address '10.10.12.3'
 set firewall group address-group k8s_cluster_prod_postgres address '10.10.12.2'
 
+set firewall group address-group ovos address '10.8.50.55'
+set firewall group address-group ovos address '10.9.6.30'
+set firewall group address-group ovos address '10.8.50.54'
+set firewall group address-group ovos address '10.9.6.27'
+
 set firewall group address-group nas-prim address '10.9.4.10'
 
 set firewall group address-group printers address '10.9.5.1'
@@ -186,6 +191,8 @@ set firewall group network-group cloudflare-ipv4 network '172.64.0.0/13'
 set firewall group network-group cloudflare-ipv4 network '131.0.72.0/22'
 
 # Port groups
+set firewall group port-group roon-proxy port '8510'
+set firewall group port-group roon-proxy port '443'
 set firewall group port-group minio port '9100'
 set firewall group port-group wireguard port '51820'
 set firewall group port-group bluesound port '80'

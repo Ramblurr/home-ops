@@ -148,6 +148,12 @@ set firewall name iot-mgmt rule 1 destination group address-group 'k8s_cluster_p
 set firewall name iot-mgmt rule 1 destination port 'http,https'
 set firewall name iot-mgmt rule 1 protocol 'tcp'
 
+set firewall name iot-mgmt rule 2 action 'accept'
+set firewall name iot-mgmt rule 2 description 'Rule: accept_ovos_k8s'
+set firewall name iot-mgmt rule 2 protocol 'tcp_udp'
+set firewall name iot-mgmt rule 2 destination group port-group 'roon-proxy'
+set firewall name iot-mgmt rule 2 source group address-group 'ovos'
+
 # From IOT to SERVICES
 set firewall name iot-services default-action 'drop'
 set firewall name iot-services description 'From IOT to SERVICES'
@@ -1122,6 +1128,12 @@ set firewall name primary-mgmt rule 13 action 'accept'
 set firewall name primary-mgmt rule 13 description 'Rule: accept_admin'
 set firewall name primary-mgmt rule 13 protocol 'tcp_udp'
 set firewall name primary-mgmt rule 13 source group address-group 'admin'
+
+set firewall name primary-mgmt rule 14 action 'accept'
+set firewall name primary-mgmt rule 14 description 'Rule: accept_ovos_k8s'
+set firewall name primary-mgmt rule 14 protocol 'tcp_udp'
+set firewall name primary-mgmt rule 14 destination group port-group 'roon-proxy'
+set firewall name primary-mgmt rule 14 source group address-group 'ovos'
 
 # From PRIMARY to SERVICES
 set firewall name primary-services default-action 'accept'

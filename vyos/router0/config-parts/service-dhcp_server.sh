@@ -34,6 +34,10 @@ set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mappi
 set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping ovos-kitchen-sat mac-address 'b8:27:eb:f3:e1:1d'
 set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping ovos-kitchen ip-address '10.8.50.54'
 set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping ovos-kitchen mac-address 'e4:5f:01:84:32:20'
+set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping markii-wlan ip-address '10.8.50.55'
+set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping markii-wlan mac-address 'e4:5f:01:b8:07:0c'
+
+
 
 # rpizero2 with yellow headers 'e4:5f:01:7e:3d:21'
 
@@ -242,6 +246,10 @@ set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-ma
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping ovos-kitchen-prim mac-address 'e4:5f:01:84:32:20'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping ovos-kitchen-sat-prim ip-address '10.9.6.29'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping ovos-kitchen-sat-prim mac-address 'b8:27:eb:f3:e1:1d'
+set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping markii-wired ip-address '10.9.6.30'
+set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping markii-wired mac-address 'e4:5f:01:b8:07:0b'
+
+
 
 
 #container0

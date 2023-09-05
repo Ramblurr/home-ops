@@ -12,7 +12,7 @@ _... managed by Flux, Renovate and GitHub Actions_ :robot:
 
 [![k8s@home](https://img.shields.io/badge/-%20k8s%40home-blue?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/k8s-at-home)
 [![selfhosted.show](https://img.shields.io/badge/-%20self--hosted-orange?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/U3Gvr54VRp)
-[![Kubernetes](https://img.shields.io/badge/v1.26-blue?style=for-the-badge&logo=kubernetes&logoColor=white)](https://www.talos.dev/)
+[![Kubernetes](https://img.shields.io/badge/v1.27-blue?style=for-the-badge&logo=kubernetes&logoColor=white)](https://www.talos.dev/)
 [![Documentation](https://img.shields.io/badge/documentation-green?&style=for-the-badge)][0]
 
 
@@ -42,10 +42,11 @@ The alternative solution to these two problems would be to host a Kubernetes clu
 | [Cloudflare](https://www.cloudflare.com/)    | DNS management, Argo Tunnels and R2                                        | ~$30/yr        |
 | [GitHub](https://github.com/)                | Hosting this repository and continuous integration/deployments             | Free           |
 | [Migadu](https://migadu.com/)                | Email hosting, personal, family, and business                              | ~$90/yr        |
-| [NextDNS](https://nextdns.io/)               | My downstream DNS server which includes AdBlocking                           | ~$20/yr        |
+| [NextDNS](https://nextdns.io/)               | My downstream DNS server which includes AdBlocking                         | ~$20/yr        |
 | [Pushover](https://pushover.net/)            | Kubernetes Alerts and application notifications                            | Free           |
 | [Terraform Cloud](https://www.terraform.io/) | Storing Terraform state                                                    | Free           |
 |                                              |                                                                            | Total: ~$18/mo |
+
 ---
 ## ⛵ Kubernetes
 
@@ -71,6 +72,7 @@ NAS](https://notes.binaryelysium.com/HomeOps/NAS/) for (NFS) file storage.
 - [rook](https://github.com/rook/rook): distributed block storage for persistent storage. I use a Ceph cluster external to the cluster, running on Proxmox.
 - [sops](https://toolkit.fluxcd.io/guides/mozilla-sops/): managed secrets for Kubernetes, Ansible and Terraform which are commited to Git
 - [volsync](https://github.com/backube/volsync) and [snapscheduler](https://github.com/backube/snapscheduler): backup and recovery of persistent volume claims
+
 ### GitOps
 
 [Flux](https://github.com/fluxcd/flux2) watches my [k8s/k8s-prod](./k8s/k8s-prod/) folder (see Directories below) and makes the changes to my cluster based on the YAML manifests.
@@ -124,6 +126,11 @@ Thanks to all the people who donate their time to the [Kubernetes @Home](https:/
 
 And also a big thanks to the great community from the [Self-Hosted Podcast](https://www.jupiterbroadcasting.com/show/self-hosted/) (and Jupiter Broadcasting in general!). It's a friendly community of FOSS, Linux, Self-Hosting advocates.
 
+---
+
+## 🤔 Still interested?
+
+[:arrow_right: Go check out my docs site!](https://notes.binaryelysium.com/HomeOps) It has tons more info.
 
 ---
 
