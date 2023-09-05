@@ -4,17 +4,18 @@ kind: Kustomization
 resources:
   - actions-runner-system
   - cert-manager
+  - comms
   - database
   - default
+  - downloads
   - flux-system
   - kube-system
+  - media
   - monitoring
   - networking
   - qemu-guest-agent
   - rook-ceph
+  - voiceassistant
   - volsync
-  - work
-  - media
   - vpn
-  - downloads
-  - comms
+  - work
