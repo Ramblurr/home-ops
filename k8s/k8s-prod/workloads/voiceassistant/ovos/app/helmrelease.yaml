@@ -152,7 +152,7 @@ spec:
         env: *base-env
         volumeMounts: *skill-mount
       ramblurr-skill-roon:
-        image: ghcr.io/ramblurr/ovos-skill-roon:dev@sha256:b78694e9c6048aba43f84dd7d63a1f8648307e17f399c0bf0ec28437fd929deb
+        image: ghcr.io/ramblurr/ovos-skill-roon:dev@sha256:90f539dc3a8e04c8bf34657f442b573eb9c31caca7dcda573bbea1ccd430d4de
         imagePullPolicy: IfNotPresent
         args: [skill]
         env:
@@ -161,7 +161,7 @@ spec:
           ROON_PUBSUB_SOCK: tcp://127.0.0.1:5655
         volumeMounts: *skill-mount
       roon-proxy:
-        image: ghcr.io/ramblurr/ovos-skill-roon:dev@sha256:b78694e9c6048aba43f84dd7d63a1f8648307e17f399c0bf0ec28437fd929deb
+        image: ghcr.io/ramblurr/ovos-skill-roon:dev@sha256:90f539dc3a8e04c8bf34657f442b573eb9c31caca7dcda573bbea1ccd430d4de
         imagePullPolicy: IfNotPresent
         args: [server]
         env:
