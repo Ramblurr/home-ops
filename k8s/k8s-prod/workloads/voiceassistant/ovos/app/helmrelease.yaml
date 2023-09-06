@@ -46,12 +46,16 @@ spec:
         volumeMounts: &base-mount
           - &mycroft-config
             name: ovos-mycroft-config
-            mountPath: /home/ovos/.config/mycroft
-            subPath: mycroft/config
+            mountPath: /home/ovos/.config
+            subPath: config
           - &mycroft-share
             name: ovos-mycroft-config
-            mountPath: /home/ovos/.local/share/mycroft
-            subPath: mycroft/share
+            mountPath: /home/ovos/.local/share
+            subPath: share
+          - &mycroft-state
+            name: ovos-mycroft-config
+            mountPath: /home/ovos/.local/state
+            subPath: state
           - name: ovos-tmp
             mountPath: /tmp/mycroft
           - name: ovos-nltk-data
@@ -79,11 +83,14 @@ spec:
         env: *base-env
         volumeMounts: &hivemind-mount
           - name: ovos-mycroft-config
-            mountPath: /home/ovos/.config/hivemind
-            subPath: hivemind/config
+            mountPath: /home/ovos/.config
+            subPath: config
           - name: ovos-mycroft-config
-            mountPath: /home/ovos/.local/share/hivemind
-            subPath: hivemind/share
+            mountPath: /home/ovos/.local/share
+            subPath: share
+          - name: ovos-mycroft-config
+            mountPath: /home/ovos/.local/state
+            subPath: state
           - name: ovos-tmp
             mountPath: /tmp/mycroft
       hivemind-cli:
@@ -96,10 +103,12 @@ spec:
         enabled: true
         existingClaim: ovos-data-nfs
         subPath:
-          - path: ovos/config
-            mountPath: /home/ovos/.config/mycroft
-          - path: ovos/share
-            mountPath: /home/ovos/.local/share/mycroft
+          - path: config
+            mountPath: /home/ovos/.config
+          - path: share
+            mountPath: /home/ovos/.local/share
+          - path: state
+            mountPath: /home/ovos/.local/state
       ovos-tmp:
         enabled: true
         type: emptyDir
