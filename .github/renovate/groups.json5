@@ -1,85 +1,94 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  packageRules: [
-        {
-      "description": "Flux Group",
-      "groupName": "Flux",
-      "matchPackagePatterns": ["flux"],
-      "matchDatasources": ["docker", "github-tags"],
-      "versioning": "semver",
-      "group": {
-        "commitMessageTopic": "{{{groupName}}} group"
-      },
-      "separateMinorPatch": true
-    },
-      {
-      "description": "Rook-Ceph Group",
-      "groupName": "Rook-Ceph",
-      "matchPackagePatterns": ["rook.ceph"],
-      "matchDatasources": ["helm"],
-      "group": {
-        "commitMessageTopic": "{{{groupName}}} group"
-      },
-      "separateMinorPatch": true
-    },
-      {
-      "description": "Immich Group",
-      "groupName": "Immich",
-      "matchPackagePatterns": ["immich"],
-      "matchDatasources": ["docker"],
-      "group": {
-        "commitMessageTopic": "{{{groupName}}} group"
-      },
-      "separateMinorPatch": true
-    },
+  "packageRules": [
     {
-      description: "Cilium image and chart",
-      groupName: "cilium",
-      matchPackageNames: [
-        "quay.io/cilium/cilium",
-        "quay.io/cilium/operator-generic",
-        "cilium",
-      ],
-      matchDatasources: ["helm", "docker"],
-      group: {
-        commitMessageTopic: "{{{groupName}}} group"
-      },
-      separateMinorPatch: true,
-    },
-      {
-      "description": "External Snapshotter Group",
-      "groupName": "External Snapshotter",
-      "matchPackageNames": ["snapshot-controller", "snapshot-validation-webhook"],
-      "matchDatasources": ["helm"],
-      "group": {
-        "commitMessageTopic": "{{{groupName}}} group"
-      },
-      "separateMinorPatch": true
-    },
+    "description": "Voice Assistant Group",
+    "groupName": "Voice Assistant",
+    "matchDatasources": ["docker", "github-tags", "helm"],
+    "additionalBranchPrefix": "k8s/k8s-prod/workloads/voiceassistant/",
+    "group": {
+      "commitMessageTopic": "{{{groupName}}} group"
+    }
+  },
     {
-      description: "Thanos image and chart - versions do not match",
-      groupName: "Thanos",
-      matchPackagePatterns: [
-        "quay.io/thanos/thanos",
-        "thanos"
-      ],
-      matchDatasources: ["docker", "github-releases", "helm"],
-      matchUpdateTypes: ["minor", "patch"],
-      group: {
-        commitMessageTopic: "{{{groupName}}} group"
-      },
-      separateMinorPatch: false,
+    "description": "Flux Group",
+    "groupName": "Flux",
+    "matchPackagePatterns": ["flux"],
+    "matchDatasources": ["docker", "github-tags"],
+    "versioning": "semver",
+    "group": {
+      "commitMessageTopic": "{{{groupName}}} group"
     },
+    "separateMinorPatch": true
+  },
     {
-      description: "Vector image and chart - versions do not match",
-      groupName: "Vector",
-      matchPackagePatterns: ["vector"],
-      matchDatasources: ["docker", "github-releases", "helm"],
-      matchUpdateTypes: ["minor", "patch"],
-      group: {
-        commitMessageTopic: "{{{groupName}}} group"
-      },
-      separateMinorPatch: false,
+    "description": "Rook-Ceph Group",
+    "groupName": "Rook-Ceph",
+    "matchPackagePatterns": ["rook.ceph"],
+    "matchDatasources": ["helm"],
+    "group": {
+      "commitMessageTopic": "{{{groupName}}} group"
     },
-  ],
+    "separateMinorPatch": true
+  },
+    {
+    "description": "Immich Group",
+    "groupName": "Immich",
+    "matchPackagePatterns": ["immich"],
+    "matchDatasources": ["docker"],
+    "group": {
+      "commitMessageTopic": "{{{groupName}}} group"
+    },
+    "separateMinorPatch": true
+  },
+    {
+    "description": "Cilium image and chart",
+    "groupName": "cilium",
+    "matchPackageNames": [
+      "quay.io/cilium/cilium",
+      "quay.io/cilium/operator-generic",
+      "cilium"
+    ],
+    "matchDatasources": ["helm", "docker"],
+    "group": {
+      "commitMessageTopic": "{{{groupName}}} group"
+    },
+    "separateMinorPatch": true
+  },
+    {
+    "description": "External Snapshotter Group",
+    "groupName": "External Snapshotter",
+    "matchPackageNames": ["snapshot-controller", "snapshot-validation-webhook"],
+    "matchDatasources": ["helm"],
+    "group": {
+      "commitMessageTopic": "{{{groupName}}} group"
+    },
+    "separateMinorPatch": true
+  },
+    {
+    "description": "Thanos image and chart - versions do not match",
+    "groupName": "Thanos",
+    "matchPackagePatterns": [
+      "quay.io/thanos/thanos",
+      "thanos"
+    ],
+    "matchDatasources": ["docker", "github-releases", "helm"],
+    "matchUpdateTypes": ["minor", "patch"],
+    "group": {
+      "commitMessageTopic": "{{{groupName}}} group"
+    },
+    "separateMinorPatch": false
+  },
+    {
+    "description": "Vector image and chart - versions do not match",
+    "groupName": "Vector",
+    "matchPackagePatterns": ["vector"],
+    "matchDatasources": ["docker", "github-releases", "helm"],
+    "matchUpdateTypes": ["minor", "patch"],
+    "group": {
+      "commitMessageTopic": "{{{groupName}}} group"
+    },
+    "separateMinorPatch": false
+  }
+  ]
 }
