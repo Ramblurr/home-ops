@@ -807,6 +807,20 @@ set firewall name mgmt-primary rule 10 description 'Rule: accept_tailscale_udp_o
 set firewall name mgmt-primary rule 10 source port '41641,3478'
 set firewall name mgmt-primary rule 10 protocol 'udp'
 
+set firewall name mgmt-primary rule 11 action 'accept'
+set firewall name mgmt-primary rule 11 description 'Rule: accept_bluesound'
+set firewall name mgmt-primary rule 11 destination group address-group 'bluesound'
+set firewall name mgmt-primary rule 11 destination group port-group 'bluesound'
+set firewall name mgmt-primary rule 11 protocol 'tcp_udp'
+set firewall name mgmt-primary rule 11 source group address-group 'k8s_cluster_prod_nodes'
+
+set firewall name mgmt-primary rule 12 action 'accept'
+set firewall name mgmt-primary rule 12 description 'Rule: accept_roon'
+set firewall name mgmt-primary rule 12 destination group address-group 'roon'
+set firewall name mgmt-primary rule 12 destination group port-group 'roon'
+set firewall name mgmt-primary rule 12 protocol 'tcp_udp'
+set firewall name mgmt-primary rule 12 source group address-group 'k8s_cluster_prod_nodes'
+
 # From MGMT to DATA
 set firewall name mgmt-data default-action 'drop'
 set firewall name mgmt-data description 'From MGMT to DATA'
