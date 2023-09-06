@@ -137,7 +137,7 @@ spec:
         env: *base-env
         volumeMounts: *skill-mount
       ovos-skill-wolfie:
-        image: docker.io/smartgic/ovos-skill-wolfie:0.0.8a
+        image: docker.io/smartgic/ovos-skill-wolfie:alpha@sha256:4daa10e6e2fa0d269826e656f00316677d39ec27393c6bf149230fbda65b421e
         imagePullPolicy: IfNotPresent
         env: *base-env
         volumeMounts: *skill-mount
