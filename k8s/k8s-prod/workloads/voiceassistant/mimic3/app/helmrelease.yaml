@@ -25,7 +25,7 @@ spec:
   values:
     image:
       repository: ghcr.io/ramblurr/mimic3
-      tag: main
+      tag: main@sha256:e9343318a1575b7fe147efcfa0c4575bbd44f97a1c81de015705467aac374315
     podSecurityContext:
       runAsUser: 1000
       runAsGroup: 1000

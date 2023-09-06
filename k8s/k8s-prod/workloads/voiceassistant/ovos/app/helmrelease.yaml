@@ -33,14 +33,14 @@ spec:
       fsGroup: 2000
     image:
       repository: docker.io/smartgic/ovos-hivemind-listener
-      tag: alpha
+      tag: alpha@sha256:e6bb5ae307d44e30157f600cfa309b54beead27c79ee7deaae8e7b2394f20fe6
     env: &base-env
       TZ: Europe/Berlin
       HOME: /home/ovos
       #XDG_RUNTIME_DIR: $XDG_RUNTIME_DIR
     sidecars:
       ovos-core:
-        image: docker.io/smartgic/ovos-core:alpha
+        image: docker.io/smartgic/ovos-core:0.0.8a
         imagePullPolicy: IfNotPresent
         env: *base-env
         volumeMounts: &base-mount
@@ -58,17 +58,17 @@ spec:
           - name: ovos-nltk-data
             mountPath: /home/ovos/nltk_data
       ovos-messagebus:
-        image: docker.io/smartgic/ovos-messagebus:alpha
+        image: docker.io/smartgic/ovos-messagebus:0.0.8a
         imagePullPolicy: IfNotPresent
         env: *base-env
         volumeMounts: *base-mount
       ovos-cli:
-        image: docker.io/smartgic/ovos-cli:alpha
+        image: docker.io/smartgic/ovos-cli:0.0.8a
         imagePullPolicy: IfNotPresent
         env: *base-env
         volumeMounts: *base-mount
       hivemind-cli:
-        image: docker.io/smartgic/ovos-hivemind-cli:alpha
+        image: docker.io/smartgic/ovos-hivemind-cli:alpha@sha256:758b636d1f947fbae9363121f389b43072619ced480f0c82df2618dff20dff22
         imagePullPolicy: IfNotPresent
         env: *base-env
         volumeMounts: &hivemind-mount
@@ -84,7 +84,7 @@ spec:
           - name: ovos-tmp
             mountPath: /tmp/mycroft
       ovos-skill-wikipedia:
-        image: docker.io/smartgic/ovos-skill-wikipedia:alpha
+        image: docker.io/smartgic/ovos-skill-wikipedia:0.0.8a
         imagePullPolicy: IfNotPresent
         env: *base-env
         volumeMounts: &skill-mount
@@ -97,62 +97,62 @@ spec:
           - name: ovos-tmp
             mountPath: /tmp/mycroft
       ovos-skill-weather:
-        image: docker.io/smartgic/ovos-skill-weather:alpha
+        image: docker.io/smartgic/ovos-skill-weather:0.0.8a
         imagePullPolicy: IfNotPresent
         env: *base-env
         volumeMounts: *skill-mount
       ovos-skill-volume:
-        image: docker.io/smartgic/ovos-skill-volume:alpha
+        image: docker.io/smartgic/ovos-skill-volume:0.0.8a
         imagePullPolicy: IfNotPresent
         env: *base-env
         volumeMounts: *skill-mount
       ovos-skill-date-time:
-        image: docker.io/smartgic/ovos-skill-date-time:alpha
+        image: docker.io/smartgic/ovos-skill-date-time:0.0.8a
         imagePullPolicy: IfNotPresent
         env: *base-env
         volumeMounts: *skill-mount
       ovos-skill-stop:
-        image: docker.io/smartgic/ovos-skill-stop:alpha
+        image: docker.io/smartgic/ovos-skill-stop:0.0.8a
         imagePullPolicy: IfNotPresent
         env: *base-env
         volumeMounts: *skill-mount
       ovos-skill-personal:
-        image: docker.io/smartgic/ovos-skill-personal:alpha
+        image: docker.io/smartgic/ovos-skill-personal:0.0.8a
         imagePullPolicy: IfNotPresent
         env: *base-env
         volumeMounts: *skill-mount
       ovos-skill-fallback-unknown:
-        image: docker.io/smartgic/ovos-skill-fallback-unknown:alpha
+        image: docker.io/smartgic/ovos-skill-fallback-unknown:0.0.8a
         imagePullPolicy: IfNotPresent
         env: *base-env
         volumeMounts: *skill-mount
       ovos-skill-hello-world:
-        image: docker.io/smartgic/ovos-skill-hello-world:alpha
+        image: docker.io/smartgic/ovos-skill-hello-world:0.0.8a
         imagePullPolicy: IfNotPresent
         env: *base-env
         volumeMounts: *skill-mount
       ovos-skill-alerts:
-        image: docker.io/smartgic/ovos-skill-alerts:alpha
+        image: docker.io/smartgic/ovos-skill-alerts:0.0.8a
         imagePullPolicy: IfNotPresent
         env: *base-env
         volumeMounts: *skill-mount
       ovos-skill-wolfie:
-        image: docker.io/smartgic/ovos-skill-wolfie:alpha
+        image: docker.io/smartgic/ovos-skill-wolfie:0.0.8a
         imagePullPolicy: IfNotPresent
         env: *base-env
         volumeMounts: *skill-mount
       ovos-skill-jokes:
-        image: docker.io/smartgic/ovos-skill-jokes:alpha
+        image: docker.io/smartgic/ovos-skill-jokes:alpha@sha256:de04e9bc1ea9196d51dd1ae4dfda8490e9448844c5b2cad1141ee13df811da9b
         imagePullPolicy: IfNotPresent
         env: *base-env
         volumeMounts: *skill-mount
       skill-homeassistant:
-        image: ghcr.io/ramblurr/neon-homeassistant-skill:alpha
+        image: ghcr.io/ramblurr/neon-homeassistant-skill:alpha@sha256:37f83815c0f36e489e5b288e8b63c36d49143bf4d16c33f541af62bd549ed529
         imagePullPolicy: IfNotPresent
         env: *base-env
         volumeMounts: *skill-mount
       ramblurr-skill-roon:
-        image: ghcr.io/ramblurr/ovos-skill-roon:dev
+        image: ghcr.io/ramblurr/ovos-skill-roon:dev@sha256:b78694e9c6048aba43f84dd7d63a1f8648307e17f399c0bf0ec28437fd929deb
         imagePullPolicy: IfNotPresent
         args: [skill]
         env:
@@ -161,7 +161,7 @@ spec:
           ROON_PUBSUB_SOCK: tcp://127.0.0.1:5556
         volumeMounts: *skill-mount
       roon-proxy:
-        image: ghcr.io/ramblurr/ovos-skill-roon:dev
+        image: ghcr.io/ramblurr/ovos-skill-roon:dev@sha256:b78694e9c6048aba43f84dd7d63a1f8648307e17f399c0bf0ec28437fd929deb
         imagePullPolicy: IfNotPresent
         args: [server]
         env:
