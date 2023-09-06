@@ -32,7 +32,7 @@ spec:
       runAsGroup: 2000
       fsGroup: 2000
     image:
-      repository: docker.io/smartgic/ovos-messagebus
+      repository: docker.io/smartgic/ovos-hivemind-listener
       tag: alpha
     env: &base-env
       TZ: Europe/Berlin
@@ -44,41 +44,31 @@ spec:
         imagePullPolicy: IfNotPresent
         env: *base-env
         volumeMounts: &base-mount
-          - &mycroft-config
-            name: ovos-mycroft-config
+          - name: ovos-mycroft-config
             mountPath: /home/ovos/.config
             subPath: config
-          - &mycroft-share
-            name: ovos-mycroft-config
+          - name: ovos-mycroft-config
             mountPath: /home/ovos/.local/share
             subPath: share
-          - &mycroft-state
-            name: ovos-mycroft-config
+          - name: ovos-mycroft-config
             mountPath: /home/ovos/.local/state
             subPath: state
           - name: ovos-tmp
             mountPath: /tmp/mycroft
           - name: ovos-nltk-data
             mountPath: /home/ovos/nltk_data
-      #ovos-phal:
-      #  image: docker.io/smartgic/ovos-phal:alpha
-      #  imagePullPolicy: IfNotPresent
-      #  env: *base-env
-      #  volumeMounts: *base-mount
-
-      #ovos-phal-admin:
-      #  image: docker.io/smartgic/ovos-phal-admin:alpha
-      #  imagePullPolicy: IfNotPresent
-      #  env: *base-env
-      #  volumeMounts: *base-mount
+      ovos-messagebus:
+        image: docker.io/smartgic/ovos-messagebus:alpha
+        imagePullPolicy: IfNotPresent
+        env: *base-env
+        volumeMounts: *base-mount
       ovos-cli:
         image: docker.io/smartgic/ovos-cli:alpha
         imagePullPolicy: IfNotPresent
         env: *base-env
         volumeMounts: *base-mount
-
-      hivemind-core:
-        image: docker.io/smartgic/ovos-hivemind-listener:alpha
+      hivemind-cli:
+        image: docker.io/smartgic/ovos-hivemind-cli:alpha
         imagePullPolicy: IfNotPresent
         env: *base-env
         volumeMounts: &hivemind-mount
@@ -93,11 +83,91 @@ spec:
             subPath: state
           - name: ovos-tmp
             mountPath: /tmp/mycroft
-      hivemind-cli:
-        image: docker.io/smartgic/ovos-hivemind-cli:alpha
+      ovos-skill-wikipedia:
+        image: docker.io/smartgic/ovos-skill-wikipedia:alpha
         imagePullPolicy: IfNotPresent
         env: *base-env
-        volumeMounts: *hivemind-mount
+        volumeMounts: &skill-mount
+          - name: ovos-mycroft-config
+            mountPath: /home/ovos/.config
+            subPath: config
+          - name: ovos-mycroft-config
+            mountPath: /home/ovos/.local/share
+            subPath: share
+          - name: ovos-tmp
+            mountPath: /tmp/mycroft
+      ovos-skill-weather:
+        image: docker.io/smartgic/ovos-skill-weather:alpha
+        imagePullPolicy: IfNotPresent
+        env: *base-env
+        volumeMounts: *skill-mount
+      ovos-skill-volume:
+        image: docker.io/smartgic/ovos-skill-volume:alpha
+        imagePullPolicy: IfNotPresent
+        env: *base-env
+        volumeMounts: *skill-mount
+      ovos-skill-date-time:
+        image: docker.io/smartgic/ovos-skill-date-time:alpha
+        imagePullPolicy: IfNotPresent
+        env: *base-env
+        volumeMounts: *skill-mount
+      ovos-skill-stop:
+        image: docker.io/smartgic/ovos-skill-stop:alpha
+        imagePullPolicy: IfNotPresent
+        env: *base-env
+        volumeMounts: *skill-mount
+      ovos-skill-personal:
+        image: docker.io/smartgic/ovos-skill-personal:alpha
+        imagePullPolicy: IfNotPresent
+        env: *base-env
+        volumeMounts: *skill-mount
+      ovos-skill-fallback-unknown:
+        image: docker.io/smartgic/ovos-skill-fallback-unknown:alpha
+        imagePullPolicy: IfNotPresent
+        env: *base-env
+        volumeMounts: *skill-mount
+      ovos-skill-hello-world:
+        image: docker.io/smartgic/ovos-skill-hello-world:alpha
+        imagePullPolicy: IfNotPresent
+        env: *base-env
+        volumeMounts: *skill-mount
+      ovos-skill-alerts:
+        image: docker.io/smartgic/ovos-skill-alerts:alpha
+        imagePullPolicy: IfNotPresent
+        env: *base-env
+        volumeMounts: *skill-mount
+      ovos-skill-wolfie:
+        image: docker.io/smartgic/ovos-skill-wolfie:alpha
+        imagePullPolicy: IfNotPresent
+        env: *base-env
+        volumeMounts: *skill-mount
+      ovos-skill-jokes:
+        image: docker.io/smartgic/ovos-skill-jokes:alpha
+        imagePullPolicy: IfNotPresent
+        env: *base-env
+        volumeMounts: *skill-mount
+      skill-homeassistant:
+        image: ghcr.io/ramblurr/neon-homeassistant-skill:alpha
+        imagePullPolicy: IfNotPresent
+        env: *base-env
+        volumeMounts: *skill-mount
+      ramblurr-skill-roon:
+        image: ghcr.io/ramblurr/ovos-skill-roon:dev
+        imagePullPolicy: IfNotPresent
+        args: [skill]
+        env:
+          <<: *base-env
+          ROON_PROXY_SOCK: tcp://127.0.0.1:5555
+          ROON_PUBSUB_SOCK: tcp://127.0.0.1:5556
+        volumeMounts: *skill-mount
+      roon-proxy:
+        image: ghcr.io/ramblurr/ovos-skill-roon:dev
+        imagePullPolicy: IfNotPresent
+        args: [server]
+        env:
+          <<: *base-env
+          ROON_PROXY_SOCK: tcp://127.0.0.1:5555
+          ROON_PUBSUB_SOCK: tcp://127.0.0.1:5556
     persistence:
       ovos-mycroft-config:
         enabled: true
@@ -129,8 +199,10 @@ spec:
         annotations:
           hajimari.io/enable: "true"
           hajimari.io/icon: mdi:account-voice
-          nginx.ingress.kubernetes.io/proxy-body-size: 100M
           nginx.ingress.kubernetes.io/proxy-buffering: "off"
+          nginx.ingress.kubernetes.io/proxy-read-timeout: 365d
+          nginx.ingress.kubernetes.io/proxy-send-timeout: 365d
+          nginx.ingress.kubernetes.io/custom-http-errors: "418" # dummy status code to disable custom http errors
         hosts:
           - host: &host hivemind.${SECRET_DOMAIN_INTERNAL}
             paths:
