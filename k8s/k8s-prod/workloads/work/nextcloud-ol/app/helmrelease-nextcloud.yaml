@@ -28,7 +28,7 @@ spec:
   values:
     image:
       repository: docker.io/library/nextcloud
-      tag: 26.0.4-fpm-alpine
+      tag: 27.0.2-fpm-alpine
     env:
       TZ: "${SECRET_TIMEZONE}"
       NEXTCLOUD_ADMIN_USER:
@@ -82,7 +82,7 @@ spec:
         # So this container pre-empts that by mounting just the volume
         # and creating the container with the privs of the user
         name: init-chmod-pvc
-        image: docker.io/library/alpine:20230329
+        image: docker.io/library/alpine:20230901
         command:
           - /bin/sh
           - -ec
