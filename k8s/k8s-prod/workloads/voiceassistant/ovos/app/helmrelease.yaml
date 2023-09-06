@@ -157,8 +157,8 @@ spec:
         args: [skill]
         env:
           <<: *base-env
-          ROON_PROXY_SOCK: tcp://127.0.0.1:5555
-          ROON_PUBSUB_SOCK: tcp://127.0.0.1:5556
+          ROON_PROXY_SOCK: tcp://127.0.0.1:5654
+          ROON_PUBSUB_SOCK: tcp://127.0.0.1:5655
         volumeMounts: *skill-mount
       roon-proxy:
         image: ghcr.io/ramblurr/ovos-skill-roon:dev@sha256:b78694e9c6048aba43f84dd7d63a1f8648307e17f399c0bf0ec28437fd929deb
@@ -166,8 +166,8 @@ spec:
         args: [server]
         env:
           <<: *base-env
-          ROON_PROXY_SOCK: tcp://127.0.0.1:5555
-          ROON_PUBSUB_SOCK: tcp://127.0.0.1:5556
+          ROON_PROXY_SOCK: tcp://127.0.0.1:5654
+          ROON_PUBSUB_SOCK: tcp://127.0.0.1:5655
     persistence:
       ovos-mycroft-config:
         enabled: true
