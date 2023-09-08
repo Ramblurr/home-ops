@@ -5,7 +5,7 @@
 set container network services prefix '10.5.0.0/24'
 
 # haproxy-k8s-api
-set container name haproxy-k8s-api image 'docker.io/library/haproxy:2.8.2'
+set container name haproxy-k8s-api image 'docker.io/library/haproxy:2.8.3'
 set container name haproxy-k8s-api memory '0'
 set container name haproxy-k8s-api network services address '10.5.0.2'
 set container name haproxy-k8s-api restart 'on-failure'
@@ -38,7 +38,7 @@ set container name smtp-relay volume smtp-relay-config source '/config/container
 # dnsdist
 set container name dnsdist cap-add 'net-bind-service'
 set container name dnsdist environment TZ value 'Europe/Berlin'
-set container name dnsdist image 'docker.io/powerdns/dnsdist-18:1.8.0'
+set container name dnsdist image 'docker.io/powerdns/dnsdist-18:1.8.1'
 set container name dnsdist arguments '--log-timestamps'
 set container name dnsdist memory '0'
 set container name dnsdist network services address '10.5.0.4'
