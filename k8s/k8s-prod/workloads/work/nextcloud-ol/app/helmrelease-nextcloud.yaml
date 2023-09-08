@@ -28,7 +28,7 @@ spec:
   values:
     image:
       repository: docker.io/library/nextcloud
-      tag: 26.0.5-fpm-alpine
+      tag: 27.0.2-fpm-alpine
     env:
       TZ: "${SECRET_TIMEZONE}"
       NEXTCLOUD_ADMIN_USER:
