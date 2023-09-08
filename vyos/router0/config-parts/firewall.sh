@@ -99,8 +99,13 @@ set firewall group address-group k8s_cluster_prod_postgres address '10.10.12.2'
 
 set firewall group address-group ovos address '10.8.50.55'
 set firewall group address-group ovos address '10.9.6.30'
+set firewall group address-group ovos address '10.8.50.53'
 set firewall group address-group ovos address '10.8.50.54'
 set firewall group address-group ovos address '10.9.6.27'
+set firewall group address-group ovos address '10.9.6.29'
+set firewall group address-group ovos address '10.8.50.55'
+set firewall group address-group ovos address '10.8.50.56'
+set firewall group address-group ovos address '10.8.50.57'
 
 set firewall group address-group nas-prim address '10.9.4.10'
 
@@ -155,6 +160,7 @@ set firewall group address-group truenas address '192.168.8.4'
 
 set firewall group address-group ludwig-wan address "${SECRET_LUDWIG_WAN_IP}"
 
+set firewall group address-group local-dns-servers address '10.5.0.4'
 set firewall group address-group local-dns-servers address '10.9.4.4'
 set firewall group address-group local-dns-servers address '192.168.1.3'
 set firewall group address-group local-dns-servers address '10.10.10.53'

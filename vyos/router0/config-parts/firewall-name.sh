@@ -163,6 +163,11 @@ set firewall name iot-services rule 1 description 'Rule: accept_dns'
 set firewall name iot-services rule 1 destination port 'domain,domain-s'
 set firewall name iot-services rule 1 protocol 'tcp_udp'
 
+set firewall name iot-services rule 2 action 'accept'
+set firewall name iot-services rule 2 description 'Rule: accept_icmp_to_dns'
+set firewall name iot-services rule 2 protocol 'icmp'
+set firewall name iot-services rule 2 destination group address-group 'local-dns-servers'
+
 # From IOT to PRIMARY
 set firewall name iot-primary default-action 'drop'
 set firewall name iot-primary description 'From IOT to PRIMARY'

@@ -30,17 +30,16 @@ set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mappi
 set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping fire-tablet-dashboard mac-address '48:78:5e:d2:2f:53'
 set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping octoprint ip-address '10.8.50.52'
 set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping octoprint mac-address 'e4:5f:01:a3:5c:2a'
-set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping ovos-kitchen-sat ip-address '10.8.50.53'
-set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping ovos-kitchen-sat mac-address 'b8:27:eb:f3:e1:1d'
+set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping ovos-bedroom ip-address '10.8.50.53'
+set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping ovos-bedroom mac-address 'b8:27:eb:f3:e1:1d'
 set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping ovos-kitchen ip-address '10.8.50.54'
 set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping ovos-kitchen mac-address 'e4:5f:01:84:32:20'
 set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping markii-wlan ip-address '10.8.50.55'
 set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping markii-wlan mac-address 'e4:5f:01:b8:07:0c'
-
-
-
-# rpizero2 with yellow headers 'e4:5f:01:7e:3d:21'
-
+set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping mic-sat-kitchen ip-address '10.8.50.56'
+set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping mic-sat-kitchen mac-address 'e4:5f:01:7e:29:29'
+set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping mic-sat-bedroom ip-address '10.8.50.57'
+set service dhcp-server shared-network-name IOT subnet 10.8.50.0/23 static-mapping mic-sat-bedroom mac-address 'e4:5f:01:85:8b:e9'
 
 # not VLAN
 set service dhcp-server shared-network-name NOT authoritative
@@ -244,13 +243,12 @@ set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-ma
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping phoniebox mac-address 'dc:a6:32:40:33:ec'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping ovos-kitchen-prim ip-address '10.9.6.27'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping ovos-kitchen-prim mac-address 'e4:5f:01:84:32:20'
-set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping ovos-kitchen-sat-prim ip-address '10.9.6.29'
-set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping ovos-kitchen-sat-prim mac-address 'b8:27:eb:f3:e1:1d'
+set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping ovos-bedroom-prim ip-address '10.9.6.29'
+set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping ovos-bedroom-prim mac-address 'b8:27:eb:f3:e1:1d'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping markii-wired ip-address '10.9.6.30'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping markii-wired mac-address 'e4:5f:01:b8:07:0b'
-
-
-
+# 10.9.6.106    54:60:09:fd:5b:dc  PRIMARY  Chromecast-Audio
+# 10.9.6.102    64:07:f6:18:a3:3e  PRIMARY  Samsung
 
 #container0
 #net1
