@@ -33,7 +33,7 @@ spec:
       fsGroup: 2000
     image:
       repository: docker.io/smartgic/ovos-hivemind-listener
-      tag: alpha@sha256:e6bb5ae307d44e30157f600cfa309b54beead27c79ee7deaae8e7b2394f20fe6
+      tag: alpha@sha256:64f77fed1a8d59d2c3cc8c9d7ff40b317cc6047c4da19befe6f0b52e151a5cab
     env: &base-env
       TZ: Europe/Berlin
       HOME: /home/ovos
