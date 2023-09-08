@@ -5,7 +5,7 @@
     "description": "Voice Assistant Group",
     "groupName": "Voice Assistant",
     "matchDatasources": ["docker", "github-tags", "helm"],
-    "additionalBranchPrefix": "k8s/k8s-prod/workloads/voiceassistant/",
+    "matchPackagePatterns": ["ovos", "^skill-"],
     "group": {
       "commitMessageTopic": "{{{groupName}}} group"
     }
