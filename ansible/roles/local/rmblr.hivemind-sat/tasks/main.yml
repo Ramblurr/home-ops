@@ -1,0 +1,139 @@
+---
+# yamllint enable rule:indentation
+- import_tasks: hifiberry.yml
+
+- name: Create directories
+  file:
+    path: "{{ item.path }}"
+    state: directory
+    mode: "{{ item.mode }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+  loop:
+    - { path: "/etc/apt/keyrings", mode: "0755", owner: "root", group: "root" }
+    - { path: "/etc/pipewire", mode: "0755", owner: "root", group: "root" }
+    - path: "/etc/pipewire/pipewire.conf.d"
+      mode: "0755"
+      owner: "root"
+      group: "root"
+    - { path: "/etc/wireplumber", mode: "0755", owner: "root", group: "root" }
+    - path: "/etc/wireplumber/policy.lua.d"
+      mode: "0755"
+      owner: "root"
+      group: "root"
+    - path: "/etc/wireplumber/main.lua.d"
+      mode: "0755"
+      owner: "root"
+      group: "root"
+    - { path: "/home/ovos/config", mode: "0750", owner: "ovos", group: "ovos" }
+    - { path: "/home/ovos/share", mode: "0750", owner: "ovos", group: "ovos" }
+    - path: "/home/ovos/config/mycroft"
+      mode: "0750"
+      owner: "ovos"
+      group: "ovos"
+    - path: "/home/ovos/config/hivemind"
+      mode: "0750"
+      owner: "ovos"
+      group: "ovos"
+    - path: "/home/ovos/share/mycroft"
+      mode: "0750"
+      owner: "ovos"
+      group: "ovos"
+    - path: "/home/ovos/share/hivemind"
+      mode: "0750"
+      owner: "ovos"
+      group: "ovos"
+    - { path: "/home/ovos/cache", mode: "0750", owner: "ovos", group: "ovos" }
+    - path: "/home/ovos/cache/ovos_listener_records"
+      mode: "0750"
+      owner: "ovos"
+      group: "ovos"
+    - path: "/home/ovos/cache/ovos_models"
+      mode: "0750"
+      owner: "ovos"
+      group: "ovos"
+    - path: "/home/ovos/cache/ovos_vosk"
+      mode: "0750"
+      owner: "ovos"
+      group: "ovos"
+    - path: "/home/ovos/cache/ovos_tts_cache"
+      mode: "0750"
+      owner: "ovos"
+      group: "ovos"
+    - { path: "/tmp/mycroft", mode: "0750", owner: "ovos", group: "ovos" }
+
+- name: Install debian backports
+  ansible.builtin.import_role:
+    name: rmblr.debian_backports
+
+- name: Pipewire Upstream Key
+  ansible.builtin.copy:
+    src: pw.asc
+    dest: /etc/apt/keyrings/pipewire.asc
+
+- name: Pipewire Upstream Repo
+  ansible.builtin.apt_repository:
+    repo: deb [arch=amd64 signed-by=/etc/apt/keyrings/pipewire.asc] http://ppa.launchpad.net/pipewire-debian/pipewire-upstream/ubuntu impish main
+    state: present
+
+- name: Install programs
+  tags: [hvdebug]
+  apt:
+    state: present
+    install_recommends: false
+    name:
+      - gstreamer1.0-pipewire
+      - libpipewire-0.3-common
+      - libpipewire-0.3-modules
+      - libspa-0.2-modules
+      - opus-tools
+      - pipewire
+      - pipewire-alsa
+      - pipewire-bin
+      - podman
+      - roc
+      - libroc
+      - wireplumber
+      - wireplumber-doc
+    update_cache: true
+  notify:
+    - restart pipewire
+    - restart wireplumber
+
+- name: Configure pipewire
+  template:
+    src: 100-user.conf.j2
+    dest: /etc/pipewire/pipewire.conf.d/100-user.conf
+  notify:
+    - restart pipewire
+    - restart wireplumber
+
+- name: Configure wireplumber policy
+  template:
+    src: 50-endpoints-config.lua.j2
+    dest: /etc/wireplumber/policy.lua.d/50-endpoints-config.lua
+  notify:
+    - restart pipewire
+    - restart wireplumber
+
+- name: Configure ROC Recv Source
+  template:
+    src: 101-roc-recv.conf.j2
+    dest: /etc/pipewire/pipewire.conf.d/101-roc-recv.conf
+  notify:
+    - restart pipewire
+    - restart wireplumber
+
+- name: Wireplumber Rename devices
+  template:
+    src: 51-rename.lua.j2
+    dest: /etc/wireplumber/main.lua.d/51-rename.lua
+  notify:
+    - restart pipewire
+    - restart wireplumber
+
+- name: Create podman service
+  template:
+    src: hivemind-sat.service.j2
+    dest: /etc/systemd/user/hivemind-sat.service
+  notify: restart hivemind-sat

@@ -1,0 +1,9 @@
+---
+# hivemind_core_host:
+# hivemind_sat_key:
+# hivemind_sat_password:
+# hivemind_sat_crypto_key:
+# hivemind_core_port:
+hivemind_dir: /home/ovos/hivemind
+xdg_runtime_dir: /run/usr/1001
+hivemind_version: alpha

@@ -1,0 +1,30 @@
+---
+- name: restart hivemind-sat
+  systemd:
+    name: hivemind-sat
+    scope: user
+    state: restarted
+    enabled: true
+    daemon_reload: true
+  environment:
+    XDG_RUNTIME_DIR: "{{ xdg_runtime_dir }}"
+
+- name: restart wireplumber
+  systemd:
+    name: wireplumber
+    scope: user
+    state: restarted
+    enabled: true
+    daemon_reload: true
+  environment:
+    XDG_RUNTIME_DIR: "{{ xdg_runtime_dir }}"
+
+- name: restart pipewire
+  systemd:
+    name: pipewire
+    scope: user
+    state: restarted
+    enabled: true
+    daemon_reload: true
+  environment:
+    XDG_RUNTIME_DIR: "{{ xdg_runtime_dir }}"

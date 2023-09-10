@@ -1,0 +1,3 @@
+---
+_ovos_home: "/home/ovos"
+_respeaker_core_directory: "{{ _ovos_home }}/seeed-voicecard"

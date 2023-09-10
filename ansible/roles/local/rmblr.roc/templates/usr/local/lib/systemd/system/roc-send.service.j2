@@ -1,0 +1,10 @@
+[Unit]
+Description=roc-send local audio input
+Wants=network.target
+
+[Service]
+Type=simple
+ExecStart={{ roc_bin_dest }}/roc-send --input {{ roc_send_hw_input }} --source {{ roc_send_source }} --repair {{ roc_send_repair }} {{ roc_send_extra_args | default("") }}
+
+[Install]
+WantedBy=multi-user.target

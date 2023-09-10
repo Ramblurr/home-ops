@@ -1,0 +1,34 @@
+default_policy.policy.roles = {
+  ["Capture"] = {
+    ["alias"] = {  "Capture" },
+    ["priority"] = 25,
+    ["action.default"] = "cork",
+    ["action.capture"] = "mix",
+    ["media.class"] = "Audio/Source",
+  },
+  ["Multimedia"] = {
+    ["alias"] = { "Movie", "Music", "Game" },
+    ["priority"] = 25,
+    ["action.default"] = "mix",
+  },
+  ["Speech"] = {
+    ["priority"] = 60,
+    ["action.default"] = "duck",
+    ["action.Speech"] = "mix",
+  }
+}
+
+default_policy.endpoints = {
+  ["endpoint.capture"] = {
+    ["media.class"] = "Audio/Source",
+    ["role"] = "Capture",
+  },
+  ["endpoint.multimedia"] = {
+    ["media.class"] = "Audio/Sink",
+    ["role"] = "Multimedia",
+  },
+  ["endpoint.speech"] = {
+    ["media.class"] = "Audio/Sink",
+    ["role"] = "Speech",
+  },
+}

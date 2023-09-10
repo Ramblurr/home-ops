@@ -1,0 +1,31 @@
+---
+- name: Remove dtparam=audio=on from /boot/config.txt
+  lineinfile:
+    path: /boot/config.txt
+    regexp: "^dtparam=audio=on"
+    state: absent
+
+- name: Update dtoverlay=vc4-kms-v3d to dtoverlay=vc4-kms-v3d,noaudio in /boot/config.txt
+  lineinfile:
+    path: /boot/config.txt
+    regexp: "^dtoverlay=vc4-kms-v3d"
+    line: "dtoverlay=vc4-kms-v3d,noaudio"
+
+- name: Add hifiberry
+  lineinfile:
+    path: /boot/config.txt
+    line: "{{ item }}"
+    state: present
+  loop:
+    - "dtoverlay=hifiberry-dac"
+    - "dtoverlay=hifiberry-dacplusadc"
+    - "force_eeprom_read=0"
+
+- name: Disable wireless
+  lineinfile:
+    path: /boot/config.txt
+    line: "{{ item }}"
+    state: present
+  loop:
+    - "dtoverlay=disable-wifi"
+    - "dtoverlay=disable-bt"

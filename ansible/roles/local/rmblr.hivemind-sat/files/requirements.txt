@@ -1,0 +1,36 @@
+# listener
+onnxruntime
+ovos-dinkum-listener
+ovos-microphone-plugin-sounddevice
+ovos-stt-plugin-server
+ovos-stt-plugin-vosk
+ovos-vad-plugin-precise
+ovos-vad-plugin-silero
+ovos-vad-plugin-webrtcvad
+ovos-ww-plugin-pocketsphinx
+ovos-ww-plugin-precise-lite
+ovos-ww-plugin-vosk
+vosk
+
+
+# audio
+ovos-audio
+ovos-audio-plugin-simple
+ovos-classifiers
+ovos-tts-plugin-mimic
+ovos-tts-plugin-mimic2
+ovos-tts-plugin-mimic3-server
+ovos-tts-plugin-server
+ovos-workshop
+onnxruntime
+
+# PHAL
+ovos-PHAL
+ovos-PHAL-plugin-alsa
+ovos-PHAL-plugin-system
+ovos-PHAL-plugin-ipgeo
+ovos-plugin-manager
+
+# hivemind
+git+https://github.com/JarbasHiveMind/HiveMind-voice-sat.git
+git+https://github.com/JarbasHiveMind/HiveMind-core.git

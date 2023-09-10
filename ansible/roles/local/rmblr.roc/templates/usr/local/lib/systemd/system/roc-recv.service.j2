@@ -1,0 +1,14 @@
+[Unit]
+Description=roc-recv remote audio input
+Wants=network.target
+
+[Service]
+Type=simple
+ExecStart={{ roc_bin_dest }}/roc-recv --output pulse://default --source {{ roc_recv_source }} --repair {{ roc_recv_repair }} {{ roc_recv_extra_args | default("") }}
+User=ovos
+Group=ovos
+Environment="XDG_RUNTIME_DIR=/run/user/{{ user_info.1 }}"
+
+
+[Install]
+WantedBy=multi-user.target

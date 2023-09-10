@@ -1,0 +1,42 @@
+[Unit]
+Description=Hivemind Satellite
+After=pipewire.service
+After=wireplumber.service
+After=network.target
+
+[Service]
+User=ovos
+Restart=unless-stopped
+ExecStartPre=-/usr/bin/podman rm -f hivemind-sat
+ExecStart=/usr/bin/podman run --rm --name hivemind-sat \
+          --log-driver=json-file --log-opt max-buffer-size=4m --log-opt max-size=200m --log-opt max-file=1 \
+          --security-opt label=disable \
+          --network host \
+          --device /dev/snd \
+          -e TZ=Europe/Berlin \
+          -e DBUS_SESSION_BUS_ADDRESS=unix:path={{ xdg_runtime_dir }}/bus \
+          -e XDG_RUNTIME_DIR={{ xdg_runtime_dir }} \
+          -e HIVEMIND_SAT_KEY={{ hivemind_sat_key }} \
+          -e HIVEMIND_SAT_PASSWORD={{ hivemind_sat_password }} \
+          -e HIVEMIND_CORE_HOST={{ hivemind_core_host }} \
+          -e HIVEMIND_CORE_PORT={{ hivemind_core_port }} \
+          -v {{ xdg_runtime_dir }}/bus:{{ xdg_runtime_dir }}/bus:ro \
+          -v {{ xdg_runtime_dir }}/pipewire-0:{{ xdg_runtime_dir }}/pipewire-0:ro \
+          -v /home/ovos/config/hivemind:/home/ovos/.config/hivemind:z \
+          -v /home/ovos/share/hivemind:/home/ovos/.local/share/hivemind:z \
+          -v /home/ovos/config/mycroft:/home/ovos/.config/mycroft \
+          -v /home/ovos/cache/ovos_listener_records:/home/ovos/.local/share/mycroft/listener \
+          -v /home/ovos/cache/ovos_models:/home/ovos/.local/share/precise-lite \
+          -v /home/ovos/cache/ovos_vosk:/home/ovos/.local/share/vosk \
+          -v /home/ovos/cache/ovos_tts_cache:/home/ovos/.cache/mycroft \
+          -v /tmp/mycroft:/tmp/mycroft \
+          docker.io/library/hivemind-voice-sat:{{ hivemind_version }}
+ExecStop=/usr/bin/podman stop hivemind-sat
+TimeoutStartSec=10m
+TimeoutStopSec=1m
+Restart=on-failure
+StartLimitInterval=5min
+StartLimitBurst=4
+
+[Install]
+WantedBy=default.target

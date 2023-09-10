@@ -1,0 +1,53 @@
+---
+- name: Install QOL packages for admin
+  ansible.builtin.package:
+    name:
+      - vim
+      - htop
+      - ncdu
+      - kitty-terminfo
+      - tmux
+    state: present
+
+- name: Create ovos user
+  ansible.builtin.user:
+    name: "ovos"
+    state: present
+
+- name: Ensure 'ovos' user is in the necessary groups
+  ansible.builtin.user:
+    name: ovos
+    groups: audio,spi,i2c,plugdev
+    append: true
+
+- name: Check if lingering is enabled for ovos
+  ansible.builtin.stat:
+    path: "/var/lib/systemd/linger/ovos"
+  register: linger
+
+- name: Enable linger for ovos
+  ansible.builtin.command: "loginctl enable-linger ovos"
+  when:
+    - not linger.stat.exists
+  register: linger
+
+- name: Add lines to /home/ovos/.profile
+  blockinfile:
+    path: /home/ovos/.profile
+    block: |
+      export XDG_RUNTIME_DIR="/run/user/$UID"
+      export DBUS_SESSION_BUS_ADDRESS="unix:path=${XDG_RUNTIME_DIR}/bus"
+    state: present
+
+- name: Configure PAM limits for @audio group
+  copy:
+    dest: /etc/security/limits.d/audio.conf
+    content: |
+      @audio  -  memlock  4194304
+      @audio  -  rtprio   95
+      @audio  -  nice     -19
+      @audio  soft  nofile  99999
+      @audio  hard  nofile  99999
+    owner: root
+    group: root
+    mode: "0644"

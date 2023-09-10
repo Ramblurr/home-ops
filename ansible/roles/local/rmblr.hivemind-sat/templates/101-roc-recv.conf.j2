@@ -1,0 +1,54 @@
+{
+  "context.modules": [
+    {
+      "args": {
+        "fec.code": "rs8m",
+        "local.ip": "0.0.0.0",
+        "local.repair.port": 10002,
+        "local.source.port": 10001,
+        "resampler.profile": "medium",
+        "source.name": "ROC Source",
+        "source.props": {
+          "media.class": "Audio/Source",
+          "node.description": "ROC Recv Source",
+          "node.name": "roc-recv-source"
+        }
+      },
+      "name": "libpipewire-module-roc-source"
+    },
+    {
+      "args": {
+        "audio.position": [
+          "FL",
+          "FR"
+        ],
+        "capture.props": {
+          "node.name": "effect_input.rnnoise",
+          "node.passive": true
+        },
+        "filter.graph": {
+          "nodes": [
+            {
+              "control": {
+                "Retroactive VAD Grace (ms)": 0,
+                "VAD Grace Period (ms)": 200,
+                "VAD Threshold (%)": 95
+              },
+              "label": "noise_suppressor_stereo",
+              "name": "rnnoise",
+              "plugin": "ladspa/librnnoise_ladspa",
+              "type": "ladspa"
+            }
+          ]
+        },
+        "media.name": "Noise Canceling source",
+        "node.description": "Noise Canceling source",
+        "playback.props": {
+          "media.class": "Audio/Source",
+          "node.name": "effect_output.rnnoise"
+        }
+      },
+      "name": "libpipewire-module-filter-chain"
+    }
+  ]
+}

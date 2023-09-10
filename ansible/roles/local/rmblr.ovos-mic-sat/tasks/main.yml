@@ -1,0 +1,59 @@
+---
+- name: Disable unused services
+  ansible.builtin.systemd_service:
+    name: "{{ item }}"
+    state: stopped
+    enabled: false
+  loop:
+    - avahi-daemon.service
+    - bluetooth.service
+    - triggerhappy.service
+    - ModemManager.service
+
+- name: Check if respeaker has been installed
+  ansible.builtin.stat:
+    path: /lib/systemd/system/seeed-voicecard.service
+  register: respeaker_stat
+
+- name: Set install repseaker var
+  ansible.builtin.set_fact:
+    _do_respeaker_install: "{{ not respeaker_stat.stat.exists }}"
+
+- name: Upgrade system to prepare for install
+  ansible.builtin.apt:
+    upgrade: dist
+    force_apt_get: true
+    cache_valid_time: 3600
+  when: _do_respeaker_install
+
+- name: Install respeaker deps
+  ansible.builtin.apt:
+    name:
+      - git
+    force_apt_get: true
+  when: _do_respeaker_install
+
+- name: Get respeaker repo
+  ansible.builtin.git:
+    repo: "{{ respeaker_git_repo }}"
+    dest: "{{ _respeaker_core_directory }}"
+    version: "{{ respeaker_branch }}"
+    update: false
+  become: true
+  when: _do_respeaker_install
+
+- name: Run install script
+  ansible.builtin.shell: ./install.sh
+  args:
+    chdir: "{{ _respeaker_core_directory }}"
+  when: _do_respeaker_install
+  become: true
+
+- name: Reboot the Raspberry Pi and wait for it to restart
+  ansible.builtin.reboot:
+    msg: "Reboot initiated by Ansible"
+    connect_timeout: 5
+    reboot_timeout: 120
+    post_reboot_delay: 5
+    test_command: whoami
+  when: _do_respeaker_install

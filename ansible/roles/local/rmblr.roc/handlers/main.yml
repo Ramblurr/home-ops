@@ -1,0 +1,15 @@
+---
+- name: restart roc-recv
+  ansible.builtin.systemd:
+    daemon-reload: true
+    name: roc-recv.service
+    state: restarted
+    enabled: true
+
+- name: restart roc-send
+  ansible.builtin.systemd:
+    daemon-reload: true
+    name: roc-send.service
+    state: restarted
+    enabled: true
+...

@@ -57,3 +57,32 @@
     - role: rmblr.rpi_coredns
     - role: prometheus.prometheus.node_exporter
       tags: [node_exporter]
+
+- name: Raspberry Pi microphone satellites for OVOS Voice Assistant
+  hosts: ovos-mic-satellites
+  gather_facts: true
+  become: true
+  tags: [ovos-sats]
+  tasks:
+    - import_role:
+        name: rmblr.ovos-common
+      tags: [common]
+    - import_role:
+        name: rmblr.ovos-mic-sat
+      tags: [sat]
+    - import_role:
+        name: rmblr.roc
+      tags: [roc]
+
+- name: OVOS Hivemind satellites
+  hosts: ovos-hivemind-satellites
+  gather_facts: true
+  become: true
+  tags: [hivemind-sats]
+  tasks:
+    - import_role:
+        name: rmblr.ovos-common
+      tags: [common]
+    - import_role:
+        name: rmblr.hivemind-sat
+      tags: [sat]

@@ -1,0 +1,27 @@
+---
+roc_toolkit_root: /home/ramblurr/src/ovos/roc-toolkit
+
+roc_binaries:
+  - roc-recv
+  - roc-send
+  - roc-conv
+
+roc_libs:
+  - libroc.so.0.2
+
+roc_symlinks:
+  - src: libroc.so.0.2
+    dest: libroc.so
+  - src: libroc.so.0.2
+    dest: libroc.so.0
+
+roc_lib_dest: /usr/local/lib
+roc_bin_dest: /usr/local/bin
+roc_with_pulseaudio: false
+
+roc_recv_output: pulse://default
+roc_recv_source: rtp+rs8m://10.9.4.26:10001
+roc_recv_repair: rs8m://10.9.4.26:10002
+
+roc_recv_enabled: false
+roc_send_enabled: false

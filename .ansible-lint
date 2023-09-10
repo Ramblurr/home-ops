@@ -1,6 +1,10 @@
+---
 skip_list:
   - yaml[line-length]
   - var-naming
+  - yaml[indentation]
+  - yaml[comments-indentation]
+  - yaml[comments]
 warn_list:
   - command-instead-of-shell
   - deprecated-command-syntax

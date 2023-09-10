@@ -56,6 +56,22 @@ all:
       hosts:
         pikvm.mgmt.socozy.casa:
           ansible_user: root
+    ovos-mic-satellites:
+      vars:
+        ansible_python_interpreter: /usr/bin/python3
+        ansible_user: ramblurr
+      hosts:
+        mic-sat-kitchen.iot.socozy.casa:
+        mic-sat-bedroom.iot.socozy.casa:
+    ovos-hivemind-satellites:
+      vars:
+        ansible_python_interpreter: /usr/bin/python3
+        ansible_user: ramblurr
+        backports_priority_enabled: true
+        backports_priority: 500
+      hosts:
+        ovos-bedroom.int.socozy.casa:
+        ovos-kitchen.int.socozy.casa:
     dns:
       hosts:
         ns1.int.socozy.casa:

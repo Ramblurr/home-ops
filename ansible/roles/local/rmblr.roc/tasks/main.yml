@@ -1,0 +1,75 @@
+---
+- name: Include architecture variables
+  include_vars: "{{ ansible_architecture }}.yml"
+
+- name: Install roc runtime deps
+  ansible.builtin.package:
+    name:
+      - libltdl7
+    state: present
+
+- name: Install roc binaries
+  ansible.builtin.copy:
+    src: "{{ roc_toolkit_root }}/bin/{{ roc_arch }}/{{ item }}"
+    dest: "{{ roc_bin_dest }}/{{ item }}"
+    mode: 0755
+    owner: root
+    group: root
+  loop: "{{ roc_binaries }}"
+
+- name: Install roc libraries
+  ansible.builtin.copy:
+    src: "{{ roc_toolkit_root }}/bin/{{ roc_arch }}/{{ item }}"
+    dest: "{{ roc_lib_dest }}/{{ item }}"
+    mode: 0755
+    owner: root
+    group: root
+  loop: "{{ roc_libs }}"
+
+- name: Symlink roc libs
+  ansible.builtin.file:
+    src: "{{ roc_lib_dest }}/{{ item.src }}"
+    dest: "{{ roc_lib_dest }}/{{ item.dest }}"
+    state: link
+    mode: 0755
+    owner: root
+    group: root
+  loop: "{{ roc_symlinks }}"
+
+- name: Retrieve ovos UID
+  ansible.builtin.getent:
+    database: passwd
+    key: "ovos"
+
+- name: Set user_info fact
+  ansible.builtin.set_fact:
+    user_info: "{{ getent_passwd['ovos'] }}"
+
+- name: Ensure local systemd dir
+  ansible.builtin.file:
+    state: directory
+    path: /usr/local/lib/systemd/system
+    mode: 0755
+    owner: root
+    group: root
+  when: roc_recv_enabled or roc_send_enabled
+
+- name: roc-recv service
+  ansible.builtin.template:
+    src: usr/local/lib/systemd/system/roc-recv.service.j2
+    dest: /usr/local/lib/systemd/system/roc-recv.service
+    mode: 0644
+    owner: root
+    group: root
+  when: roc_recv_enabled
+  notify: restart roc-recv
+
+- name: roc-send service
+  ansible.builtin.template:
+    src: usr/local/lib/systemd/system/roc-send.service.j2
+    dest: /usr/local/lib/systemd/system/roc-send.service
+    mode: 0644
+    owner: root
+    group: root
+  when: roc_send_enabled
+  notify: restart roc-send

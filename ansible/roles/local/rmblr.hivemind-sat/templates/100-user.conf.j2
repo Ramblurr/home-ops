@@ -1,0 +1,33 @@
+{
+  "context.modules": [
+    {
+      "args": {
+        "nice.level": 20,
+        "rlimits.enabled": true,
+        "rt.prio": 88,
+        "rtkit.enabled": false,
+        "rtportal.enabled": false
+      },
+      "flags": [
+        "ifexists",
+        "nofail"
+      ],
+      "name": "libpipewire-module-rt"
+    },
+    {
+      "args": {
+        "capture.props": {
+          "node.target": "alsa_input.platform-soc_sound.stereo-fallback"
+        },
+        "node.description": "music-to-speakers-bridge",
+        "node.name": "music-to-speakers-bridge",
+        "playback.props": {
+          "media.role": "Multimedia",
+          "monitor.channel-volumes": true
+        },
+        "target.delay.sec": 0
+      },
+      "name": "libpipewire-module-loopback"
+    }
+  ]
+}
