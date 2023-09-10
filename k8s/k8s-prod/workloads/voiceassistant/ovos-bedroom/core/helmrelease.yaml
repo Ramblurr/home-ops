@@ -106,11 +106,9 @@ spec:
       main:
         ports:
           http:
-            port: 5678
-      insecure-messagebus:
-        ports:
+            port: &secure-port 5678
           ovos-messagebus:
-            port: 8181
+            port: &insecure-port 8181
     ingress:
       main:
         enabled: true
@@ -126,6 +124,8 @@ spec:
             paths:
               - path: /
                 pathType: Prefix
+                service:
+                  port: *secure-port
         tls:
           - hosts:
               - *host
@@ -144,8 +144,7 @@ spec:
               - path: /
                 pathType: Prefix
                 service:
-                  name:: ovos-bedroom-insecure-messagebus
-                  port: 8181
+                  port: *insecure-port
         tls:
           - hosts:
               - *host2
