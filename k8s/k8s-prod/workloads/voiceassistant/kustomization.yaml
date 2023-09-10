@@ -5,6 +5,7 @@ resources:
   - ./namespace.yaml
   - ./mimic3/ks.yaml
   - ./stt-whispercpp/ks.yaml
+  - ./stt-fasterwhisper/ks.yaml
   - ./ovos-pv/ks.yaml
   - ./ovos-kitchen/ks.yaml
   - ./ovos-bedroom/ks.yaml
