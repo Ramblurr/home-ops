@@ -103,12 +103,16 @@ spec:
         type: emptyDir
         mountPath: /home/ovos/nltk_data
     service:
-      main:
+      hivemind:
         ports:
           http:
             port: 5678
+      insecure-messagebus:
+        ports:
+          http:
+            port: 8181
     ingress:
-      main:
+      hivemind:
         enabled: true
         ingressClassName: nginx-internal
         annotations:
