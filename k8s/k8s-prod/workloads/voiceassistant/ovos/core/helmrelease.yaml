@@ -46,13 +46,13 @@ spec:
         volumeMounts: &base-mount
           - name: ovos-mycroft-config
             mountPath: /home/ovos/.config
-            subPath: config
+            subPath: kitchen-core/config
           - name: ovos-mycroft-config
             mountPath: /home/ovos/.local/share
-            subPath: share
+            subPath: kitchen-core/share
           - name: ovos-mycroft-config
             mountPath: /home/ovos/.local/state
-            subPath: state
+            subPath: kitchen-core/state
           - name: ovos-tmp
             mountPath: /tmp/mycroft
           - name: ovos-nltk-data
@@ -74,13 +74,13 @@ spec:
         volumeMounts: &hivemind-mount
           - name: ovos-mycroft-config
             mountPath: /home/ovos/.config
-            subPath: config
+            subPath: kitchen-core/config
           - name: ovos-mycroft-config
             mountPath: /home/ovos/.local/share
-            subPath: share
+            subPath: kitchen-core/share
           - name: ovos-mycroft-config
             mountPath: /home/ovos/.local/state
-            subPath: state
+            subPath: kitchen-core/state
           - name: ovos-tmp
             mountPath: /tmp/mycroft
     persistence:
@@ -88,11 +88,11 @@ spec:
         enabled: true
         existingClaim: ovos-data-nfs
         subPath:
-          - path: config
+          - path: kitchen-core/config
             mountPath: /home/ovos/.config
-          - path: share
+          - path: kitchen-core/share
             mountPath: /home/ovos/.local/share
-          - path: state
+          - path: kitchen-core/state
             mountPath: /home/ovos/.local/state
       ovos-tmp:
         enabled: true
@@ -103,16 +103,16 @@ spec:
         type: emptyDir
         mountPath: /home/ovos/nltk_data
     service:
-      hivemind:
+      main:
         ports:
           http:
             port: 5678
       insecure-messagebus:
         ports:
-          http:
+          ovos-messagebus:
             port: 8181
     ingress:
-      hivemind:
+      main:
         enabled: true
         ingressClassName: nginx-internal
         annotations:

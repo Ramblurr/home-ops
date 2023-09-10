@@ -21,10 +21,10 @@ spec:
           volumeMounts:
             - name: ovos-mycroft-config
               mountPath: /home/ovos/.config
-              subPath: config
+              subPath: kitchen-skills/config
             - name: ovos-mycroft-config
               mountPath: /home/ovos/.local/share
-              subPath: share
+              subPath: kitchen-skills/share
             - name: ovos-tmp
               mountPath: /tmp/mycroft
       volumes:
