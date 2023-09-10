@@ -1,11 +1,12 @@
 ---
-# yaml-language-server: $schema=https://github.com/yannh/kubernetes-json-schema/raw/master/v1.27.4-standalone-strict/deployment-apps-v1.json
+# yaml-language-server: $schema=https://github.com/yannh/kubernetes-json-schema/raw/master/v1.27.4-standalone-strict/statefulset-apps-v1.json
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: &name bedroom-base-skills
   namespace: voiceassistant
 spec:
+  serviceName: *name
   replicas: 1
   selector:
     matchLabels:
