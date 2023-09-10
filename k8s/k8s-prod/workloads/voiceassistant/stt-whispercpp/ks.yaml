@@ -1,0 +1,25 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.kokoro.wtf/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cluster-workloads-stt-whispercpp
+  namespace: flux-system
+  labels:
+    substitution.flux.home.arpa/enabled: "true"
+spec:
+  path: ./k8s/k8s-prod/workloads/voiceassistant/stt-whispercpp/app
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  interval: 30m
+  retryInterval: 1m
+  timeout: 3m
+  healthChecks:
+    - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+      kind: HelmRelease
+      name: stt-whispercpp
+      namespace: voiceassistant
+  dependsOn:
+    - name: cluster-workloads-cert-manager-issuers
