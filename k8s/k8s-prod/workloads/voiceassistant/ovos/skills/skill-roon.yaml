@@ -3,7 +3,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: &name kitchen-skill-wikipedia
+  name: &name kitchen-roon-skill
   namespace: voiceassistant
 spec:
   replicas: 1
@@ -16,8 +16,19 @@ spec:
         app: *name
     spec:
       containers:
-        - name: *name
-          image: docker.io/smartgic/ovos-skill-wikipedia:0.0.8a
+        - name: ramblurr-skill-roon
+          image: ghcr.io/ramblurr/ovos-skill-roon:dev@sha256:90f539dc3a8e04c8bf34657f442b573eb9c31caca7dcda573bbea1ccd430d4de
+          imagePullPolicy: IfNotPresent
+          args: [skill]
+          env: &base-env
+            - name: TZ
+              value: Europe/Berlin
+            - name: HOME
+              value: /home/ovos
+            - name: ROON_PROXY_SOCK
+              value: tcp://127.0.0.1:5654
+            - name: ROON_PUBSUB_SOCK
+              value: tcp://127.0.0.1:5655
           volumeMounts:
             - name: ovos-mycroft-config
               mountPath: /home/ovos/.config
@@ -27,6 +38,11 @@ spec:
               subPath: kitchen-skills/share
             - name: ovos-tmp
               mountPath: /tmp/mycroft
+        - name: roon-proxy
+          image: ghcr.io/ramblurr/ovos-skill-roon:dev@sha256:90f539dc3a8e04c8bf34657f442b573eb9c31caca7dcda573bbea1ccd430d4de
+          imagePullPolicy: IfNotPresent
+          args: [server]
+          env: *base-env
       volumes:
         - name: ovos-mycroft-config
           persistentVolumeClaim:

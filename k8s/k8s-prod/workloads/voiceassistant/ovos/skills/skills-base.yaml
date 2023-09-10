@@ -1,0 +1,89 @@
+---
+# yaml-language-server: $schema=https://github.com/yannh/kubernetes-json-schema/raw/master/v1.27.4-standalone-strict/deployment-apps-v1.json
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: &name kitchen-base-skills
+  namespace: voiceassistant
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: *name
+  template:
+    metadata:
+      labels:
+        app: *name
+    spec:
+      containers:
+        - name: skill-wikipedia
+          image: docker.io/smartgic/ovos-skill-wikipedia:0.0.8a
+          env: &base-env
+            - name: TZ
+              value: Europe/Berlin
+            - name: HOME
+              value: /home/ovos
+          volumeMounts: &skill-mnt
+            - name: ovos-mycroft-config
+              mountPath: /home/ovos/.config
+              subPath: kitchen-skills/config
+            - name: ovos-mycroft-config
+              mountPath: /home/ovos/.local/share
+              subPath: kitchen-skills/share
+            - name: ovos-tmp
+              mountPath: /tmp/mycroft
+        - name: skill-weather
+          image: docker.io/smartgic/ovos-skill-weather:0.0.8a
+          volumeMounts: *skill-mnt
+          env: *base-env
+        - name: skill-volume
+          image: docker.io/smartgic/ovos-skill-volume:0.0.8a
+          volumeMounts: *skill-mnt
+          env: *base-env
+        - name: skill-date-time
+          image: docker.io/smartgic/ovos-skill-date-time:0.0.8a
+          volumeMounts: *skill-mnt
+          env: *base-env
+        - name: skill-stop
+          image: docker.io/smartgic/ovos-skill-stop:0.0.8a
+          volumeMounts: *skill-mnt
+          env: *base-env
+        - name: skill-personal
+          image: docker.io/smartgic/ovos-skill-personal:0.0.8a
+          volumeMounts: *skill-mnt
+          env: *base-env
+        - name: skill-fallback-unknown
+          image: docker.io/smartgic/ovos-skill-fallback-unknown:0.0.8a
+          volumeMounts: *skill-mnt
+          env: *base-env
+        - name: skill-hello-world
+          image: docker.io/smartgic/ovos-skill-hello-world:0.0.8a
+          volumeMounts: *skill-mnt
+          env: *base-env
+        - name: skill-alerts
+          image: docker.io/smartgic/ovos-skill-alerts:0.0.8a
+          volumeMounts: *skill-mnt
+          env: *base-env
+        - name: skill-wolfie
+          image: docker.io/smartgic/ovos-skill-wolfie:alpha@sha256:4daa10e6e2fa0d269826e656f00316677d39ec27393c6bf149230fbda65b421e
+          volumeMounts: *skill-mnt
+          env: *base-env
+        - name: skill-jokes
+          image: docker.io/smartgic/ovos-skill-jokes:alpha@sha256:de04e9bc1ea9196d51dd1ae4dfda8490e9448844c5b2cad1141ee13df811da9b
+          volumeMounts: *skill-mnt
+          env: *base-env
+        - name: skill-homeassistant
+          image: ghcr.io/ramblurr/neon-homeassistant-skill:alpha@sha256:37f83815c0f36e489e5b288e8b63c36d49143bf4d16c33f541af62bd549ed529
+          volumeMounts: *skill-mnt
+          env: *base-env
+
+      volumes:
+        - name: ovos-mycroft-config
+          persistentVolumeClaim:
+            claimName: ovos-data-nfs
+        - name: ovos-tmp
+          emptyDir: {}
+      securityContext:
+        fsGroup: 2000
+        runAsGroup: 2000
+        runAsUser: 1000
