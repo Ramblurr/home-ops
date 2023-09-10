@@ -42,7 +42,7 @@ spec:
           volumeMounts: *skill-mnt
           env: *base-env
         - name: skill-date-time
-          image: docker.io/smartgic/ovos-skill-date-time:0.0.8a
+          image: docker.io/smartgic/ovos-skill-date-time:0.0.8aa
           volumeMounts: *skill-mnt
           env: *base-env
         - name: skill-stop
@@ -54,7 +54,7 @@ spec:
           volumeMounts: *skill-mnt
           env: *base-env
         - name: skill-fallback-unknown
-          image: docker.io/smartgic/ovos-skill-fallback-unknown:0.0.8a
+          image: docker.io/smartgic/ovos-skill-fallback-unknown:0.0.8aa
           volumeMounts: *skill-mnt
           env: *base-env
         - name: skill-hello-world
@@ -62,7 +62,7 @@ spec:
           volumeMounts: *skill-mnt
           env: *base-env
         - name: skill-alerts
-          image: docker.io/smartgic/ovos-skill-alerts:0.0.8a
+          image: docker.io/smartgic/ovos-skill-alerts:0.0.8aa
           volumeMounts: *skill-mnt
           env: *base-env
         - name: skill-wolfie
