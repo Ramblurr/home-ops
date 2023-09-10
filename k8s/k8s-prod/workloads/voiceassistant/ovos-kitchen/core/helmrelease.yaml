@@ -40,7 +40,7 @@ spec:
       #XDG_RUNTIME_DIR: $XDG_RUNTIME_DIR
     sidecars:
       ovos-core:
-        image: docker.io/smartgic/ovos-core:0.0.8a
+        image: docker.io/smartgic/ovos-core:0.0.8aa
         imagePullPolicy: IfNotPresent
         env: *base-env
         volumeMounts: &base-mount
@@ -58,12 +58,12 @@ spec:
           - name: ovos-nltk-data
             mountPath: /home/ovos/nltk_data
       ovos-messagebus:
-        image: docker.io/smartgic/ovos-messagebus:0.0.8a
+        image: docker.io/smartgic/ovos-messagebus:0.0.8aa
         imagePullPolicy: IfNotPresent
         env: *base-env
         volumeMounts: *base-mount
       ovos-cli:
-        image: docker.io/smartgic/ovos-cli:0.0.8a
+        image: docker.io/smartgic/ovos-cli:0.0.8aa
         imagePullPolicy: IfNotPresent
         env: *base-env
         volumeMounts: *base-mount
