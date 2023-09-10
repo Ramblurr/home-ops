@@ -202,7 +202,12 @@ set firewall name iot-primary rule 6 source group address-group 'wall-dashboards
 set firewall name iot-primary rule 6 destination group address-group 'homeassistant'
 set firewall name iot-primary rule 6 destination group port-group 'homeassistant'
 set firewall name iot-primary rule 6 protocol 'tcp_udp'
-
+set firewall name iot-primary rule 7 action 'accept'
+set firewall name iot-primary rule 7 description 'Rule: accept_roc_recv_from_mic_sats'
+set firewall name iot-primary rule 7 source group address-group 'ovos'
+set firewall name iot-primary rule 7 destination group address-group 'ovos'
+set firewall name iot-primary rule 7 destination group port-group 'ovos-mic-sat-recv'
+set firewall name iot-primary rule 7 protocol 'tcp_udp'
 
 # From IOT to DATA
 set firewall name iot-data default-action 'drop'

@@ -242,4 +242,6 @@ set firewall group port-group zigbee2mqtt port '8080'
 
 set firewall group port-group kde-connect port '1714-1764'
 
+set firewall group port-group ovos-mic-sat-recv port '10001-10003'
+
 set firewall group network-group offsite1 network '192.168.8.0/22'

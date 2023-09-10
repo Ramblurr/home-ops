@@ -1,6 +1,6 @@
 ---
 ovos_user: ovos
-roc_send_hw_input: "alsa://hw:1,0"
+roc_send_hw_input: "alsa://hw:2,0" # seeed voicecard 2-mic
 roc_send_source: rtp+rs8m://ovos-kitchen.int.socozy.casa:10001
 roc_send_repair: rs8m://ovos-kitchen.int.socozy.casa:10002
 roc_send_enabled: true
