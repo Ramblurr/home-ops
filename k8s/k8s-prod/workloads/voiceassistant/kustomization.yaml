@@ -4,5 +4,6 @@ kind: Kustomization
 resources:
   - ./namespace.yaml
   - ./mimic3/ks.yaml
+  - ./ovos-pv/ks.yaml
   - ./ovos-kitchen/ks.yaml
   - ./ovos-bedroom/ks.yaml

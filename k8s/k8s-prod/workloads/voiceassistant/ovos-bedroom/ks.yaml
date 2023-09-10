@@ -22,6 +22,7 @@ spec:
       name: ovos
       namespace: voiceassistant
   dependsOn:
+    - name: cluster-workloads-voiceassistant-pv
     - name: cluster-workloads-cert-manager-issuers
     - name: cluster-workloads-rook-ceph-cluster
 ---
