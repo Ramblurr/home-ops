@@ -123,7 +123,7 @@ spec:
           nginx.ingress.kubernetes.io/proxy-send-timeout: 365d
           nginx.ingress.kubernetes.io/custom-http-errors: "418" # dummy status code to disable custom http errors
         hosts:
-          - host: &host hivemind.${SECRET_DOMAIN_INTERNAL}
+          - host: &host bedroom-hivemind.${SECRET_DOMAIN_INTERNAL}
             paths:
               - path: /
                 pathType: Prefix
