@@ -1,0 +1,32 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: &name kitchen-skill-wikipedia
+  namespace: voiceassistant
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: *name
+  template:
+    metadata:
+      labels:
+        app: *name
+    spec:
+      containers:
+        - name: *name
+          image: docker.io/smartgic/ovos-skill-wikipedia:0.0.8a
+          volumeMounts:
+            - name: ovos-mycroft-config
+              mountPath: /home/ovos/.config
+              subPath: config
+            - name: ovos-mycroft-config
+              mountPath: /home/ovos/.local/share
+              subPath: share
+            - name: ovos-tmp
+              mountPath: /tmp/mycroft
+      volumes:
+        - name: ovos-mycroft-config
+          persistentVolumeClaim:
+            claimName: ovos-data-nfs
