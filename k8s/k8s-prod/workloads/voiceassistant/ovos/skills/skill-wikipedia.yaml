@@ -1,4 +1,5 @@
 ---
+# yaml-language-server: $schema=https://github.com/yannh/kubernetes-json-schema/raw/master/v1.27.4-standalone-strict/deployment-apps-v1.json
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -30,3 +31,9 @@ spec:
         - name: ovos-mycroft-config
           persistentVolumeClaim:
             claimName: ovos-data-nfs
+        - name: ovos-tmp
+          emptyDir: {}
+      securityContext:
+        fsGroup: 2000
+        runAsGroup: 2000
+        runAsUser: 1000
