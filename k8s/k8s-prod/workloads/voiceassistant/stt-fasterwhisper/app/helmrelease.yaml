@@ -29,6 +29,7 @@ spec:
     podSecurityContext:
       runAsUser: 1000
       runAsGroup: 1000
+      fsGroup: 1000
     service:
       main:
         ports:
@@ -52,3 +53,8 @@ spec:
               - *host
     podAnnotations:
       reloader.stakater.com/auto: "true"
+    persistence:
+      ovos-tmp:
+        enabled: true
+        type: emptyDir
+        mountPath: /.cache
