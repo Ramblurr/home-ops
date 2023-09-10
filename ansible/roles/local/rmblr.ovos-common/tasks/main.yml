@@ -9,6 +9,14 @@
       - tmux
     state: present
 
+- name: set authorized keys
+  ansible.posix.authorized_key:
+    user: ramblurr
+    state: present
+    key: "{{ ssh_public_keys | join('\n\n') }}"
+    follow: true
+    exclusive: false
+
 - name: Create ovos user
   ansible.builtin.user:
     name: "ovos"
