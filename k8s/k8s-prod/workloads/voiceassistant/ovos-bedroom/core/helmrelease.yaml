@@ -116,8 +116,7 @@ spec:
         enabled: true
         ingressClassName: nginx-internal
         annotations:
-          hajimari.io/enable: "true"
-          hajimari.io/icon: mdi:account-voice
+          hajimari.io/enable: "false"
           nginx.ingress.kubernetes.io/proxy-buffering: "off"
           nginx.ingress.kubernetes.io/proxy-read-timeout: 365d
           nginx.ingress.kubernetes.io/proxy-send-timeout: 365d
@@ -130,5 +129,25 @@ spec:
         tls:
           - hosts:
               - *host
+      insecure-messagebus:
+        enabled: true
+        ingressClassName: nginx-internal
+        annotations:
+          hajimari.io/enable: "false"
+          nginx.ingress.kubernetes.io/proxy-buffering: "off"
+          nginx.ingress.kubernetes.io/proxy-read-timeout: 365d
+          nginx.ingress.kubernetes.io/proxy-send-timeout: 365d
+          nginx.ingress.kubernetes.io/custom-http-errors: "418" # dummy status code to disable custom http errors
+        hosts:
+          - host: &host2 bedroom-messagebus.${SECRET_DOMAIN_INTERNAL}
+            paths:
+              - path: /
+                pathType: Prefix
+                service:
+                  name:: ovos-bedroom-insecure-messagebus
+                  port: 8181
+        tls:
+          - hosts:
+              - *host2
     podAnnotations:
       reloader.stakater.com/auto: "true"
