@@ -3,12 +3,12 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: cluster-workloads-ovos-core
+  name: cluster-workloads-ovos-kitchen-core
   namespace: flux-system
   labels:
     substitution.flux.home.arpa/enabled: "true"
 spec:
-  path: ./k8s/k8s-prod/workloads/voiceassistant/ovos/core
+  path: ./k8s/k8s-prod/workloads/voiceassistant/ovos-kitchen/core
   prune: true
   sourceRef:
     kind: GitRepository
@@ -29,12 +29,12 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: cluster-workloads-ovos-skills
+  name: cluster-workloads-ovos-kitchen-skills
   namespace: flux-system
   labels:
     substitution.flux.home.arpa/enabled: "true"
 spec:
-  path: ./k8s/k8s-prod/workloads/voiceassistant/ovos/skills
+  path: ./k8s/k8s-prod/workloads/voiceassistant/ovos-kitchen/skills
   prune: true
   sourceRef:
     kind: GitRepository
@@ -43,4 +43,4 @@ spec:
   retryInterval: 1m
   timeout: 3m
   dependsOn:
-    - name: cluster-workloads-ovos-core
+    - name: cluster-workloads-ovos-kitchen-core

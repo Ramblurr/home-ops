@@ -1,0 +1,134 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: ovos-bedroom
+  namespace: voiceassistant
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: app-template
+      version: 1.5.1
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+      interval: 15m
+  install:
+    createNamespace: true
+    remediation:
+      retries: 0
+  upgrade:
+    remediation:
+      retries: 0
+  values:
+    controller:
+      type: statefulset
+      annotations:
+        reloader.stakater.com/auto: "true"
+    podSecurityContext:
+      runAsUser: 1000
+      runAsGroup: 2000
+      fsGroup: 2000
+    image:
+      repository: docker.io/smartgic/ovos-hivemind-listener
+      tag: alpha@sha256:acbafee2edef570b5ea9a319bbda36d34066d74bc1c4cbbdcc8454e00bb1e5fe
+    env: &base-env
+      TZ: Europe/Berlin
+      HOME: /home/ovos
+      #XDG_RUNTIME_DIR: $XDG_RUNTIME_DIR
+    sidecars:
+      ovos-core:
+        image: docker.io/smartgic/ovos-core:0.0.8a
+        imagePullPolicy: IfNotPresent
+        env: *base-env
+        volumeMounts: &base-mount
+          - name: ovos-mycroft-config
+            mountPath: /home/ovos/.config
+            subPath: bedroom-core/config
+          - name: ovos-mycroft-config
+            mountPath: /home/ovos/.local/share
+            subPath: bedroom-core/share
+          - name: ovos-mycroft-config
+            mountPath: /home/ovos/.local/state
+            subPath: bedroom-core/state
+          - name: ovos-tmp
+            mountPath: /tmp/mycroft
+          - name: ovos-nltk-data
+            mountPath: /home/ovos/nltk_data
+      ovos-messagebus:
+        image: docker.io/smartgic/ovos-messagebus:0.0.8a
+        imagePullPolicy: IfNotPresent
+        env: *base-env
+        volumeMounts: *base-mount
+      ovos-cli:
+        image: docker.io/smartgic/ovos-cli:0.0.8a
+        imagePullPolicy: IfNotPresent
+        env: *base-env
+        volumeMounts: *base-mount
+      hivemind-cli:
+        image: docker.io/smartgic/ovos-hivemind-cli:alpha@sha256:758b636d1f947fbae9363121f389b43072619ced480f0c82df2618dff20dff22
+        imagePullPolicy: IfNotPresent
+        env: *base-env
+        volumeMounts: &hivemind-mount
+          - name: ovos-mycroft-config
+            mountPath: /home/ovos/.config
+            subPath: bedroom-core/config
+          - name: ovos-mycroft-config
+            mountPath: /home/ovos/.local/share
+            subPath: bedroom-core/share
+          - name: ovos-mycroft-config
+            mountPath: /home/ovos/.local/state
+            subPath: bedroom-core/state
+          - name: ovos-tmp
+            mountPath: /tmp/mycroft
+    persistence:
+      ovos-mycroft-config:
+        enabled: true
+        existingClaim: ovos-data-nfs
+        subPath:
+          - path: bedroom-core/config
+            mountPath: /home/ovos/.config
+          - path: bedroom-core/share
+            mountPath: /home/ovos/.local/share
+          - path: bedroom-core/state
+            mountPath: /home/ovos/.local/state
+      ovos-tmp:
+        enabled: true
+        type: emptyDir
+        mountPath: /tmp/mycroft
+      ovos-nltk-data:
+        enabled: true
+        type: emptyDir
+        mountPath: /home/ovos/nltk_data
+    service:
+      main:
+        ports:
+          http:
+            port: 5678
+      insecure-messagebus:
+        ports:
+          ovos-messagebus:
+            port: 8181
+    ingress:
+      main:
+        enabled: true
+        ingressClassName: nginx-internal
+        annotations:
+          hajimari.io/enable: "true"
+          hajimari.io/icon: mdi:account-voice
+          nginx.ingress.kubernetes.io/proxy-buffering: "off"
+          nginx.ingress.kubernetes.io/proxy-read-timeout: 365d
+          nginx.ingress.kubernetes.io/proxy-send-timeout: 365d
+          nginx.ingress.kubernetes.io/custom-http-errors: "418" # dummy status code to disable custom http errors
+        hosts:
+          - host: &host hivemind.${SECRET_DOMAIN_INTERNAL}
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - hosts:
+              - *host
+    podAnnotations:
+      reloader.stakater.com/auto: "true"
