@@ -69,7 +69,6 @@ spec:
       extraArgs:
         default-ssl-certificate: "networking/${SECRET_DOMAIN/./-}-wildcard-tls"
         ingress-class: nginx-internal
-        enable-dynamic-configuration: true
       topologySpreadConstraints:
         - maxSkew: 2
           topologyKey: kubernetes.io/hostname
