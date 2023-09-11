@@ -104,6 +104,9 @@ spec:
         mountPath: /home/ovos/nltk_data
     service:
       main:
+        type: LoadBalancer
+        loadBalancerIP: "${SVC_VOICEASS_KITCHEN}"
+        externalTrafficPolicy: Local
         ports:
           http:
             port: &secure-port 5678
