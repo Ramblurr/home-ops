@@ -58,7 +58,6 @@ spec:
           "status": $status, "vhost": "$host", "request_proto": "$server_protocol", "path": "$uri", "request_query": "$args",
           "request_length": $request_length, "duration": $request_time, "method": "$request_method", "http_referrer": "$http_referer",
           "http_user_agent": "$http_user_agent"}
-        custom-http-errors: 400,401,403,404,500,502,503,504
       metrics:
         enabled: true
         serviceMonitor:
@@ -84,12 +83,4 @@ spec:
         limits:
           memory: 500Mi
     defaultBackend:
-      enabled: true
-      image:
-        repository: ghcr.io/tarampampam/error-pages
-        tag: 2.25.0
-      extraEnvs:
-        - name: TEMPLATE_NAME
-          value: hacker-terminal
-        - name: SHOW_DETAILS
-          value: "false"
+      enabled: false
