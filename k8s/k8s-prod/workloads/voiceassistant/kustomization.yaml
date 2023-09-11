@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
   - ./namespace.yaml
   - ./tts-mimic3/ks.yaml
+  - ./tts-piper/ks.yaml
   - ./stt-whispercpp/ks.yaml
   - ./stt-fasterwhisper/ks.yaml
   - ./ovos-pv/ks.yaml

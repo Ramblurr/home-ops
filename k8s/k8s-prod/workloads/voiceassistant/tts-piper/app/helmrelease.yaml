@@ -1,0 +1,84 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: tts-piper
+  namespace: voiceassistant
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: app-template
+      version: 1.5.1
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+      interval: 15m
+  install:
+    createNamespace: true
+    remediation:
+      retries: 0
+  upgrade:
+    remediation:
+      retries: 0
+  values:
+    image:
+      repository: docker.io/smartgic/ovos-tts-server-piper
+      tag: alpha@sha256:3a224c8b7d571d8fe3e8ef60c6080cff952e43e9c931372627346b5944f7ddf6
+    podSecurityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+    persistence:
+      piper-cache:
+        enabled: true
+        type: emptyDir
+        mountPath: /home/ovos/.local/share/piper_tts
+      gradio-cache:
+        enabled: true
+        type: emptyDir
+        mountPath: /home/ovos/gradio_cached_examples
+      config:
+        enabled: true
+        type: configMap
+        name: tts-piper-config
+        subPath: mycroft.conf
+        mountPath: /home/ovos/.config/mycroft/mycroft.conf
+        readOnly: true
+    configMaps:
+      config:
+        enabled: true
+        data:
+          mycroft.conf: |-
+            {
+              "tts": {
+                "module": "ovos-tts-plugin-piper",
+                "ovos-tts-plugin-piper": {
+                  "model": "alan-low",
+                }
+              }
+            }
+
+    service:
+      main:
+        ports:
+          http:
+            port: 9666
+    ingress:
+      main:
+        enabled: true
+        ingressClassName: nginx-internal
+        annotations:
+          hajimari.io/enable: "false"
+          nginx.ingress.kubernetes.io/proxy-body-size: 100M
+          nginx.ingress.kubernetes.io/proxy-buffering: "off"
+        hosts:
+          - host: &host tts-piper.${SECRET_DOMAIN_INTERNAL}
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - hosts:
+              - *host
+    podAnnotations:
+      reloader.stakater.com/auto: "true"
