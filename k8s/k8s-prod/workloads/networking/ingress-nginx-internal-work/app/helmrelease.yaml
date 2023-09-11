@@ -74,7 +74,7 @@ spec:
           namespaceSelector:
             any: true
       extraArgs:
-        default-ssl-certificate: "networking/${SECRET_DOMAIN/./-}-wildcard-tls"
+        default-ssl-certificate: "networking/${SECRET_DOMAIN_WORK/./-}-wildcard-tls"
         ingress-class: nginx-internal-work
       topologySpreadConstraints:
         - maxSkew: 2
