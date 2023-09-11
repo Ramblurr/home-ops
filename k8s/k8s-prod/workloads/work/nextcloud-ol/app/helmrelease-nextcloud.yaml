@@ -227,7 +227,7 @@ spec:
     ingress:
       main:
         enabled: true
-        ingressClassName: nginx-internal
+        ingressClassName: nginx-internal-work
         annotations:
           external-dns.home.arpa/enabled: "true"
           hajimari.io/enable: "true"

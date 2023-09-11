@@ -50,7 +50,7 @@ spec:
       enabled: true
       hostname: &host "sentry.${SECRET_DOMAIN_WORK}"
       annotations:
-        kubernetes.io/ingress.class: nginx-internal
+        kubernetes.io/ingress.class: nginx-internal-work
         external-dns.home.arpa/enabled: "true"
         hajimari.io/enable: "true"
         hajimari.io/group: work

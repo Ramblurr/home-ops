@@ -8,11 +8,11 @@
 # E.g. `cloudflared tunnel route dns example-tunnel tunnel.example.com`.
 ingress:
   - hostname: "${SECRET_DOMAIN_WORK}"
-    service: https://ingress-nginx-internal-controller.networking.svc.cluster.local:443
+    service: https://ingress-nginx-internal-work-controller.networking.svc.cluster.local:443
     originRequest:
       originServerName: "ingress.${SECRET_DOMAIN}"
   - hostname: "*.${SECRET_DOMAIN_WORK}"
-    service: https://ingress-nginx-internal-controller.networking.svc.cluster.local:443
+    service: https://ingress-nginx-internal-work-controller.networking.svc.cluster.local:443
     originRequest:
       originServerName: "ingress.${SECRET_DOMAIN}"
   - service: http_status:404

@@ -52,7 +52,7 @@ spec:
         existingClaim: invoiceninja-ceph-storage
     ingress:
       hostname: &host "clients.${SECRET_DOMAIN_WORK}"
-      ingressClassName: nginx-internal
+      ingressClassName: nginx-internal-work
       annotations:
         external-dns.home.arpa/enabled: "true"
         hajimari.io/enable: "true"
