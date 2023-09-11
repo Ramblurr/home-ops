@@ -27,9 +27,6 @@ spec:
     keepHistory: false
   values:
     controller:
-      replicaCount: 3
-      updateStrategy:
-        type: RollingUpdate
       ingressClassResource:
         name: nginx-internal-voiceassistant
       ingressClass: nginx-internal-voiceassistant
