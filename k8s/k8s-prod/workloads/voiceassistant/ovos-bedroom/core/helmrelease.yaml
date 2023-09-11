@@ -112,7 +112,7 @@ spec:
     ingress:
       main:
         enabled: true
-        ingressClassName: nginx-internal
+        ingressClassName: nginx-internal-voiceassistant
         annotations:
           hajimari.io/enable: "false"
           nginx.ingress.kubernetes.io/proxy-buffering: "off"
@@ -131,7 +131,7 @@ spec:
               - *host
       insecure-messagebus:
         enabled: true
-        ingressClassName: nginx-internal
+        ingressClassName: nginx-internal-voiceassistant
         annotations:
           hajimari.io/enable: "false"
           nginx.ingress.kubernetes.io/proxy-buffering: "off"

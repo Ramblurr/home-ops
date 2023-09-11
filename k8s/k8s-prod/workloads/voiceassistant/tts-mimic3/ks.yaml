@@ -8,7 +8,7 @@ metadata:
   labels:
     substitution.flux.home.arpa/enabled: "true"
 spec:
-  path: ./k8s/k8s-prod/workloads/voiceassistant/mimic3/app
+  path: ./k8s/k8s-prod/workloads/voiceassistant/tts-mimic3/app
   prune: true
   sourceRef:
     kind: GitRepository

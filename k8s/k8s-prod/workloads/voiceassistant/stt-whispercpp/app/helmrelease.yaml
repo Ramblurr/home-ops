@@ -37,7 +37,7 @@ spec:
     ingress:
       main:
         enabled: true
-        ingressClassName: nginx-internal
+        ingressClassName: nginx-internal-voiceassistant
         annotations:
           hajimari.io/enable: "false"
           nginx.ingress.kubernetes.io/proxy-body-size: 100M
