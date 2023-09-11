@@ -2,7 +2,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: mimic3
+  name: tts-mimic3
   namespace: voiceassistant
 spec:
   interval: 5m
@@ -49,8 +49,7 @@ spec:
         enabled: true
         ingressClassName: nginx-internal
         annotations:
-          hajimari.io/enable: "true"
-          hajimari.io/icon: mdi:account-voice
+          hajimari.io/enable: "false"
           nginx.ingress.kubernetes.io/proxy-body-size: 100M
           nginx.ingress.kubernetes.io/proxy-buffering: "off"
         hosts:

@@ -42,7 +42,6 @@ spec:
         tls:
           - hosts:
               - *host
-            secretName: wildcard-tls
 
     podSecurityContext:
       runAsUser: 568

@@ -74,11 +74,11 @@ spec:
           volumeMounts: *skill-mnt
           env: *base-env
         - name: skill-homeassistant
-          image: ghcr.io/ramblurr/neon-homeassistant-skill:alpha@sha256:37f83815c0f36e489e5b288e8b63c36d49143bf4d16c33f541af62bd549ed529
+          image: ghcr.io/ramblurr/neon-homeassistant-skill-dev:rolling@sha256:47706ae14db176fe8df999f338af4440b6180ddf0a69b6d876c104b4dbcafafa
           volumeMounts: *skill-mnt
           env: *base-env
         - name: skill-chatgpt
-          image: ghcr.io/ramblurr/skill-ovos-fallback-chatgpt:dev@sha256:35d5b87783ad64711cac78fe271d40beac85cbe675919fc09ba445a54cce6aca
+          image: ghcr.io/ramblurr/skill-ovos-fallback-chatgpt-dev:rolling@sha256:c6a9dbbcb72c5dc7efafbf0e5ff917dd5abae5333e6b3777b499238c3509acc3
           volumeMounts: *skill-mnt
           env: *base-env
 

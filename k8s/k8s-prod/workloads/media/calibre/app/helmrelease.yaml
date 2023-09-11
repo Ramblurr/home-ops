@@ -73,7 +73,6 @@ spec:
         tls:
           - hosts:
               - *host
-            secretName: wildcard-tls
 
     resources:
       requests:
