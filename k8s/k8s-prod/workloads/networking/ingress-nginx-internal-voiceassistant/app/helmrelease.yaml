@@ -29,6 +29,14 @@ spec:
     controller:
       ingressClassResource:
         name: nginx-internal-voiceassistant
+        default: false
+        controllerValue: k8s.io/internal-voiceassistant
+      admissionWebhooks:
+        objectSelector:
+          matchExpressions:
+            - key: ingress-class
+              operator: In
+              values: ["voiceassistant"]
       ingressClass: nginx-internal-voiceassistant
       extraEnvs:
         - name: TZ

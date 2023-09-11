@@ -32,6 +32,8 @@ spec:
         type: RollingUpdate
       ingressClassResource:
         name: nginx-internal
+        default: true
+        controllerValue: k8s.io/internal
       ingressClass: nginx-internal
       extraEnvs:
         - name: TZ
