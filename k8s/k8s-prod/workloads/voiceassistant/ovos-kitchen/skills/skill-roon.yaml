@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: ramblurr-skill-roon
-          image: ghcr.io/ramblurr/ovos-skill-roon:dev@sha256:63e73f062d9f7900df3c9a2820426ef4662ddee7170e6737ff3726bd1acff7b4
+          image: ghcr.io/ramblurr/ovos-skill-roon:dev@sha256:ed5909a743f5e970489f306388aea57b5c0e9c2e3212570543078d547435d17c
           imagePullPolicy: IfNotPresent
           args: [skill]
           env: &base-env
@@ -40,7 +40,7 @@ spec:
             - name: ovos-tmp
               mountPath: /tmp/mycroft
         - name: roon-proxy
-          image: ghcr.io/ramblurr/ovos-skill-roon:dev@sha256:63e73f062d9f7900df3c9a2820426ef4662ddee7170e6737ff3726bd1acff7b4
+          image: ghcr.io/ramblurr/ovos-skill-roon:dev@sha256:ed5909a743f5e970489f306388aea57b5c0e9c2e3212570543078d547435d17c
           imagePullPolicy: IfNotPresent
           args: [server]
           env: *base-env
