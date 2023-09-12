@@ -67,6 +67,11 @@ spec:
         imagePullPolicy: IfNotPresent
         env: *base-env
         volumeMounts: *base-mount
+      ovos-ocp-standalone:
+        image: ghcr.io/ramblurr/ovos-ocp-standalone-dev:rolling@sha256:172e0a405e3f988681eb093bad7dd62f22de68c869a08ee35efb4c41cec2eb46
+        imagePullPolicy: IfNotPresent
+        env: *base-env
+        volumeMounts: *base-mount
       hivemind-cli:
         image: docker.io/smartgic/ovos-hivemind-cli:alpha@sha256:758b636d1f947fbae9363121f389b43072619ced480f0c82df2618dff20dff22
         imagePullPolicy: IfNotPresent

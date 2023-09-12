@@ -1159,6 +1159,12 @@ set firewall name primary-mgmt rule 14 protocol 'tcp_udp'
 set firewall name primary-mgmt rule 14 destination group port-group 'roon-proxy'
 set firewall name primary-mgmt rule 14 source group address-group 'ovos'
 
+set firewall name primary-mgmt rule 15 action 'accept'
+set firewall name primary-mgmt rule 15 description 'Rule: accept_ovos_k8s_messagebus'
+set firewall name primary-mgmt rule 15 protocol 'tcp_udp'
+set firewall name primary-mgmt rule 15 destination group port-group 'ovos-messagebus'
+set firewall name primary-mgmt rule 15 source group address-group 'ovos'
+
 # From PRIMARY to SERVICES
 set firewall name primary-services default-action 'accept'
 set firewall name primary-services description 'From PRIMARY to SERVICES'

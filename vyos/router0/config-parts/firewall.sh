@@ -199,6 +199,9 @@ set firewall group network-group cloudflare-ipv4 network '131.0.72.0/22'
 # Port groups
 set firewall group port-group roon-proxy port '8510'
 set firewall group port-group roon-proxy port '443'
+
+set firewall group port-group ovos-messagebus port '5678'
+set firewall group port-group ovos-messagebus port '8181'
 set firewall group port-group minio port '9100'
 set firewall group port-group wireguard port '51820'
 set firewall group port-group bluesound port '80'
