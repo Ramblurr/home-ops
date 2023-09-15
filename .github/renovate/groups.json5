@@ -22,6 +22,16 @@
     "separateMinorPatch": true
   },
     {
+    "description": "GHA Runner",
+    "groupName": "GHA Runner",
+    "matchPackagePatterns": ["gha-runner"],
+    "matchDatasources": ["docker", "helm"],
+    "group": {
+      "commitMessageTopic": "{{{groupName}}} group"
+    },
+    "separateMinorPatch": true
+  },
+    {
     "description": "Rook-Ceph Group",
     "groupName": "Rook-Ceph",
     "matchPackagePatterns": ["rook.ceph"],
