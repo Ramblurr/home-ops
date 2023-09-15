@@ -37,6 +37,7 @@ spec:
             - key: ingress-class
               operator: In
               values: ["voiceassistant"]
+      electionID: "ingress-voiceassistant-leader"
       ingressClass: nginx-internal-voiceassistant
       extraEnvs:
         - name: TZ

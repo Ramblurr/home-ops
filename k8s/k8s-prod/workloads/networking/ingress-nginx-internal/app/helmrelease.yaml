@@ -34,6 +34,7 @@ spec:
         name: nginx-internal
         default: true
         controllerValue: k8s.io/internal
+      electionID: "ingress-internal-leader"
       ingressClass: nginx-internal
       extraEnvs:
         - name: TZ

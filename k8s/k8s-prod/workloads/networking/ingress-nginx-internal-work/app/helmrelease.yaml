@@ -40,6 +40,7 @@ spec:
             - key: ingress-class
               operator: In
               values: ["work"]
+      electionID: "ingress-work-leader"
       ingressClass: nginx-internal-work
       extraEnvs:
         - name: TZ
