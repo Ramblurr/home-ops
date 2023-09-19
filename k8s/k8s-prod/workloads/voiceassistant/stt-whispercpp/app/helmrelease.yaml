@@ -25,7 +25,7 @@ spec:
   values:
     image:
       repository: ghcr.io/ramblurr/ovos-stt-plugin-whispercpp-dev
-      tag: rolling@sha256:5d177dd8c4503df64b0fd5948872cbe05f649db967f2747070c6bed928aac76f
+      tag: rolling@sha256:951f8d02954f2cb19c25beccb62629e5fa8a62161f12a4d364b798f7b1ce7bd6
     podSecurityContext:
       runAsUser: 1000
       runAsGroup: 1000
