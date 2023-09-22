@@ -28,6 +28,12 @@ spec:
         repository: ghcr.io/rtsp/docker-lighttpd
         tag: 1.4.71
 
+      client:
+        m.homeserver:
+          base_url: "https://matrix.${SECRET_DOMAIN_WORK}"
+        org.matrix.msc3575.proxy:
+          url: "https://matrix.${SECRET_DOMAIN_WORK}"
+
     workers:
       media_repository:
         enabled: false
@@ -64,6 +70,16 @@ spec:
         - &host "matrix.${SECRET_DOMAIN_WORK}"
       hosts:
         - *host
+
+      paths:
+        - path: /_matrix/client/unstable/org.matrix.msc3575/sync
+          pathType: Prefix
+          backend:
+            service:
+              name: matrix-sliding-sync
+              port:
+                number: 80
+
       wkHosts:
         - *host
       tls:

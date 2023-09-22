@@ -1,0 +1,64 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: matrix-sliding-sync
+  namespace: comms
+spec:
+  interval: 5m
+  chart:
+    spec:
+      # renovate: registryUrl=https://ananace.gitlab.io/charts
+      chart: sliding-sync-proxy
+      version: 0.2.4
+      sourceRef:
+        kind: HelmRepository
+        name: ananace
+        namespace: flux-system
+      interval: 5m
+  dependsOn:
+    - name: matrix-synapse
+      namespace: comms
+  values:
+    image:
+      repository: ghcr.io/matrix-org/sliding-sync
+      tag: v0.99.10
+    # syncSecret:
+    matrixServer: "https://matrix.${SECRET_DOMAIN_WORK}"
+    nameOverride: matrix-sliding-sync
+    fullNameOverride: matrix-sliding-sync
+    postgresql:
+      enabled: false
+    externalPostgresql:
+      sslmode: disable
+      #host:
+      # database:
+      # username:
+      # password:
+    podAnnotations:
+      reloader.stakater.com/auto: "true"
+  valuesFrom:
+    - kind: Secret
+      name: matrix-synapse-secret
+      valuesKey: sliding-sync-key
+      targetPath: syncSecret
+
+    - kind: Secret
+      name: pg-cluster-matrix-synapse-pguser-sliding-sync
+      valuesKey: host
+      targetPath: externalPostgresql.host
+
+    - kind: Secret
+      name: pg-cluster-matrix-synapse-pguser-sliding-sync
+      valuesKey: dbname
+      targetPath: externalPostgresql.database
+
+    - kind: Secret
+      name: pg-cluster-matrix-synapse-pguser-sliding-sync
+      valuesKey: user
+      targetPath: externalPostgresql.username
+
+    - kind: Secret
+      name: pg-cluster-matrix-synapse-pguser-sliding-sync
+      valuesKey: password
+      targetPath: externalPostgresql.password

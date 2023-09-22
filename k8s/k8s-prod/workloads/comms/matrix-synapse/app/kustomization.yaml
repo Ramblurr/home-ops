@@ -7,4 +7,5 @@ resources:
   - externalsecret.yaml
   - volsync.yaml
   - helmrelease.yaml
+  - helmrelease-sliding-sync.yaml
   - servicemonitor.yaml
