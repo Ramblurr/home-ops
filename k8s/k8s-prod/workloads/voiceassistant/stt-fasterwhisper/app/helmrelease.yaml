@@ -25,7 +25,7 @@ spec:
   values:
     image:
       repository: ghcr.io/ramblurr/ovos-stt-plugin-fasterwhisper-dev
-      tag: rolling@sha256:ca94a4096f68161fc51037d1c22756c0279afc4a36da524a88bbee34cf0f2a47
+      tag: rolling@sha256:cc217961faeda293ea1ebe8753054f6e4b9ee285a35101af95752e05537127e5
     podSecurityContext:
       runAsUser: 1000
       runAsGroup: 1000
