@@ -50,7 +50,7 @@ access_control:
         - "group:friends"
         - "group:${SECRET_AUTHELIA_GROUP}"
     - domain: ["photos.${SECRET_DOMAIN}"]
-      policy: two_factor
+      policy: one_factor
       subject:
         - "group:friends"
         - "group:${SECRET_AUTHELIA_GROUP}"
@@ -71,7 +71,7 @@ access_control:
         - "alertmanager.${SECRET_INTERNAL_DOMAIN}"
         - "grafana.${SECRET_INTERNAL_DOMAIN}"
         - "prometheus.${SECRET_INTERNAL_DOMAIN}"
-      policy: two_factor
+      policy: one_factor
       subject:
         - "group:admins"
     # catch alls
@@ -81,7 +81,7 @@ access_control:
         - "group:admins"
         - "group:${SECRET_AUTHELIA_GROUP}"
     - domain: ["*.${SECRET_DOMAIN}"]
-      policy: two_factor
+      policy: one_factor
       subject:
         - "group:admins"
         - "group:${SECRET_AUTHELIA_GROUP}"
@@ -96,7 +96,7 @@ identity_providers:
         description: Grafana
         secret: "${GRAFANA_OAUTH_CLIENT_SECRET_HASH}"
         public: false
-        authorization_policy: two_factor
+        authorization_policy: one_factor
         pre_configured_consent_duration: 1y
         scopes: ["openid", "profile", "groups", "email"]
         redirect_uris:
@@ -106,7 +106,7 @@ identity_providers:
         description: Immich
         secret: "${IMMICH_OAUTH_CLIENT_SECRET_HASH}"
         public: false
-        authorization_policy: two_factor
+        authorization_policy: one_factor
         pre_configured_consent_duration: 1y
         scopes: ["openid", "profile", "groups", "email"]
         redirect_uris:
