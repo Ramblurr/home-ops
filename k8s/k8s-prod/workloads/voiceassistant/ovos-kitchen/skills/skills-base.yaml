@@ -78,7 +78,7 @@ spec:
           volumeMounts: *skill-mnt
           env: *base-env
         - name: skill-chatgpt
-          image: ghcr.io/ramblurr/skill-ovos-fallback-chatgpt-dev:rolling@sha256:b9344651211cf4e03485b992aa67f94ec235fa668ebca0356847610b3c10b578
+          image: ghcr.io/ramblurr/skill-ovos-fallback-chatgpt-dev:rolling@sha256:48fac1d7c7e17420a510da7d269b9aeebe9d0ed4eb2d73420d2d0bfb4a8b446e
           volumeMounts: *skill-mnt
           env: *base-env
 
