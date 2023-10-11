@@ -27,7 +27,7 @@ spec:
                 secretName: photoprism-config-secret
           containers:
             - name: photoprism-backup
-              image: docker.io/photoprism/photoprism:latest@sha256:53c504ee6272cc8ddc6f25d49e621926df25842d87a41bd822fd0637acaa1836
+              image: docker.io/photoprism/photoprism:latest@sha256:29b636a388ab50cbcc9aec7dd6fafe634780a59cb316517511ad14c9cf237242
               imagePullPolicy: IfNotPresent
               command: ["photoprism", "backup", "--force", "--index"]
               env:
