@@ -68,7 +68,7 @@ spec:
         env: *base-env
         volumeMounts: *base-mount
       ovos-ocp-standalone:
-        image: ghcr.io/ramblurr/ovos-ocp-standalone-dev:rolling@sha256:4b1b5c07ca32cf9d1f6d14a68bf507cec2c3672d4a7eda4a3e2deca0e4e26b56
+        image: ghcr.io/ramblurr/ovos-ocp-standalone-dev:rolling@sha256:a56479095b58f589e977ff81af059c3e03936731b17522421aa04e08760cc61f
         imagePullPolicy: IfNotPresent
         env: *base-env
         volumeMounts: *base-mount
