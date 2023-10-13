@@ -22,7 +22,7 @@ spec:
   values:
     image:
       repository: ghcr.io/matrix-org/sliding-sync
-      tag: v0.99.10
+      tag: v0.99.11
     # syncSecret:
     matrixServer: "https://matrix.${SECRET_DOMAIN_WORK}"
     nameOverride: matrix-sliding-sync
