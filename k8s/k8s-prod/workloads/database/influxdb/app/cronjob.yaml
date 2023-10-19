@@ -32,7 +32,7 @@ spec:
               - 65541
           containers:
             - name: influxdb-backup
-              image: docker.io/library/influxdb:2.7.1
+              image: docker.io/library/influxdb:2.7.3
               imagePullPolicy: IfNotPresent
               command: ["/bin/sh", "/scripts/backup.sh"]
               env:
