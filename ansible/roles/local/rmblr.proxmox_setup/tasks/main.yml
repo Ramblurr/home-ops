@@ -132,11 +132,6 @@
   when: proxmox_acme_enabled
   tags: [acme-cert]
 
-- name: install borg backup
-  ansible.builtin.import_tasks: ./borg-setup.yml
-  when: proxmox_borg_enabled
-  tags: [borg-setup]
-
 - name: configure ceph
   ansible.builtin.import_tasks: ./ceph.yml
   when: proxmox_ceph_enabled
@@ -148,3 +143,8 @@
 - name: configure pve-exporter
   ansible.builtin.import_tasks: ./pve-exporter.yml
   when: proxmox_pve_exporter_enabled
+
+- name: install borg backup
+  ansible.builtin.import_tasks: ./borg-setup.yml
+  when: proxmox_borg_enabled
+  tags: [borg-setup]

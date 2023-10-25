@@ -9,6 +9,7 @@ borg_ssh_key_public: ENC[AES256_GCM,data:2Tv+EQe3UCddzE623ufr7jRKNmXSGN2r7UfK4vs
 borg_source_directories:
     - ENC[AES256_GCM,data:kwAaOQ==,iv:gP903xGaYQ5AHhXt8aSDSL2jlHmVaKIpLSgenYHViVU=,tag:Zwzt/C/yE+KSZoLyz7JBkg==,type:str]
     - ENC[AES256_GCM,data:dR1RbDxJ0I7Ghhqx8lG56HrLO0somQ==,iv:jWSvmdNEdBZnZUN8OotH9qJj1FIQHgziwILAv5kROpw=,tag:vSD39S8XR7AX0kT7DTLz3Q==,type:str]
+    - ENC[AES256_GCM,data:2kVbsHW/fuSqmQKXYqVd,iv:ampxZQ55doCaXNrT9c3yBM+mkO/7v5u+IdSQCIz9pmE=,tag:p4ZkBuwy2+TUShYayXJKIg==,type:str]
     - ENC[AES256_GCM,data:ZxwTnss=,iv:N3FHgz/1MAQx2/QDFFhDUMsn9NtlZvC9tSEXE4GkCiA=,tag:0yPQAjLYI3XFLZdjC++OYw==,type:str]
     - ENC[AES256_GCM,data:OzLdimVeFnivv9t74KUC,iv:CYmtf+ScGDi9gseOkKHgQW+Z/WlalitHWeZPAxAceY4=,tag:oi4pt4hEuVFanxhlb4zfBQ==,type:str]
     - ENC[AES256_GCM,data:REaTdTrflulinDs1eHhl,iv:OzT9ETBW9yVev/dITtZX2I13mAzjoRBsKJ3j77/zQVM=,tag:gXaixKhaDGYqZsEey4TaRQ==,type:str]
@@ -96,8 +97,8 @@ sops:
             enFpTG9JQmZKSlNhK0ZrclRSOGdoQ1UKYTv/OUYk0ojImBmUraXlM2t3PxF2LfYR
             78mlGvKFkfppbupnUgbQOAjF0QJNyyoPM8d3EAFozGaA8lS3Qd4sWA==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2023-09-03T12:40:26Z"
-    mac: ENC[AES256_GCM,data:t3b+ePG3La3XVZRJTcayvcfZ09a+fbAePOENJ8xQh57RZnCO84USXjJTd+wwbSvIv6GXT1peT3uaQC/8CS06qmR0s5HW96eIWJM1tR3WP7gT08qxr16fZBMFCQpb0e4Udu/Dz3rdeZVhAs/Qc//kk27XVNY/Hif+DAGVOlWgdyM=,iv:+2kzCSIZ36UhpbOh+6rtKerlfVZumxxki9p3CVDpRYE=,tag:Silp46T/chz2TqyS6QB44Q==,type:str]
+    lastmodified: "2023-10-24T16:00:13Z"
+    mac: ENC[AES256_GCM,data:i3sYmVk+RUAvETkLaG6XOJyLNtr/U31+rfKW4/1LHBPgxA9Oi3Q/ck7CkdJY50BTqoHuW74U+/RBQfAPfnrHy0O3FqP6WI2In5NkKVE31P0ffXk6uUWbJEBDa/tq4xpm2cNtJgJUrbL5K5REkgdRxyR29nGSylTZH+C2MBqCZS0=,iv:RwniN1gmVC8h1o/w4s+XlA3DW2uKDK7/jA5MCos2V98=,tag:knasRQMRyj34S9498VYPUw==,type:str]
     pgp:
         - created_at: "2021-08-18T15:21:28Z"
           enc: |-
@@ -120,4 +121,4 @@ sops:
             -----END PGP MESSAGE-----
           fp: 978C4D08058BA26EB97CB51820782DBCACFAACDA
     unencrypted_suffix: _unencrypted
-    version: 3.7.3
+    version: 3.8.0
