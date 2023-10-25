@@ -87,10 +87,10 @@ spec:
     resources:
       requests:
         cpu: 5m
-        memory: 277M
+        memory: 512M
         gpu.intel.com/i915: 1
       limits:
-        memory: 512M
+        memory: 2048M
         gpu.intel.com/i915: 1
 
     nodeSelector:
