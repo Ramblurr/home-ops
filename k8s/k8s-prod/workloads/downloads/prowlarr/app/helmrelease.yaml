@@ -1,4 +1,5 @@
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2beta1.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
@@ -9,7 +10,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 2.0.3
       interval: 30m
       sourceRef:
         kind: HelmRepository
@@ -17,37 +18,51 @@ spec:
         namespace: flux-system
 
   values:
-    controller:
-      type: statefulset
-      annotations:
-        reloader.stakater.com/auto: "true"
-
-    image:
-      repository: ghcr.io/onedr0p/prowlarr-nightly
-      tag: 1.10.1.4055@sha256:35bd8dec40871ac6b418aa2f27d8743138120b6ed3dc71ef11ca324dedd54a10
-
-    podAnnotations:
-      setGateway: "true"
-
-    podSecurityContext:
-      runAsUser: 2000
-      runAsGroup: 2000
-      fsGroup: 2000
-      fsGroupChangePolicy: "OnRootMismatch"
-
-    env:
-      PROWLARR__INSTANCE_NAME: Prowlarr
-      PROWLARR__PORT: &port 9696
-      PROWLARR__LOG_LEVEL: info
-      PROWLARR__ANALYTICS_ENABLED: "False"
-      PROWLARR__AUTHENTICATION_METHOD: External
-      PROWLARR__API_KEY:
-        valueFrom:
-          secretKeyRef:
-            name: prowlarr-secret
-            key: PROWLARR__API_KEY
-
-    hostname: prowlarr
+    controllers:
+      main:
+        type: statefulset
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          main:
+            image:
+              repository: ghcr.io/onedr0p/prowlarr-nightly
+              tag: 1.10.1.4055@sha256:35bd8dec40871ac6b418aa2f27d8743138120b6ed3dc71ef11ca324dedd54a10
+            resources:
+              requests:
+                cpu: 18m
+                memory: 160Mi
+              limits:
+                memory: 160Mi
+            env:
+              TZ: "${TIMEZONE}"
+              PROWLARR__INSTANCE_NAME: Prowlarr
+              PROWLARR__PORT: &port 9696
+              PROWLARR__LOG_LEVEL: info
+              PROWLARR__ANALYTICS_ENABLED: "False"
+              PROWLARR__AUTHENTICATION_METHOD: External
+              PROWLARR__API_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: prowlarr-secret
+                    key: PROWLARR__API_KEY
+        pod:
+          hostname: prowlarr
+          annotations:
+            setGateway: "true"
+          securityContext:
+            runAsUser: 2000
+            runAsGroup: 2000
+            fsGroup: 2000
+            fsGroupChangePolicy: "OnRootMismatch"
+        statefulset:
+          volumeClaimTemplates:
+            - name: config
+              accessMode: ReadWriteOnce
+              size: 1Gi
+              storageClass: "${DEFAULT_STORAGE_CLASS}"
+              globalMounts:
+                - path: /config
 
     service:
       main:
@@ -58,7 +73,7 @@ spec:
     ingress:
       main:
         enabled: true
-        ingressClassName: nginx-internal
+        className: nginx-internal
         annotations:
           hajimari.io/icon: mdi:movie-search
           nginx.ingress.kubernetes.io/auth-method: GET
@@ -67,22 +82,12 @@ spec:
           nginx.ingress.kubernetes.io/auth-response-headers: Remote-User,Remote-Name,Remote-Groups,Remote-Email
           nginx.ingress.kubernetes.io/auth-snippet: proxy_set_header X-Forwarded-Method $request_method;
         hosts:
-          - host: &host "prowlarr.${SECRET_DOMAIN_INTERNAL}"
+          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN_INTERNAL}"
             paths:
               - path: /
+                service:
+                  name: main
+                  port: http
         tls:
           - hosts:
               - *host
-
-    volumeClaimTemplates:
-      - name: config
-        mountPath: /config
-        accessMode: ReadWriteOnce
-        size: 1Gi
-        storageClass: "${DEFAULT_STORAGE_CLASS}"
-    resources:
-      requests:
-        cpu: 18m
-        memory: 160Mi
-      limits:
-        memory: 160Mi
