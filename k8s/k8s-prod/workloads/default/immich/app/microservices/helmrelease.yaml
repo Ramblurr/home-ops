@@ -10,15 +10,24 @@ spec:
     spec:
       chart: app-template
       version: 1.5.1
-      interval: 30m
       sourceRef:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
-
+  maxHistory: 2
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
   dependsOn:
     - name: immich-server
     - name: immich-typesense
+
 
   values:
     controller:
@@ -30,11 +39,7 @@ spec:
     image:
       repository: ghcr.io/immich-app/immich-server
       tag: v1.82.1@sha256:c6dc1823f99e3b23002088eab26b7675e7c3b4703ab71449d054dd18bbdfb11d
-
-    command: /bin/sh
-    args:
-      - ./start-microservices.sh
-
+    args: ["start-microservices.sh"]
     env:
       DB_HOSTNAME:
         valueFrom:
@@ -86,12 +91,12 @@ spec:
         mountPath: /usr/src/app/.transformers_cache
     resources:
       requests:
-        cpu: 5m
-        memory: 512M
         gpu.intel.com/i915: 1
+        cpu: 100m
+        memory: 1000Mi
       limits:
-        memory: 2048M
         gpu.intel.com/i915: 1
+        memory: 6000Mi
 
     nodeSelector:
       rmblr.role/worker: "true"
