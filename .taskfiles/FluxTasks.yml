@@ -45,3 +45,11 @@ tasks:
       - |
         flux get helmrelease --all-namespaces --no-header | awk '{print $1, $2}' \
           | xargs -L 1 bash -c 'flux -n $0 resume helmrelease $1'
+
+  hr-toggle:
+    desc: Suspend and then resume a HelmRelease pass ns= and hr=
+    cmds:
+      - |
+        flux suspend hr -n {{.ns}} {{.hr}}
+        sleep 1
+        flux resume hr -n {{.ns}} {{.hr}}
