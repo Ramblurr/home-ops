@@ -1,4 +1,5 @@
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2beta1.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
@@ -9,7 +10,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 2.0.3
       interval: 30m
       sourceRef:
         kind: HelmRepository
@@ -17,18 +18,26 @@ spec:
         namespace: flux-system
 
   values:
-    controller:
-      type: statefulset
-      annotations:
-        reloader.stakater.com/auto: "true"
+    controllers:
+      main:
+        type: statefulset
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          main:
+            image:
+              repository: cloudb0x/autoscan
+              tag: master
+            env:
+              PUID: 2000
+              PGID: 100
+            resources:
+              requests:
+                cpu: 5m
+                memory: 34M
+              limits:
+                memory: 34M
 
-    image:
-      repository: cloudb0x/autoscan
-      tag: master
-
-    env:
-      PUID: 2000
-      PGID: 100
 
     service:
       main:
@@ -40,21 +49,15 @@ spec:
       main:
         enabled: false
 
-    resources:
-      requests:
-        cpu: 5m
-        memory: 34M
-      limits:
-        memory: 34M
-
     persistence:
       config:
-        enabled: true
         existingClaim: autoscan-data
       config-file:
-        enabled: true
         type: secret
         name: autoscan-config-secret
-        subPath: config.yml
-        mountPath: /config/config.yml
-        readOnly: true
+        advancedMounts:
+          main: # controller
+            main: # container
+            - path: /config/config.yml
+              subPath: config.yml
+              readOnly: true
