@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 2.0.3
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -31,40 +31,48 @@ spec:
   values:
     global:
       fullnameOverride: *app
-    #automountServiceAccountToken: false
-    controller:
-      type: deployment
-      replicas: 1
-    image:
-      repository: docker.io/searxng/searxng
-      tag: 2023.7.22-65d8b1a31
-    podAnnotations:
-      setGateway: "true"
-    env:
-      TZ: "${TZ}"
-      SEARXNG_BASE_URL: "https://search.${SECRET_DOMAIN}"
-      SEARXNG_URL: "https://search.${SECRET_DOMAIN}"
-      SEARXNG_PORT: &http "8080"
-      SEARXNG_SECRET:
-        valueFrom:
-          secretKeyRef:
-            name: searxng-secret
-            key: SEARXNG_SECRET
-      SEARXNG_REDIS_URL:
-        valueFrom:
-          secretKeyRef:
-            name: searxng-secret
-            key: REDIS_URL
+    controllers:
+      main:
+        pod:
+          annotations:
+            setGateway: "true"
+        containers:
+          main:
+            image:
+              repository: docker.io/searxng/searxng
+              tag: 2023.7.22-65d8b1a31
+            resources:
+              requests:
+                cpu: 50m
+                memory: 850Mi
+              limits:
+                memory: 2048Mi
+            env:
+              TZ: "${TZ}"
+              SEARXNG_BASE_URL: "https://search.${SECRET_DOMAIN}"
+              SEARXNG_URL: "https://search.${SECRET_DOMAIN}"
+              SEARXNG_PORT: &http "8080"
+              SEARXNG_SECRET:
+                valueFrom:
+                  secretKeyRef:
+                    name: searxng-secret
+                    key: SEARXNG_SECRET
+              SEARXNG_REDIS_URL:
+                valueFrom:
+                  secretKeyRef:
+                    name: searxng-secret
+                    key: REDIS_URL
     service:
       main:
         ports:
           http:
             port: *http
+
     ingress:
       main:
         enabled: true
         primary: true
-        ingressClassName: nginx-internal
+        className: nginx-internal
         annotations:
           hajimari.io/enable: "true"
           external-dns.home.arpa/enabled: "true"
@@ -78,23 +86,29 @@ spec:
           - host: &host "search.${SECRET_DOMAIN}"
             paths:
               - path: /
-                pathType: Prefix
+                service:
+                  name: main
+                  port: http
         tls:
           - hosts:
               - *host
     persistence:
       config:
-        enabled: true
         type: configMap
         name: searxng-config
-        subPath: settings.yml
-        mountPath: /etc/searxng/settings.yml
-        readOnly: true
+        advancedMounts:
+          main:
+            main:
+              - path: /etc/searxng/settings.yml
+                subPath: settings.yml
+                readOnly: true
       tmp:
         enabled: true
         type: emptyDir
         medium: Memory
-        mountPath: /etc/searxng
+        globalMounts:
+          - path: /etc/searxng
+
     configMaps:
       config:
         enabled: true
@@ -230,9 +244,3 @@ spec:
               - 'Vim-like hotkeys'
     # NOTE: Search engines disabled:
     # - archive.is (too many requests)
-    resources:
-      requests:
-        cpu: 50m
-        memory: 850Mi
-      limits:
-        memory: 2048Mi
