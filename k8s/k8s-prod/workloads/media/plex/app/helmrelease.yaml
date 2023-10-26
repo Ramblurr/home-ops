@@ -33,26 +33,27 @@ spec:
     - name: volsync
       namespace: volsync
   values:
-    controller:
-      type: statefulset
-      annotations:
-        reloader.stakater.com/auto: "true"
+    controllers:
+      main:
+        type: statefulset
+        annotations:
+          reloader.stakater.com/auto: "true"
 
-      containers:
-        main:
-          image:
-            repository: ghcr.io/onedr0p/plex
-            tag: 1.32.6.7557-1cf77d501@sha256:6f87b0811df009af1defc9afad6afa383b9d821a7fcaddc968df41ba445d321e
-          env:
-            TZ: "${TIMEZONE}"
-          resources:
-            requests:
-              gpu.intel.com/i915: 1
-              cpu: 100m
-              memory: 2Gi
-            limits:
-              gpu.intel.com/i915: 1
-              memory: 10Gi
+        containers:
+          main:
+            image:
+              repository: ghcr.io/onedr0p/plex
+              tag: 1.32.6.7557-1cf77d501@sha256:6f87b0811df009af1defc9afad6afa383b9d821a7fcaddc968df41ba445d321e
+            env:
+              TZ: "${TIMEZONE}"
+            resources:
+              requests:
+                gpu.intel.com/i915: 1
+                cpu: 100m
+                memory: 2Gi
+              limits:
+                gpu.intel.com/i915: 1
+                memory: 10Gi
         pod:
           affinity:
             podAntiAffinity:
