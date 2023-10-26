@@ -6,6 +6,7 @@
     "groupName": "Voice Assistant",
     "matchDatasources": ["docker", "github-tags", "helm"],
     "matchPackagePatterns": ["ovos", "^skill-"],
+    "allowedVersions": "!/0.0.8aa$/",
     "group": {
       "commitMessageTopic": "{{{groupName}}} group"
     }

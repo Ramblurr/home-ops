@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: skill-wikipedia
-          image: docker.io/smartgic/ovos-skill-wikipedia:0.0.8aa
+          image: docker.io/smartgic/ovos-skill-wikipedia:0.0.8a
           env: &base-env
             - name: TZ
               value: Europe/Berlin
@@ -38,31 +38,31 @@ spec:
           volumeMounts: *skill-mnt
           env: *base-env
         - name: skill-volume
-          image: docker.io/smartgic/ovos-skill-volume:0.0.8aa
+          image: docker.io/smartgic/ovos-skill-volume:0.0.8a
           volumeMounts: *skill-mnt
           env: *base-env
         - name: skill-date-time
-          image: docker.io/smartgic/ovos-skill-date-time:0.0.8aa
+          image: docker.io/smartgic/ovos-skill-date-time:0.0.8a
           volumeMounts: *skill-mnt
           env: *base-env
         - name: skill-stop
-          image: docker.io/smartgic/ovos-skill-stop:0.0.8aa
+          image: docker.io/smartgic/ovos-skill-stop:0.0.8a
           volumeMounts: *skill-mnt
           env: *base-env
         - name: skill-personal
-          image: docker.io/smartgic/ovos-skill-personal:0.0.8aa
+          image: docker.io/smartgic/ovos-skill-personal:0.0.8a
           volumeMounts: *skill-mnt
           env: *base-env
         - name: skill-fallback-unknown
-          image: docker.io/smartgic/ovos-skill-fallback-unknown:0.0.8aa
+          image: docker.io/smartgic/ovos-skill-fallback-unknown:0.0.8a
           volumeMounts: *skill-mnt
           env: *base-env
         - name: skill-hello-world
-          image: docker.io/smartgic/ovos-skill-hello-world:0.0.8aa
+          image: docker.io/smartgic/ovos-skill-hello-world:0.0.8a
           volumeMounts: *skill-mnt
           env: *base-env
         - name: skill-alerts
-          image: docker.io/smartgic/ovos-skill-alerts:0.0.8aa
+          image: docker.io/smartgic/ovos-skill-alerts:0.0.8a
           volumeMounts: *skill-mnt
           env: *base-env
         #- name: skill-wolfie
