@@ -2,6 +2,16 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "packageRules": [
     {
+    "description": "Reduce noise for monitoring stack updates",
+    "groupName": "Monitoring Stack",
+    "matchDatasources": ["docker", "github-tags", "helm", "flux"],
+    "matchPackagePatterns": ["kube-prometheus-stack", "loki"],
+    "group": {
+      "commitMessageTopic": "{{{groupName}}} group"
+    },
+    "schedule": ["on the first day of the month"]
+  },
+    {
     "description": "Voice Assistant Group",
     "groupName": "Voice Assistant",
     "matchDatasources": ["docker", "github-tags", "helm"],
