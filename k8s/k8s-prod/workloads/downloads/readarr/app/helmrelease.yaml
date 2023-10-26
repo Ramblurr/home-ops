@@ -1,4 +1,5 @@
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2beta1.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
@@ -8,7 +9,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 2.0.3
       interval: 15m
       sourceRef:
         kind: HelmRepository
@@ -16,12 +17,31 @@ spec:
         namespace: flux-system
   interval: 15m
   values:
-    image:
-      repository: ghcr.io/onedr0p/readarr-nightly
-      tag: 0.3.9.2272
-
-    env:
-      TZ: "${SECRET_TZ}"
+    controllers:
+      main:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          main:
+            image:
+              repository: ghcr.io/onedr0p/readarr-nightly
+              tag: 0.3.9.2272
+            env:
+              TZ: "${TIMEZONE}"
+            resources:
+              requests:
+                memory: 250Mi
+                cpu: 500m
+              limits:
+                memory: 1500Mi
+        pod:
+          securityContext:
+            runAsUser: 568
+            runAsGroup: 568
+            fsGroup: 568
+            fsGroupChangePolicy: "OnRootMismatch"
+            supplementalGroups:
+              - 2000
 
     service:
       main:
@@ -31,48 +51,26 @@ spec:
 
     ingress:
       main:
-        primary: true
         enabled: true
-        ingressClassName: nginx-internal
+        className: nginx-internal
         hosts:
-          - host: &host "readarr.${SECRET_DOMAIN_INTERNAL}"
+          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN_INTERNAL}"
             paths:
               - path: /
                 pathType: Prefix
+                service:
+                  name: main
+                  port: http
         tls:
           - hosts:
               - *host
 
-    podSecurityContext:
-      runAsUser: 568
-      runAsGroup: 568
-      fsGroup: 568
-      fsGroupChangePolicy: "OnRootMismatch"
-      supplementalGroups:
-        - 2000
-
     persistence:
       config:
-        enabled: true
         existingClaim: readarr-config-0
       media:
-        enabled: true
         existingClaim: mali-downloads-media-nfs
         mountPath: /media
       downloads:
-        enabled: true
         existingClaim: mali-downloads-nfs
         mountPath: /downloads
-
-    resources:
-      requests:
-        memory: 250Mi
-        cpu: 500m
-      limits:
-        memory: 1500Mi
-
-    prometheus:
-      podMonitor:
-        enabled: true
-        interval: 10m
-        scrapeTimeout: 2m
