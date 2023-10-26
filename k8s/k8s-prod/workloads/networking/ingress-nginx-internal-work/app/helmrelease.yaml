@@ -45,6 +45,7 @@ spec:
       extraEnvs:
         - name: TZ
           value: "${SECRET_TIMEZONE}"
+      allowSnippetAnnotations: true
       service:
         annotations:
           io.cilium/lb-ipam-ips: "${SVC_INGRESS_WORK}"
