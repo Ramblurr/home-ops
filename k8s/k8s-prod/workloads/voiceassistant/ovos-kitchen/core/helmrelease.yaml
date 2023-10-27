@@ -33,7 +33,7 @@ spec:
       fsGroup: 2000
     image:
       repository: docker.io/smartgic/ovos-hivemind-listener
-      tag: alpha@sha256:acbafee2edef570b5ea9a319bbda36d34066d74bc1c4cbbdcc8454e00bb1e5fe
+      tag: alpha@sha256:49013e2d34123110a8a20f0e9e1b139966b8356c9acc21de2f692c98c5d415b5
     env: &base-env
       TZ: Europe/Berlin
       HOME: /home/ovos
@@ -68,7 +68,7 @@ spec:
         env: *base-env
         volumeMounts: *base-mount
       ovos-ocp-standalone:
-        image: ghcr.io/ramblurr/ovos-ocp-standalone-dev:rolling@sha256:7846f08952d1b8e96ccde48d7df2fc296929d41f658e5992dd2de00fb23628ed
+        image: ghcr.io/ramblurr/ovos-ocp-standalone-dev:rolling@sha256:89544e8fac238308dbdc833ad4b8f50cd9df90be68af0bf890e311e64c72b6cb
         imagePullPolicy: IfNotPresent
         env: *base-env
         volumeMounts: *base-mount
