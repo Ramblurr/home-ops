@@ -9,6 +9,7 @@ resources:
   - ./autoscan/ks.yaml
   - ./radarr/ks.yaml
   - ./sonarr/ks.yaml
+  - ./lidarr/ks.yaml
   - ./prowlarr/ks.yaml
   - ./recyclarr/ks.yaml
   - ./sabnzbd/ks.yaml

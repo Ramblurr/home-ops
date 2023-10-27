@@ -1,0 +1,11 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: downloads
+resources:
+  - ./externalsecret.yaml
+  - ./volsync.yaml
+  - ./helmrelease.yaml
+commonLabels:
+  app.kubernetes.io/name: lidarr
+  app.kubernetes.io/instance: lidarr
