@@ -115,9 +115,9 @@ spec:
               - *host
     persistence:
       media:
-        existingClaim: mali-downloads-media-nfs
+        existingClaim: mali-downloads-media-music-other-nfs
         globalMounts:
-          - path: /media
+          - path: /music-other
       downloads:
         existingClaim: mali-downloads-nfs
         globalMounts:

@@ -5,4 +5,5 @@ kind: Kustomization
 namespace: downloads
 resources:
   - ./pv.yaml
+  - ./music-pv.yaml
   - ./downloads-pv.yaml
