@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: sentry
-      version: 20.8.2
+      version: 20.9.0
       sourceRef:
         kind: HelmRepository
         name: sentry
