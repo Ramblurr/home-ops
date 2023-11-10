@@ -25,7 +25,7 @@ spec:
   values:
     image:
       repository: docker.io/smartgic/ovos-tts-server-piper
-      tag: alpha@sha256:fc508aaa211ea7aa8800d23291a3809b73f317dcac2ffe19c9a788b8fb4986e1
+      tag: alpha@sha256:aaf7220604a9ef5030c62da74f7c514344559d236988045a4d239f8b6175c321
     podSecurityContext:
       runAsUser: 1000
       runAsGroup: 1000
