@@ -10,7 +10,7 @@ spec:
     spec:
       # renovate: registryUrl=https://ananace.gitlab.io/charts
       chart: sliding-sync-proxy
-      version: 0.2.5
+      version: 0.2.6
       sourceRef:
         kind: HelmRepository
         name: ananace
