@@ -70,7 +70,7 @@ spec:
         #  volumeMounts: *skill-mnt
         #  env: *base-env
         - name: skill-jokes
-          image: docker.io/smartgic/ovos-skill-jokes:alpha@sha256:df66f59e5b45b71b4a4b2eac8bab2d8ee78c556c76f9a83938595623775c5263
+          image: docker.io/smartgic/ovos-skill-jokes:alpha@sha256:ffd03d31b05c8e3296bb0c85fafeb52728a06662b60ce160f314e268eaf76f47
           volumeMounts: *skill-mnt
           env: *base-env
         - name: skill-homeassistant
@@ -78,7 +78,7 @@ spec:
           volumeMounts: *skill-mnt
           env: *base-env
         - name: skill-chatgpt
-          image: ghcr.io/ramblurr/skill-ovos-fallback-chatgpt-dev:rolling@sha256:925cb84fc8972cef5f1902d1c468df6ad50b5d00473f7310bd26936562767cd8
+          image: ghcr.io/ramblurr/skill-ovos-fallback-chatgpt-dev:rolling@sha256:ba332db96f0cbe6d5e518e93525c409ec7a562d51309de114bf32a9fe6a5c999
           volumeMounts: *skill-mnt
           env: *base-env
 
