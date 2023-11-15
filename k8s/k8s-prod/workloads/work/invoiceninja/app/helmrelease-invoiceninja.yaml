@@ -27,7 +27,7 @@ spec:
     image:
       registry: docker.io
       repository: invoiceninja/invoiceninja
-      tag: 5.7.45@sha256:813eb9e07d813180d3204ddb6cf5d109bed32d78d0a5be2b0a41bb6ce016d207
+      tag: 5.7.51@sha256:9c103be229386c8fe3d087c2e6eb75e46c2d69774f708c24b306c1461367af0b
     existingSecret: invoiceninja-secret
     updateStrategy:
       type: Recreate
