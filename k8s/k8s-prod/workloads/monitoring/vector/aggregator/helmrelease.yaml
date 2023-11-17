@@ -45,7 +45,7 @@ spec:
 
     image:
       repository: ghcr.io/onedr0p/vector
-      tag: 0.34.0-debian
+      tag: 0.34.1-debian
 
     args:
       - "--config"
