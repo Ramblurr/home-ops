@@ -24,6 +24,7 @@ resources:
   - ingress-nginx.yaml
   - intel.yaml
   - invoiceninja.yaml
+  - jacobcolvin.yaml
   - jetstack.yaml
   - kubernetes-replicator-charts.yaml
   - kubernetes-sigs-descheduler.yaml

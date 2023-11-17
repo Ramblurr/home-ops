@@ -12,5 +12,6 @@ resources:
   - ./ingress-nginx-internal-voiceassistant/ks.yaml
   - ./k8s-gateway/ks.yaml
   - ./cloudflared/ks.yaml
+  - ./tailscale/ks.yaml
   # Standard Resources
   - wildcard-certificate

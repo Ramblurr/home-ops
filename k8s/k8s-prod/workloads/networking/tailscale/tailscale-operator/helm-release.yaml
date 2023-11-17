@@ -1,0 +1,37 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: &app tailscale-operator
+  namespace: &ns networking
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: tailscale-operator
+      version: 0.1.0
+      interval: 15m
+      sourceRef:
+        kind: HelmRepository
+        name: jacobcolvin
+        namespace: flux-system
+  values:
+    # ref: https://github.com/tailscale/tailscale/blob/main/cmd/k8s-operator/deploy/chart/values.yaml
+    operatorConfig:
+      repo: tailscale/k8s-operator
+      tag: unstable-v1.55.26
+    proxyConfig:
+      image:
+        repo: tailscale/tailscale
+        tag: v1.52.0
+      # ACL tag that operator will tag proxies with. Operator must be made owner of
+      # these tags
+      # https://tailscale.com/kb/1236/kubernetes-operator/?q=operator#setting-up-the-kubernetes-operator
+      defaultTags: tag:k8s-prod
+      firewallMode: auto
+
+    # apiServerProxyConfig allows to configure whether the operator should expose
+    # Kubernetes API server.
+    # https://tailscale.com/kb/1236/kubernetes-operator/#accessing-the-kubernetes-control-plane-using-an-api-server-proxy
+    apiServerProxyConfig:
+      mode: "false"
