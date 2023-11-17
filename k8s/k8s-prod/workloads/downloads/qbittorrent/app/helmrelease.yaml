@@ -18,6 +18,8 @@ spec:
         namespace: flux-system
 
   values:
+    serviceAccount:
+      name: qbittorrent-tailscale
     controllers:
       main:
         annotations:
