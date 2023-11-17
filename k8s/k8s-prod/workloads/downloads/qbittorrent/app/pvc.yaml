@@ -14,4 +14,4 @@ spec:
   resources:
     requests:
       storage: 2Gi
-  storageClassName: ceph-filesystem
+  storageClassName: "${DEFAULT_CEPHFS_STORAGE_CLASS}"
