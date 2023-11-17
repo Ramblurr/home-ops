@@ -5,14 +5,15 @@ resources:
   # Pre Flux-Kustomizations
   - ./namespace.yaml
   # Flux-Kustomizations
-  - ./downloads-pv/ks.yaml
   - ./autoscan/ks.yaml
-  - ./radarr/ks.yaml
-  - ./sonarr/ks.yaml
+  - ./downloads-pv/ks.yaml
   - ./lidarr/ks.yaml
   - ./prowlarr/ks.yaml
+  - ./qbittorrent/ks.yaml
+  - ./radarr/ks.yaml
+  - ./readarr-audiobooks/ks.yaml
+  - ./readarr/ks.yaml
   - ./recyclarr/ks.yaml
   - ./sabnzbd/ks.yaml
-  - ./readarr/ks.yaml
-  - ./readarr-audiobooks/ks.yaml
   - ./searxng/ks.yaml
+  - ./sonarr/ks.yaml
