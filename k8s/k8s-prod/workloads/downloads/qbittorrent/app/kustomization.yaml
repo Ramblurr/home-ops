@@ -7,7 +7,6 @@ resources:
   - ./externalsecret.yaml
   - ./helmrelease.yaml
   - ./pvc.yaml
-  #- ./rbac.yaml
 configMapGenerator:
   - name: qbittorrent-scripts
     files:

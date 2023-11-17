@@ -18,8 +18,6 @@ spec:
         namespace: flux-system
 
   values:
-    # serviceAccount:
-    # name: qbittorrent-tailscale
     controllers:
       main:
         annotations:
@@ -56,18 +54,32 @@ spec:
             image:
               repository: docker.io/powerdns/dnsdist-18
               tag: 1.8.2
-
-          tailscale:
+          gluetun:
             image:
-              repository: ghcr.io/tailscale/tailscale
-              tag: v1.52.0
+              repository: ghcr.io/qdm12/gluetun
+              tag: latest@sha256:7769408234d50c07638c2d9962bb8d38b403d3c101c252d05ce421149fd2148b
             env:
-              - name: TS_HOSTNAME
-                value: qbittorrent-tailscale
-              - name: TS_USERSPACE
-                value: "false"
-              - name: TS_STATE_DIR
-                value: /tailscale-data
+              - name: VPN_SERVICE_PROVIDER
+                value: custom
+              - name: VPN_TYPE
+                value: wireguard
+              - name: VPN_INTERFACE
+                value: wg0
+              - name: VPN_ENDPOINT_PORT
+                value: "51820"
+              - name: VPN_PORT_FORWARDING
+                value: "on"
+              - name: FIREWALL_INPUT_PORTS
+                value: "8080"
+              - name: FIREWALL_OUTBOUND_SUBNETS
+                # Allow access to k8s subnets
+                value: "10.45.0.0/12,10.44.0.0/16,10.10.12.0/23"
+              - name: SHADOWSOCKS
+                value: "on"
+              - name: DOT
+                value: "off"
+              - name: DNS_PLAINTEXT_ADDRESS
+                value: "127.0.0.2"
             envFrom:
               - secretRef:
                   name: qbittorrent-secret
@@ -129,9 +141,12 @@ spec:
               - path: /etc/dnsdist/dnsdist.conf
                 subPath: dnsdist.conf
                 readOnly: true
-      tailscale-data:
+      gluetun-data:
         type: emptyDir
         advancedMounts:
           main:
-            tailscale:
-              - path: /tailscale-data
+            gluetun:
+              - path: /tmp/gluetun
+            port-forward:
+              - path: /tmp/gluetun
+                readOnly: true
