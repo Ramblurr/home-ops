@@ -18,8 +18,8 @@ spec:
         namespace: flux-system
 
   values:
-    serviceAccount:
-      name: qbittorrent-tailscale
+    # serviceAccount:
+    # name: qbittorrent-tailscale
     controllers:
       main:
         annotations:
@@ -62,12 +62,12 @@ spec:
               repository: ghcr.io/tailscale/tailscale
               tag: v1.52.0
             env:
-              - name: TS_KUBE_SECRET
-                value: qbittorrent-tailscale
               - name: TS_HOSTNAME
                 value: qbittorrent-tailscale
               - name: TS_USERSPACE
                 value: "false"
+              - name: TS_STATE_DIR
+                value: /tailscale-data
             envFrom:
               - secretRef:
                   name: qbittorrent-secret
@@ -129,3 +129,9 @@ spec:
               - path: /etc/dnsdist/dnsdist.conf
                 subPath: dnsdist.conf
                 readOnly: true
+      tailscale-data:
+        type: emptyDir
+        advancedMounts:
+          main:
+            tailscale:
+              - path: /tailscale-data
