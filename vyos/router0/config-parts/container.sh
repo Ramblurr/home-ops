@@ -5,7 +5,7 @@
 set container network services prefix '10.5.0.0/24'
 
 # haproxy-k8s-api
-set container name haproxy-k8s-api image 'docker.io/library/haproxy:2.8.3'
+set container name haproxy-k8s-api image 'docker.io/library/haproxy:2.8.4'
 set container name haproxy-k8s-api memory '0'
 set container name haproxy-k8s-api network services address '10.5.0.2'
 set container name haproxy-k8s-api restart 'on-failure'
