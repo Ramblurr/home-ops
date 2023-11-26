@@ -83,11 +83,11 @@ spec:
         globalMounts:
           - path: /config
       media:
-        existingClaim: mali-downloads-media-nfs
+        existingClaim: mali-media-nfs
         globalMounts:
           - path: /data/media
       downloads:
-        existingClaim: mali-downloads-nfs
+        existingClaim: mali-media-downloads-nfs
         globalMounts:
           - path: /data/downloads
       settings:
