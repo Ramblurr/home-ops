@@ -32,7 +32,7 @@ spec:
           main:
             image:
               repository: docker.io/filebrowser/filebrowser
-              tag: v2.26.0-s6
+              tag: v2.26.0
             env:
               TZ: "${TIMEZONE}"
         pod:
@@ -95,7 +95,7 @@ spec:
         globalMounts:
           - path: "/config/settings.json"
         subPath: ".filebrowser.json"
-        type: "custom"
+        type: custom
         volumeSpec:
           configMap:
             name: filebrowser-settings
