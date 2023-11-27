@@ -35,6 +35,11 @@ spec:
               tag: v2.26.0
             env:
               TZ: "${TIMEZONE}"
+              FB_DATABASE: /config/filebrowser.db
+              FB_ROOT: /data
+              FB_LOG: stdout
+              FB_NOAUTH: true
+              FB_PORT: "8080"
         pod:
           securityContext:
             runAsUser: 2000
@@ -90,12 +95,12 @@ spec:
         existingClaim: mali-media-downloads-nfs
         globalMounts:
           - path: /data/downloads
-      settings:
-        enabled: true
-        globalMounts:
-          - path: "/config/settings.json"
-        subPath: ".filebrowser.json"
-        type: custom
-        volumeSpec:
-          configMap:
-            name: filebrowser-settings
+      #settings:
+      #  enabled: true
+      #  globalMounts:
+      #    - path: "/config/settings.json"
+      #  subPath: ".filebrowser.json"
+      #  type: custom
+      #  volumeSpec:
+      #    configMap:
+      #      name: filebrowser-settings
