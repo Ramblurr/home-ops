@@ -5,7 +5,7 @@ metadata:
   name: filebrowser
   namespace: media
 spec:
-  interval: 15m
+  interval: 30m
   chart:
     spec:
       chart: app-template
@@ -25,9 +25,14 @@ spec:
       retries: 3
   uninstall:
     keepHistory: false
+  dependsOn:
+    - name: rook-ceph
+      namespace: rook-ceph
   values:
     controllers:
       main:
+        annotations:
+          reloader.stakater.com/auto: "true"
         containers:
           main:
             image:
@@ -39,7 +44,28 @@ spec:
               FB_ROOT: /data
               FB_LOG: stdout
               FB_NOAUTH: true
-              FB_PORT: "8080"
+              FB_PORT: &port 8080
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+              startup:
+                enabled: false
+            resources:
+              requests:
+                cpu: 10m
+                memory: 64Mi
+              limits:
+                memory: 512Mi
         pod:
           securityContext:
             runAsUser: 2000
@@ -51,7 +77,7 @@ spec:
       main:
         ports:
           http:
-            port: 8080
+            port: *port
     ingress:
       main:
         enabled: true
