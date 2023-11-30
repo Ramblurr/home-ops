@@ -36,7 +36,7 @@ spec:
           main:
             image:
               repository: ghcr.io/paperless-ngx/paperless-ngx
-              tag: 1.17.4
+              tag: 2.0.1
             env:
               PAPERLESS_DBHOST:
                 valueFrom:
