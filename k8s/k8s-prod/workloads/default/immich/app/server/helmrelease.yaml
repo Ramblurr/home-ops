@@ -28,7 +28,7 @@ spec:
 
     image:
       repository: ghcr.io/immich-app/immich-server
-      tag: v1.88.2@sha256:ac214c6c4e7f6c2133b885d9e6ebc7696cbcf96a148c95746eef15eef0cea71a
+      tag: v1.89.0@sha256:b5aa4023c63b904136e859b4c3f4c1d34272b7c5f7ee65f50f12378d6039e9e7
 
     command: /bin/sh
     args:
