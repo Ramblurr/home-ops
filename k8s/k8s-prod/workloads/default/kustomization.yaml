@@ -9,7 +9,7 @@ resources:
   - ./echo-server/ks.yaml
   - ./external-home-assistant/ks.yaml
   - ./hajimari/ks.yaml
-  - ./immich/ks.yaml
+  #- ./immich/ks.yaml
   - ./lldap/ks.yaml
   - ./nextcloud-sc/ks.yaml
   - ./paperless/ks.yaml
