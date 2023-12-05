@@ -9,31 +9,53 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 2.3.0
       interval: 30m
       sourceRef:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
+
+  maxHistory: 2
   install:
     createNamespace: true
     remediation:
-      retries: 0
+      retries: 3
   upgrade:
+    cleanupOnFail: true
     remediation:
-      retries: 0
+      retries: 3
+  uninstall:
+    keepHistory: false
   values:
-    image:
-      repository: ghcr.io/bjw-s/calibre-web
-      tag: 0.6.21@sha256:bca0b47096d1df270f4ad7d640558ef69bbf03a675bf1691bf88d209d2ff7e4a
+    controllers:
+      main:
+        type: statefulset
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          main:
+            image:
+              repository: ghcr.io/bjw-s/calibre-web
+              tag: 0.6.21@sha256:bca0b47096d1df270f4ad7d640558ef69bbf03a675bf1691bf88d209d2ff7e4a
+            env:
+              TZ: "${TIMEZONE}"
+              CACHE_DIR: /cache
+            resources:
+              requests:
+                cpu: 15m
+                memory: 249M
+              limits:
+                memory: 299M
 
-    podSecurityContext:
-      runAsUser: 2000
-      runAsGroup: 2000
-      fsGroup: 2000
-    enableServiceLinks: false
-    env:
-      CACHE_DIR: /cache
+        pod:
+          securityContext:
+            runAsUser: 2000
+            runAsGroup: 2000
+            fsGroup: 2000
+            fsGroupChangePolicy: OnRootMismatch
+            supplementalGroups: [10000]
+
     service:
       main:
         ports:
@@ -42,6 +64,7 @@ spec:
     ingress:
       main:
         enabled: true
+        className: nginx-internal
         annotations:
           external-dns.alpha.kubernetes.io/target: "ingress.${SECRET_DOMAIN}"
           nginx.ingress.kubernetes.io/proxy-body-size: 1000M
@@ -54,16 +77,19 @@ spec:
           hajimari.io/icon: mdi:bookshelf
           hajimari.io/info: Calibre Web
           hajimari.io/group: media
-        ingressClassName: nginx-internal
         hosts:
           - host: &host books.${SECRET_DOMAIN}
             paths:
               - path: /
+                service:
+                  name: main
+                  port: http
         tls:
           - hosts:
               - *host
       kobo:
         enabled: true
+        className: nginx-internal
         annotations:
           external-dns.alpha.kubernetes.io/target: "ingress.${SECRET_DOMAIN}"
           hajimari.io/enable: "false"
@@ -72,11 +98,13 @@ spec:
           nginx.ingress.kubernetes.io/proxy-buffer-size: "256k"
           nginx.ingress.kubernetes.io/configuration-snippet: |
             proxy_busy_buffers_size 256k;
-        ingressClassName: nginx-internal
         hosts:
           - host: &host_kobo books-kobo.${SECRET_DOMAIN}
             paths:
               - path: /kobo/
+                service:
+                  name: main
+                  port: http
         tls:
           - hosts:
               - *host_kobo
@@ -85,18 +113,13 @@ spec:
       config:
         enabled: true
         existingClaim: calibre-web-config-ceph
+        globalMounts:
+          - path: /config
       media:
-        enabled: true
         existingClaim: calibre-web-books-nfs
-        mountPath: /data/media
+        globalMounts:
+          - path: /data/media
       cache:
-        enabled: true
         type: emptyDir
-        mountPath: /cache
-
-    resources:
-      requests:
-        cpu: 15m
-        memory: 249M
-      limits:
-        memory: 299M
+        globalMounts:
+          - path: /cache
