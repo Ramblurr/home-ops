@@ -9,56 +9,58 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 2.3.0
       interval: 15m
       sourceRef:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
+  maxHistory: 2
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
   values:
-    image:
-      repository: ghcr.io/linuxserver/calibre
-      tag: 7.1.0
-
+    controllers:
+      main:
+        type: statefulset
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          main:
+            image:
+              repository: ghcr.io/linuxserver/calibre
+              tag: 7.1.0
+            env:
+              TZ: "${TIMEZONE}"
+              PUID: "2000"
+              PGID: "2000"
+            resources:
+              requests:
+                cpu: 0.003
+                memory: 1Gi
+              limits:
+                memory: 10Gi
     service:
       main:
         ports:
           http:
             port: 8080
       webserver:
-        enabled: true
         ports:
           webserver:
-            enabled: true
             port: 8081
-            protocol: TCP
-            targetPort: 8081
-        type: ClusterIP
-
-    env:
-      TZ: ${TZ}
-      PUID: "2000"
-      PGID: "2000"
-
-    persistence:
-      config:
-        enabled: true
-        existingClaim: calibre-config-0
-      media:
-        enabled: true
-        existingClaim: mali-media-nfs
-        mountPath: /media
-        readOnly: false
-      downloads:
-        enabled: true
-        existingClaim: mali-media-downloads-nfs
-        mountPath: /downloads
 
     ingress:
       main:
-        primary: true
         enabled: true
-        ingressClassName: nginx-internal
+        className: nginx-internal
         annotations:
           nginx.ingress.kubernetes.io/auth-method: GET
           nginx.ingress.kubernetes.io/auth-url: http://authelia.default.svc.cluster.local:8000/api/verify
@@ -66,17 +68,23 @@ spec:
           nginx.ingress.kubernetes.io/auth-response-headers: Remote-User,Remote-Name,Remote-Groups,Remote-Email
           nginx.ingress.kubernetes.io/auth-snippet: proxy_set_header X-Forwarded-Method $request_method;
         hosts:
-          - host: &host "calibre.${SECRET_DOMAIN_INTERNAL}"
+          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN_INTERNAL}"
             paths:
               - path: /
-                pathType: Prefix
-        tls:
-          - hosts:
-              - *host
+                service:
+                  name: main
+                  port: http
 
-    resources:
-      requests:
-        cpu: 0.003
-        memory: 1Gi
-      limits:
-        memory: 10Gi
+    persistence:
+      config:
+        existingClaim: calibre-config-0
+        globalMounts:
+          - path: /config
+      media:
+        existingClaim: mali-media-nfs
+        globalMounts:
+          - path: /media
+      downloads:
+        existingClaim: mali-media-downloads-nfs
+        globalMounts:
+          - path: /downloads
