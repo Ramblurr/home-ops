@@ -247,6 +247,8 @@ set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-ma
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping ovos-bedroom-prim mac-address 'b8:27:eb:f3:e1:1d'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping markii-wired ip-address '10.9.6.30'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping markii-wired mac-address 'e4:5f:01:b8:07:0b'
+set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping phoniebox-dev ip-address '10.9.6.31'
+set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping phoniebox-dev mac-address 'e4:5f:01:e5:fe:c7'
 # 10.9.6.106    54:60:09:fd:5b:dc  PRIMARY  Chromecast-Audio
 # 10.9.6.102    64:07:f6:18:a3:3e  PRIMARY  Samsung
 
