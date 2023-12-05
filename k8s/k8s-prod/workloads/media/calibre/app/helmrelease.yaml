@@ -49,10 +49,14 @@ spec:
                 memory: 10Gi
     service:
       main:
+        primary: true
         ports:
           http:
             port: 8080
       webserver:
+        controller: main
+        primary: false
+        enabled: true
         ports:
           webserver:
             port: 8081
