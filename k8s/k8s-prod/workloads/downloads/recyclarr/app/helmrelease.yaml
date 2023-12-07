@@ -32,7 +32,7 @@ spec:
           main:
             image:
               repository: ghcr.io/recyclarr/recyclarr
-              tag: edge@sha256:e858d481c4f972cb007e9e7062556b6a2bf275670ab9bf8dfbff6b39723122d6
+              tag: edge@sha256:25a13100cb905b8e21d81f2a4a3959812a7b1df67a04f7c26fcba87e95097d4d
             resources:
               requests:
                 cpu: 5m
