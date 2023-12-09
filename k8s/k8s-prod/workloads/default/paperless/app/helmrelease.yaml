@@ -80,7 +80,7 @@ spec:
               PAPERLESS_FILENAME_FORMAT: "{created_year}/{created_year}-{created_month}-{created_day} {title}"
               PAPERLESS_FILENAME_DATE_ORDER: YMD
               PAPERLESS_URL: https://paperless.${SECRET_DOMAIN_INTERNAL}
-              PAPERLESS_OCR_MAX_IMAGE_PIXELS: 956000000
+              PAPERLESS_OCR_MAX_IMAGE_PIXELS: "956000000"
               USERMAP_UID: 2000
               USERMAP_GID: 2000
             envFrom:
