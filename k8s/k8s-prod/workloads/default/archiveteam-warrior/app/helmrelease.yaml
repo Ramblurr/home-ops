@@ -31,7 +31,7 @@ spec:
       fsGroupChangePolicy: "OnRootMismatch"
     image:
       repository: atdr.meo.ws/archiveteam/warrior-dockerfile
-      tag: latest@sha256:008ea901c4ceadf251961790a0e222e8da1aedb386509698f5e99a235fcb98c6
+      tag: latest@sha256:1df66b037c4a8c915b380bde4ffd59ced214d809779a8c3cac07685a618ab7b5
     service:
       main:
         ports:
