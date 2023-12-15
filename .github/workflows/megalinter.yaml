@@ -34,7 +34,7 @@ jobs:
           YAML_YAMLLINT_CONFIG_FILE: .yamllint.yaml
       - name: Archive production artifacts
         if: ${{ success() }} || ${{ failure() }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: MegaLinter reports
           path: |
