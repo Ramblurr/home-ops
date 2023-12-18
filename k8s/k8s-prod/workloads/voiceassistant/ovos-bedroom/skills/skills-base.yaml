@@ -74,7 +74,7 @@ spec:
           volumeMounts: *skill-mnt
           env: *base-env
         - name: skill-homeassistant
-          image: ghcr.io/ramblurr/skill-homeassistant-dev:rolling@sha256:a59076389e7aeb36b342396ab681bd40a330b1fc84f4e87d736e8be578b6a693
+          image: ghcr.io/ramblurr/skill-homeassistant-dev:rolling@sha256:a26f96cc1b294d313372c46c61078409f3b110ff8168728957d7a7aeeb1a319f
           volumeMounts: *skill-mnt
           env: *base-env
         - name: skill-chatgpt
