@@ -82,7 +82,7 @@ spec:
         # So this container pre-empts that by mounting just the volume
         # and creating the container with the privs of the user
         name: init-chmod-pvc
-        image: docker.io/library/alpine:20230901
+        image: docker.io/library/alpine:20231219
         command:
           - /bin/sh
           - -ec
