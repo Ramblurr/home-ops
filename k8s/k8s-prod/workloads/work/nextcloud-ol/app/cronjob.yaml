@@ -23,7 +23,7 @@ spec:
           restartPolicy: Never
           containers:
             - name: *name
-              image: nextcloud:27.1.5-fpm-alpine
+              image: nextcloud:28.0.1-fpm-alpine
               command:
                 - curl
               args:
