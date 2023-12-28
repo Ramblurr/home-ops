@@ -47,6 +47,15 @@ spec:
                 memory: 1Gi
               limits:
                 memory: 10Gi
+        statefulset:
+          volumeClaimTemplates:
+            - name: new-config
+              accessMode: ReadWriteOnce
+              size: 1Gi
+              storageClass: "${DEFAULT_STORAGE_CLASS}"
+              globalMounts:
+                - path: /config
+
     service:
       main:
         primary: true
@@ -80,11 +89,11 @@ spec:
                   port: http
 
     persistence:
-      config:
+      old-config:
         enabled: true
         existingClaim: calibre-config-0
         globalMounts:
-          - path: /config
+          - path: /old-config
       media:
         enabled: true
         existingClaim: mali-media-nfs
