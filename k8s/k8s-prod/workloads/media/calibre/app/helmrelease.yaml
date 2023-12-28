@@ -80,21 +80,18 @@ spec:
                   port: http
 
     persistence:
-      old-config:
-        existingClaim: calibre-config-0
-        globalMounts:
-          - path: /old-config
       config:
         enabled: true
-        existingClaim: mali-media-nfs
+        existingClaim: calibre-config-0
         globalMounts:
-          - subPath: calibre
-            path: /config
+          - path: /config
       media:
+        enabled: true
         existingClaim: mali-media-nfs
         globalMounts:
           - path: /media
       downloads:
+        enabled: true
         existingClaim: mali-media-downloads-nfs
         globalMounts:
           - path: /downloads
