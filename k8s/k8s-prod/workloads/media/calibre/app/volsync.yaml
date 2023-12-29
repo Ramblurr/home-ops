@@ -31,7 +31,7 @@ metadata:
   name: calibre
   namespace: media
 spec:
-  sourcePVC: calibre-config-0
+  sourcePVC: new-config-calibre-0
   trigger:
     schedule: "0 4 * * *"
   restic:
