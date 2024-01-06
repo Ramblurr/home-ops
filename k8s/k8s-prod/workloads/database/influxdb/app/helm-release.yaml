@@ -20,7 +20,7 @@ spec:
     fullnameOverride: *app
     image:
       repository: docker.io/library/influxdb
-      tag: 2.7.4
+      tag: 2.7.5
       pullPolicy: IfNotPresent
     adminUser:
       create: true
