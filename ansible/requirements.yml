@@ -16,7 +16,7 @@ collections:
   - name: community.healthchecksio
     version: 1.3.1
   - name: prometheus.prometheus
-    version: 0.10.0
+    version: 0.10.1
   - name: vyos.vyos
     version: 4.1.0
 roles:
