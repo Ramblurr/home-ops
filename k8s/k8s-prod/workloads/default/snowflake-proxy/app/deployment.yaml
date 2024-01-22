@@ -26,6 +26,6 @@ spec:
                       - wrk0
       containers:
         - name: snowflake
-          image: thetorproject/snowflake-proxy:v2.6.0
+          image: thetorproject/snowflake-proxy:v2.8.1
           args: ["-capacity", "50"]
       restartPolicy: Always
