@@ -124,11 +124,13 @@ set firewall group address-group roon address '10.9.6.28'
 set firewall group address-group roon address '10.9.4.15'
 set firewall group address-group roon address '10.9.4.13'
 set firewall group address-group roon address '10.9.4.12'
+set firewall group address-group roon address '10.9.4.3'
 set firewall group address-group roon address '10.9.6.23'
 set firewall group address-group roon address '10.9.6.31'
 set firewall group address-group roon address '10.9.6.32'
 set firewall group address-group roon address '10.9.6.33'
 set firewall group address-group roon address '10.9.6.34'
+set firewall group address-group roon address '10.9.8.33'
 
 set firewall group address-group roon-server address '10.9.6.23'
 
@@ -156,6 +158,9 @@ set firewall group address-group kde-connect-devices address '192.168.1.82'
 set firewall group address-group kde-connect-devices address '192.168.1.243'
 set firewall group address-group kde-connect-devices address '10.9.6.15'
 set firewall group address-group kde-connect-devices address '10.9.6.14'
+set firewall group address-group kde-connect-devices address '10.9.4.3'
+set firewall group address-group kde-connect-devices address '10.9.8.33'
+
 
 set firewall group address-group mali address '10.9.4.10'
 set firewall group address-group mali address '10.9.10.10'
