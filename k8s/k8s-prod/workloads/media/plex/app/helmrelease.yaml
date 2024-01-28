@@ -1,5 +1,4 @@
 ---
-
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
@@ -115,4 +114,4 @@ spec:
         globalMounts:
           - readOnly: true
             path: /media
-        readOnly: true
+        readOnly: false
