@@ -112,6 +112,6 @@ spec:
       media:
         existingClaim: mali-media-nfs
         globalMounts:
-          - readOnly: true
+          - readOnly: false
             path: /media
         readOnly: false
