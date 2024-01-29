@@ -33,7 +33,7 @@ spec:
     - name: cluster-workloads-external-dns-shared
     - name: cluster-workloads-external-secrets-stores
   healthChecks:
-    - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+    - apiVersion: helm.toolkit.fluxcd.io/v2beta2
       kind: HelmRelease
       name: external-dns-personal
       namespace: networking
@@ -58,7 +58,7 @@ spec:
     - name: cluster-workloads-external-dns-shared
     - name: cluster-workloads-external-secrets-stores
   healthChecks:
-    - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+    - apiVersion: helm.toolkit.fluxcd.io/v2beta2
       kind: HelmRelease
       name: external-dns-work
       namespace: networking
