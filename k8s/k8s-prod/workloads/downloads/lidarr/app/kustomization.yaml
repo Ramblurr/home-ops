@@ -5,6 +5,7 @@ namespace: downloads
 resources:
   - ./externalsecret.yaml
   - ./volsync.yaml
+  - ./pvc.yaml
   - ./helmrelease.yaml
 commonLabels:
   app.kubernetes.io/name: lidarr

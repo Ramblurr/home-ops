@@ -31,67 +31,40 @@ spec:
   values:
     controllers:
       main:
-        type: statefulset
-        annotations:
-          reloader.stakater.com/auto: "true"
         containers:
           main:
             image:
-              repository: ghcr.io/onedr0p/lidarr-develop
-              tag: rolling@sha256:de7dac090ba6250853146dca5e06cc5be3638631c8b2a47843b0a2434f5f0035
+              repository: lscr.io/linuxserver/lidarr
+              tag: latest@sha256:98c4a2e0ee1ba2876b8a42f3a66b50a0077a62022b4c20f38ab69b437a48b5e1
+              pullPolicy: IfNotPresent
+
+            probes:
+              liveness:
+                spec:
+                  timeoutSeconds: 2
+              readiness:
+                spec:
+                  timeoutSeconds: 2
+              startup:
+                spec:
+                  timeoutSeconds: 2
             env:
               TZ: "${TIMEZONE}"
-              PUSHOVER_DEBUG: "false"
-              LIDARR__AUTHENTICATION_METHOD: None
-              LIDARR__INSTANCE_NAME: Lidarr
-              LIDARR__PORT: &port 8686
-              LIDARR__LOG_LEVEL: info
-              LIDARR__API_KEY:
-                valueFrom:
-                  secretKeyRef:
-                    name: lidarr-secret
-                    key: LIDARR__API_KEY
-            probes:
-              liveness: &probes
-                enabled: true
-                custom: true
-                spec:
-                  httpGet:
-                    path: /ping
-                    port: *port
-                  initialDelaySeconds: 0
-                  periodSeconds: 10
-                  timeoutSeconds: 1
-                  failureThreshold: 3
-              readiness: *probes
-              startup:
-                enabled: false
+              PUID: 2000
+              PGID: 2000
             resources:
               requests:
-                cpu: 10m
-                memory: 256M
+                cpu: 15m
+                memory: 0.5G
               limits:
-                memory: 1Gi
-        pod:
-          securityContext:
-            runAsUser: 2000
-            runAsGroup: 2000
-            fsGroup: 2000
-            fsGroupChangePolicy: OnRootMismatch
-
-        statefulset:
-          volumeClaimTemplates:
-            - name: config
-              accessMode: ReadWriteOnce
-              size: 1Gi
-              storageClass: "${DEFAULT_STORAGE_CLASS}"
-              globalMounts:
-                - path: /config
+                # cpu: 500m
+                memory: 1G
+        strategy: Recreate
     service:
       main:
         ports:
           http:
-            port: *port
+            port: &port 8686
     ingress:
       main:
         enabled: true
@@ -114,6 +87,12 @@ spec:
           - hosts:
               - *host
     persistence:
+      config:
+        enabled: true
+        type: persistentVolumeClaim
+        existingClaim: lidarr-config-v1
+        globalMounts:
+          - path: /config
       media:
         existingClaim: mali-downloads-media-music-other-nfs
         globalMounts:
@@ -122,3 +101,7 @@ spec:
         existingClaim: mali-downloads-nfs
         globalMounts:
           - path: /downloads
+          - path: /custom-services.d
+            subPath: lidarr-scripts/custom-services.d
+          - path: /custom-cont-init.d
+            subPath: lidarr-scripts/custom-cont-init.d
