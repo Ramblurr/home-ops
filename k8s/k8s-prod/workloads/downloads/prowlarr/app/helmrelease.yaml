@@ -49,7 +49,7 @@ spec:
         pod:
           hostname: prowlarr
           annotations:
-            setGateway: "true"
+            setGateway: "false"
           securityContext:
             runAsUser: 2000
             runAsGroup: 2000
