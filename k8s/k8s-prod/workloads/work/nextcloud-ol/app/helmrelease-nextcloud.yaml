@@ -197,7 +197,7 @@ spec:
       www-conf:
         enabled: true
         type: configMap
-        name: nextcloud-sc-extra-config
+        name: nextcloud-ol-extra-config
         mountPath: /usr/local/etc/php-fpm.d/zz-www.conf
         readOnly: true
         subPath: www.conf
@@ -207,7 +207,7 @@ spec:
       opcache-recommended-ini:
         enabled: true
         type: configMap
-        name: nextcloud-sc-extra-config
+        name: nextcloud-ol-extra-config
         mountPath: /usr/local/etc/php/conf.d/opcache-recommended.ini
         readOnly: true
         subPath: opcache-recommended.ini
