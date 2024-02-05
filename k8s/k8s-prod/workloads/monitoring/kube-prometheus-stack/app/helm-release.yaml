@@ -6,13 +6,6 @@ metadata:
   namespace: monitoring
 spec:
   interval: 5m
-  install:
-    disableWait: true
-    remediation:
-      retries: 300
-  upgrade:
-    remediation:
-      retries: 300
   chart:
     spec:
       chart: kube-prometheus-stack
@@ -21,8 +14,14 @@ spec:
         kind: HelmRepository
         name: prometheus-community-charts
         namespace: flux-system
-      interval: 5m
+      interval: 30m
+  install:
+    crds: CreateReplace
+  upgrade:
+    crds: CreateReplace
   values:
+    crds:
+      enabled: true
     cleanPrometheusOperatorObjectNames: true
     alertmanager:
       config:
