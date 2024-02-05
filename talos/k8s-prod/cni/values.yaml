@@ -35,6 +35,6 @@ rollOutCiliumPods: true
 securityContext:
   privileged: true
 # direct routing
-tunnel: disabled
+routingMode: native
 ipv6:
   enabled: false

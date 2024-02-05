@@ -21,8 +21,8 @@ hubble:
   enabled: false
 ipam:
   mode: kubernetes
-ipv4NativeRoutingCIDR: {{ cluster_net_pod_cidr }}
-k8sServiceHost: {{ cluster_apiserver_addr }}
+ipv4NativeRoutingCIDR: { { cluster_net_pod_cidr } }
+k8sServiceHost: { { cluster_apiserver_addr } }
 k8sServicePort: 6443
 # kubeProxyReplacement enables kube-proxy replacement in Cilium BPF datapath
 kubeProxyReplacement: strict
@@ -36,6 +36,6 @@ rollOutCiliumPods: true
 securityContext:
   privileged: true
 # direct routing
-tunnel: disabled
+routingMode: native
 ipv6:
   enabled: false
