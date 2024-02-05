@@ -71,6 +71,7 @@ spec:
     retain:
       daily: 7
       within: 3d
+    unlock: "2024-02-05 15:24:34"
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/volsync.backube/replicationsource_v1alpha1.json
 apiVersion: volsync.backube/v1alpha1
@@ -96,3 +97,4 @@ spec:
     retain:
       daily: 7
       within: 3d
+    unlock: "2024-02-05 15:24:34"
