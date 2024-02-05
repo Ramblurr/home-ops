@@ -56,7 +56,7 @@ spec:
 
     autoDirectNodeRoutes: true
     ipv4NativeRoutingCIDR: "${CLUSTER_CIDR}"
-    tunnel: disabled
+    routingMode: native
     containerRuntime:
       integration: containerd
 
