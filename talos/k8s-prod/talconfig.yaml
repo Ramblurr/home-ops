@@ -282,6 +282,16 @@ nodes:
 
 controlPlane:
   patches:
+    # Enable K8s Talos API Access
+    - |-
+      machine:
+        features:
+          kubernetesTalosAPIAccess:
+            enabled: true
+            allowedRoles:
+              - os:etcd:backup
+            allowedKubernetesNamespaces:
+              - kube-system
     # - |-
     #   - op: add
     #     path: /cluster/apiServer/admissionControl/0/configuration/exemptions

@@ -14,3 +14,4 @@ resources:
   - ./snapshot-controller/ks.yaml
   - ./external-secrets/ks.yaml
   - ./kubelet-csr-approver/ks.yaml
+  - ./talos-backup/ks.yaml
