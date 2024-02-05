@@ -197,7 +197,6 @@ spec:
         items:
           - key: opcache-recommended.ini
             path: opcache-recommended.ini
-
       nextcloud-config:
         enabled: true
         type: configMap
@@ -316,7 +315,6 @@ data:
     pm.start_servers = 10
     pm.min_spare_servers = 5
     pm.max_spare_servers = 20
-
   opcache-recommended.ini: |
     opcache.enable=1
     opcache.interned_strings_buffer=64
@@ -327,7 +325,6 @@ data:
     opcache.validate_timestamps=0
     opcache.jit=1255
     opcache.jit_buffer_size=128M
-
   post-start.sh: |-
     #!/bin/sh
     set -e

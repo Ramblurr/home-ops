@@ -194,6 +194,26 @@ spec:
         items:
           - key: uploadLimit.ini
             path: uploadLimit.ini
+      www-conf:
+        enabled: true
+        type: configMap
+        name: nextcloud-sc-extra-config
+        mountPath: /usr/local/etc/php-fpm.d/zz-www.conf
+        readOnly: true
+        subPath: www.conf
+        items:
+          - key: www.conf
+            path: www.conf
+      opcache-recommended-ini:
+        enabled: true
+        type: configMap
+        name: nextcloud-sc-extra-config
+        mountPath: /usr/local/etc/php/conf.d/opcache-recommended.ini
+        readOnly: true
+        subPath: opcache-recommended.ini
+        items:
+          - key: opcache-recommended.ini
+            path: opcache-recommended.ini
       nextcloud-config:
         enabled: true
         type: configMap
@@ -307,7 +327,22 @@ data:
     max_input_time = 3600
     max_execution_time = 3600
     default_phone_region = AT
-
+  www.conf: |
+    [www]
+    pm.max_children = 256
+    pm.start_servers = 10
+    pm.min_spare_servers = 5
+    pm.max_spare_servers = 20
+  opcache-recommended.ini: |
+    opcache.enable=1
+    opcache.interned_strings_buffer=64
+    opcache.max_accelerated_files=20000
+    opcache.memory_consumption=256
+    opcache.save_comments=1
+    opcache.revalidate_freq=60
+    opcache.validate_timestamps=0
+    opcache.jit=1255
+    opcache.jit_buffer_size=128M
   post-start.sh: |-
     #!/bin/sh
     set -e
