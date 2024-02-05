@@ -15,10 +15,10 @@ spec:
     template:
       engineVersion: v2
       data:
-        RESTIC_REPOSITORY: '{{ .REPOSITORY_TEMPLATE }}/nextcloud-ol'
-        RESTIC_PASSWORD: '{{ .RESTIC_PASSWORD }}'
-        AWS_ACCESS_KEY_ID: '{{ .AWS_ACCESS_KEY_ID }}'
-        AWS_SECRET_ACCESS_KEY: '{{ .AWS_SECRET_ACCESS_KEY }}'
+        RESTIC_REPOSITORY: "{{ .REPOSITORY_TEMPLATE }}/nextcloud-ol"
+        RESTIC_PASSWORD: "{{ .RESTIC_PASSWORD }}"
+        AWS_ACCESS_KEY_ID: "{{ .AWS_ACCESS_KEY_ID }}"
+        AWS_SECRET_ACCESS_KEY: "{{ .AWS_SECRET_ACCESS_KEY }}"
   dataFrom:
     - extract:
         key: volsync-restic-template
@@ -37,7 +37,7 @@ spec:
     copyMethod: Snapshot
     pruneIntervalDays: 7
     repository: nextcloud-ol-restic-secret
-    cacheCapacity: 2Gi
+    cacheCapacity: 5Gi
     volumeSnapshotClassName: csi-ceph-blockpool
     storageClassName: "${DEFAULT_STORAGE_CLASS}"
     moverSecurityContext:
