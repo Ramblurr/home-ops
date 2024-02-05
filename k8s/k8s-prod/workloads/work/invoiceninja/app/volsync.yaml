@@ -86,7 +86,7 @@ spec:
     copyMethod: Snapshot
     pruneIntervalDays: 7
     repository: invoiceninja-storage-restic-secret
-    cacheCapacity: 2Gi
+    cacheCapacity: 5Gi
     volumeSnapshotClassName: csi-ceph-filesystem
     storageClassName: "${DEFAULT_CEPHFS_STORAGE_CLASS}"
     moverSecurityContext:
