@@ -68,7 +68,8 @@ spec:
       filesystem:
         persistence:
           enabled: true
-          existingClaim: sentry-filestore
+          existingClaim: sentry-filestore-rwx
+          accessMode: ReadWriteMany
 
     postgresql:
       enabled: false
