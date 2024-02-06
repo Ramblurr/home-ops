@@ -40,8 +40,10 @@ spec:
       url: "https://sentry.${SECRET_DOMAIN_WORK}"
       adminEmail: "${SECRET_WORK_EMAIL}"
       public: false
-      ## This will generate one for you (it's must be given upon updates)
-      # secretKey: "xx"
+    sourcemaps:
+      enabled: true
+    symbolicator:
+      enabled: false
     auth:
       register: false
     nginx:
