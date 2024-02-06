@@ -37,6 +37,7 @@ resources:
   - prometheus-community-charts.yaml
   - rook-ceph-charts.yaml
   - sentry.yaml
+  - sentry-custom.yaml
   - stakater.yaml
   - teampiped.yaml
   - weave-gitops.yaml

@@ -8,11 +8,11 @@ spec:
   interval: 1m
   chart:
     spec:
-      chart: sentry
-      version: 21.3.1
+      chart: sentry-custom
+      version: 21.3.2
       sourceRef:
         kind: HelmRepository
-        name: sentry
+        name: sentry-custom
         namespace: flux-system
       interval: 15m
   install:
@@ -72,9 +72,13 @@ spec:
           accessMode: ReadWriteMany
 
     clickhouse:
-      persistentVolumeClaim:
-        dataPersistentVolume:
-          storage: 5Gi
+      singleNode: true
+      clickhouse:
+        persistentVolumeClaim:
+          dataPersistentVolume:
+            storage: 5Gi
+    memcached:
+      extraEnvVarsCM: sentry-sentry-custom-memcached
     postgresql:
       enabled: false
     externalPostgresql:
@@ -86,6 +90,8 @@ spec:
       # provided by flux helm's valuesFrom
       # host, username, database
     rabbitmq:
+      enabled: false
+    zookeeper:
       enabled: false
     kafka:
       zookeeper:
