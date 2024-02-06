@@ -71,6 +71,10 @@ spec:
           existingClaim: sentry-filestore-rwx
           accessMode: ReadWriteMany
 
+    clickhouse:
+      persistentVolumeClaim:
+        dataPersistentVolume:
+          storage: 5Gi
     postgresql:
       enabled: false
     externalPostgresql:
