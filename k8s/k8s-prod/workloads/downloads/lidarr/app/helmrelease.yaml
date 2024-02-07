@@ -35,7 +35,7 @@ spec:
           main:
             image:
               repository: lscr.io/linuxserver/lidarr
-              tag: latest@sha256:78cdbfca917eb5da087b64d570ece80ef26b67681b351535e75cb3fb5dab46ac
+              tag: latest@sha256:c91490ac2147c21caa2066a1e311b6528b0ade319e73e452a5c4ff616462bf0b
               pullPolicy: IfNotPresent
 
             probes:
