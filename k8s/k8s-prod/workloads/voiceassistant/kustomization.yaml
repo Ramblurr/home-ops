@@ -3,9 +3,9 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ./namespace.yaml
-  - ./tts-mimic3/ks.yaml
-  - ./tts-piper/ks.yaml
-  - ./stt-fasterwhisper/ks.yaml
   - ./ovos-pv/ks.yaml
-  - ./ovos-kitchen/ks.yaml
-  - ./ovos-bedroom/ks.yaml
+    #- ./tts-mimic3/ks.yaml
+    #- ./tts-piper/ks.yaml
+    #- ./stt-fasterwhisper/ks.yaml
+    #- ./ovos-kitchen/ks.yaml
+    #- ./ovos-bedroom/ks.yaml
