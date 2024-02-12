@@ -22,7 +22,7 @@ spec:
           - ReadWriteOnce
         resources:
           requests:
-            storage: 5Gi
+            storage: 10Gi
       walVolumeClaimSpec:
         storageClassName: "${DEFAULT_STORAGE_CLASS}"
         accessModes:
