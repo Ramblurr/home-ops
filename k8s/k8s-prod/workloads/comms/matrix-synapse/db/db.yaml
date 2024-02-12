@@ -57,7 +57,7 @@ spec:
       repos:
         - name: repo1
           schedules:
-            full: "5 15 * * *" # TODO(change back)
+            full: "30 15 * * *" # TODO(change back)
             differential: "0 1 * * 1-6"
           s3:
             bucket: k8s-prod-crunchy-postgres
