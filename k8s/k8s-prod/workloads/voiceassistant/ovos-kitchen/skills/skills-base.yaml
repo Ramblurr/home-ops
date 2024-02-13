@@ -70,7 +70,7 @@ spec:
         #   volumeMounts: *skill-mnt
         #   env: *base-env
         - name: skill-jokes
-          image: docker.io/smartgic/ovos-skill-jokes:alpha@sha256:285c49fc7f71a4955a85bf5a5d82fdd48778b1fc5ba45edce8607d3189f8d979
+          image: docker.io/smartgic/ovos-skill-jokes:alpha@sha256:a904cc731ba50894ede859ebc9df7b4d44bbe5f825c13cfbd840414221762989
           volumeMounts: *skill-mnt
           env: *base-env
         - name: skill-homeassistant
