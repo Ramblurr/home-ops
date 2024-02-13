@@ -1,0 +1,265 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: nextcloud-home-app
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: app-template
+      version: 2.6.0
+      interval: 15m
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  values:
+    controllers:
+      main:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          init-db:
+            image:
+              repository: ghcr.io/onedr0p/postgres-init
+              tag: 16
+            envFrom: &envFrom
+              - secretRef:
+                  name: nextcloud-home-secret
+            env:
+              INIT_POSTGRES_HOST: &dbHostSecretRef
+                valueFrom:
+                  secretKeyRef:
+                    name: "app-db-pguser-authroot"
+                    key: host
+              INIT_POSTGRES_SUPER_USER:
+                valueFrom:
+                  secretKeyRef:
+                    name: "app-db-pguser-authroot"
+                    key: user
+              INIT_POSTGRES_SUPER_PASS:
+                valueFrom:
+                  secretKeyRef:
+                    name: "app-db-pguser-authroot"
+                    key: password
+              PGSSLROOTCERT: /certs/root.crt
+              PGSSLMODE: verify-full
+        containers:
+          main:
+            image:
+              repository: docker.io/library/nextcloud
+              tag: 28.0.2-fpm-alpine
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /status.php
+                    port: &port 8080
+                    httpHeaders:
+                      - name: Host
+                        value: &host "drive.${SECRET_DOMAIN}"
+                  initialDelaySeconds: 10
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 3
+                  successThreshold: 1
+              readiness: *probes
+              startup:
+                enabled: false
+            env:
+              TZ: "${SECRET_TIMEZONE}"
+              NEXTCLOUD_ADMIN_USER:
+                valueFrom:
+                  secretKeyRef:
+                    name: nextcloud-home-secret
+                    key: ADMIN_USERNAME
+              NEXTCLOUD_ADMIN_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: nextcloud-home-secret
+                    key: ADMIN_PASSWORD
+              SMTP_HOST: "${SMTP_RELAY_HOST}"
+              SMTP_PORT: "${SMTP_RELAY_PORT}"
+              SMTP_AUTHTYPE: ""
+              MAIL_FROM_ADDRESS: "${SECRET_SMTP_FROM_USER}"
+              MAIL_DOMAIN: "${SECRET_DOMAIN}"
+              POSTGRES_HOST:
+                valueFrom:
+                  secretKeyRef:
+                    name: database-nextcloud-home-user
+                    key: HOST
+              POSTGRES_USER:
+                valueFrom:
+                  secretKeyRef:
+                    name: database-nextcloud-home-user
+                    key: LOGIN
+              POSTGRES_DB:
+                valueFrom:
+                  secretKeyRef:
+                    name: database-nextcloud-home-user
+                    key: DATABASE_NAME
+              POSTGRES_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: database-nextcloud-home-user
+                    key: PASSWORD
+              REDIS_HOST: nextcloud-home-redis.default.svc.cluster.local
+              REDIS_HOST_PORT: 6379
+              REDIS_HOST_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: nextcloud-home-secret
+                    key: REDIS_PASSWORD
+              NEXTCLOUD_DATA_DIR: /data
+
+    persistence:
+      poststart-metrics:
+        enabled: true
+        type: emptyDir
+        medium: Memory
+        globalMounts:
+          - path: /srv/metrics
+      app-config:
+        enabled: true
+        type: persistentVolumeClaim
+        existingClaim: nextcloud-home-ceph
+        globalMounts:
+          - subPath: nextcloud/html
+            path: /var/www/html
+
+      data:
+        enabled: true
+        type: persistentVolumeClaim
+        existingClaim: nextcloud-home-nfs
+        globalMounts:
+          - path: /data
+            subPath: nextcloud/data
+
+      paperless:
+        enabled: true
+        type: persistentVolumeClaim
+        existingClaim: nextcloud-home-paperless3-nfs
+        globalMounts:
+          - path: /paperless
+
+      post-start-sh:
+        enabled: true
+        type: configMap
+        name: nextcloud-home-extra-config
+        globalMounts:
+          - path: /usr/local/bin/post-start.sh
+            subPath: post-start.sh
+            readOnly: true
+        defaultMode: 0750
+        items:
+          - key: post-start.sh
+            path: post-start.sh
+
+      upload-limit-ini:
+        enabled: true
+        type: configMap
+        name: nextcloud-home-extra-config
+        globalMounts:
+          - path: /usr/local/etc/php-fpm.d/uploadLimit.ini
+            subPath: uploadLimit.ini
+            readOnly: true
+        items:
+          - key: uploadLimit.ini
+            path: uploadLimit.ini
+
+      www-conf:
+        enabled: true
+        type: configMap
+        name: nextcloud-home-extra-config
+        globalMounts:
+          - path: /usr/local/etc/php-fpm.d/zz-www.conf
+            subPath: www.conf
+            readOnly: true
+        items:
+          - key: www.conf
+            path: www.conf
+
+      opcache-recommended-ini:
+        enabled: true
+        type: configMap
+        name: nextcloud-home-extra-config
+        globalMounts:
+          - path: /usr/local/etc/php/conf.d/opcache-recommended.ini
+            subPath: opcache-recommended.ini
+            readOnly: true
+        items:
+          - key: opcache-recommended.ini
+            path: opcache-recommended.ini
+      nextcloud-config:
+        enabled: true
+        type: configMap
+        name: nextcloud-home-extra-config
+        globalMounts:
+          - path: /var/www/html/config/extra.config.php
+            subPath: extra.config.php
+            readOnly: true
+        items:
+          - key: extra.config.php
+            path: extra.config.php
+      redis-session-ini:
+        enabled: true
+        type: configMap
+        name: nextcloud-home-extra-config
+        globalMounts:
+          - path: /usr/local/etc/php/conf.d/redis-session.ini
+            subPath: redis-session.ini
+            readOnly: true
+        items:
+          - key: redis-session.ini
+            path: redis-session.ini
+      nginx-config:
+        enabled: true
+        type: configMap
+        name: nextcloud-home-nginx-config
+        globalMounts:
+          - path: /etc/nginx/nginx.conf
+            subPath: nginx.conf
+            readOnly: true
+        items:
+          - key: nginx.conf
+            path: nginx.conf
+      pgo-root-cert:
+        enabled: true
+        type: secret
+        name: pgo-root-cacert
+        items:
+          - key: root.crt
+            path: root.crt
+        globalMounts:
+          - path: /certs
+            readOnly: true
+
+    ingress:
+      main:
+        enabled: true
+        className: external
+        annotations:
+          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+          nginx.ingress.kubernetes.io/proxy-body-size: 10G
+          nginx.ingress.kubernetes.io/custom-http-errors: "418" # dummy status code to disable custom http errors
+          nginx.ingress.kubernetes.io/enable-global-auth: "false"
+          nginx.ingress.kubernetes.io/enable-cors: "true"
+          nginx.ingress.kubernetes.io/cors-allow-headers: "X-Forwarded-For"
+        hosts:
+          - host: *host
+            paths:
+              - path: /
+                service:
+                  name: main
+                  port: http
+        tls:
+          - hosts:
+              - *host
+    service:
+      main:
+        ports:
+          http:
+            port: *port

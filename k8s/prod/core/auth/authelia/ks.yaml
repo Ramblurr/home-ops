@@ -1,0 +1,22 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: authelia
+  namespace: flux-system
+spec:
+  targetNamespace: auth
+  dependsOn:
+    - name: cert-manager-issuers
+    - name: auth-db
+    - name: lldap
+  path: ./k8s/prod/core/auth/authelia/app
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: home-kubernetes
+  wait: true
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m

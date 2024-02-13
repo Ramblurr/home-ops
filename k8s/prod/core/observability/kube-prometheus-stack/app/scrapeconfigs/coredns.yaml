@@ -1,0 +1,15 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/monitoring.coreos.com/scrapeconfig_v1alpha1.json
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: home-dns
+spec:
+  staticConfigs:
+    - targets:
+        - ns1.${SECRET_DOMAIN}:9253
+        - ns2.${SECRET_DOMAIN}:9253
+  metricsPath: /metrics
+  scrape_interval: 2m
+  scrape_timeout: 10s
+  honor_timestamps: true

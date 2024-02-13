@@ -1,0 +1,13 @@
+# ###############################################################################################################
+# The `rook-ceph-osd-env-override` ConfigMap is a development feature
+# that allows to inject arbitrary environment variables to OSD-related
+# containers created by the operator.
+# We use it in production to override the PATH variable so that NixOS binaries are available
+# ###############################################################################################################
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rook-ceph-osd-env-override
+data:
+  PATH: "/run/current-system/sw/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"

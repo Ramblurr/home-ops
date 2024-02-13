@@ -1,0 +1,32 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.26.1-standalone-strict/cronjob-batch-v1.json
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: &name nextcloud-home-cron
+  labels: &labels
+    app.kubernetes.io/name: nextcloud-home
+    app.kubernetes.io/instance: nextcloud-home
+spec:
+  schedule: "*/5 * * * *"
+  successfulJobsHistoryLimit: 2
+  failedJobsHistoryLimit: 2
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    metadata:
+      labels: *labels
+    spec:
+      template:
+        metadata:
+          labels: *labels
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: *name
+              image: nextcloud:28.0.2-fpm-alpine
+              command:
+                - curl
+              args:
+                - --silent
+                - --show-error
+                - https://drive.${SECRET_DOMAIN}/cron.php
