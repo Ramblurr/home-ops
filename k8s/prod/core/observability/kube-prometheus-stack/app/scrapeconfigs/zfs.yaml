@@ -1,0 +1,18 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/monitoring.coreos.com/scrapeconfig_v1alpha1.json
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: zfs
+spec:
+  staticConfigs:
+    - targets:
+        - 10.9.8.13:9002
+        - 10.9.8.14:9002
+        - 10.9.8.16:9002
+        - 10.9.8.18:9002
+        - 10.9.8.21:9002
+  metricsPath: /metrics
+  scrape_interval: 10m
+  scrape_timeout: 5s
+  honor_timestamps: true

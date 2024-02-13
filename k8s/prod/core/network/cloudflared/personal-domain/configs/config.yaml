@@ -1,0 +1,12 @@
+---
+originRequest:
+  originServerName: "external.${SECRET_DOMAIN}"
+# The `ingress` block tells cloudflared which local service to route incoming
+# requests to. For more about ingress rules, see
+# https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/configuration/ingress
+ingress:
+  - hostname: "${SECRET_DOMAIN}"
+    service: https://ingress-nginx-external-controller.network.svc.cluster.local:443
+  - hostname: "*.${SECRET_DOMAIN}"
+    service: https://ingress-nginx-external-controller.network.svc.cluster.local:443
+  - service: http_status:404

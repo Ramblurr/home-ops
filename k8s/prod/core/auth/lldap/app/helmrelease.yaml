@@ -1,0 +1,141 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2beta2.json
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: &app lldap
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 2.5.0
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  dependsOn:
+    - name: crunchy-postgres-operator
+      namespace: database
+  values:
+    controllers:
+      main:
+        replicas: 2
+        strategy: RollingUpdate
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          init-db:
+            image:
+              repository: ghcr.io/onedr0p/postgres-init
+              tag: 16
+            envFrom: &envFrom
+              - secretRef:
+                  name: lldap-secret
+            env:
+              INIT_POSTGRES_HOST: &dbHostSecretRef
+                valueFrom:
+                  secretKeyRef:
+                    name: "auth-db-pguser-authroot"
+                    key: host
+              INIT_POSTGRES_SUPER_USER:
+                valueFrom:
+                  secretKeyRef:
+                    name: "auth-db-pguser-authroot"
+                    key: user
+              INIT_POSTGRES_SUPER_PASS:
+                valueFrom:
+                  secretKeyRef:
+                    name: "auth-db-pguser-authroot"
+                    key: password
+              PGSSLROOTCERT: /certs/root.crt
+              PGSSLMODE: verify-full
+        containers:
+          main:
+            image:
+              repository: ghcr.io/lldap/lldap
+              tag: v0.5.0@sha256:f0f5d92cd6c6dca9415993cfc57919f0618e87090b323a98c1536975860fa45a
+            env:
+              TZ: Europe/Berlin
+              LLDAP_HTTP_PORT: &httpPort 80
+              LLDAP_HTTP_URL: https://lldap.${SECRET_DOMAIN_INTERNAL}
+              LLDAP_LDAP_PORT: &ldapPort 389
+              LLDAP_LDAP_BASE_DN: dc=home,dc=arpa
+              DATABASE_URL:
+                valueFrom:
+                  secretKeyRef:
+                    name: "auth-db-pguser-authroot"
+                    key: uri
+              LLDAP_DATABASE_URL: "$(DATABASE_URL)?sslmode=verify-full&sslrootcert=/certs/root.crt"
+            envFrom: *envFrom
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: *httpPort
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+              startup:
+                enabled: false
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 128Mi
+        pod:
+          topologySpreadConstraints:
+            - maxSkew: 1
+              topologyKey: kubernetes.io/hostname
+              whenUnsatisfiable: DoNotSchedule
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/name: *app
+    service:
+      main:
+        ports:
+          http:
+            port: *httpPort
+          ldap:
+            port: *ldapPort
+    ingress:
+      main:
+        enabled: true
+        className: internal
+        hosts:
+          - host: &host lldap.${SECRET_DOMAIN_INTERNAL}
+            paths:
+              - path: /
+                service:
+                  name: main
+                  port: http
+        tls:
+          - hosts:
+              - *host
+    persistence:
+      data:
+        type: emptyDir
+      pgo-root-cert:
+        enabled: true
+        type: secret
+        name: pgo-root-cacert
+        items:
+          - key: root.crt
+            path: root.crt
+        globalMounts:
+          - path: /certs
+            readOnly: true

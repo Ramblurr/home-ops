@@ -873,10 +873,12 @@ set firewall name services-lan rule 1 protocol 'tcp_udp'
 set firewall name services-local default-action 'drop'
 set firewall name services-local description 'From SERVICES to LOCAL'
 set firewall name services-local enable-default-log
+
 set firewall name services-local rule 1 action 'accept'
 set firewall name services-local rule 1 description 'Rule: accept_ntp'
 set firewall name services-local rule 1 destination port 'ntp'
 set firewall name services-local rule 1 protocol 'udp'
+
 set firewall name services-local rule 2 action 'accept'
 set firewall name services-local rule 2 description 'Rule: accept_dhcp'
 set firewall name services-local rule 2 destination port '67,68'
@@ -889,6 +891,11 @@ set firewall name services-local rule 3 source address '10.5.0.9'
 set firewall name services-local rule 3 destination address '10.9.8.1'
 set firewall name services-local rule 3 protocol 'tcp_udp'
 set firewall name services-local rule 3 destination port '161'
+
+set firewall name services-local rule 4 action 'accept'
+set firewall name services-local rule 4 description 'Rule: accept_vlan_dns'
+set firewall name services-local rule 4 destination port 'domain,domain-s'
+set firewall name services-local rule 4 protocol 'udp'
 
 # From SERVICES to MGMT
 set firewall name services-mgmt default-action 'accept'
@@ -1091,18 +1098,20 @@ set firewall name primary-mgmt rule 3 destination port 'domain,domain-s'
 set firewall name primary-mgmt rule 3 destination group address-group 'local-dns-servers'
 set firewall name primary-mgmt rule 3 protocol 'tcp_udp'
 
-set firewall name primary-mgmt rule 4 action 'accept'
-set firewall name primary-mgmt rule 4 description 'Rule: accept_k8s_ingress'
-set firewall name primary-mgmt rule 4 destination port 'http,https'
-set firewall name primary-mgmt rule 4 destination group address-group 'k8s_cluster_test_ingress_all'
-set firewall name primary-mgmt rule 4 protocol 'tcp_udp'
+#DELETE
+#set firewall name primary-mgmt rule 4 action 'accept'
+#set firewall name primary-mgmt rule 4 description 'Rule: accept_k8s_ingress'
+#set firewall name primary-mgmt rule 4 destination port 'http,https'
+#set firewall name primary-mgmt rule 4 destination group address-group 'k8s_cluster_test_ingress_all'
+#set firewall name primary-mgmt rule 4 protocol 'tcp_udp'
 
-set firewall name primary-mgmt rule 5 action 'accept'
-set firewall name primary-mgmt rule 5 description 'Rule: accept_k8s_api_from_admin'
-set firewall name primary-mgmt rule 5 destination group port-group 'k8s-api'
-set firewall name primary-mgmt rule 5 destination group address-group 'k8s_cluster_test_api'
-set firewall name primary-mgmt rule 5 protocol 'tcp_udp'
-set firewall name primary-mgmt rule 5 source group address-group 'admin'
+#DELETE
+#set firewall name primary-mgmt rule 5 action 'accept'
+#set firewall name primary-mgmt rule 5 description 'Rule: accept_k8s_api_from_admin'
+#set firewall name primary-mgmt rule 5 destination group port-group 'k8s-api'
+#set firewall name primary-mgmt rule 5 destination group address-group 'k8s_cluster_test_api'
+#set firewall name primary-mgmt rule 5 protocol 'tcp_udp'
+#set firewall name primary-mgmt rule 5 source group address-group 'admin'
 
 set firewall name primary-mgmt rule 6 action 'accept'
 set firewall name primary-mgmt rule 6 description 'Rule: accept_admin_ssh'
@@ -1228,6 +1237,9 @@ set firewall name data-local rule 2 description 'Rule: accept_dhcp'
 set firewall name data-local rule 2 destination port '67,68'
 set firewall name data-local rule 2 protocol 'udp'
 set firewall name data-local rule 2 source port '67,68'
+set firewall name data-local rule 3 action 'accept'
+set firewall name data-local rule 3 description 'Rule: accept_icmp'
+set firewall name data-local rule 3 protocol 'icmp'
 
 # From DATA to MGMT
 set firewall name data-mgmt default-action 'drop'
@@ -1303,12 +1315,14 @@ set firewall name wan-local rule 2 protocol 'udp'
 set firewall name wan-mgmt default-action 'drop'
 set firewall name wan-mgmt description 'From WAN to MGMT'
 set firewall name wan-mgmt enable-default-log
-set firewall name wan-mgmt rule 1 action 'accept'
-set firewall name wan-mgmt rule 1 description 'Rule: accept_ingress_from_cloudflare'
-set firewall name wan-mgmt rule 1 destination group address-group 'k8s_cluster_test_ingress_external'
-set firewall name wan-mgmt rule 1 destination port 'http,https'
-set firewall name wan-mgmt rule 1 protocol 'tcp'
-set firewall name wan-mgmt rule 1 source group network-group 'cloudflare-ipv4'
+
+#DELETE
+#set firewall name wan-mgmt rule 1 action 'accept'
+#set firewall name wan-mgmt rule 1 description 'Rule: accept_ingress_from_cloudflare'
+#set firewall name wan-mgmt rule 1 destination group address-group 'k8s_cluster_test_ingress_external'
+#set firewall name wan-mgmt rule 1 destination port 'http,https'
+#set firewall name wan-mgmt rule 1 protocol 'tcp'
+#set firewall name wan-mgmt rule 1 source group network-group 'cloudflare-ipv4'
 
 set firewall name wan-mgmt rule 2 action 'accept'
 set firewall name wan-mgmt rule 2 description 'Rule: accept_plex'
@@ -1316,12 +1330,13 @@ set firewall name wan-mgmt rule 2 destination address '10.10.12.8'
 set firewall name wan-mgmt rule 2 destination port '32400'
 set firewall name wan-mgmt rule 2 protocol 'tcp'
 
-set firewall name wan-mgmt rule 3 action 'accept'
-set firewall name wan-mgmt rule 3 description 'Rule: accept_k8s_prod_ingress_from_cloudflare'
-set firewall name wan-mgmt rule 3 destination group address-group 'k8s_cluster_prod_ingress_external'
-set firewall name wan-mgmt rule 3 destination port 'http,https'
-set firewall name wan-mgmt rule 3 protocol 'tcp'
-set firewall name wan-mgmt rule 3 source group network-group 'cloudflare-ipv4'
+#DELETE
+#set firewall name wan-mgmt rule 3 action 'accept'
+#set firewall name wan-mgmt rule 3 description 'Rule: accept_k8s_prod_ingress_from_cloudflare'
+#set firewall name wan-mgmt rule 3 destination group address-group 'k8s_cluster_prod_ingress_external'
+#set firewall name wan-mgmt rule 3 destination port 'http,https'
+#set firewall name wan-mgmt rule 3 protocol 'tcp'
+#set firewall name wan-mgmt rule 3 source group network-group 'cloudflare-ipv4'
 
 # From WAN to SERVICES
 set firewall name wan-services default-action 'drop'

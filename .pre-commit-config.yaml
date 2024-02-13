@@ -21,7 +21,7 @@ repos:
       - id: trailing-whitespace
         exclude: iot/
       - id: end-of-file-fixer
-        exclude: iot/
+        exclude: (iot/|.sops)
       - id: fix-byte-order-marker
         exclude: iot/
       - id: mixed-line-ending
@@ -38,7 +38,7 @@ repos:
       - id: remove-crlf
         exclude: iot/
       - id: remove-tabs
-        exclude: (Makefile|Makefile.j2|iot/)
+        exclude: (Makefile|Makefile.j2|iot/|.sops)
 
   - repo: https://github.com/sirosen/texthooks
     rev: 0.6.4

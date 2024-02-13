@@ -1,0 +1,16 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - pvc.yaml
+  - externalsecret.yaml
+  - nginx-config.yaml
+  - helmrelease-redis.yaml
+  - configmap.yaml
+  - helmrelease.yaml
+  - cronjob.yaml
+  - ../../../../templates/volsync
+commonLabels:
+  app.kubernetes.io/name: nextcloud-home
+  app.kubernetes.io/instance: nextcloud-home
