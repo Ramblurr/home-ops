@@ -1,0 +1,25 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2beta2.json
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: appdb-userinit
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: crunchy-userinit-controller
+      version: 0.0.4
+      sourceRef:
+        kind: HelmRepository
+        name: crunchy-userinit
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 1
+  uninstall:
+    keepHistory: false

@@ -11,12 +11,9 @@ all:
         security_ssh_permit_root_login: "yes"
       hosts:
         tailscale0.int.socozy.casa:
-    proxmox_creds:
-      hosts:
-        localhost:
-      children:
-        proxmox:
-    proxmox:
+    k3s:
+      vars:
+        ansible_python_interpreter: /run/current-system/sw/bin/python
       hosts:
         peirce.mgmt.socozy.casa:
           ip_address_mgmt: 10.9.8.18
@@ -28,11 +25,11 @@ all:
           ip_address_data: 10.9.10.16
           proxmox_10gbe_iface: enp6s0
           proxmox_1gbe_iface: eno1
-        mill.mgmt.socozy.casa:
-          ip_address_mgmt: 10.9.8.13
-          ip_address_data: 10.9.10.13
-          proxmox_10gbe_iface: enp6s0
-          proxmox_1gbe_iface: eno1
+        #mill.mgmt.socozy.casa:
+        #  ip_address_mgmt: 10.9.8.13
+        #  ip_address_data: 10.9.10.13
+        #  proxmox_10gbe_iface: enp6s0
+        #  proxmox_1gbe_iface: eno1
         dewey.mgmt.socozy.casa:
           ip_address_mgmt: 10.9.8.14
           ip_address_data: 10.9.10.14
@@ -43,10 +40,6 @@ all:
           ip_address_data: 10.9.10.21
           proxmox_10gbe_iface: enp4s0
           proxmox_1gbe_iface: enp100s0
-    k8s:
-      hosts:
-        cluster-test.mgmt.socozy.casa:
-        cluster-prod.mgmt.socozy.casa:
     truenas:
       hosts:
         ludwig.int.socozy.casa:

@@ -1,0 +1,15 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/monitoring.coreos.com/scrapeconfig_v1alpha1.json
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: node-exporter
+spec:
+  staticConfigs:
+    - targets:
+        - mali.int.${SECRET_DOMAIN}:9001
+        - node-exporter.vyos.${SECRET_DOMAIN}:9100
+  metricsPath: /metrics
+  scrape_interval: 2m
+  scrape_timeout: 10s
+  honor_timestamps: true

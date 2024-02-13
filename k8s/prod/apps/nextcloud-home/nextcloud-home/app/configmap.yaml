@@ -1,0 +1,203 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nextcloud-home-extra-config
+data:
+  # https://github.com/nextcloud/docker/blob/master/26/fpm-alpine/entrypoint.sh
+  redis-session.ini: |
+    session.save_handler = redis
+    session.save_path = "tcp://$${REDIS_HOST}:$${REDIS_HOST_PORT}?auth=$${REDIS_HOST_PASSWORD}"
+    redis.session.locking_enabled = 1
+    redis.session.lock_retries = -1
+    redis.session.lock_wait_time = 10000
+  uploadLimit.ini: |
+    upload_max_filesize = 16G
+    post_max_size = 16G
+    max_input_time = 3600
+    max_execution_time = 3600
+    default_phone_region = AT
+  www.conf: |
+    [www]
+    pm.max_children = 256
+    pm.start_servers = 10
+    pm.min_spare_servers = 5
+    pm.max_spare_servers = 20
+  opcache-recommended.ini: |
+    opcache.enable=1
+    opcache.interned_strings_buffer=64
+    opcache.max_accelerated_files=20000
+    opcache.memory_consumption=256
+    opcache.save_comments=1
+    opcache.revalidate_freq=60
+    opcache.validate_timestamps=0
+    opcache.jit=1255
+    opcache.jit_buffer_size=128M
+  post-start.sh: |-
+    #!/bin/sh
+    set -e
+    exec > /tmp/postStart-$(date +"%s").log
+    exec 2> /tmp/postStart-$(date +"%s")_error.log
+
+    # Write a simple status (errors or no errors) to a file, to be served to
+    # prometheus by a sidecar container.
+    report_metrics() {
+      errors=$1
+      outfile=/srv/metrics/status
+      truncate -s 0 $outfile
+      echo '# HELP nextcloud_poststart_errors Whether the nextcloud postStart script has encountered errors.' >> $outfile
+      echo '# TYPE nextcloud_poststart_errors gauge' >> $outfile
+      echo "nextcloud_poststart_errors $errors" >> $outfile
+    }
+    # We just started, so no errors yet!
+    report_metrics "0"
+
+    exception_handler() {
+        signal=$1
+        exitCode=$2
+        lineNumber=$3
+        echo "setup-apps.sh received $signal (code $exitCode) on line $lineNumber"
+        if [ $signal == "EXIT" ] && [ $exitCode -eq 0 ]
+        then
+          # No problem, this is regular EXIT at the end of the script.
+          report_metrics "0"
+          echo "That's all good, exiting normally."
+        else
+          # Report to prometheus that we have an error.
+          report_metrics "1"
+          echo "Still exiting with status 0 to allow nextcloud to start."
+        fi
+        # Remove the handler for `EXIT` so we don't run that as well. If we're
+        # currently handling `EXIT` already then this is not necessary because
+        # bash treats an `exit` specially if it happens in the `EXIT` handler.
+        # If we're handling another signal though, then we want to prevent that
+        # the call to `exit` also triggers the `EXIT` handler.
+        trap '' EXIT
+        exit 0
+    }
+
+    trap 'exception_handler ERR $? $LINENO' ERR
+    trap 'exception_handler EXIT $? $LINENO' EXIT
+    trap 'exception_handler SIGINT $? $LINENO' SIGINT
+    trap 'exception_handler SIGTERM $? $LINENO' SIGTERM
+
+
+    # Copied from the NC docker entrypoint to run OCC commands
+    if [ "$(id -u)" = 0 ]; then
+        echo "Running as root is not supported."
+        exit 2
+    fi
+
+    echo "STARTING post-start.sh"
+    occ="/var/www/html/occ"
+    count=0
+    limit=10
+    # There's a nextcloud setup process. First, wait for `occ` to exist
+    until [ -f "$occ" ] || [ "$count" -gt "$limit" ]
+    do
+        count=$((count+1))
+        wait=$((count*10))
+        echo "$occ doesn't exist yet, waiting $wait seconds"
+        sleep $wait
+    done
+
+    echo "$occ now exists!"
+
+    count=0
+
+    # As soon as the $occ command exists, we know that we can run occ, but
+    # Nextcloud might still be initializing, we use `occ` to find out whether
+    # the installation process has finished, and then we continue.
+    until [[ $(php /var/www/html/occ status --output json) =~ '"installed":true' ]] || [ "$count" -gt "$limit" ]
+    do
+        count=$((count+1))
+        wait=$((count*10))
+        echo "Nextcloud is not installed yet. Waiting $wait seconds..."
+        sleep $wait
+    done
+
+    echo "Nextcloud is now installed, we can do our thing!"
+
+    php $occ upgrade
+
+    echo "Updating database indices, columns, keys, etc."
+    php $occ db:add-missing-indices --no-interaction
+    php $occ db:add-missing-columns --no-interaction
+    php $occ db:add-missing-primary-keys --no-interaction
+    php $occ db:convert-filecache-bigint --no-interaction
+
+    # remove nextcloud advertisements for new users
+    rm -rf /var/www/html/core/skeleton/*
+
+    exit 0
+
+  extra.config.php: |-
+    <?php
+    $CONFIG = array(
+      'overwriteprotocol' => 'https',
+      'overwrite.cli.url' => 'https://drive.${SECRET_DOMAIN}',
+      'trusted_domains' => array(
+         'localhost',
+         'drive.${SECRET_DOMAIN}',
+      ),
+      'trusted_proxies' => array(
+          0 => '127.0.0.1',
+          1 => '${CLUSTER_CIDR}'
+      ),
+      'forwarded_for_headers' => array(
+        0 => 'HTTP_X_FORWARDED_FOR',
+      ),
+
+      'appstoreenabled' => true,
+
+      'memcache.local' => '\OC\Memcache\APCu',
+      'memcache.distributed' => '\OC\Memcache\Redis',
+      'memcache.locking' => '\OC\Memcache\Redis',
+      'redis' => array(
+        'host' => getenv('REDIS_HOST'),
+        'port' => getenv('REDIS_HOST_PORT') ?: 6379,
+        'password' => getenv('REDIS_HOST_PASSWORD'),
+      ),
+
+      'apps_paths' => array(
+          0 => array (
+                  'path'     => OC::$SERVERROOT.'/apps',
+                  'url'      => '/apps',
+                  'writable' => false,
+          ),
+          1 => array (
+                  'path'     => OC::$SERVERROOT.'/custom_apps',
+                  'url'      => '/custom_apps',
+                  'writable' => true,
+          ),
+      ),
+
+      'htaccess.RewriteBase' => '/',
+
+      // SMTP without authentication
+      'mail_smtpmode' => 'smtp',
+      'mail_smtptimeout' => 30,
+      'mail_sendmailmode' => 'smtp',
+      'mail_smtphost' => getenv('SMTP_HOST'),
+      'mail_smtpport' => 25,
+      'mail_smtpsecure' => '',
+      'mail_smtpauth' => 0,
+      'mail_smtpauthtype' => '',
+      'mail_smtppassword' => '',
+      'mail_smtpname' => '',
+      'mail_from_address' => getenv('MAIL_FROM_ADDRESS'),
+      'mail_domain' => getenv('MAIL_DOMAIN'),
+      'mail_smtpstreamoptions' => array(
+        'ssl' => array(
+          'allow_self_signed' => true,
+          'verify_peer' => false,
+          'verify_peer_name' => false
+        )
+      ),
+
+       // Circumvention for client freezes - https://github.com/nextcloud/desktop/issues/5094
+      'bulkupload.enabled' => false,
+
+      'backgroundjobs_mode' => 'webcron',
+      'default_phone_region' => 'AT',
+    );

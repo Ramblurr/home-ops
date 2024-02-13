@@ -1,0 +1,111 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.26.1-standalone-strict/persistentvolume-v1.json
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: &name nextcloud-home-nfs
+  labels:
+    app.kubernetes.io/name: *name
+    app.kubernetes.io/instance: *name
+spec:
+  capacity:
+    storage: 1Mi # Size does not matter
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  storageClassName: nextcloud-home-nfs
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    server: "${SECRET_NFS_SERVER}"
+    path: /mnt/tank2/services/drive.${SECRET_DOMAIN}-2
+  mountOptions:
+    - vers=3
+    - rw
+    - nolock # TODO https://github.com/siderolabs/talos/issues/6582
+    - noatime
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.26.1-standalone-strict/persistentvolumeclaim-v1.json
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: &name nextcloud-home-nfs
+  labels:
+    app.kubernetes.io/name: *name
+    app.kubernetes.io/instance: *name
+spec:
+  accessModes: ["ReadWriteMany"]
+  storageClassName: nextcloud-home-nfs
+  resources:
+    requests:
+      storage: 1Mi # Size does not matter
+
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.26.1-standalone-strict/persistentvolume-v1.json
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: &name nextcloud-home-paperless3-nfs
+  labels:
+    app.kubernetes.io/name: *name
+    app.kubernetes.io/instance: *name
+spec:
+  capacity:
+    storage: 1Mi # Size does not matter
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  storageClassName: nextcloud-home-paperless3-nfs
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    server: "${SECRET_NFS_SERVER}"
+    path: /mnt/tank2/services/paperless.${SECRET_DOMAIN_INTERNAL}
+  mountOptions:
+    - vers=3
+    - rw
+    - nolock # TODO https://github.com/siderolabs/talos/issues/6582
+    - noatime
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.26.1-standalone-strict/persistentvolumeclaim-v1.json
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: &name nextcloud-home-paperless3-nfs
+  labels:
+    app.kubernetes.io/name: *name
+    app.kubernetes.io/instance: *name
+spec:
+  accessModes: ["ReadWriteMany"]
+  storageClassName: nextcloud-home-paperless3-nfs
+  resources:
+    requests:
+      storage: 1Mi # Size does not matter
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.26.1-standalone-strict/persistentvolumeclaim-v1.json
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: &name nextcloud-home-ceph
+  labels:
+    app.kubernetes.io/name: *name
+    app.kubernetes.io/instance: *name
+    snapshot.home.arpa/enabled: "true"
+spec:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 5Gi
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.26.1-standalone-strict/persistentvolumeclaim-v1.json
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: &name nextcloud-home-redis-ceph
+  labels:
+    app.kubernetes.io/name: *name
+    app.kubernetes.io/instance: *name
+    snapshot.home.arpa/enabled: "true"
+spec:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 2Gi
