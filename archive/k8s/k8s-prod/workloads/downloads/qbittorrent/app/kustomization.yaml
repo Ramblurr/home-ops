@@ -3,17 +3,20 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: downloads
 resources:
-  - ./helmrelease.yaml
   - ./volsync.yaml
-  - ./qbittools-tagging
+  - ./externalsecret.yaml
+  - ./helmrelease.yaml
+  - ./pvc.yaml
+configMapGenerator:
+  - name: qbittorrent-scripts
+    files:
+      - ./scripts/completed.sh
+  - name: qbittorrent-dnsdist
+    files:
+      - ./config/dnsdist.conf
+generatorOptions:
+  disableNameSuffixHash: true
 commonLabels:
   app.kubernetes.io/name: qbittorrent
   app.kubernetes.io/instance: qbittorrent
-configMapGenerator:
-  - name: qbittorrent-configmap
-    files:
-      - config/categories.json
-      - config/qBittorrent.conf
-      - config/watched_folders.json
-generatorOptions:
-  disableNameSuffixHash: true
+  app.kubernetes.io/component: app
