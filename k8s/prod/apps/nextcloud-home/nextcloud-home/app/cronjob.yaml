@@ -3,10 +3,10 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: &name nextcloud-home-cron
+  name: &name ${APP}-cron
   labels: &labels
-    app.kubernetes.io/name: nextcloud-home
-    app.kubernetes.io/instance: nextcloud-home
+    app.kubernetes.io/name: ${APP}
+    app.kubernetes.io/instance: ${APP}
 spec:
   schedule: "*/5 * * * *"
   successfulJobsHistoryLimit: 2
@@ -29,4 +29,6 @@ spec:
               args:
                 - --silent
                 - --show-error
-                - http://nextcloud-home-app.nextcloud-home.svc.cluster.local:8080/cron.php
+                - -H
+                - "Host: ${NC_DOMAIN}"
+                - http://${APP}-app.${APP_NS}.svc.cluster.local:8080/cron.php

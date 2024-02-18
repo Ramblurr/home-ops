@@ -2,7 +2,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: nextcloud-home-redis
+  name: ${APP}-redis
 spec:
   interval: 15m
   chart:
@@ -31,7 +31,7 @@ spec:
               REDIS_PASSWORD:
                 valueFrom:
                   secretKeyRef:
-                    name: nextcloud-home-secret
+                    name: ${APP}-secret
                     key: REDIS_HOST_PASSWORD
 
     service:
@@ -43,6 +43,6 @@ spec:
       data:
         enabled: true
         type: persistentVolumeClaim
-        existingClaim: nextcloud-home-redis-ceph
+        existingClaim: ${APP}-redis-ceph
         globalMounts:
           - path: /data

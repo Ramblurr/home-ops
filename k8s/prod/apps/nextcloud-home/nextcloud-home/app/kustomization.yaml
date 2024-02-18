@@ -12,5 +12,5 @@ resources:
   - cronjob.yaml
   - ../../../../templates/volsync
 commonLabels:
-  app.kubernetes.io/name: nextcloud-home
-  app.kubernetes.io/instance: nextcloud-home
+  app.kubernetes.io/name: ${APP}
+  app.kubernetes.io/instance: ${APP}

@@ -25,4 +25,6 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      APP_NS: &ns
+      NC_DOMAIN: drive.${SECRET_DOMAIN}
       VOLSYNC_CAPACITY: 1Gi

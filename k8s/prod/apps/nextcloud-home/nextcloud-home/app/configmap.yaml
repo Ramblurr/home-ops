@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: nextcloud-home-extra-config
+  name: ${APP}-extra-config
 data:
   # https://github.com/nextcloud/docker/blob/master/26/fpm-alpine/entrypoint.sh
   redis-session.ini: |
@@ -135,10 +135,10 @@ data:
     <?php
     $CONFIG = array(
       'overwriteprotocol' => 'https',
-      'overwrite.cli.url' => 'https://drive.${SECRET_DOMAIN}',
+      'overwrite.cli.url' => 'https://${NC_DOMAIN}',
       'trusted_domains' => array(
          'localhost',
-         'drive.${SECRET_DOMAIN}',
+         '${NC_DOMAIN}',
       ),
       'trusted_proxies' => array(
           0 => '127.0.0.1',
