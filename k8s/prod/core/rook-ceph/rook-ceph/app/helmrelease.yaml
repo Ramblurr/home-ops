@@ -33,6 +33,32 @@ spec:
       enableLiveness: true
       serviceMonitor:
         enabled: true
+      ## BEGIN: NixOS Host Specific Values ##
+      # The following are only necessary when NixOS is the host
+      # https://rook.io/docs/rook/latest/Getting-Started/Prerequisites/prerequisites/#nixos
+      csiRBDPluginVolume:
+        - name: lib-modules
+          hostPath:
+            path: /run/booted-system/kernel-modules/lib/modules/
+        - name: host-nix
+          hostPath:
+            path: /nix
+      csiRBDPluginVolumeMount:
+        - name: host-nix
+          mountPath: /nix
+          readOnly: true
+      csiCephFSPluginVolume:
+        - name: lib-modules
+          hostPath:
+            path: /run/booted-system/kernel-modules/lib/modules/
+        - name: host-nix
+          hostPath:
+            path: /nix
+      csiCephFSPluginVolumeMount:
+        - name: host-nix
+          mountPath: /nix
+          readOnly: true
+    ## END: NixOS Host Specific Values ##
     monitoring:
       enabled: true
     resources:
@@ -40,29 +66,3 @@ spec:
         memory: 128Mi # unchangable
         cpu: 100m # unchangable
       limits: {}
-    ## BEGIN: NixOS Host Specific Values ##
-    # The following are only necessary when NixOS is the host
-    # https://rook.io/docs/rook/latest/Getting-Started/Prerequisites/prerequisites/#nixos
-    csiRBDPluginVolume:
-      - name: lib-modules
-        hostPath:
-          path: /run/booted-system/kernel-modules/lib/modules/
-      - name: host-nix
-        hostPath:
-          path: /nix
-    csiRBDPluginVolumeMount:
-      - name: host-nix
-        mountPath: /nix
-        readOnly: true
-    csiCephFSPluginVolume:
-      - name: lib-modules
-        hostPath:
-          path: /run/booted-system/kernel-modules/lib/modules/
-      - name: host-nix
-        hostPath:
-          path: /nix
-    csiCephFSPluginVolumeMount:
-      - name: host-nix
-        mountPath: /nix
-        readOnly: true
-    ## END: NixOS Host Specific Values ##
