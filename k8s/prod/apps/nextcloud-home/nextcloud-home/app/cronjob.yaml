@@ -31,4 +31,4 @@ spec:
                 - --show-error
                 - -H
                 - "Host: ${NC_DOMAIN}"
-                - http://${APP}-app.${APP_NS}.svc.cluster.local:8080/cron.php
+                - http://${APP}.${APP_NS}.svc.cluster.local:8080/cron.php
