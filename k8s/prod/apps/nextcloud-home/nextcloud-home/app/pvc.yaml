@@ -84,22 +84,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: &name nextcloud-home-ceph
-  labels:
-    app.kubernetes.io/name: *name
-    app.kubernetes.io/instance: *name
-    snapshot.home.arpa/enabled: "true"
-spec:
-  accessModes: ["ReadWriteOnce"]
-  resources:
-    requests:
-      storage: 5Gi
----
-# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.26.1-standalone-strict/persistentvolumeclaim-v1.json
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: &name nextcloud-home-redis-ceph
+  name: &name nextcloud-home-redis
   labels:
     app.kubernetes.io/name: *name
     app.kubernetes.io/instance: *name

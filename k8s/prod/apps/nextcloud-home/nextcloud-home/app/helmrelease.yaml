@@ -107,7 +107,7 @@ spec:
       app-config:
         enabled: true
         type: persistentVolumeClaim
-        existingClaim: ${APP}-ceph
+        existingClaim: ${APP}
         globalMounts:
           - subPath: nextcloud/html
             path: /var/www/html
