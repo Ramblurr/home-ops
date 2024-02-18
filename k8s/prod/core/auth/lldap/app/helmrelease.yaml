@@ -65,7 +65,7 @@ spec:
               repository: ghcr.io/lldap/lldap
               tag: v0.5.0@sha256:f0f5d92cd6c6dca9415993cfc57919f0618e87090b323a98c1536975860fa45a
             env:
-              TZ: Europe/Berlin
+              TZ: "${SECRET_TIMEZONE}"
               LLDAP_HTTP_PORT: &httpPort 80
               LLDAP_HTTP_URL: https://lldap.${SECRET_DOMAIN_INTERNAL}
               LLDAP_LDAP_PORT: &ldapPort 389

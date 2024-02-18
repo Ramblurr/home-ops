@@ -32,7 +32,7 @@ spec:
               repository: ghcr.io/unpoller/unpoller
               tag: v2.9.5@sha256:486a63339969fd5207697502e29e4875f4bf7d7ef5c558188b192f2f88fdd3d6
             env:
-              TZ: Europe/Berlin
+              TZ: "${SECRET_TIMEZONE}"
               UP_UNIFI_DEFAULT_ROLE: home-ops
               UP_UNIFI_DEFAULT_URL: https://unifi.int.${SECRET_DOMAIN}:8443
               UP_UNIFI_DEFAULT_VERIFY_SSL: false
