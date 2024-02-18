@@ -114,22 +114,25 @@ spec:
 
       data:
         enabled: true
-        type: persistentVolumeClaim
-        existingClaim: ${APP}-nfs
+        type: nfs
+        server: ${SECRET_NFS_SERVER}
+        path: /mnt/tank2/services/drive.${SECRET_DOMAIN}-2
         advancedMounts:
           main:
             main:
               - path: /data
-                subPath: nextcloud/data-test
+                subPath: nextcloud/data
 
       paperless:
         enabled: true
-        type: persistentVolumeClaim
-        existingClaim: ${APP}-paperless3-nfs
+        type: nfs
+        server: ${SECRET_NFS_SERVER}
+        path: /mnt/tank2/services/paperless.${SECRET_DOMAIN_INTERNAL}
         advancedMounts:
           main:
             main:
               - path: /paperless
+                readOnly: true
 
       post-start-sh:
         enabled: true
