@@ -9,7 +9,7 @@ resources:
   - configmap.yaml
   - helmrelease.yaml
   - cronjob.yaml
-  - ../../../../templates/volsync
+  #- ../../../../templates/volsync
 commonLabels:
   app.kubernetes.io/name: ${APP}
   app.kubernetes.io/instance: ${APP}
