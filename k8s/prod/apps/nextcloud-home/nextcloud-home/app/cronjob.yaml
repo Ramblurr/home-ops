@@ -29,4 +29,4 @@ spec:
               args:
                 - --silent
                 - --show-error
-                - https://drive.${SECRET_DOMAIN}/cron.php
+                - http://nextcloud-home-app.nextcloud-home.svc.cluster.local:8080/cron.php
