@@ -14,11 +14,24 @@ spec:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
-  dependsOn:
-    - name: ${APP}-redis
-      namespace: ${APP}
   values:
     controllers:
+      redis:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          redis:
+            image:
+              repository: docker.io/library/redis
+              tag: "7"
+            command: ["redis-server", "--requirepass", "$(REDIS_PASSWORD)"]
+            env:
+              REDIS_REPLICATION_MODE: master
+              REDIS_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: ${APP}-secret
+                    key: REDIS_HOST_PASSWORD
       main:
         annotations:
           reloader.stakater.com/auto: "true"
@@ -44,7 +57,7 @@ spec:
                 mkdir -p /var/www/html/config && chmod 0700 /var/www/html/config
             volumeMounts:
               - mountPath: /var/www/html
-                name: app-config
+                name: nextcloud
                 subPath: nextcloud/html
                 readOnly: false
             securityContext:
@@ -86,7 +99,7 @@ spec:
               PGSSLMODE: verify-full
               MAIL_FROM_ADDRESS: "${SECRET_SMTP_FROM_USER}"
               MAIL_DOMAIN: "${SECRET_DOMAIN}"
-              REDIS_HOST: ${APP}-redis.${APP}.svc.cluster.local
+              REDIS_HOST: ${APP}.${APP_NS}.svc.cluster.local
               REDIS_HOST_PORT: 6379
               NEXTCLOUD_DATA_DIR: /data
             envFrom: &envFrom
@@ -104,13 +117,24 @@ spec:
           main:
             main:
               - path: /srv/metrics
-      app-config:
+
+      nextcloud:
         enabled: true
         type: persistentVolumeClaim
         existingClaim: ${APP}
         globalMounts:
           - subPath: nextcloud/html
             path: /var/www/html
+
+      redis:
+        enabled: true
+        type: persistentVolumeClaim
+        existingClaim: ${APP}
+        advancedMounts:
+          main:
+            redis:
+              - path: /data
+                subPath: redis
 
       data:
         enabled: true
@@ -264,6 +288,10 @@ spec:
           - hosts:
               - *host
     service:
+      redis:
+        ports:
+          http:
+            port: 6379
       main:
         ports:
           http:

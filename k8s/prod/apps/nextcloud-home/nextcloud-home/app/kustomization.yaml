@@ -6,7 +6,6 @@ resources:
   - pvc.yaml
   - externalsecret.yaml
   - nginx-config.yaml
-  - helmrelease-redis.yaml
   - configmap.yaml
   - helmrelease.yaml
   - cronjob.yaml
