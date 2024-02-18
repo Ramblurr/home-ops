@@ -120,7 +120,7 @@ spec:
           main:
             main:
               - path: /data
-                subPath: nextcloud/data
+                subPath: nextcloud/data-test
 
       paperless:
         enabled: true

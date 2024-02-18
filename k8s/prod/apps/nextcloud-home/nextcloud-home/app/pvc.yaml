@@ -14,7 +14,7 @@ spec:
   accessModes:
     - ReadWriteMany
   storageClassName: nextcloud-home-nfs
-  persistentVolumeReclaimPolicy: Retain
+  persistentVolumeReclaimPolicy: Delete
   nfs:
     server: "${SECRET_NFS_SERVER}"
     path: /mnt/tank2/services/drive.${SECRET_DOMAIN}-2
