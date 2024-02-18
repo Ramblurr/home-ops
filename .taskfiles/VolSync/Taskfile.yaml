@@ -98,9 +98,10 @@ tasks:
       - kubectl --context {{.cluster}} -n {{.ns}} wait job/volsync-src-{{.app}} --for condition=complete --timeout=120m
     env: *env
     requires:
-      vars: ["cluster", "app"]
+      vars: ["app"]
     vars:
       ns: '{{.ns | default "default"}}'
+      cluster: '{{.cluster | default "default"}}'
       controller:
         sh: true && {{.resources}}/controller.sh {{.app}} {{.ns}} {{.cluster}}
     preconditions:
