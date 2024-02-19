@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: storage-users
+data:
+  storage-uuid: 3bff9628-17d4-4428-9ce7-80f50d7b1b0f
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: graph
+data:
+  application-id: a7f4089f-e359-491c-a902-5542156363c7

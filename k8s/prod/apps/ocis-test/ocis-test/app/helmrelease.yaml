@@ -1,0 +1,40 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: ocis-test
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: ./charts/ocis
+      sourceRef:
+        kind: GitRepository
+        name: owncloud-ocis-next
+        namespace: flux-system
+  values:
+    image:
+      repository: docker.io/owncloud/ocis
+      tag: 5.0.0-rc.4
+    insecure:
+      oidcIdpInsecure: true
+      ocisHttpApiInsecure: true
+    externalDomain: ocis-test.${SECRET_DOMAIN}
+
+    ingress:
+      enabled: true
+      ingressClassName: external
+      annotations:
+        external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+        nginx.ingress.kubernetes.io/proxy-body-size: 10G
+        nginx.ingress.kubernetes.io/custom-http-errors: "418" # dummy status code to disable custom http errors
+        nginx.ingress.kubernetes.io/enable-global-auth: "false"
+      tls:
+        - hosts:
+            - "ocis-test.${SECRET_DOMAIN}"
+
+    securityContext:
+      fsGroup: 2000
+      fsGroupChangePolicy: "OnRootMismatch"
+      runAsUser: 2000
+      runAsGroup: 2000
