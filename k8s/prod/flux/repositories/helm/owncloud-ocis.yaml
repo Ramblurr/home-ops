@@ -1,0 +1,14 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: owncloud-ocis
+  namespace: flux-system
+spec:
+  interval: 5m0s
+  url: https://github.com/owncloud/ocis-charts
+  ref:
+    tag: v0.1.0
+  ignore: |
+    /*
+    !/charts/ocis/
