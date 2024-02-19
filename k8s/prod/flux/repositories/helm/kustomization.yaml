@@ -25,3 +25,4 @@ resources:
   - ./crunchydata.yaml
   - ./crunchy-userinit.yaml
   - ./owncloud-ocis.yaml
+  - ./authentik.yaml

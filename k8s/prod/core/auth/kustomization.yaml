@@ -8,5 +8,6 @@ resources:
   - ./notifications.yaml
   # Flux-Kustomizations
   - ./auth-db/ks.yaml
-  - ./lldap/ks.yaml
-  - ./authelia/ks.yaml
+    #- ./lldap/ks.yaml
+    #- ./authelia/ks.yaml
+  - ./authentik/ks.yaml
