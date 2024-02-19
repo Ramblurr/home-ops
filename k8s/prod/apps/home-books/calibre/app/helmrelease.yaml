@@ -1,0 +1,100 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: calibre
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: app-template
+      version: 2.6.0
+      interval: 15m
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  maxHistory: 2
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    controllers:
+      main:
+        type: statefulset
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          main:
+            image:
+              repository: ghcr.io/linuxserver/calibre
+              tag: 7.4.0
+            env:
+              TZ: "${TIMEZONE}"
+              PUID: "2000"
+              PGID: "2000"
+            resources:
+              requests:
+                cpu: 0.003
+                memory: 1Gi
+              limits:
+                memory: 10Gi
+    service:
+      main:
+        primary: true
+        ports:
+          http:
+            port: 8080
+      webserver:
+        controller: main
+        primary: false
+        enabled: true
+        ports:
+          webserver:
+            port: 8081
+
+    ingress:
+      main:
+        enabled: true
+        className: internal
+        #annotations:
+          #nginx.ingress.kubernetes.io/auth-method: GET
+          #nginx.ingress.kubernetes.io/auth-url: http://authelia.default.svc.cluster.local:8000/api/verify
+          #nginx.ingress.kubernetes.io/auth-signin: https://auth.${SECRET_DOMAIN}?rm=$request_method
+          #nginx.ingress.kubernetes.io/auth-response-headers: Remote-User,Remote-Name,Remote-Groups,Remote-Email
+          #nginx.ingress.kubernetes.io/auth-snippet: proxy_set_header X-Forwarded-Method $request_method;
+        hosts:
+          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN_INTERNAL}"
+            paths:
+              - path: /
+                service:
+                  name: main
+                  port: http
+
+    persistence:
+      config:
+        enabled: true
+        existingClaim: ${VOLSYNC_CLAIM}
+        globalMounts:
+          - path: /config
+      media:
+        enabled: true
+        type: nfs
+        server: ${SECRET_NFS_SERVER}
+        path: /mnt/tank2/media/books
+        globalMounts:
+          - path: /media/books
+      downloads:
+        enabled: true
+        type: nfs
+        server: ${SECRET_NFS_SERVER}
+        path: /mnt/fast/downloads
+        globalMounts:
+          - path: /downloads
