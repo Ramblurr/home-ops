@@ -8,3 +8,4 @@ resources:
   - ./notifications.yaml
   # Flux-Kustomizations
   - ./ocis-test/ks.yaml
+  - ./ocis-test-simple/ks.yaml
