@@ -1193,6 +1193,10 @@ set firewall name primary-data rule 2 destination group port-group 'truenas-samb
 set firewall name primary-data rule 2 destination group address-group 'mali'
 set firewall name primary-data rule 2 protocol 'tcp_udp'
 set firewall name primary-data rule 2 source group address-group 'homeassistant'
+set firewall name primary-data rule 3 action 'accept'
+set firewall name primary-data rule 3 description 'Rule: accept_admin'
+set firewall name primary-data rule 3 protocol 'tcp_udp'
+set firewall name primary-data rule 3 source group address-group 'admin'
 
 # From PRIMARY to WAN
 set firewall name primary-wan default-action 'accept'
