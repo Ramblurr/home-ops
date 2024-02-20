@@ -27,6 +27,8 @@ spec:
     fullnameOverride: ingress-nginx-internal
     controller:
       replicaCount: 1
+      allowSnippetAnnotations: true
+      enableAnnotationValidations: true
       service:
         annotations:
           io.cilium/lb-ipam-ips: "${SVC_INGRESS_INTERNAL}"
