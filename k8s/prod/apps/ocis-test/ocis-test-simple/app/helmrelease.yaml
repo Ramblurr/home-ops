@@ -47,7 +47,7 @@ spec:
               NOTIFICATIONS_SMTP_SENDER: "${SECRET_SMTP_FROM_FULL}"
               NOTIFICATIONS_SMTP_INSECURE: true
               # Authentik OIDC
-              OCIS_OIDC_ISSUER: https://auth.${SECRET_DOMAIN}/application/o/${APP}-web/
+              OCIS_OIDC_ISSUER: https://auth.${SECRET_DOMAIN}/application/o/ocis-test/
               WEB_OIDC_CLIENT_ID: ${APP}-web
               # Without this, I got the following errors in the ownCloud log:
               # Authelia: failed to verify access token: token contains an invalid number of segments
