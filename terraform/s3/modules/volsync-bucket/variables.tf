@@ -3,6 +3,12 @@ variable "bucket_name" {
   description = "The name of the bucket to create"
 }
 
+variable "restic_password" {
+  type        = string
+  sensitive   = true
+  description = "(Optional) The encryption password to use for the restic repository, one will be generated if not provided"
+}
+
 variable "vault" {
   type        = string
   description = "The 1password vault to store the item in"

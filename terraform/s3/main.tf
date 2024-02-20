@@ -3,16 +3,16 @@ data "sops_file" "secrets" {
 }
 
 locals {
-  secrets               = yamldecode(data.sops_file.secrets.raw)
-  cloudflare_api_token  = local.secrets.cloudflare_api_token
-  cloudflare_account_id = local.secrets.cloudflare_account_id
-
-  minio_server         = local.secrets.minio_server
-  minio_username       = local.secrets.minio_username
-  minio_password       = local.secrets.minio_password
-  onepassword_vault_id = local.secrets.onepassword_vault_id
-  vault                = local.onepassword_vault_id
-  prefix               = "k8s-prod"
+  secrets                = yamldecode(data.sops_file.secrets.raw)
+  cloudflare_api_token   = local.secrets.cloudflare_api_token
+  cloudflare_account_id  = local.secrets.cloudflare_account_id
+  legacy_restic_password = local.secrets.legacy_restic_password
+  minio_server           = local.secrets.minio_server
+  minio_username         = local.secrets.minio_username
+  minio_password         = local.secrets.minio_password
+  onepassword_vault_id   = local.secrets.onepassword_vault_id
+  vault                  = local.onepassword_vault_id
+  prefix                 = "k8s-prod"
   tags = [
     "tenant:home-ops",
     "env:prod",
@@ -20,7 +20,8 @@ locals {
     "app:r2",
     "app:volsync",
   ]
-  buckets = [
+  # these have a pre-existing restic key
+  legacy_buckets = [
     "volsync-calibre-web",
     "volsync-autoscan",
     "volsync-calibre",
@@ -42,6 +43,8 @@ locals {
     "volsync-sonarr",
     "volsync-tautulli",
   ]
+  # these can have the restic key generated
+  new_buckets = []
 }
 
 provider "cloudflare" {
@@ -59,7 +62,7 @@ provider "minio" {
 
 
 module "volsync_bucket" {
-  for_each              = toset(local.buckets)
+  for_each              = toset(local.legacy_buckets)
   source                = "./modules/volsync-bucket"
   minio_server          = local.minio_server
   r2_enabled            = true
@@ -67,6 +70,7 @@ module "volsync_bucket" {
   vault                 = local.vault
   bucket_name           = each.key
   tags                  = local.tags
+  restic_password       = local.legacy_restic_password
 
   providers = {
     minio = minio.nas

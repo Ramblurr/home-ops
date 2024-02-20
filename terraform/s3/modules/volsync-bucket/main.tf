@@ -3,7 +3,7 @@ locals {
   minio_secret_key = random_password.minio_secret.result
   r2_access_key    = var.r2_enabled ? module.r2_bucket[0].access_key : null
   r2_secret_key    = var.r2_enabled ? module.r2_bucket[0].secret_key : null
-  restic_password  = random_password.restic_secret.result
+  restic_password  = var.restic_password != null ? var.restic_password : random_password.restic_secret.result
 }
 
 resource "random_password" "minio_secret" {
