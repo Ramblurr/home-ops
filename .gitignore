@@ -42,3 +42,4 @@ xanmanning.k3s*
 tmp/
 bin/pki
 .venv
+.direnv
