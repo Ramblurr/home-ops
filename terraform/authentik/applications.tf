@@ -26,7 +26,7 @@ module "calibre" {
   source                  = "./modules/forward-auth-application"
   name                    = "calibre"
   domain                  = "calibre.${var.internal_domain}"
-  group                   = "Books"
+  group                   = "admin"
   authorization_flow_uuid = local.implicit_authorization_flow
   meta_icon               = "${local.icon_base}/calibre.png"
 }
