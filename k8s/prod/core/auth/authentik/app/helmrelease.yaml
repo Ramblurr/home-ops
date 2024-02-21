@@ -8,18 +8,18 @@ spec:
   interval: 30m
   chart:
     spec:
-      #chart: authentik
-      #version: 2024.2.0-rc1
-      #interval: 30m
-      #sourceRef:
-        #kind: HelmRepository
-        #name: authentik
-        #namespace: flux-system
-      chart: ./charts/authentik
+      chart: authentik
+      version: 2024.2.0-rc2
+      interval: 30m
       sourceRef:
-        kind: GitRepository
-        name: authentik-main
+        kind: HelmRepository
+        name: authentik
         namespace: flux-system
+      #chart: ./charts/authentik
+      #sourceRef:
+      #  kind: GitRepository
+      #  name: authentik-main
+      #  namespace: flux-system
   values:
     authentik:
       log_level: info
