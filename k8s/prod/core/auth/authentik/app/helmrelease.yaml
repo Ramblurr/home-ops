@@ -59,6 +59,14 @@ spec:
             secretKeyRef:
               name: "${APP}-pguser-${DB_USER}"
               key: password
+      volumes:
+        - name: custom-css
+          configMap:
+            name: authentik-custom-css
+      volumeMounts:
+        - name: custom-css
+          mountPath: /web/dist/custom.css
+          subPath: custom.css
     server:
       metrics:
         serviceMonitor:

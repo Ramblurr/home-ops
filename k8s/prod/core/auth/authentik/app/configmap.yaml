@@ -1,0 +1,128 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: authentik-custom-css
+data:
+  custom.css: |
+    /*** global ***/
+    :root {
+      --ak-accent: #3A244A !important;
+      --ak-flow-background: url(https://raw.githubusercontent.com/ramblurr/home-ops/main/icons/bg.jpg) !important;
+      --pf-global--primary-color--100: #70468E !important;
+      --pf-global--primary-color--200: #55356c !important;
+      --pf-global--primary-color--400: var(--ak-accent);
+      --pf-global--link--Color: var(--pf-global--primary-color--100) !important;
+      --pf-global--link--Color--hover: var(--pf-global--primary-color--200) !important;
+    }
+    /* set up ::before psuedo-elems for hex transparency
+    *
+    * NOTE:
+    * this is necessary as var() returns tokens, not strings, so:
+    *   --a: #deadbe;
+    *   x: var(--a)ef;
+    * becomes:
+    *   x: #deadbe ef;
+    *
+    * to get around this we use psuedo-elems with opacity; easier and less verbose
+    * to just define the selectors here again instead of duplicating properties
+    *
+    * CSS Color Module Level 5 is not ready yet and would prevent this nasty shit
+    */
+    .pf-c-login__main,
+    .pf-c-login__footer .pf-c-list,
+    .pf-c-page__sidebar {
+      background-color: transparent !important;
+      backdrop-filter: blur(25px);
+    }
+    .pf-c-login__main::before,
+    .pf-c-login__footer .pf-c-list::before,
+    .pf-c-page__sidebar::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.8;
+    }
+
+
+    /*** flows ***/
+    .pf-c-background-image {
+      --pf-c-background-image--Filter: none;
+    }
+
+    .ak-login-container {
+      /* fix #4830 */
+      justify-content: initial;
+    }
+    .pf-c-login__header {
+      margin-top: 10px;
+    }
+
+    /* give both the blur and color same radius */
+    .pf-c-login__main,
+    .pf-c-login__main::before {
+      border-radius: 3px 3px 0 0;
+    }
+    .pf-c-login__footer .pf-c-list,
+    .pf-c-login__footer .pf-c-list::before {
+      border-radius: 0 0 3px 3px;
+    }
+
+    .pf-c-login__main::before,
+    .pf-c-login__footer .pf-c-list::before {
+      background-color: var(--pf-c-login__main--BackgroundColor);
+    }
+    .pf-c-login__footer {
+      /* unset inverted colorscheme on footer since we're adding bg */
+      --pf-global--Color--100: inherit;
+      --pf-global--Color--200: inherit;
+      --pf-global--BorderColor--100: inherit;
+      --pf-global--primary-color--100: inherit;
+      --pf-global--link--Color: inherit;
+      --pf-global--link--Color--hover: inherit;
+      --pf-global--BackgroundColor--100: inherit;
+    }
+
+    .pf-c-login__footer .pf-c-list {
+        padding-top: var(--pf-c-login__footer--c-list--PaddingTop);
+        padding-bottom: var(--pf-c-login__footer--c-list--PaddingTop);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .pf-c-login__main::before,
+      .pf-c-login__footer .pf-c-list::before {
+        background-color: var(--ak-dark-background);
+      }
+    }
+
+
+    /*** user interface ***/
+    .header input {
+      border-bottom-color: var(--pf-global--primary-color--100);
+    }
+
+
+    /*** admin interface ***/
+    .pf-c-page__sidebar {
+      backdrop-filter: blur(10px);
+    }
+    .pf-c-page__sidebar::before {
+      background-color: var(--pf-global--BackgroundColor--dark-300);
+    }
+    @media (prefers-color-scheme: dark) {
+      .pf-c-page__sidebar::before {
+        background-color: var(--ak-dark-background-light);
+      }
+      .pf-c-nav {
+        background-color: transparent;
+      }
+    }
+    .pf-c-nav__link.pf-m-current::after,
+    .pf-c-nav__link.pf-m-current:hover::after,
+    .pf-c-nav__item.pf-m-current:not(.pf-m-expanded) .pf-c-nav__link::after {
+      --pf-c-nav__link--m-current--after--BorderColor: var(--ak-accent) !important;
+    }
