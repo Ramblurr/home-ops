@@ -19,6 +19,7 @@ spec:
       runAsUser: ${APP_UID:-2000}
       runAsGroup: ${APP_GID:-2000}
       fsGroup: ${APP_GID:-2000}
+      supplementalGroups: [2000]
     pruneIntervalDays: 7
     retain:
       hourly: 24
