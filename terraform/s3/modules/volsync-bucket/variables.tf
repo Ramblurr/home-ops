@@ -5,6 +5,7 @@ variable "bucket_name" {
 
 variable "restic_password" {
   type        = string
+  default     = null
   sensitive   = true
   description = "(Optional) The encryption password to use for the restic repository, one will be generated if not provided"
 }

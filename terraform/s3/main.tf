@@ -44,7 +44,9 @@ locals {
     "volsync-tautulli",
   ]
   # these can have the restic key generated
-  new_buckets = []
+  new_buckets = [
+    "volsync-home-automation-influxdb"
+  ]
 }
 
 provider "cloudflare" {
@@ -71,6 +73,21 @@ module "volsync_bucket" {
   bucket_name           = each.key
   tags                  = local.tags
   restic_password       = local.legacy_restic_password
+
+  providers = {
+    minio = minio.nas
+  }
+}
+
+module "volsync_bucket_new" {
+  for_each              = toset(local.new_buckets)
+  source                = "./modules/volsync-bucket"
+  minio_server          = local.minio_server
+  r2_enabled            = true
+  cloudflare_account_id = local.cloudflare_account_id
+  vault                 = local.vault
+  bucket_name           = each.key
+  tags                  = local.tags
 
   providers = {
     minio = minio.nas
