@@ -3,7 +3,7 @@
 apiVersion: postgres-operator.crunchydata.com/v1beta1
 kind: PostgresCluster
 metadata:
-  name: "app-db"
+  name: &name app-db
   labels:
     crunchy-userinit.ramblurr.github.com/enabled: "true"
     crunchy-userinit.ramblurr.github.com/superuser: "app-db-root"
@@ -44,7 +44,7 @@ spec:
           egress.home.arpa/apiserver: allow
           egress.home.arpa/minio: allow
           egress.home.arpa/kubedns: allow # FIXME: Remove when clusterNetworkPolicy is in place
-      replicas: 3
+      replicas: &replicas 3
       dataVolumeClaimSpec:
         storageClassName: openebs-hostpath
         accessModes:
@@ -140,3 +140,26 @@ spec:
             bucket: pg-crunchy-app-db
             endpoint: ${SECRET_CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com
             region: us-east-1
+  proxy:
+    pgBouncer:
+      service:
+        metadata:
+          annotations:
+            io.cilium/lb-ipam-ips: ${SVC_APP_DB}
+        type: LoadBalancer
+      port: 5432
+      replicas: *replicas
+      config:
+        global:
+          # Grafana requires session
+          # Ref: https://github.com/grafana/grafana/issues/74260
+          pool_mode: transaction
+          client_tls_sslmode: prefer
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              postgres-operator.crunchydata.com/cluster: *name
+              postgres-operator.crunchydata.com/role: pgbouncer
