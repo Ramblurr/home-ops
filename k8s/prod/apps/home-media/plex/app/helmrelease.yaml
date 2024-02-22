@@ -24,8 +24,8 @@ spec:
   uninstall:
     keepHistory: false
   dependsOn:
-    #- name: intel-device-plugins-gpu
-    #  namespace: kube-system
+    - name: intel-device-plugins-gpu
+      namespace: kube-system
     - name: rook-ceph-cluster
       namespace: rook-ceph
     - name: volsync
@@ -44,11 +44,11 @@ spec:
               TZ: "${SECRET_TIMEZONE}"
             resources:
               requests:
-                #gpu.intel.com/i915: 1
+                gpu.intel.com/i915: 1
                 cpu: 100m
                 memory: 2Gi
               limits:
-                #gpu.intel.com/i915: 1
+                gpu.intel.com/i915: 1
                 memory: 10Gi
         pod:
           affinity:
