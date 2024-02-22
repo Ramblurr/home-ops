@@ -46,6 +46,11 @@ spec:
       enabled: true
     hubble:
       enabled: true
+      tls:
+        enabled: true
+        auto:
+          enabled: true
+          method: helm
       metrics:
         enabled:
           - dns:query
