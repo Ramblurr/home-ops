@@ -20,6 +20,10 @@ variable "minio_server" {
   description = "The hostname portion of the minio server endpoint"
 }
 
+variable "minio_server_10gbe" {
+  type = string
+}
+
 variable "tags" {
   type        = list(string)
   description = "(Optional)Tags to apply to the 1password item"

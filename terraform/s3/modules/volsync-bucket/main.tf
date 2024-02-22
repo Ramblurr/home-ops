@@ -30,19 +30,20 @@ module "r2_bucket" {
 }
 
 module "secret" {
-  source           = "../volsync-secret"
-  vault            = var.vault
-  name             = var.bucket_name
-  bucket_name      = var.bucket_name
-  minio_access_key = local.minio_access_key
-  minio_secret_key = local.minio_secret_key
-  r2_access_key    = local.r2_access_key
-  r2_secret_key    = local.r2_secret_key
-  restic_password  = local.restic_password
-  notes            = "This is the secret access key for the minio bucket ${var.bucket_name} and the restic repository encryption password. It is used to access the minio bucket from the k8s cluster."
-  r2_endpoint      = var.r2_enabled ? module.r2_bucket[0].endpoint : null
-  minio_server     = var.minio_server
-  tags             = sort(var.tags)
+  source             = "../volsync-secret"
+  vault              = var.vault
+  name               = var.bucket_name
+  bucket_name        = var.bucket_name
+  minio_access_key   = local.minio_access_key
+  minio_secret_key   = local.minio_secret_key
+  r2_access_key      = local.r2_access_key
+  r2_secret_key      = local.r2_secret_key
+  restic_password    = local.restic_password
+  notes              = "This is the secret access key for the minio bucket ${var.bucket_name} and the restic repository encryption password. It is used to access the minio bucket from the k8s cluster."
+  r2_endpoint        = var.r2_enabled ? module.r2_bucket[0].endpoint : null
+  minio_server       = var.minio_server
+  minio_server_10gbe = var.minio_server_10gbe
+  tags               = sort(var.tags)
 }
 
 output "minio_access_key" {

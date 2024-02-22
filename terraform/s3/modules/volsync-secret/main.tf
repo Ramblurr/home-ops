@@ -24,6 +24,11 @@ resource "onepassword_item" "item" {
       type  = "CONCEALED"
     }
     field {
+      label = "MINIO_RESTIC_REPOSITORY_10GBE"
+      value = "s3:https://${var.minio_server_10gbe}/${var.bucket_name}/restic"
+      type  = "CONCEALED"
+    }
+    field {
       label = "MINIO_RESTIC_REPOSITORY"
       value = "s3:https://${var.minio_server}/${var.bucket_name}/restic"
       type  = "CONCEALED"
@@ -72,6 +77,11 @@ variable "r2_endpoint" {
 variable "minio_server" {
   type = string
 }
+
+variable "minio_server_10gbe" {
+  type = string
+}
+
 variable "vault" {
   type        = string
   description = "The vault to store the item in"

@@ -8,6 +8,7 @@ locals {
   cloudflare_account_id  = local.secrets.cloudflare_account_id
   legacy_restic_password = local.secrets.legacy_restic_password
   minio_server           = local.secrets.minio_server
+  minio_server_10gbe     = local.secrets.minio_server_10gbe
   minio_username         = local.secrets.minio_username
   minio_password         = local.secrets.minio_password
   onepassword_vault_id   = local.secrets.onepassword_vault_id
@@ -67,6 +68,7 @@ module "volsync_bucket" {
   for_each              = toset(local.legacy_buckets)
   source                = "./modules/volsync-bucket"
   minio_server          = local.minio_server
+  minio_server_10gbe    = local.minio_server_10gbe
   r2_enabled            = true
   cloudflare_account_id = local.cloudflare_account_id
   vault                 = local.vault
@@ -83,6 +85,7 @@ module "volsync_bucket_new" {
   for_each              = toset(local.new_buckets)
   source                = "./modules/volsync-bucket"
   minio_server          = local.minio_server
+  minio_server_10gbe    = local.minio_server_10gbe
   r2_enabled            = true
   cloudflare_account_id = local.cloudflare_account_id
   vault                 = local.vault
