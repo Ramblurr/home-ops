@@ -14,6 +14,7 @@
     "github>ramblurr/home-ops//.github/renovate/disabledDatasources.json5",
     "github>ramblurr/home-ops//.github/renovate/groups.json5",
     "github>ramblurr/home-ops//.github/renovate/labels.json5",
+    "github>ramblurr/home-ops//.github/renovate/grafanaDashboards.json5"
   ],
   "enabled": true,
   "timezone": "Europe/Berlin",
@@ -46,20 +47,12 @@
   },
   "regexManagers": [
     {
-    "description": ["Process CRD dependencies - Chart and Github Release are the same version"],
-    "fileMatch": ["k8s/.+\\.ya?ml$"],
-    "matchStrings": [
-      "# renovate: registryUrl=(?<registryUrl>\\S+) chart=(?<depName>\\S+)\n.*?(?<currentValue>[^-\\s]*)\n",
-    ],
-    "datasourceTemplate": "helm"
-  },
-    // regexManager to read and process Rook-Ceph CRD's
-    {
-      "fileMatch": [
-        "k8s/.+/crds/rook-ceph/.+\\.yaml$"
+      "description": [
+        "Process CRD dependencies - Chart and Github Release are the same version"
       ],
+      "fileMatch": ["k8s/.+\\.ya?ml$"],
       "matchStrings": [
-        "registryUrl=(?<registryUrl>.*?) chart=(?<depName>.*?)\n *tag: (?<currentValue>.*)\n"
+        "# renovate: registryUrl=(?<registryUrl>\\S+) chart=(?<depName>\\S+)\n.*?(?<currentValue>[^-\\s]*)\n"
       ],
       "datasourceTemplate": "helm"
     },
@@ -67,21 +60,18 @@
       "description": ["Generic Docker image Regex manager"],
       "fileMatch": [
         "ansible/.+\\.ya?ml$",
-        "talos/.+\\.ya?ml$",
         "vyos/.+\\.ya?ml$",
         "terraform/.+\\.tf$"
       ],
       "matchStrings": [
-        "# renovate: docker-image( versioning=(?<versioning>.*=?))?\n .*[:|=] \"?(?<depName>.*?):(?<currentValue>[^\"\n]*=?)\"?",
+        "# renovate: docker-image( versioning=(?<versioning>.*=?))?\n .*[:|=] \"?(?<depName>.*?):(?<currentValue>[^\"\n]*=?)\"?"
       ],
       "datasourceTemplate": "docker",
       "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
     },
     {
       "description": ["Generic Docker image Regex manager for VyOS"],
-      "fileMatch": [
-        "vyos/router0/config-parts/.+\\.sh$"
-      ],
+      "fileMatch": ["vyos/router0/config-parts/.+\\.sh$"],
       "matchStrings": [
         "set container name .* image '?(?<depName>.*?):(?<currentValue>[^'\n]*=?)'?"
       ],
@@ -95,7 +85,7 @@
         "k8s/.+\\.ya?ml$"
       ],
       "matchStrings": [
-        "https:\\/\\/raw.githubusercontent.com\\/(?<depName>[\\w\\d\\-_]+\\/[\\w\\d\\-_]+)\\/(?<currentValue>[\\w\\d\\.\\-_]+)\\/.*",
+        "https:\\/\\/raw.githubusercontent.com\\/(?<depName>[\\w\\d\\-_]+\\/[\\w\\d\\-_]+)\\/(?<currentValue>[\\w\\d\\.\\-_]+)\\/.*"
       ],
       "datasourceTemplate": "github-releases",
       "versioningTemplate": "semver"
@@ -118,7 +108,10 @@
     // Version strategies
     {
       "matchDatasources": ["docker"],
-      "matchPackageNames": ["ghcr.io/onedr0p/plex", "ghcr.io/onedr0p/qbittorrent"],
+      "matchPackageNames": [
+        "ghcr.io/onedr0p/plex",
+        "ghcr.io/onedr0p/qbittorrent"
+      ],
       "versioning": "loose"
     },
     {
@@ -183,6 +176,6 @@
       "matchUpdateTypes": ["patch"],
       "semanticCommitType": "fix",
       "labels": ["renovate/helm", "dep/patch"]
-    },
+    }
   ]
 }
