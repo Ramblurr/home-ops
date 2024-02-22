@@ -59,6 +59,17 @@ tasks:
       - { msg: "List template not found", sh: "test -f {{.resources}}/list.tmpl.yaml" }
     silent: true
 
+  unlock-local:
+    desc: Unlock a restic repository locally fetching secrets from 1password
+    summary: |
+      vault: the name of the 1password vault (required)
+      item: the 1password item name (required)
+    requires:
+      vars: ["vault", "item"]
+    silent: true
+    cmds:
+      - bash {{.resources}}/unlock-local.sh "{{.vault}}" "{{.item}}"
+
   unlock:
     desc: Unlock a Restic repository for an application
     summary: |
