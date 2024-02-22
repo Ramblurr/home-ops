@@ -10,14 +10,14 @@ spec:
       stanza: db
       configuration:
         - secret:
-            name: pgo-s3-creds
+            name: "${APP}-db-secret"
       global:
         repo1-path: "/${APP}/repo1"
         repo1-s3-uri-style: path
       repo:
         name: repo1
         s3:
-          bucket: k8s-prod-crunchy-postgres
+          bucket: pg-crunchy-${APP}-db
           endpoint: ${SECRET_S3_ENDPOINT}
           region: us-east-1
   patroni:
