@@ -56,6 +56,9 @@ locals {
     },
     "pg-crunchy-synapse-ol-db" : {
       r2_enabled : false
+    },
+    "pg-crunchy-app-db" : {
+      r2_enabled : true
     }
   }
 }

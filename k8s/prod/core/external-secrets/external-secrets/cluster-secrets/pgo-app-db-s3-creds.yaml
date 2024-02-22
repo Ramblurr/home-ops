@@ -1,0 +1,38 @@
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ClusterExternalSecret
+metadata:
+  name: pgo-app-db-s3-creds
+spec:
+  externalSecretName: pgo-app-db-s3-creds
+
+  namespaceSelector:
+    matchLabels:
+      pgo-app-db-enabled-bjw-s.dev: "true"
+
+  refreshTime: "1m"
+
+  externalSecretSpec:
+    secretStoreRef:
+      kind: ClusterSecretStore
+      name: onepassword-connect
+
+    target:
+      name: pgo-app-db-s3-creds
+      creationPolicy: Owner
+      template:
+        engineVersion: v2
+        data:
+          s3.conf: |
+            [global]
+            repo1-s3-key={{ .MINIO_ACCESS_KEY_ID }}
+            repo1-s3-key-secret={{ .MINIO_SECRET_ACCESS_KEY }}
+            repo2-s3-key={{ .R2_ACCESS_KEY_ID }}
+            repo2-s3-key-secret={{ .R2_SECRET_ACCESS_KEY }}
+          encryption.conf: |
+            [global]
+            repo1-cipher-pass={{ .ENCRYPTION_PASSPHRASE }}
+            repo2-cipher-pass={{ .ENCRYPTION_PASSPHRASE }}
+    dataFrom:
+      - extract:
+          key: pg-crunchy-app-db
