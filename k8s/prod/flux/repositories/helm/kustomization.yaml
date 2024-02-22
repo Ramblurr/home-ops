@@ -27,3 +27,4 @@ resources:
   - ./owncloud-ocis.yaml
   - ./authentik.yaml
   - ./influxdata-charts.yaml
+  - ./node-feature-discovery.yaml

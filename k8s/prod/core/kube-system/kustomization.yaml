@@ -6,3 +6,4 @@ resources:
   - ./cilium/ks.yaml
   - ./metrics-server/ks.yaml
   - ./reloader/ks.yaml
+  - ./node-feature-discovery/ks.yaml
