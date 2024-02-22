@@ -10,7 +10,7 @@ spec:
     storage: 1Mi # Size does not matter
   #volumeMode: Filesystem
   accessModes: ["ReadWriteMany"]
-  persistentVolumeReclaimPolicy: Recycle
+  persistentVolumeReclaimPolicy: Retain
   nfs:
     server: "${SECRET_NFS_SERVER}"
     path: /mnt/tank2/media
@@ -43,7 +43,7 @@ spec:
     storage: 1Mi # Size does not matter
   #volumeMode: Filesystem
   accessModes: ["ReadWriteMany"]
-  persistentVolumeReclaimPolicy: Recycle
+  persistentVolumeReclaimPolicy: Retain
   nfs:
     server: "${SECRET_NFS_SERVER}"
     path: /mnt/fast/downloads
