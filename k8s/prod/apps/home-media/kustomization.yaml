@@ -9,3 +9,4 @@ resources:
   # Flux-Kustomizations
   - ./media-pv/ks.yaml
   - ./plex/ks.yaml
+  - ./overseerr/ks.yaml
