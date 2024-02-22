@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: sabnzbd
+  name: sonarr
 spec:
   interval: 30m
   chart:
@@ -26,39 +26,44 @@ spec:
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
-    - name: volsync
-      namespace: volsync-system
   values:
     controllers:
       main:
         annotations:
           reloader.stakater.com/auto: "true"
+        #initContainers:
+        #  init-db:
+        #    image:
+        #      repository: ghcr.io/onedr0p/postgres-init
+        #      tag: 16
+        #    envFrom: &envFrom
+        #      - secretRef:
+        #          name: sonarr-secret
         containers:
           main:
             image:
-              repository: ghcr.io/onedr0p/sabnzbd
-              tag: 4.2.2@sha256:5b1f15c8d25afa2342505492486361d4ecf14449e1453aeea45cd7c1e5eeb63a
+              repository: ghcr.io/onedr0p/sonarr-develop
+              tag: 4.0.1.1168@sha256:5ea8846eb99054ec31f412a5af3c87fc5d359c0a0de5571636831530ce8d6348
             env:
-              TZ: America/New_York
-              SABNZBD__PORT: &port 80
-              SABNZBD__HOST_WHITELIST_ENTRIES: >-
-                sabnzbd,
-                sabnzbd.home-dl,
-                sabnzbd.home-dl.svc,
-                sabnzbd.home-dl.svc.cluster,
-                sabnzbd.home-dl.svc.cluster.local,
-                sab.${SECRET_DOMAIN_INTERNAL},
-                sabnzbd.${SECRET_DOMAIN_INTERNAL}
-            envFrom:
+              COMPlus_EnableDiagnostics: "0"
+              PUSHOVER_DEBUG: "false"
+              SONARR__AUTHENTICATION_METHOD: External
+              SONARR__AUTHENTICATION_REQUIRED: DisabledForLocalAddresses
+              SONARR__INSTANCE_NAME: Sonarr
+              SONARR__PORT: &port 8989
+              SONARR__LOG_LEVEL: info
+              SONARR__THEME: dark
+              TZ: "${SECRET_TIMEZONE}"
+            envFrom: &envFrom
               - secretRef:
-                  name: sabnzbd-secret
+                  name: sonarr-secret
             probes:
               liveness: &probes
                 enabled: true
                 custom: true
                 spec:
                   httpGet:
-                    path: /api?mode=version
+                    path: /ping
                     port: *port
                   initialDelaySeconds: 0
                   periodSeconds: 10
@@ -73,9 +78,9 @@ spec:
               capabilities: { drop: ["ALL"] }
             resources:
               requests:
-                cpu: 100m
+                cpu: 10m
               limits:
-                memory: 8Gi
+                memory: 1Gi
         pod:
           securityContext:
             runAsUser: 2000
@@ -98,7 +103,7 @@ spec:
           nginx.ingress.kubernetes.io/auth-response-headers: Set-Cookie,X-authentik-username,X-authentik-groups,X-authentik-email,X-authentik-name,X-authentik-uid
           nginx.ingress.kubernetes.io/auth-snippet: proxy_set_header X-Forwarded-Host $http_host;
         hosts:
-          - host: &host sabnzbd.${SECRET_DOMAIN_INTERNAL}
+          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN_INTERNAL}"
             paths:
               - path: /
                 service:
@@ -111,8 +116,22 @@ spec:
       config:
         enabled: true
         existingClaim: "${APP}"
+      pushover-notify:
+        type: configMap
+        name: sonarr-configmap
+        defaultMode: 0775
+        globalMounts:
+          - path: /scripts/pushover-notify.sh
+            subPath: pushover-notify.sh
+            readOnly: true
       tmp:
         type: emptyDir
+      media:
+        type: nfs
+        server: ${SECRET_NFS_SERVER}
+        path: /mnt/tank2/media
+        globalMounts:
+          - path: /media
       downloads:
         type: nfs
         server: ${SECRET_NFS_SERVER}

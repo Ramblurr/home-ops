@@ -10,6 +10,7 @@ locals {
     module.filebrowser.proxy_provider_id,
     module.sabnzbd.proxy_provider_id,
     module.prowlarr.proxy_provider_id,
+    module.sonarr.proxy_provider_id,
   ]
   implicit_authorization_flow = resource.authentik_flow.provider-authorization-implicit-consent.uuid
   default_authentication_flow = data.authentik_flow.default-authentication-flow.id
@@ -42,6 +43,15 @@ module "filebrowser" {
   meta_icon               = "${local.icon_base}/filebrowser.png"
 }
 
+module "sonarr" {
+  source                  = "./modules/forward-auth-application"
+  name                    = "sonarr"
+  domain                  = "sonarr.${var.internal_domain}"
+  group                   = "admin"
+  authorization_flow_uuid = local.implicit_authorization_flow
+  meta_icon               = "${local.icon_base}/sonarr.png"
+}
+
 module "prowlarr" {
   source                  = "./modules/forward-auth-application"
   name                    = "prowlarr"
@@ -50,6 +60,7 @@ module "prowlarr" {
   authorization_flow_uuid = local.implicit_authorization_flow
   meta_icon               = "${local.icon_base}/prowlarr.png"
 }
+
 module "sabnzbd" {
   source                  = "./modules/forward-auth-application"
   name                    = "sabnzbd"
