@@ -9,6 +9,7 @@ locals {
     module.calibre-web.proxy_provider_id,
     module.calibre.proxy_provider_id,
     module.filebrowser.proxy_provider_id,
+    module.sabnzbd.proxy_provider_id,
   ]
   implicit_authorization_flow = resource.authentik_flow.provider-authorization-implicit-consent.uuid
   default_authentication_flow = data.authentik_flow.default-authentication-flow.id
@@ -39,6 +40,15 @@ module "filebrowser" {
   group                   = "admin"
   authorization_flow_uuid = local.implicit_authorization_flow
   meta_icon               = "${local.icon_base}/filebrowser.png"
+}
+
+module "sabnzbd" {
+  source                  = "./modules/forward-auth-application"
+  name                    = "sabnzbd"
+  domain                  = "sabnzbd.${var.internal_domain}"
+  group                   = "admin"
+  authorization_flow_uuid = local.implicit_authorization_flow
+  meta_icon               = "${local.icon_base}/sabnzbd.png"
 }
 
 module "ocis-test" {
