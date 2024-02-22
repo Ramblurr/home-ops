@@ -46,7 +46,8 @@ locals {
   ]
   # these can have the restic key generated
   volsync_new_buckets = [
-    "volsync-home-automation-influxdb"
+    "volsync-home-automation-influxdb",
+    "volsync-home-media-filebrowser"
   ]
 
   crunchy_db_buckets = {
