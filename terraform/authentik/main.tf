@@ -1,8 +1,9 @@
 provider "authentik" {}
 
 resource "authentik_service_connection_kubernetes" "local" {
-  name  = "local"
-  local = true
+  name       = "local"
+  local      = true
+  verify_ssl = false
 }
 
 data "sops_file" "secrets" {
@@ -23,7 +24,7 @@ resource "authentik_outpost" "external" {
     "docker_labels"                  = null
     "authentik_host"                 = "https://${var.authentik_domain}/"
     "docker_network"                 = null
-    "container_image"                = "ghcr.io/goauthentik/proxy:2024.2.0-rc2"
+    "container_image"                = null
     "docker_map_ports"               = true
     "kubernetes_replicas"            = 1
     "kubernetes_namespace"           = var.kubernetes_namespace
@@ -49,7 +50,7 @@ resource "authentik_outpost" "internal" {
     "docker_labels"                  = null
     "authentik_host"                 = "https://${var.authentik_domain}/"
     "docker_network"                 = null
-    "container_image"                = "ghcr.io/goauthentik/proxy:2024.2.0-rc2"
+    "container_image"                = null
     "docker_map_ports"               = true
     "kubernetes_replicas"            = 1
     "kubernetes_namespace"           = var.kubernetes_namespace
