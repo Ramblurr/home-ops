@@ -3,13 +3,13 @@ locals {
   icon_base = "https://raw.githubusercontent.com/ramblurr/home-ops/main/icons"
   external_proxy_provider_ids = [
     module.calibre-web.proxy_provider_id,
-
   ]
   internal_proxy_provider_ids = [
     module.calibre-web.proxy_provider_id,
     module.calibre.proxy_provider_id,
     module.filebrowser.proxy_provider_id,
     module.sabnzbd.proxy_provider_id,
+    module.prowlarr.proxy_provider_id,
   ]
   implicit_authorization_flow = resource.authentik_flow.provider-authorization-implicit-consent.uuid
   default_authentication_flow = data.authentik_flow.default-authentication-flow.id
@@ -42,6 +42,14 @@ module "filebrowser" {
   meta_icon               = "${local.icon_base}/filebrowser.png"
 }
 
+module "prowlarr" {
+  source                  = "./modules/forward-auth-application"
+  name                    = "prowlarr"
+  domain                  = "prowlarr.${var.internal_domain}"
+  group                   = "admin"
+  authorization_flow_uuid = local.implicit_authorization_flow
+  meta_icon               = "${local.icon_base}/prowlarr.png"
+}
 module "sabnzbd" {
   source                  = "./modules/forward-auth-application"
   name                    = "sabnzbd"

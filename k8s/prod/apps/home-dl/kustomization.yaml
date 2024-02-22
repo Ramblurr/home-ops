@@ -8,7 +8,7 @@ resources:
   - ./notifications.yaml
   # Flux-Kustomizations
   - ./sabnzbd/ks.yaml
-    #- ./prowlarr/ks.yaml
+  - ./prowlarr/ks.yaml
     #- ./sonarr/ks.yaml
     #- ./radarr/ks.yaml
     #- ./qbittorrent/ks.yaml
