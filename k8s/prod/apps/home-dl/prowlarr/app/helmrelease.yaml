@@ -108,8 +108,12 @@ spec:
           - hosts:
               - *host
     persistence:
+      # for when switching to database
+      #config:
+      #  enabled: true
+      #  type: emptyDir
       config:
         enabled: true
-        type: emptyDir
+        existingClaim: "${APP}"
       tmp:
         type: emptyDir
