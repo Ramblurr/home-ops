@@ -24,11 +24,6 @@ resource "onepassword_item" "item" {
       type  = "CONCEALED"
     }
     field {
-      label = "MINIO_RESTIC_REPOSITORY_10GBE"
-      value = "s3:https://${var.minio_server_10gbe}/${var.bucket_name}/restic"
-      type  = "CONCEALED"
-    }
-    field {
       label = "MINIO_RESTIC_REPOSITORY"
       value = "s3:https://${var.minio_server}/${var.bucket_name}/restic"
       type  = "CONCEALED"
@@ -38,6 +33,11 @@ resource "onepassword_item" "item" {
       value   = var.notes != null ? var.notes : null
       type    = "STRING"
       purpose = "NOTES"
+    }
+    field {
+      label = "MINIO_RESTIC_REPOSITORY_10GBE"
+      value = "s3:https://${var.minio_server_10gbe}/${var.bucket_name}/restic"
+      type  = "CONCEALED"
     }
   }
 
