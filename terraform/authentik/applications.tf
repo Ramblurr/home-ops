@@ -11,6 +11,7 @@ locals {
     module.sabnzbd.proxy_provider_id,
     module.prowlarr.proxy_provider_id,
     module.sonarr.proxy_provider_id,
+    module.radarr.proxy_provider_id,
   ]
   implicit_authorization_flow = resource.authentik_flow.provider-authorization-implicit-consent.uuid
   default_authentication_flow = data.authentik_flow.default-authentication-flow.id
@@ -43,6 +44,14 @@ module "filebrowser" {
   meta_icon               = "${local.icon_base}/filebrowser.png"
 }
 
+module "radarr" {
+  source                  = "./modules/forward-auth-application"
+  name                    = "radarr"
+  domain                  = "radarr.${var.internal_domain}"
+  group                   = "admin"
+  authorization_flow_uuid = local.implicit_authorization_flow
+  meta_icon               = "${local.icon_base}/radarr.png"
+}
 module "sonarr" {
   source                  = "./modules/forward-auth-application"
   name                    = "sonarr"
