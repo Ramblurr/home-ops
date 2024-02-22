@@ -7,7 +7,7 @@ vars:
 
 tasks:
   crunchy-owner:
-    desc: Restore a pg_dump to a CrunchyData Postgres cluster, writing to the master instance.
+    desc: Set a pg user as the owner of a database
     dir: "{{.USER_WORKING_DIR}}"
     vars: &crunchy-vars
       APP: "{{.APP}}"

@@ -31,14 +31,6 @@ spec:
       main:
         annotations:
           reloader.stakater.com/auto: "true"
-        #initContainers:
-        #  init-db:
-        #    image:
-        #      repository: ghcr.io/onedr0p/postgres-init
-        #      tag: 16
-        #    envFrom: &envFrom
-        #      - secretRef:
-        #          name: sonarr-secret
         containers:
           main:
             image:
@@ -53,10 +45,13 @@ spec:
               SONARR__PORT: &port 8989
               SONARR__LOG_LEVEL: info
               SONARR__THEME: dark
+              PGSSLROOTCERT: /certs/pg-root.crt
               TZ: "${SECRET_TIMEZONE}"
-            envFrom: &envFrom
+            envFrom:
               - secretRef:
                   name: sonarr-secret
+              - secretRef:
+                  name: sonarr-db-secret
             probes:
               liveness: &probes
                 enabled: true
@@ -138,3 +133,14 @@ spec:
         path: /mnt/fast/downloads
         globalMounts:
           - path: /downloads
+
+      app-db-root-cert:
+        enabled: true
+        type: secret
+        name: app-db-root-cert
+        items:
+          - key: root.crt
+            path: pg-root.crt
+        globalMounts:
+          - path: /certs
+            readOnly: true
