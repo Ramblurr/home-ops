@@ -34,7 +34,7 @@ variable "policy_engine_mode" {
 
 resource "authentik_provider_proxy" "main" {
   name                  = var.name
-  external_host         = "http://${var.domain}"
+  external_host         = "https://${var.domain}"
   mode                  = "forward_single"
   authorization_flow    = var.authorization_flow_uuid
   access_token_validity = var.access_token_validity

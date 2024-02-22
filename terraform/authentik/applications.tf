@@ -8,6 +8,7 @@ locals {
   internal_proxy_provider_ids = [
     module.calibre-web.proxy_provider_id,
     module.calibre.proxy_provider_id,
+    module.filebrowser.proxy_provider_id,
   ]
   implicit_authorization_flow = resource.authentik_flow.provider-authorization-implicit-consent.uuid
   default_authentication_flow = data.authentik_flow.default-authentication-flow.id
@@ -29,6 +30,15 @@ module "calibre" {
   group                   = "admin"
   authorization_flow_uuid = local.implicit_authorization_flow
   meta_icon               = "${local.icon_base}/calibre.png"
+}
+
+module "filebrowser" {
+  source                  = "./modules/forward-auth-application"
+  name                    = "filebrowser"
+  domain                  = "files.${var.internal_domain}"
+  group                   = "admin"
+  authorization_flow_uuid = local.implicit_authorization_flow
+  meta_icon               = "${local.icon_base}/filebrowser.png"
 }
 
 module "ocis-test" {
