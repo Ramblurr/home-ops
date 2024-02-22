@@ -22,7 +22,7 @@ locals {
     "app:volsync",
   ]
   # these have a pre-existing restic key
-  legacy_buckets = [
+  volsync_legacy_buckets = [
     "volsync-calibre-web",
     "volsync-autoscan",
     "volsync-calibre",
@@ -45,9 +45,18 @@ locals {
     "volsync-tautulli",
   ]
   # these can have the restic key generated
-  new_buckets = [
+  volsync_new_buckets = [
     "volsync-home-automation-influxdb"
   ]
+
+  crunchy_db_buckets = {
+    "pg-crunchy-authentik-db" : {
+      r2_enabled : true
+    },
+    "pg-crunchy-synapse-ol-db" : {
+      r2_enabled : false
+    }
+  }
 }
 
 provider "cloudflare" {
@@ -65,7 +74,7 @@ provider "minio" {
 
 
 module "volsync_bucket" {
-  for_each              = toset(local.legacy_buckets)
+  for_each              = toset(local.volsync_legacy_buckets)
   source                = "./modules/volsync-bucket"
   minio_server          = local.minio_server
   minio_server_10gbe    = local.minio_server_10gbe
@@ -82,7 +91,7 @@ module "volsync_bucket" {
 }
 
 module "volsync_bucket_new" {
-  for_each              = toset(local.new_buckets)
+  for_each              = toset(local.volsync_new_buckets)
   source                = "./modules/volsync-bucket"
   minio_server          = local.minio_server
   minio_server_10gbe    = local.minio_server_10gbe
@@ -95,6 +104,27 @@ module "volsync_bucket_new" {
   providers = {
     minio = minio.nas
   }
+}
+
+module "crunchy_bucket" {
+  for_each              = local.crunchy_db_buckets
+  source                = "./modules/crunchy-bucket"
+  minio_server          = local.minio_server
+  minio_server_10gbe    = local.minio_server_10gbe
+  r2_enabled            = each.value.r2_enabled
+  cloudflare_account_id = local.cloudflare_account_id
+  vault                 = local.vault
+  bucket_name           = each.key
+  tags                  = local.tags
+
+  providers = {
+    minio = minio.nas
+  }
+}
+
+output "crunchy_buckets" {
+  value     = module.crunchy_bucket
+  sensitive = true
 }
 
 output "volsync_buckets" {

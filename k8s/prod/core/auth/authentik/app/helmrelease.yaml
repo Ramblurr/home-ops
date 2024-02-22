@@ -42,22 +42,22 @@ spec:
         - name: AUTHENTIK_POSTGRESQL__HOST
           valueFrom:
             secretKeyRef:
-              name: "${APP}-pguser-${DB_USER}"
+              name: "${APP}-db-pguser-${DB_USER}"
               key: host
         - name: AUTHENTIK_POSTGRESQL__NAME
           valueFrom:
             secretKeyRef:
-              name: "${APP}-pguser-${DB_USER}"
+              name: "${APP}-db-pguser-${DB_USER}"
               key: dbname
         - name: AUTHENTIK_POSTGRESQL__USER
           valueFrom:
             secretKeyRef:
-              name: "${APP}-pguser-${DB_USER}"
+              name: "${APP}-db-pguser-${DB_USER}"
               key: user
         - name: AUTHENTIK_POSTGRESQL__PASSWORD
           valueFrom:
             secretKeyRef:
-              name: "${APP}-pguser-${DB_USER}"
+              name: "${APP}-db-pguser-${DB_USER}"
               key: password
       volumes:
         - name: custom-css

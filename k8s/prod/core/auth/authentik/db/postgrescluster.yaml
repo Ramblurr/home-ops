@@ -2,24 +2,24 @@
 apiVersion: postgres-operator.crunchydata.com/v1beta1
 kind: PostgresCluster
 metadata:
-  name: "${APP}"
+  name: "${APP}-db"
 spec:
   postgresVersion: 16
-    #dataSource:
-    #  pgbackrest:
-    #    stanza: db
-    #    configuration:
-    #      - secret:
-    #          name: pgo-s3-creds
-    #    global:
-    #      repo1-path: "/${APP}/repo1"
-    #      repo1-s3-uri-style: path
-    #    repo:
-    #      name: repo1
-    #      s3:
-    #        bucket: k8s-prod-crunchy-postgres
-    #        endpoint: ${SECRET_S3_ENDPOINT}
-    #        region: us-east-1
+  dataSource:
+    pgbackrest:
+      stanza: db
+      configuration:
+        - secret:
+            name: pgo-s3-creds
+      global:
+        repo1-path: "/${APP}/repo1"
+        repo1-s3-uri-style: path
+      repo:
+        name: repo1
+        s3:
+          bucket: k8s-prod-crunchy-postgres
+          endpoint: ${SECRET_S3_ENDPOINT}
+          region: us-east-1
   patroni:
     dynamicConfiguration:
       synchronous_mode: true
@@ -63,29 +63,55 @@ spec:
     pgbackrest:
       configuration:
         - secret:
-            name: pgo-s3-creds
+            name: "${APP}-db-secret"
       global:
         archive-push-queue-max: 4GiB
+        archive-timeout: "60"
+        compress-type: lz4
+        compress-level: "9"
+        delta: "y"
         repo1-retention-full: "14"
         repo1-retention-full-type: time
         repo1-path: "/${APP}/repo1"
         repo1-s3-uri-style: path
+        repo1-bundle: "y"
+        repo1-block: "y"
+        repo1-retention-diff: "30"
+        repo2-bundle: "y"
+        repo2-block: "y"
+        repo2-path: "/${APP}/repo2"
+        repo2-s3-uri-style: path
+        repo2-retention-full-type: time
+        repo2-retention-full: "2"
+        repo2-retention-diff: "7"
       manual:
         repoName: repo1
         options:
           - --type=full
       metadata:
         labels:
-          app.kubernetes.io/name: pgo-${APP}-backup
+          app.kubernetes.io/name: pg-crunchy-${APP}-db
           egress.home.arpa/apiserver: allow
           egress.home.arpa/minio: allow
           egress.home.arpa/kubedns: allow # FIXME: Remove when clusterNetworkPolicy is in place
       repos:
+        # Minio
         - name: repo1
           schedules:
-            full: "0 1 * * 0"
-            differential: "0 1 * * 1-6"
+            full: "0 1 * * 0" # Sunday at 1am
+            differential: "0 1 * * 1-6" # Mon-Sat at 1am
+            incremental: "0 3-23 * * *" # Every hour except 1-2am
           s3:
-            bucket: k8s-prod-crunchy-postgres
+            bucket: pg-crunchy-${APP}-db
             endpoint: ${SECRET_S3_ENDPOINT}
+            region: us-east-1
+        # Cloudflare R2
+        - name: repo2
+          schedules:
+            full: "0 13 * * 3" # Wednesday at 1:00
+            differential: "0 13 * * 0-2,4-6" # Sun-Tue + Thu-Sat at 13:00
+            incremental: "0 0-12,14-23 * * *" # Every hour except 13:00-14:00
+          s3:
+            bucket: pg-crunchy-${APP}-db
+            endpoint: ${SECRET_CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com
             region: us-east-1
