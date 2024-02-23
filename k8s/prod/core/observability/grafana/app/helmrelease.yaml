@@ -356,6 +356,9 @@ spec:
       - natel-discrete-panel
       - pr0ps-trackmap-panel
       - vonage-status-panel
+    serviceAccount:
+      create: true
+      autoMount: true
     serviceMonitor:
       enabled: true
     ingress:
