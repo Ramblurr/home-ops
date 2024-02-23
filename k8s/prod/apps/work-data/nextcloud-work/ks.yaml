@@ -9,7 +9,7 @@ spec:
   dependsOn:
     - name: cert-manager-issuers
     - name: app-db
-  path: ./k8s/prod/apps/nextcloud-work/nextcloud-work/app
+  path: ./k8s/prod/apps/work-data/nextcloud-work/app
   prune: true
   sourceRef:
     kind: GitRepository
