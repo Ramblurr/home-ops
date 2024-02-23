@@ -5,3 +5,19 @@ data "authentik_scope_mapping" "oauth2" {
     "goauthentik.io/providers/oauth2/scope-profile"
   ]
 }
+
+resource "authentik_scope_mapping" "radicale_username" {
+  name       = "radicale-username"
+  scope_name = "ak_proxy"
+  expression = <<EOF
+return {
+    "ak_proxy": {
+        "user_attributes": {
+            "additionalHeaders": {
+                "X-Remote-User": request.user.username
+            }
+        }
+    }
+}
+EOF
+}

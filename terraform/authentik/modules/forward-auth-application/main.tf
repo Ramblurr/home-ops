@@ -32,12 +32,43 @@ variable "policy_engine_mode" {
   default = "all"
 }
 
+variable "mode" {
+  type    = string
+  default = "forward_single"
+}
+
+variable "internal_host" {
+  type    = string
+  default = null
+}
+variable "basic_auth_enabled" {
+  type    = bool
+  default = false
+}
+variable "basic_auth_password_attribute" {
+  type    = string
+  default = null
+}
+variable "basic_auth_username_attribute" {
+  type    = string
+  default = null
+}
+
+variable "property_mappings" {
+  type    = list(string)
+  default = null
+}
 resource "authentik_provider_proxy" "main" {
-  name                  = var.name
-  external_host         = "https://${var.domain}"
-  mode                  = "forward_single"
-  authorization_flow    = var.authorization_flow_uuid
-  access_token_validity = var.access_token_validity
+  name                          = var.name
+  external_host                 = "https://${var.domain}"
+  internal_host                 = var.internal_host
+  basic_auth_enabled            = var.basic_auth_enabled
+  basic_auth_password_attribute = var.basic_auth_password_attribute
+  basic_auth_username_attribute = var.basic_auth_username_attribute
+  mode                          = var.mode
+  authorization_flow            = var.authorization_flow_uuid
+  access_token_validity         = var.access_token_validity
+  property_mappings             = var.property_mappings
 }
 
 

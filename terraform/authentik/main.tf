@@ -36,7 +36,9 @@ resource "authentik_outpost" "external" {
     "kubernetes_image_pull_secrets"  = []
     "kubernetes_ingress_class_name"  = var.external_kubernetes_ingress_class_name
     "kubernetes_disabled_components" = []
-    "kubernetes_ingress_annotations" = {}
+    "kubernetes_ingress_annotations" = {
+      "external-dns.alpha.kubernetes.io/target" : "external.${var.external_domain}"
+    }
     "kubernetes_ingress_secret_name" = "authentik-outpost-tls"
   })
 }
