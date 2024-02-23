@@ -1,0 +1,328 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: ${APP}
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: app-template
+      version: 2.6.0
+      interval: 15m
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  values:
+    controllers:
+      collabora:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          collabora:
+            image:
+              repository: nextcloud/aio-collabora
+              tag: 20240201_120631-latest
+            env:
+              TZ: "${SECRET_TIMEZONE}"
+              DONT_GEN_SSL_CERT: "1"
+              aliasgroup1: https://${NC_DOMAIN}:443
+              dictionaries: "de_DE en_US es_ES"
+              extra_params: --o:ssl.enable=false --o:ssl.termination=true --o:mount_jail_tree=false --o:logging.level=warning --o:home_mode.enable=true {{ .Values.COLLABORA_SECCOMP_POLICY }} --o:remote_font_config.url=https://${NC_DOMAIN}/apps/richdocuments/settings/fonts.json
+              server_name: "${NC_DOMAIN}"
+            securityContext:
+              capabilities:
+                add:
+                  - MKNOD
+      imaginary:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          imaginary:
+            image:
+              repository: docker.io/nextcloud/aio-imaginary
+              tag: 20240201_120631-latest
+            env:
+              TZ: "${SECRET_TIMEZONE}"
+      redis:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          redis:
+            image:
+              repository: docker.io/library/redis
+              tag: "7"
+            command: ["redis-server", "--requirepass", "$(REDIS_PASSWORD)"]
+            env:
+              REDIS_REPLICATION_MODE: master
+              REDIS_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: ${APP}-secret
+                    key: REDIS_HOST_PASSWORD
+      main:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        pod:
+          securityContext:
+            runAsUser: 2000
+            runAsGroup: 2000
+            fsGroup: 2000
+        initContainers:
+          init-chmod-pvc:
+            # This is necessary because the configmap mounted
+            # at /var/www/html/config/extra.config.php will be created by k8s
+            # but the config dir itself will be root owned
+            # So this container pre-empts that by mounting just the volume
+            # and creating the container with the privs of the user
+            image:
+              repository: docker.io/library/alpine
+              tag: 3
+            command:
+              - /bin/sh
+              - -ec
+              - |
+                mkdir -p /var/www/html/config && chmod 0770 /var/www/html/config
+            securityContext:
+              runAsGroup: 2000
+        containers:
+          nginx:
+            image:
+              repository: docker.io/nginxinc/nginx-unprivileged
+              tag: 1-alpine
+          main:
+            image:
+              repository: docker.io/library/nextcloud
+              tag: 28.0.2-fpm-alpine
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /status.php
+                    port: &port 8080
+                    httpHeaders:
+                      - name: Host
+                        value: &host "${NC_DOMAIN}"
+                  initialDelaySeconds: 10
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 3
+                  successThreshold: 1
+              readiness: *probes
+              startup:
+                enabled: false
+            env:
+              TZ: "${SECRET_TIMEZONE}"
+              SMTP_HOST: "${SMTP_RELAY_HOST}"
+              SMTP_PORT: "${SMTP_RELAY_PORT}"
+              SMTP_AUTHTYPE: ""
+              PGSSLROOTCERT: /certs/pg-root.crt
+              PGSSLMODE: verify-full
+              MAIL_FROM_ADDRESS: "${SECRET_SMTP_FROM_FULL_WORK}"
+              MAIL_DOMAIN: "${SECRET_DOMAIN_WORK}"
+              REDIS_HOST: ${APP}.${APP_NS}.svc.cluster.local
+              REDIS_HOST_PORT: 6379
+              NEXTCLOUD_DATA_DIR: /data
+            envFrom: &envFrom
+              - secretRef:
+                  name: ${APP}-db-secret
+              - secretRef:
+                  name: ${APP}-secret
+
+    persistence:
+      poststart-metrics:
+        enabled: true
+        type: emptyDir
+        medium: Memory
+        advancedMounts:
+          main:
+            main:
+              - path: /srv/metrics
+
+      nextcloud:
+        enabled: true
+        type: persistentVolumeClaim
+        existingClaim: ${APP}
+        advancedMounts:
+          main:
+            main:
+              - path: /var/www/html
+            init-chmod-pvc:
+              - path: /var/www/html
+
+      redis:
+        enabled: true
+        type: persistentVolumeClaim
+        existingClaim: work-nextcloud-redis
+        advancedMounts:
+          main:
+            redis:
+              - path: /data
+
+      data:
+        enabled: true
+        type: nfs
+        server: ${SECRET_NFS_SERVER}
+        path: /mnt/tank2/services/data.${SECRET_DOMAIN_WORK}
+        advancedMounts:
+          main:
+            main:
+              - path: /data
+                subPath: nextcloud/data
+
+      post-start-sh:
+        enabled: true
+        type: configMap
+        name: ${APP}-extra-config
+        advancedMounts:
+          main:
+            main:
+              - path: /usr/local/bin/post-start.sh
+                subPath: post-start.sh
+                readOnly: true
+        defaultMode: 0750
+        items:
+          - key: post-start.sh
+            path: post-start.sh
+
+      upload-limit-ini:
+        enabled: true
+        type: configMap
+        name: ${APP}-extra-config
+        advancedMounts:
+          main:
+            main:
+              - path: /usr/local/etc/php-fpm.d/uploadLimit.ini
+                subPath: uploadLimit.ini
+                readOnly: true
+        items:
+          - key: uploadLimit.ini
+            path: uploadLimit.ini
+
+      www-conf:
+        enabled: true
+        type: configMap
+        name: ${APP}-extra-config
+        advancedMounts:
+          main:
+            main:
+              - path: /usr/local/etc/php-fpm.d/zz-www.conf
+                subPath: www.conf
+                readOnly: true
+        items:
+          - key: www.conf
+            path: www.conf
+
+      opcache-recommended-ini:
+        enabled: true
+        type: configMap
+        name: ${APP}-extra-config
+        advancedMounts:
+          main:
+            main:
+              - path: /usr/local/etc/php/conf.d/opcache-recommended.ini
+                subPath: opcache-recommended.ini
+                readOnly: true
+        items:
+          - key: opcache-recommended.ini
+            path: opcache-recommended.ini
+      nextcloud-config:
+        enabled: true
+        type: configMap
+        name: ${APP}-extra-config
+        advancedMounts:
+          main:
+            main:
+              - path: /var/www/html/config/extra.config.php
+                subPath: extra.config.php
+                readOnly: true
+        items:
+          - key: extra.config.php
+            path: extra.config.php
+      redis-session-ini:
+        enabled: true
+        type: configMap
+        name: ${APP}-extra-config
+        advancedMounts:
+          main:
+            main:
+              - path: /usr/local/etc/php/conf.d/redis-session.ini
+                subPath: redis-session.ini
+                readOnly: true
+        items:
+          - key: redis-session.ini
+            path: redis-session.ini
+      nginx-config:
+        enabled: true
+        type: configMap
+        name: ${APP}-nginx-config
+        advancedMounts:
+          main:
+            nginx:
+              - path: /etc/nginx/nginx.conf
+                subPath: nginx.conf
+                readOnly: true
+        items:
+          - key: nginx.conf
+            path: nginx.conf
+      app-db-root-cert:
+        enabled: true
+        type: secret
+        name: app-db-root-cert
+        items:
+          - key: root.crt
+            path: pg-root.crt
+        globalMounts:
+          - path: /certs
+            readOnly: true
+
+    ingress:
+      main:
+        enabled: true
+        className: external
+        annotations:
+          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN_WORK}"
+          nginx.ingress.kubernetes.io/proxy-body-size: 10G
+          nginx.ingress.kubernetes.io/custom-http-errors: "418" # dummy status code to disable custom http errors
+          nginx.ingress.kubernetes.io/enable-global-auth: "false"
+          nginx.ingress.kubernetes.io/enable-cors: "true"
+          nginx.ingress.kubernetes.io/cors-allow-headers: "X-Forwarded-For"
+        hosts:
+          - host: *host
+            paths:
+              - path: /
+                service:
+                  name: main
+                  port: http
+        tls:
+          - hosts:
+              - *host
+    service:
+      collabora:
+        controller: collabora
+        enabled: true
+        primary: false
+        ports:
+          http:
+            port: 9980
+      imaginary:
+        controller: imaginary
+        enabled: true
+        primary: false
+        ports:
+          http:
+            port: 9000
+      redis:
+        controller: redis
+        enabled: true
+        primary: false
+        ports:
+          http:
+            port: 6379
+      main:
+        ports:
+          http:
+            port: *port

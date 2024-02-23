@@ -72,6 +72,11 @@ spec:
         - "nextcloud-home"
       password:
         type: AlphaNumeric
+    - name: "work-nextcloud"
+      databases:
+        - "work-nextcloud"
+      password:
+        type: AlphaNumeric
     - name: "radarr"
       databases:
         - radarr_main

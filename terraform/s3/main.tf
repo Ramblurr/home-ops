@@ -43,6 +43,7 @@ locals {
     "volsync-sabnzbd",
     "volsync-sonarr",
     "volsync-tautulli",
+    "volsync-work-nextcloud"
   ]
   # these can have the restic key generated
   volsync_new_buckets = [

@@ -1,0 +1,30 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: &app work-nextcloud
+  namespace: flux-system
+spec:
+  targetNamespace: &ns work-data
+  dependsOn:
+    - name: cert-manager-issuers
+    - name: app-db
+  path: ./k8s/prod/apps/work-data/work-nextcloud/app
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: home-kubernetes
+  #healthChecks:
+  #  - apiVersion: helm.toolkit.fluxcd.io/v2beta2
+  #    kind: HelmRelease
+  #    name: work-nextcloud
+  #    namespace: *ns
+  interval: 30m
+  retryInterval: 1m
+  timeout: 3m
+  postBuild:
+    substitute:
+      APP: *app
+      APP_NS: *ns
+      NC_DOMAIN: data.${SECRET_DOMAIN_WORK}
+      VOLSYNC_CAPACITY: 5Gi
