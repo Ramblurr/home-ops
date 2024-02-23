@@ -48,7 +48,8 @@ locals {
   volsync_new_buckets = [
     "volsync-home-automation-influxdb",
     "volsync-home-media-filebrowser",
-    "volsync-home-radicale"
+    "volsync-home-radicale",
+    "volsync-home-nextcloud-work"
   ]
 
   crunchy_db_buckets = {
