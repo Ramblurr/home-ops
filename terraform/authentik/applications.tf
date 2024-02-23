@@ -79,6 +79,15 @@ module "sabnzbd" {
   meta_icon               = "${local.icon_base}/sabnzbd.png"
 }
 
+module "paperless" {
+  source                  = "./modules/forward-auth-application"
+  name                    = "paperless"
+  domain                  = "paperless.${var.internal_domain}"
+  group                   = "Home"
+  authorization_flow_uuid = local.implicit_authorization_flow
+  meta_icon               = "${local.icon_base}/paperless-ngx.png"
+}
+
 module "ocis-test" {
   source                 = "./modules/oidc-application"
   name                   = "ocis-test"

@@ -1,0 +1,31 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &appname paperless
+  namespace: flux-system
+spec:
+  targetNamespace: home-paperless
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *appname
+  interval: 10m
+  path: "./k8s/prod/apps/home-paperless/paperless/app"
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: home-kubernetes
+  wait: false
+  dependsOn:
+    - name: rook-ceph
+    - name: volsync
+    - name: external-secrets-stores
+  postBuild:
+    substitute:
+      APP: *appname
+      HOSTNAME: paperless.${SECRET_DOMAIN_INTERNAL}
+      #APP_UID: "2000"
+      #APP_GID: "2000"
+      #VOLSYNC_CLAIM: paperless-data
+      #VOLSYNC_CAPACITY: 15Gi

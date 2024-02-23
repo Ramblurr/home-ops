@@ -1,0 +1,119 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2beta2.json
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: paperless
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 2.6.0
+      interval: 30m
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+
+  values:
+    controllers:
+      main:
+        annotations:
+          reloader.stakater.com/auto: "true"
+
+        pod:
+          securityContext:
+            supplementalGroups:
+              - 65542 # gladius:external-services
+
+        containers:
+          main:
+            image:
+              repository: ghcr.io/paperless-ngx/paperless-ngx
+              tag: 2.5.3
+            env:
+              PAPERLESS_DBENGINE: postgresql
+              PAPERLESS_CONSUMER_POLLING: 60
+              PAPERLESS_CONSUMER_RECURSIVE: "true"
+              PAPERLESS_CONSUMER_SUBDIRS_AS_TAGS: "true"
+              PAPERLESS_CONSUMPTION_DIR: /library/consume
+              PAPERLESS_DATA_DIR: /library/data
+              PAPERLESS_ENABLE_HTTP_REMOTE_USER: "true"
+              PAPERLESS_EXPORT_DIR: /library/export
+              PAPERLESS_HTTP_REMOTE_USER_HEADER_NAME: X-authentik-username
+              PAPERLESS_MEDIA_ROOT: /library/media
+              PAPERLESS_OCR_LANGUAGE: "deu+eng"
+              PAPERLESS_PORT: &port 8080
+              PAPERLESS_REDIS: redis://localhost:6379
+              PAPERLESS_TASK_WORKERS: 2
+              PAPERLESS_TIKA_ENABLED: 1
+              PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://localhost:3000
+              PAPERLESS_TIKA_ENDPOINT: http://localhost:9998
+              PAPERLESS_TIME_ZONE: Europe/Berlin
+              PAPERLESS_FILENAME_FORMAT: "{created_year}/{created_year}-{created_month}-{created_day} {title}"
+              PAPERLESS_FILENAME_DATE_ORDER: YMD
+              PAPERLESS_URL: https://${HOSTNAME}
+              PAPERLESS_OCR_MAX_IMAGE_PIXELS: "956000000"
+              USERMAP_UID: 2000
+              USERMAP_GID: 2000
+            envFrom:
+              - secretRef:
+                  name: paperless-secret
+              - secretRef:
+                  name: paperless-db-secret
+            resources:
+              requests:
+                cpu: 11m
+                memory: 2048Mi
+          gotenburg:
+            image:
+              repository: thecodingmachine/gotenberg
+              tag: 8.0.2
+            env:
+              DISABLE_GOOGLE_CHROME: 1
+          redis:
+            image:
+              repository: public.ecr.aws/docker/library/redis
+              tag: 7.2.4
+          tika:
+            image:
+              repository: ghcr.io/paperless-ngx/tika
+              tag: 2.9.0-full
+
+    service:
+      main:
+        ports:
+          http:
+            port: *port
+
+    ingress:
+      main:
+        enabled: true
+        className: internal
+        annotations:
+          nginx.ingress.kubernetes.io/auth-url: http://ak-outpost-internal.auth.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
+          nginx.ingress.kubernetes.io/auth-signin: /outpost.goauthentik.io/start?rd=$escaped_request_uri
+          nginx.ingress.kubernetes.io/auth-response-headers: Set-Cookie,X-authentik-username,X-authentik-groups,X-authentik-email,X-authentik-name,X-authentik-uid
+          nginx.ingress.kubernetes.io/auth-snippet: proxy_set_header X-Forwarded-Host $http_host;
+        hosts:
+          - host: "${HOSTNAME}"
+            paths:
+              - path: /
+                service:
+                  name: main
+                  port: http
+        tls:
+          - hosts:
+              - "${HOSTNAME}"
+
+    persistence:
+      library:
+        enabled: true
+        type: nfs
+        server: ${SECRET_NFS_SERVER}
+        path: /mnt/tank2/services/paperless.${SECRET_DOMAIN_INTERNAL}
+        advancedMounts:
+          main:
+            main:
+              - path: /library

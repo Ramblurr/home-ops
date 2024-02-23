@@ -84,6 +84,11 @@ spec:
         - sonarr_log
       password:
         type: AlphaNumeric
+    - name: "paperless"
+      databases:
+        - paperless
+      password:
+        type: AlphaNumeric
   backups:
     pgbackrest:
       configuration:
