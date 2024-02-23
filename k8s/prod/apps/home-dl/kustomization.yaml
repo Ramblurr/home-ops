@@ -12,5 +12,5 @@ resources:
   - ./prowlarr/ks.yaml
   - ./sonarr/ks.yaml
   - ./radarr/ks.yaml
-    #- ./qbittorrent/ks.yaml
+  - ./qbittorrent/ks.yaml
     #- ./recyclarr/ks.yaml
