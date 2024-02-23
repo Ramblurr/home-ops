@@ -127,16 +127,16 @@ spec:
         ports:
           http:
             port: *port
-      bittorrent:
-        controller: main
-        type: LoadBalancer
-        annotations:
-          io.cilium/lb-ipam-ips: 192.168.42.122
-        ports:
-          bittorrent:
-            enabled: true
-            port: *bittorrentPort
-            protocol: TCP
+      #bittorrent:
+      #  controller: main
+      #  type: LoadBalancer
+      #  annotations:
+      #    io.cilium/lb-ipam-ips: 192.168.42.122
+      #  ports:
+      #    bittorrent:
+      #      enabled: true
+      #      port: *bittorrentPort
+      #      protocol: TCP
     ingress:
       main:
         enabled: true
@@ -177,7 +177,7 @@ spec:
         advancedMounts:
           main:
             main:
-              - path: /downloads
+              - path: /data/downloads
       dnsdist-config:
         type: configMap
         name: qbittorrent-dnsdist
