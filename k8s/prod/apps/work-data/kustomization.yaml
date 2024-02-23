@@ -7,4 +7,5 @@ resources:
   - ./namespace.yaml
   - ./notifications.yaml
   # Flux-Kustomizations
-  - ./nextcloud-work/ks.yaml
+  - ./app-db-root-cert/ks.yaml
+  - ./work-nextcloud/ks.yaml

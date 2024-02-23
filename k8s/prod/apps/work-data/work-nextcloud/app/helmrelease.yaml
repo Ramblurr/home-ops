@@ -83,12 +83,7 @@ spec:
               - /bin/sh
               - -ec
               - |
-                mkdir -p /var/www/html/config && chmod 0700 /var/www/html/config
-            volumeMounts:
-              - mountPath: /var/www/html
-                name: nextcloud
-                subPath: nextcloud/html
-                readOnly: false
+                mkdir -p /var/www/html/config && chmod 0770 /var/www/html/config
             securityContext:
               runAsGroup: 2000
         containers:
@@ -155,17 +150,17 @@ spec:
           main:
             main:
               - path: /var/www/html
-                subPath: nextcloud/html
+            init-chmod-pvc:
+              - path: /var/www/html
 
       redis:
         enabled: true
         type: persistentVolumeClaim
-        existingClaim: ${APP}
+        existingClaim: work-nextcloud-redis
         advancedMounts:
           main:
             redis:
               - path: /data
-                subPath: redis
 
       data:
         enabled: true
