@@ -12,6 +12,7 @@ locals {
     module.prowlarr.proxy_provider_id,
     module.sonarr.proxy_provider_id,
     module.radarr.proxy_provider_id,
+    module.paperless.proxy_provider_id,
   ]
   implicit_authorization_flow = resource.authentik_flow.provider-authorization-implicit-consent.uuid
   default_authentication_flow = data.authentik_flow.default-authentication-flow.id
