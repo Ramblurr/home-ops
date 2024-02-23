@@ -127,7 +127,7 @@ spec:
               PGSSLROOTCERT: /certs/pg-root.crt
               PGSSLMODE: verify-full
               MAIL_FROM_ADDRESS: "${SECRET_SMTP_FROM_USER}"
-              MAIL_DOMAIN: "${SECRET_DOMAIN}"
+              MAIL_DOMAIN: "${SECRET_DOMAIN_WORK}"
               REDIS_HOST: ${APP}.${APP_NS}.svc.cluster.local
               REDIS_HOST_PORT: 6379
               NEXTCLOUD_DATA_DIR: /data
@@ -171,23 +171,12 @@ spec:
         enabled: true
         type: nfs
         server: ${SECRET_NFS_SERVER}
-        path: /mnt/tank2/services/drive.${SECRET_DOMAIN}-2
+        path: /mnt/tank2/services/data.${SECRET_DOMAIN_WORK}
         advancedMounts:
           main:
             main:
               - path: /data
                 subPath: nextcloud/data
-
-      paperless:
-        enabled: true
-        type: nfs
-        server: ${SECRET_NFS_SERVER}
-        path: /mnt/tank2/services/paperless.${SECRET_DOMAIN_INTERNAL}
-        advancedMounts:
-          main:
-            main:
-              - path: /paperless
-                readOnly: true
 
       post-start-sh:
         enabled: true
@@ -300,7 +289,7 @@ spec:
         enabled: true
         className: external
         annotations:
-          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN_WORK}"
           nginx.ingress.kubernetes.io/proxy-body-size: 10G
           nginx.ingress.kubernetes.io/custom-http-errors: "418" # dummy status code to disable custom http errors
           nginx.ingress.kubernetes.io/enable-global-auth: "false"

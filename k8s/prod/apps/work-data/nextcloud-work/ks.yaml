@@ -26,5 +26,5 @@ spec:
     substitute:
       APP: *app
       APP_NS: *ns
-      NC_DOMAIN: data.${SECRET_WORK_DOMAIN}
+      NC_DOMAIN: data.${SECRET_DOMAIN_WORK}
       VOLSYNC_CAPACITY: 5Gi
