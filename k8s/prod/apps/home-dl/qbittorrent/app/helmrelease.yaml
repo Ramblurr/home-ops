@@ -44,11 +44,21 @@ spec:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
+            envFrom:
+              - secretRef:
+                  name: qbittorrent-secret
             env:
               UMASK: "022"
               TZ: "${SECRET_TIMEZONE}"
               QBITTORRENT__PORT: &port 8080
               QBITTORRENT__BT_PORT: &bittorrentPort "${SECRET_QB_PORT}"
+              QBT_Preferences__WebUI__AlternativeUIEnabled: false
+              QBT_Preferences__WebUI__AuthSubnetWhitelistEnabled: true
+              QBT_Preferences__WebUI__AuthSubnetWhitelist: |-
+                ${CLUSTER_CIDR}, ${NODE_CIDR}
+              QBT_Preferences__WebUI__LocalHostAuth: false
+              QBT_BitTorrent__Session__Interface: wg0
+              QBT_BitTorrent__Session__InterfaceName: wg0
             probes:
               liveness: &probes
                 enabled: true
@@ -92,7 +102,7 @@ spec:
                 value: *port
               - name: FIREWALL_OUTBOUND_SUBNETS
                 # Allow access to k8s subnets
-                value: "10.45.0.0/16,10.44.0.0/16,10.10.12.0/23"
+                value: "${NODE_CIDR},${CLUSTER_CIDR}"
               - name: SHADOWSOCKS
                 value: "on"
               - name: DOT
