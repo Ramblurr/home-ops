@@ -39,9 +39,7 @@ spec:
               PAPERLESS_CONSUMER_SUBDIRS_AS_TAGS: "true"
               PAPERLESS_CONSUMPTION_DIR: /library/consume
               PAPERLESS_DATA_DIR: /library/data
-              PAPERLESS_ENABLE_HTTP_REMOTE_USER: "true"
               PAPERLESS_EXPORT_DIR: /library/export
-              PAPERLESS_HTTP_REMOTE_USER_HEADER_NAME: X-authentik-username
               PAPERLESS_MEDIA_ROOT: /library/media
               PAPERLESS_OCR_LANGUAGE: "deu+eng"
               PAPERLESS_PORT: &port 8080
@@ -55,6 +53,10 @@ spec:
               PAPERLESS_FILENAME_DATE_ORDER: YMD
               PAPERLESS_URL: https://${HOSTNAME}
               PAPERLESS_OCR_MAX_IMAGE_PIXELS: "956000000"
+              PAPERLESS_APPS: allauth.socialaccount.providers.openid_connect
+              PAPERLESS_ACCOUNT_ALLOW_SIGNUPS: "false"
+              #PAPERLESS_ENABLE_HTTP_REMOTE_USER: "true"
+              #PAPERLESS_HTTP_REMOTE_USER_HEADER_NAME: X-authentik-username
               USERMAP_UID: 2000
               USERMAP_GID: 2000
             envFrom:
@@ -62,6 +64,8 @@ spec:
                   name: paperless-secret
               - secretRef:
                   name: paperless-db-secret
+              - secretRef:
+                  name: paperless-oidc-secret
             resources:
               requests:
                 cpu: 11m
@@ -92,10 +96,7 @@ spec:
         enabled: true
         className: internal
         annotations:
-          nginx.ingress.kubernetes.io/auth-url: http://ak-outpost-internal.auth.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
-          nginx.ingress.kubernetes.io/auth-signin: /outpost.goauthentik.io/start?rd=$escaped_request_uri
-          nginx.ingress.kubernetes.io/auth-response-headers: Set-Cookie,X-authentik-username,X-authentik-groups,X-authentik-email,X-authentik-name,X-authentik-uid
-          nginx.ingress.kubernetes.io/auth-snippet: proxy_set_header X-Forwarded-Host $http_host;
+          nginx.ingress.kubernetes.io/proxy-body-size: "0"
         hosts:
           - host: "${HOSTNAME}"
             paths:

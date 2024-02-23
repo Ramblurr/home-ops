@@ -11,8 +11,7 @@ locals {
     module.sabnzbd.proxy_provider_id,
     module.prowlarr.proxy_provider_id,
     module.sonarr.proxy_provider_id,
-    module.radarr.proxy_provider_id,
-    module.paperless.proxy_provider_id,
+    module.radarr.proxy_provider_id
   ]
   implicit_authorization_flow = resource.authentik_flow.provider-authorization-implicit-consent.uuid
   default_authentication_flow = data.authentik_flow.default-authentication-flow.id
@@ -80,15 +79,6 @@ module "sabnzbd" {
   meta_icon               = "${local.icon_base}/sabnzbd.png"
 }
 
-module "paperless" {
-  source                  = "./modules/forward-auth-application"
-  name                    = "paperless"
-  domain                  = "paperless.${var.internal_domain}"
-  group                   = "Home"
-  authorization_flow_uuid = local.implicit_authorization_flow
-  meta_icon               = "${local.icon_base}/paperless-ngx.png"
-}
-
 module "ocis-test" {
   source                 = "./modules/oidc-application"
   name                   = "ocis-test"
@@ -121,4 +111,21 @@ module "grafana" {
   authentik_domain       = var.authentik_domain
   vault                  = local.onepassword_vault_id
   meta_icon              = "${local.icon_base}/grafana.png"
+}
+
+
+module "paperless" {
+  source                 = "./modules/oidc-application"
+  name                   = "paperless"
+  client_id              = "paperless"
+  domain                 = "paperless.${var.internal_domain}"
+  group                  = "Home"
+  authorization_flow_id  = local.implicit_authorization_flow
+  authentication_flow_id = local.default_authentication_flow
+  redirect_uris          = ["https://paperless.${var.internal_domain}/accounts/oidc/authentik/login/callback/"]
+  property_mappings      = data.authentik_scope_mapping.oauth2.ids
+  access_token_validity  = "hours=72"
+  authentik_domain       = var.authentik_domain
+  vault                  = local.onepassword_vault_id
+  meta_icon              = "${local.icon_base}/paperless-ngx.png"
 }
