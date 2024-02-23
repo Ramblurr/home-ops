@@ -5,7 +5,7 @@ metadata:
   name: &app nextcloud-work
   namespace: flux-system
 spec:
-  targetNamespace: &ns nextcloud-work
+  targetNamespace: &ns work-data
   dependsOn:
     - name: cert-manager-issuers
     - name: app-db
