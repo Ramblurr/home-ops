@@ -47,10 +47,11 @@ spec:
     hubble:
       enabled: true
       tls:
-        enabled: true
         auto:
-          enabled: true
-          method: helm
+          enable: true
+          method: cronJob
+          certValidityDuration: 1095
+          schedule: "0 0 1 */4 *"
       metrics:
         enabled:
           - dns:query
