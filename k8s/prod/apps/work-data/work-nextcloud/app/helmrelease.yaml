@@ -78,7 +78,7 @@ spec:
             # and creating the container with the privs of the user
             image:
               repository: docker.io/library/alpine
-              tag: 3
+              tag: 20231219
             command:
               - /bin/sh
               - -ec
