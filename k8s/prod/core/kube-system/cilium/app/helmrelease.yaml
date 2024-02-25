@@ -39,9 +39,14 @@ spec:
       integration: containerd
       socketPath: /var/run/k3s/containerd/containerd.sock
     # NOTE: This might need to be set if you have more than one active NIC on your hosts
+    enableRuntimeDeviceDetection: true
     devices:
       - brmgmt9
       - brdata11
+      - brprim4
+      - vlmgmt9
+      - vlprim
+      - vldata11
     endpointRoutes:
       enabled: true
     hubble:
