@@ -83,7 +83,7 @@ resource "authentik_application" "main" {
 }
 
 output "application_id" {
-  value = authentik_application.main.id
+  value = authentik_application.main.uuid
 }
 output "proxy_provider_id" {
   value = authentik_provider_proxy.main.id

@@ -16,6 +16,23 @@ locals {
   ]
   implicit_authorization_flow = resource.authentik_flow.provider-authorization-implicit-consent.uuid
   default_authentication_flow = data.authentik_flow.default-authentication-flow.id
+
+  admin_app_ids = toset([
+    # module.ocis-test.application_id,
+    module.grafana.application_id,
+    module.calibre.application_id,
+    module.filebrowser.application_id,
+    module.sabnzbd.application_id,
+    module.prowlarr.application_id,
+    module.sonarr.application_id,
+    module.radarr.application_id,
+    module.grafana.application_id,
+  ])
+
+  household_app_ids = toset([
+    module.paperless.application_id,
+    module.radicale.application_id,
+  ])
 }
 
 module "calibre-web" {
@@ -27,6 +44,7 @@ module "calibre-web" {
   meta_icon               = "${local.icon_base}/calibre-web.png"
 }
 
+
 module "calibre" {
   source                  = "./modules/forward-auth-application"
   name                    = "calibre"
@@ -35,6 +53,7 @@ module "calibre" {
   authorization_flow_uuid = local.implicit_authorization_flow
   meta_icon               = "${local.icon_base}/calibre.png"
 }
+
 
 module "filebrowser" {
   source                  = "./modules/forward-auth-application"
@@ -92,23 +111,23 @@ module "radicale" {
   property_mappings       = [authentik_scope_mapping.radicale_username.id]
 }
 
-module "ocis-test" {
-  source                 = "./modules/oidc-application"
-  name                   = "ocis-test"
-  client_id              = "ocis-test-simple-web2"
-  client_type            = "public"
-  domain                 = "ocis-test-simple.${var.external_domain}"
-  group                  = "Books"
-  authorization_flow_id  = local.implicit_authorization_flow
-  authentication_flow_id = local.default_authentication_flow
-  authentik_domain       = var.authentik_domain
-  meta_icon              = "${local.icon_base}/owncloud.png"
-  redirect_uris = [
-    "https://ocis-test-simple.${var.external_domain}/",
-    "https://ocis-test-simple.${var.external_domain}/oidc-callback.html",
-    "https://ocis-test-simple.${var.external_domain}/oidc-silent-redirect.html"
-  ]
-}
+# module "ocis-test" {
+#   source                 = "./modules/oidc-application"
+#   name                   = "ocis-test"
+#   client_id              = "ocis-test-simple-web2"
+#   client_type            = "public"
+#   domain                 = "ocis-test-simple.${var.external_domain}"
+#   group                  = "Books"
+#   authorization_flow_id  = local.implicit_authorization_flow
+#   authentication_flow_id = local.default_authentication_flow
+#   authentik_domain       = var.authentik_domain
+#   meta_icon              = "${local.icon_base}/owncloud.png"
+#   redirect_uris = [
+#     "https://ocis-test-simple.${var.external_domain}/",
+#     "https://ocis-test-simple.${var.external_domain}/oidc-callback.html",
+#     "https://ocis-test-simple.${var.external_domain}/oidc-silent-redirect.html"
+#   ]
+# }
 
 module "grafana" {
   source                 = "./modules/oidc-application"

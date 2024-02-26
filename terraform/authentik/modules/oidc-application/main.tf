@@ -171,7 +171,7 @@ resource "onepassword_item" "item" {
 }
 
 output "application_id" {
-  value = authentik_application.main.id
+  value = authentik_application.main.uuid
 }
 output "oauth2_provider_id" {
   value = authentik_provider_oauth2.main.id

@@ -17,3 +17,24 @@ resource "authentik_group" "home" {
   name         = "Home"
   is_superuser = false
 }
+
+
+resource "authentik_policy_binding" "readers" {
+  target = module.calibre-web.application_id
+  group  = authentik_group.books.id
+  order  = 0
+}
+
+resource "authentik_policy_binding" "admins" {
+  for_each = local.admin_app_ids
+  target   = each.value
+  group    = authentik_group.admins.id
+  order    = 0
+}
+
+resource "authentik_policy_binding" "home" {
+  for_each = local.household_app_ids
+  target   = each.value
+  group    = authentik_group.home.id
+  order    = 0
+}
