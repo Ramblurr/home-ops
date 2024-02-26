@@ -47,10 +47,10 @@ spec:
     endpointRoutes:
       enabled: true
     hubble:
-      enabled: false
+      enabled: true
       tls:
         auto:
-          enable: false
+          enable: true
           method: cronJob
           certValidityDuration: 1095
           schedule: "0 0 1 */4 *"
@@ -70,13 +70,13 @@ spec:
           annotations:
             grafana_folder: Cilium
       relay:
-        enabled: false
+        enabled: true
         rollOutPods: true
         prometheus:
           serviceMonitor:
             enabled: true
       ui:
-        enabled: false
+        enabled: true
         rollOutPods: true
         ingress:
           enabled: true
