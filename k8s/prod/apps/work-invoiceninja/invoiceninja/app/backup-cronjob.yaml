@@ -1,0 +1,57 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.26.1-standalone-strict/cronjob-batch-v1.json
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: invoiceninja-db-backup
+spec:
+  schedule: "0 4 * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          automountServiceAccountToken: false
+          enableServiceLinks: false
+          securityContext:
+            runAsUser: 2000
+            runAsGroup: 2000
+            fsGroup: 2000
+            supplementalGroups:
+              - 65541
+          containers:
+            - name: invoiceninja-db-backup
+              image: docker.io/databack/mysql-backup:latest
+              imagePullPolicy: IfNotPresent
+              env:
+                - name: DB_DUMP_TARGET
+                  value: /backups
+                - name: SINGLE_DATABASE
+                  value: "true"
+                - name: RUN_ONCE
+                  value: "true"
+                - name: NICE
+                  value: "true"
+                - name: DB_USER
+                  value: invoiceninja
+                - name: DB_SERVER
+                  value: invoiceninja-mariadb
+                - name: DB_PORT
+                  value: "3306"
+                - name: DB_PASS
+                  valueFrom:
+                    secretKeyRef:
+                      name: invoiceninja-secret
+                      key: mariadb-password
+                - name: DB_NAMES
+                  value: "invoiceninja"
+              volumeMounts:
+                - name: invoiceninja-db-backup-nfs
+                  mountPath: /backups
+
+          restartPolicy: OnFailure
+
+          volumes:
+            - name: invoiceninja-db-backup-nfs
+              persistentVolumeClaim:
+                claimName: invoiceninja-db-backup-nfs

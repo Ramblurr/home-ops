@@ -1,0 +1,27 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app work-invoiceninja-public-pvc
+  namespace: flux-system
+spec:
+  targetNamespace: &ns work-invoiceninja
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  interval: 10m
+  path: "./k8s/prod/apps/work-invoiceninja/invoiceninja-public-pvc/app"
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: home-kubernetes
+  wait: true
+  dependsOn:
+    - name: volsync
+  postBuild:
+    substitute:
+      APP: work-invoiceninja-public
+      APP_NS: *ns
+      VOLSYNC_CLAIM: work-invoiceninja-public
+      VOLSYNC_CAPACITY: 1Gi

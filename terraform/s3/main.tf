@@ -27,8 +27,6 @@ locals {
     "volsync-autoscan",
     "volsync-calibre",
     "volsync-calibre-web",
-    "volsync-invoiceninja-mariadb",
-    "volsync-invoiceninja-public",
     "volsync-jellyfin",
     "volsync-lidarr",
     "volsync-matrix-synapse-ol",
@@ -43,13 +41,15 @@ locals {
     "volsync-sabnzbd",
     "volsync-sonarr",
     "volsync-tautulli",
-    "volsync-work-nextcloud"
+    "volsync-work-nextcloud",
+    "volsync-work-invoiceninja-public",
   ]
   # these can have the restic key generated
   volsync_new_buckets = [
     "volsync-home-automation-influxdb",
     "volsync-home-media-filebrowser",
-    "volsync-home-radicale"
+    "volsync-home-radicale",
+    "volsync-work-invoiceninja-storage",
   ]
 
   crunchy_db_buckets = {

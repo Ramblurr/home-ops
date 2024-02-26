@@ -1,0 +1,85 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: invoiceninja
+spec:
+  interval: 1m
+  chart:
+    spec:
+      chart: invoiceninja
+      version: 0.10.2
+      sourceRef:
+        kind: HelmRepository
+        name: invoiceninja
+        namespace: flux-system
+      interval: 15m
+  install:
+    createNamespace: true
+    remediation:
+      retries: 0
+  upgrade:
+    remediation:
+      retries: 0
+  values:
+    debug: false
+    image:
+      registry: docker.io
+      repository: invoiceninja/invoiceninja
+      tag: 5.8.23@sha256:4fb77d6038d6df855473095c6c362600fef504775f568a6d5fda3266d6a09a50
+    existingSecret: invoiceninja-secret
+    updateStrategy:
+      type: Recreate
+    appURL: "https://clients.${SECRET_DOMAIN_WORK}"
+    userEmail: "${SECRET_WORK_EMAIL}"
+    mariadb:
+      auth:
+        database: invoiceninja
+        username: invoiceninja
+        existingSecret: invoiceninja-secret
+    redis:
+      sentinel:
+        enabled: false
+      master:
+        count: 1
+        persistence:
+          enabled: false
+    persistence:
+      public:
+        existingClaim: work-invoiceninja-public
+      storage:
+        existingClaim: work-invoiceninja-storage
+    ingress:
+      hostname: &host "clients.${SECRET_DOMAIN_WORK}"
+      ingressClassName: external-work
+      annotations:
+        external-dns.home.arpa/enabled: "true"
+        nginx.ingress.kubernetes.io/proxy-body-size: 100M
+        nginx.ingress.kubernetes.io/enable-cors: "true"
+        nginx.ingress.kubernetes.io/cors-allow-headers: "X-Forwarded-For"
+        external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN_WORK}"
+      hosts:
+        - host: *host
+          paths:
+            - path: /
+              pathType: Prefix
+      tls:
+        - hosts:
+            - *host
+          # https://github.com/invoiceninja/dockerfiles/issues/515
+          # secretName: "${SECRET_DOMAIN_WORK_CERT_SECRET}"
+    podAnnotations:
+      reloader.stakater.com/auto: "true"
+  postRenderers:
+    - kustomize:
+        patchesStrategicMerge:
+          - kind: Ingress
+            apiVersion: networking.k8s.io/v1
+            metadata:
+              name: invoiceninja
+              namespace: ${APP_NS}
+            spec:
+              tls:
+                - hosts:
+                    - *host
+                  secretName: "${SECRET_DOMAIN_WORK_CERT_SECRET}"
