@@ -146,7 +146,7 @@ spec:
           schedules:
             full: "0 13 * * 3" # Wednesday at 1:00
             differential: "0 13 * * 0-2,4-6" # Sun-Tue + Thu-Sat at 13:00
-            incremental: "0 0-12,14-23 * * *" # Every hour except 13:00-14:00
+            incremental: "30 0-12,14-23 * * *" # Every hour except 13:00-14:00
           s3:
             bucket: pg-crunchy-app-db
             endpoint: ${SECRET_CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com
