@@ -44,9 +44,6 @@ spec:
       - brmgmt9
       - brdata11
       - brprim4
-      - vlmgmt9
-      - vlprim
-      - vldata11
     endpointRoutes:
       enabled: true
     hubble:
