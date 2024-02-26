@@ -5,9 +5,12 @@ version: "3"
 vars:
   PYTHON_BIN: python3
   CLUSTER_DIR: "{{.ROOT_DIR}}/k8s/prod"
+  KUBERNETES_DIR: "{{.ROOT_DIR}}/k8s/prod"
   ANSIBLE_DIR: "{{.ROOT_DIR}}/ansible"
   SCRIPTS_DIR: "{{.ROOT_DIR}}/bin"
   AGE_FILE: "{{.ROOT_DIR}}/age.key"
+  CLUSTER_SECRET_SOPS_FILE: k8s/prod/flux/vars/cluster-secrets.sops.yaml
+  CLUSTER_SETTINGS_FILE: k8s/prod/flux/vars/cluster-settings.yaml
 
 env:
   KUBECONFIG_FILE: "{{.ROOT_DIR}}/kubeconfig"
