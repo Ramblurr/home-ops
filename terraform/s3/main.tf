@@ -67,6 +67,7 @@ locals {
 
 provider "cloudflare" {
   api_token = local.cloudflare_api_token
+  rps       = 2
 }
 
 provider "minio" {
