@@ -140,6 +140,10 @@ spec:
           - path: *configDir
     service:
       main:
+        type: LoadBalancer
+        annotations:
+          io.cilium/lb-ipam-ips: "${SVC_ONEPASSWORD}"
+        externalTrafficPolicy: Cluster
         ports:
           http:
             port: *apiPort
