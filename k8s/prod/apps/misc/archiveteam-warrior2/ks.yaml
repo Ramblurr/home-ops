@@ -3,17 +3,14 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app archiveteam-warrior
+  name: &app archiveteam-warrior2
   namespace: flux-system
 spec:
   targetNamespace: misc
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: external-secrets-stores
-    - name: home-dl-app-db-root-cert
-  path: ./k8s/prod/apps/misc/archiveteam-warrior/app
+  path: ./k8s/prod/apps/misc/archiveteam-warrior2/app
   prune: true
   sourceRef:
     kind: GitRepository
@@ -22,3 +19,6 @@ spec:
   interval: 30m
   retryInterval: 1m
   timeout: 5m
+  postBuild:
+    substitute:
+      WAR_NUM: "2"
