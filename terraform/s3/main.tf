@@ -65,6 +65,11 @@ locals {
   }
 }
 
+provider "onepassword" {
+  url = "http://onepassword-connect.k8s.socozy.casa"
+  # token specified via env var
+}
+
 provider "cloudflare" {
   api_token = local.cloudflare_api_token
   rps       = 2
