@@ -22,8 +22,7 @@ metadata:
 spec:
   secretName: "${SECRET_DOMAIN_WORK/./-}-wildcard-tls"
   issuerRef:
-    #name: letsencrypt-production
-    name: letsencrypt-staging
+    name: letsencrypt-production
     kind: ClusterIssuer
   commonName: "${SECRET_DOMAIN_WORK}"
   dnsNames:
