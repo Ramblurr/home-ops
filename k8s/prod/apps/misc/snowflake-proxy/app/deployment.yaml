@@ -1,0 +1,30 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: snowflake-proxy
+spec:
+  selector:
+    matchLabels:
+      app: snowflake-proxy
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: snowflake-proxy
+    spec:
+      hostNetwork: true
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - ibnsina
+      containers:
+        - name: snowflake
+          image: docker.io/thetorproject/snowflake-proxy:v2.8.1
+          args: ["-capacity", "50"]
+      restartPolicy: Always

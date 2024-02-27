@@ -8,4 +8,4 @@ resources:
   - ./notifications.yaml
   # Flux-Kustomizations
   - ./archiveteam-warrior/ks.yaml
-  #- ./snowflake-proxy/ks.yaml
+  - ./snowflake-proxy/ks.yaml
