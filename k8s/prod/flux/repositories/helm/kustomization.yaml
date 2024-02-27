@@ -28,3 +28,4 @@ resources:
   - ./authentik.yaml
   - ./influxdata-charts.yaml
   - ./node-feature-discovery.yaml
+  - ./invoiceninja.yaml
