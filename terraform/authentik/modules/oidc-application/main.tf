@@ -12,6 +12,10 @@ terraform {
 variable "name" {
   type = string
 }
+variable "slug" {
+  type    = string
+  default = null
+}
 variable "authentik_domain" {
   type = string
 }
@@ -39,6 +43,10 @@ variable "meta_icon" {
   default = null
 }
 variable "meta_description" {
+  type    = string
+  default = null
+}
+variable "meta_launch_url" {
   type    = string
   default = null
 }
@@ -101,14 +109,19 @@ resource "authentik_provider_oauth2" "main" {
   redirect_uris         = var.redirect_uris
   access_token_validity = var.access_token_validity
   property_mappings     = var.property_mappings
+  lifecycle {
+    ignore_changes = [
+      "signing_key"
+    ]
+  }
 }
 
 resource "authentik_application" "main" {
   name               = title(var.name)
-  slug               = var.name
+  slug               = coalesce(var.slug, var.name)
   group              = var.group
   policy_engine_mode = "any"
-  meta_launch_url    = "https://${var.domain}"
+  meta_launch_url    = coalesce(var.meta_launch_url, "https://${var.domain}")
   meta_icon          = var.meta_icon
   meta_description   = var.meta_description
   protocol_provider  = authentik_provider_oauth2.main.id

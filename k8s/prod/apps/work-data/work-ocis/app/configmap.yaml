@@ -1,0 +1,20 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: work-ocis-config
+data:
+  proxy.yaml: |
+    role_assignment:
+        driver: oidc
+        oidc_role_mapper:
+            role_claim: groups
+            role_mapping:
+                - role_name: admin
+                  claim_value: WorkDataSuperuser
+                - role_name: spaceadmin
+                  claim_value: WorkDataSpaceAdmin
+                - role_name: user
+                  claim_value: WorkDataUser
+                - role_name: guest
+                  claim_value: WorkDataGuest

@@ -14,11 +14,13 @@ locals {
     module.sonarr.proxy_provider_id,
     module.radarr.proxy_provider_id
   ]
+  external_work_proxy_provider_ids = [
+  ]
   implicit_authorization_flow = resource.authentik_flow.provider-authorization-implicit-consent.uuid
+  explicit_authorization_flow = data.authentik_flow.default-provider-authorization-explicit-consent.id
   default_authentication_flow = data.authentik_flow.default-authentication-flow.id
 
   admin_app_ids = toset([
-    # module.ocis-test.application_id,
     module.grafana.application_id,
     module.calibre.application_id,
     module.filebrowser.application_id,
@@ -111,23 +113,94 @@ module "radicale" {
   property_mappings       = [authentik_scope_mapping.radicale_username.id]
 }
 
-# module "ocis-test" {
-#   source                 = "./modules/oidc-application"
-#   name                   = "ocis-test"
-#   client_id              = "ocis-test-simple-web2"
-#   client_type            = "public"
-#   domain                 = "ocis-test-simple.${var.external_domain}"
-#   group                  = "Books"
-#   authorization_flow_id  = local.implicit_authorization_flow
-#   authentication_flow_id = local.default_authentication_flow
-#   authentik_domain       = var.authentik_domain
-#   meta_icon              = "${local.icon_base}/owncloud.png"
-#   redirect_uris = [
-#     "https://ocis-test-simple.${var.external_domain}/",
-#     "https://ocis-test-simple.${var.external_domain}/oidc-callback.html",
-#     "https://ocis-test-simple.${var.external_domain}/oidc-silent-redirect.html"
-#   ]
-# }
+locals {
+  work_ocis_name   = "Outskirts Labs Data"
+  work_ocis_domain = "data.${var.external_domain_work}"
+}
+
+
+module "work-ocis-web" {
+  source                 = "./modules/oidc-application"
+  name                   = "${local.work_ocis_name} - web"
+  slug                   = "work-ocis"
+  client_type            = "public"
+  client_id              = "work-ocis"
+  domain                 = local.work_ocis_domain
+  group                  = "Work"
+  authorization_flow_id  = local.explicit_authorization_flow
+  authentication_flow_id = local.default_authentication_flow
+  authentik_domain       = var.authentik_domain_work
+  meta_launch_url        = "https://${local.work_ocis_domain}"
+  meta_icon              = "${local.icon_base}/owncloud.png"
+  property_mappings      = data.authentik_scope_mapping.oauth2.ids
+  redirect_uris = [
+    "https://${local.work_ocis_domain}/",
+    "https://${local.work_ocis_domain}/oidc-callback.html",
+    "https://${local.work_ocis_domain}/oidc-silent-redirect.html"
+  ]
+}
+module "work-ocis-desktop" {
+  source                 = "./modules/oidc-application"
+  name                   = "${local.work_ocis_name} - Desktop"
+  slug                   = "work-ocis-desktop"
+  client_type            = "confidential"
+  client_id              = "xdXOt13JKxym1B1QcEncf2XDkLAexMBFwiT9j6EfhhHFJhs2KM9jbjTmf8JBXE69"
+  client_secret          = "UBntmLjC2yYCeHwsyj73Uwo9TAaecAetRwMw0xYcvNL9yRdLSUi0hUAHfvCHFeFh"
+  domain                 = local.work_ocis_domain
+  group                  = "Work"
+  authorization_flow_id  = local.explicit_authorization_flow
+  authentication_flow_id = local.default_authentication_flow
+  authentik_domain       = var.authentik_domain_work
+  meta_launch_url        = "blank://blank" # This hides the application in the library page
+  meta_icon              = "${local.icon_base}/owncloud.png"
+  property_mappings      = concat(data.authentik_scope_mapping.oauth2_offline.ids, data.authentik_scope_mapping.oauth2.ids)
+  vault                  = local.onepassword_vault_id
+  redirect_uris = [
+    "http://127.0.0.1(:.*)?",
+    "http://localhost(:.*)?"
+  ]
+}
+module "work-ocis-android" {
+  source                 = "./modules/oidc-application"
+  name                   = "${local.work_ocis_name} - Android"
+  slug                   = "work-ocis-android"
+  client_id              = "e4rAsNUSIUs0lF4nbv9FmCeUkTlV9GdgTLDH1b5uie7syb90SzEVrbN7HIpmWJeD"
+  client_type            = "confidential"
+  client_secret          = "dInFYGV33xKzhbRmpqQltYNdfLdJIfJ9L5ISoKhNoT9qZftpdWSP71VrpGR9pmoD"
+  domain                 = local.work_ocis_domain
+  group                  = "Work"
+  authorization_flow_id  = local.explicit_authorization_flow
+  authentication_flow_id = local.default_authentication_flow
+  authentik_domain       = var.authentik_domain_work
+  meta_launch_url        = "blank://blank" # This hides the application in the library page
+  meta_icon              = "${local.icon_base}/owncloud.png"
+  property_mappings      = concat(data.authentik_scope_mapping.oauth2_offline.ids, data.authentik_scope_mapping.oauth2.ids)
+  vault                  = local.onepassword_vault_id
+  redirect_uris = [
+    "oc://android.owncloud.com",
+  ]
+}
+
+module "work-ocis-ios" {
+  source                 = "./modules/oidc-application"
+  name                   = "${local.work_ocis_name} - iOS"
+  slug                   = "work-ocis-ios"
+  client_id              = "work-ocis-ios"
+  client_type            = "confidential"
+  domain                 = local.work_ocis_domain
+  group                  = "Work"
+  authorization_flow_id  = local.explicit_authorization_flow
+  authentication_flow_id = local.default_authentication_flow
+  authentik_domain       = var.authentik_domain_work
+  meta_launch_url        = "blank://blank" # This hides the application in the library page
+  meta_icon              = "${local.icon_base}/owncloud.png"
+  property_mappings      = concat(data.authentik_scope_mapping.oauth2_offline.ids, data.authentik_scope_mapping.oauth2.ids)
+  vault                  = local.onepassword_vault_id
+  redirect_uris = [
+    "oc://ios.owncloud.com",
+    "oc.ios://ios.owncloud.com"
+  ]
+}
 
 module "grafana" {
   source                 = "./modules/oidc-application"
@@ -135,7 +208,7 @@ module "grafana" {
   client_id              = "grafana"
   domain                 = "grafana.${var.internal_domain}"
   group                  = "Books"
-  authorization_flow_id  = local.implicit_authorization_flow
+  authorization_flow_id  = local.explicit_authorization_flow
   authentication_flow_id = local.default_authentication_flow
   redirect_uris          = ["https://grafana.${var.internal_domain}/login/generic_oauth"]
   property_mappings      = data.authentik_scope_mapping.oauth2.ids

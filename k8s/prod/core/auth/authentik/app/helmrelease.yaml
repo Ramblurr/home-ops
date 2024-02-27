@@ -67,6 +67,12 @@ spec:
         - name: custom-css
           mountPath: /web/dist/custom.css
           subPath: custom.css
+        - name: custom-css
+          mountPath: /web/dist/assets/icons/work-logo.svg
+          subPath: work-logo.svg
+        - name: custom-css
+          mountPath: /web/dist/assets/icons/work-favicon.png
+          subPath: work-favicon.png
     server:
       metrics:
         serviceMonitor:

@@ -12,6 +12,10 @@ data "authentik_flow" "default-authentication-flow" {
   slug = "default-authentication-flow"
 }
 
+data "authentik_flow" "default-provider-authorization-explicit-consent" {
+  slug = "default-provider-authorization-explicit-consent"
+}
+
 
 # Recovery flow
 resource "authentik_flow" "recovery" {
@@ -45,4 +49,28 @@ resource "authentik_flow_stage_binding" "recovery-flow-binding-30" {
   target = authentik_flow.recovery.uuid
   stage  = authentik_stage_user_write.password-change-write.id
   order  = 30
+}
+
+
+## User settings flow
+resource "authentik_flow" "user-settings" {
+  name               = "User settings"
+  title              = "Update your info"
+  slug               = "user-settings-flow"
+  policy_engine_mode = "any"
+  denied_action      = "message_continue"
+  designation        = "stage_configuration"
+  # background         = "https://placeholder.jpeg"
+}
+
+resource "authentik_flow_stage_binding" "user-settings-flow-binding-20" {
+  target = authentik_flow.user-settings.uuid
+  stage  = authentik_stage_prompt.user-settings.id
+  order  = 20
+}
+
+resource "authentik_flow_stage_binding" "user-settings-flow-binding-100" {
+  target = authentik_flow.user-settings.uuid
+  stage  = authentik_stage_user_write.user-settings-write.id
+  order  = 100
 }

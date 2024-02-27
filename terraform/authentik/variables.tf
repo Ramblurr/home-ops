@@ -1,6 +1,9 @@
 variable "external_domain" {
   type = string
 }
+variable "external_domain_work" {
+  type = string
+}
 variable "internal_domain" {
   type = string
 }
@@ -8,6 +11,10 @@ variable "kubernetes_namespace" {
   type = string
 }
 variable "authentik_domain" {
+  type = string
+}
+
+variable "authentik_domain_work" {
   type = string
 }
 
