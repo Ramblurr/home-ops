@@ -45,12 +45,23 @@ locals {
     "volsync-work-invoiceninja-public",
   ]
   # these can have the restic key generated
-  volsync_new_buckets = [
-    "volsync-home-automation-influxdb",
-    "volsync-home-media-filebrowser",
-    "volsync-home-radicale",
-    "volsync-work-invoiceninja-storage",
-  ]
+  volsync_new_buckets = {
+    "volsync-home-automation-influxdb" : {
+      r2_enabled : true
+    },
+    "volsync-home-media-filebrowser" : {
+      r2_enabled : true
+    },
+    "volsync-home-radicale" : {
+      r2_enabled : true
+    },
+    "volsync-work-invoiceninja-storage" : {
+      r2_enabled : true
+    },
+    "volsync-home-archivebox" : {
+      r2_enabled : false
+    },
+  }
 
   crunchy_db_buckets = {
     "pg-crunchy-authentik-db" : {
@@ -103,11 +114,11 @@ module "volsync_bucket" {
 }
 
 module "volsync_bucket_new" {
-  for_each              = toset(local.volsync_new_buckets)
+  for_each              = local.volsync_new_buckets
   source                = "./modules/volsync-bucket"
   minio_server          = local.minio_server
   minio_server_10gbe    = local.minio_server_10gbe
-  r2_enabled            = true
+  r2_enabled            = each.value.r2_enabled
   cloudflare_account_id = local.cloudflare_account_id
   vault                 = local.vault
   bucket_name           = each.key

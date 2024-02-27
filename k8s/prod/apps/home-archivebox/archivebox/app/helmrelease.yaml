@@ -1,0 +1,102 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: &name archivebox
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: app-template
+      version: 2.6.0
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+      interval: 5m
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  values:
+    fullnameOverride: *name
+    controllers:
+      main:
+        containers:
+          sonic:
+            image:
+              repository: docker.io/valeriansaliou/sonic
+              tag: v1.4.8
+            env:
+              TZ: "${SECRET_TIMEZONE}"
+          main:
+            image:
+              repository: docker.io/archivebox/archivebox
+              tag: latest@sha256:bdf72dd0173fdc08283c58a3422fa6c8a076b27ff767e9282b6947693c53fc17
+            args: ["server"]
+            env:
+              TZ: "${SECRET_TIMEZONE}"
+              PUID: 2000
+              PGID: 2000
+              SEARCH_BACKEND_ENGINE: sonic
+              SEARCH_BACKEND_HOST_NAME: localhost
+              SEARCH_BACKEND_PASSWORD: sonic
+              MEDIA_MAX_SIZE: 1024m
+              SAVE_ARCHIVE_DOT_ORG: "True"
+            resources:
+              requests:
+                cpu: 50m
+                memory: 32Mi
+    service:
+      main:
+        ports:
+          http:
+            port: 8000
+    ingress:
+      main:
+        enabled: true
+        className: internal
+        annotations:
+          nginx.ingress.kubernetes.io/proxy-body-size: 1000M
+          #nginx.ingress.kubernetes.io/auth-url: http://ak-outpost-internal.auth.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx
+          #nginx.ingress.kubernetes.io/auth-signin: /outpost.goauthentik.io/start?rd=$escaped_request_uri
+          #nginx.ingress.kubernetes.io/auth-response-headers: Set-Cookie,X-authentik-username,X-authentik-groups,X-authentik-email,X-authentik-name,X-authentik-uid
+          #nginx.ingress.kubernetes.io/auth-snippet: proxy_set_header X-Forwarded-Host $http_host;
+        hosts:
+          - host: &host "archive.${SECRET_DOMAIN_INTERNAL}"
+            paths:
+              - path: /
+                pathType: Prefix
+                service:
+                  name: main
+                  port: http
+        tls:
+          - hosts:
+              - *host
+    persistence:
+      config:
+        enabled: true
+        existingClaim: "${VOLSYNC_CLAIM}"
+        advancedMounts:
+          main:
+            main:
+              - path: /data
+                subPath: archivebox
+            sonic:
+              - path: /var/lib/sonic/store
+                subPath: sonic/store
+
+      sonic-config:
+        enabled: true
+        type: configMap
+        name: archivebox-sonic-config
+        defaultMode: 0750
+        advancedMounts:
+          main:
+            sonic:
+              - path: /etc/sonic.cfg
+                subPath: sonic.cfg
+                readOnly: true

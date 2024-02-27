@@ -55,7 +55,7 @@ resource "onepassword_item" "item" {
     }
     field {
       label = "R2_RESTIC_REPOSITORY"
-      value = "s3:https://${var.r2_endpoint}/${var.bucket_name}/restic"
+      value = var.r2_endpoint == null ? "" : "s3:https://${var.r2_endpoint}/${var.bucket_name}/restic"
       type  = "CONCEALED"
     }
   }
