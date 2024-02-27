@@ -1,14 +1,18 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  packageRules: [
+  "packageRules": [
     {
-      description: "Auto merge container digests",
-      matchDatasources: ["docker"],
-      automerge: true,
-      automergeType: "branch",
-      matchUpdateTypes: ["digest"],
-      matchPackagePattern: ["ghcr.io/bjw-s", "ghcr.io/onedr0p"],
-      ignoreTests: true,
+      "description": "Auto merge container digests",
+      "matchDatasources": ["docker"],
+      "automerge": true,
+      "automergeType": "branch",
+      "matchUpdateTypes": ["digest"],
+      "matchPackagePattern": [
+        "ghcr.io/bjw-s",
+        "ghcr.io/onedr0p",
+        "atdr.meo.ws/archiveteam"
+      ],
+      "ignoreTests": true
     },
     {
       "description": "Auto merge GitHub Actions",
@@ -20,19 +24,20 @@
       "matchUpdateTypes": ["minor", "patch"]
     },
     {
-      description: "Auto merge containers",
-      matchDatasources: ["docker"],
-      automerge: true,
-      automergeType: "branch",
-      matchUpdateTypes: ["minor", "patch"],
-      matchPackageNames: [
+      "description": "Auto merge containers",
+      "matchDatasources": ["docker"],
+      "automerge": true,
+      "automergeType": "branch",
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchPackageNames": [
         "ghcr.io/onedr0p/prowlarr-nightly",
         "ghcr.io/onedr0p/readarr-develop",
         "ghcr.io/onedr0p/sonarr-develop",
         "ghcr.io/onedr0p/radarr-develop",
-        "ghcr.io/onedr0p/readarr-nightly"
+        "ghcr.io/onedr0p/readarr-nightly",
+        "atdr.meo.ws/archiveteam/warrior-dockerfile"
       ],
-      ignoreTests: true,
-    },
-  ],
+      "ignoreTests": true
+    }
+  ]
 }
