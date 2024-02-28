@@ -1,0 +1,129 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2beta2.json
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: davis
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 2.6.0
+      interval: 30m
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+
+  values:
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsUser: 2000
+        runAsGroup: 2000
+        fsGroup: 2000
+        fsGroupChangePolicy: OnRootMismatch
+    controllers:
+      main:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          nginx:
+            image:
+              repository: ghcr.io/ramblurr/davis
+              tag: 4.4.1@sha256:a82b5bb91f4a55e20435232b9bc0e262fdae868bda8cca3524859f8b033c4f7c
+            args: [nginx]
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  tcpSocket:
+                    port: &httpPort 8080
+                  initialDelaySeconds: 2
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 3
+                  successThreshold: 1
+              readiness: *probes
+              startup:
+                enabled: false
+          main:
+            image:
+              repository: ghcr.io/ramblurr/davis
+              tag: 4.4.1@sha256:a82b5bb91f4a55e20435232b9bc0e262fdae868bda8cca3524859f8b033c4f7c
+            args: [davis]
+            env:
+              APP_DEBUG: "true"
+              APP_ENV: prod
+              DATABASE_DRIVER: postgresql
+              MAILER_DSN: smtp://${SMTP_RELAY_HOST}:${SMTP_RELAY_PORT}
+              AUTH_REALM: SabreDAV
+              AUTH_METHOD: Basic
+              CALDAV_ENABLED: "true"
+              CARDDAV_ENABLED: "true"
+              WEBDAV_ENABLED: "false"
+              WEBDAV_TMP_DIR: "/tmp"
+              WEBDAV_PUBLIC_DIR: "/webdav"
+              INVITE_FROM_ADDRESS: "${SECRET_SMTP_FROM_FULL}"
+              APP_TIMEZONE: ${SECRET_TIMEZONE}
+            envFrom: &envFrom
+              - secretRef:
+                  name: davis-secret
+              - secretRef:
+                  name: home-davis-db-secret
+            resources:
+              limits:
+                memory: 512Mi
+                cpu: 100m
+              requests:
+                cpu: 60m
+                memory: 512Mi
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  tcpSocket:
+                    port: 9000
+                  initialDelaySeconds: 2
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 3
+                  successThreshold: 1
+              readiness: *probes
+              startup:
+                enabled: false
+    service:
+      main:
+        ports:
+          http:
+            port: *httpPort
+
+    ingress:
+      main:
+        enabled: true
+        className: external
+        annotations:
+          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+        hosts:
+          - host: "${HOSTNAME}"
+            paths:
+              - path: /
+                service:
+                  name: main
+                  port: http
+        tls:
+          - hosts:
+              - "${HOSTNAME}"
+
+    persistence:
+      config:
+        enabled: true
+        existingClaim: "${VOLSYNC_CLAIM}"
+        globalMounts:
+          - path: /data
+            subPath: data
+          - path: /var/www/davis/var
+            subPath: var

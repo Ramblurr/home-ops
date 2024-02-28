@@ -100,6 +100,11 @@ spec:
         - linkding
       password:
         type: AlphaNumeric
+    - name: "home-davis"
+      databases:
+        - home-davis
+      password:
+        type: AlphaNumeric
   backups:
     pgbackrest:
       configuration:
