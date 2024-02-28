@@ -77,6 +77,17 @@ spec:
           - hosts:
               - *host
     persistence:
+      archive:
+        enabled: true
+        type: nfs
+        server: &nfsServer ${SECRET_NFS_SERVER}
+        # zfs create tank2/services/archivebox -o dedup=on -o compression=zstd
+        path: &nfsPath /mnt/tank2/services/archivebox
+        advancedMounts:
+          main:
+            main:
+              - path: /data/archive
+                subPath: archive
       config:
         enabled: true
         existingClaim: "${VOLSYNC_CLAIM}"
@@ -88,11 +99,10 @@ spec:
             sonic:
               - path: /var/lib/sonic/store
                 subPath: sonic/store
-
       sonic-config:
         enabled: true
         type: configMap
-        name: archivebox-sonic-config
+        name: archivebox-sonic-configmap
         defaultMode: 0750
         advancedMounts:
           main:

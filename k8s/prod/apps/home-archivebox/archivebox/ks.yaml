@@ -24,9 +24,6 @@ spec:
   postBuild:
     substitute:
       APP: *appname
-      VOLSYNC_CAPACITY: 20Gi
+      VOLSYNC_CAPACITY: 500Mi
       VOLSYNC_CLAIM: home-archivebox
-      VOLSYNC_ACCESSMODES: ReadWriteMany
-      VOLSYNC_STORAGECLASS: ceph-filesystem
-      VOLSYNC_SNAPSHOTCLASS: csi-ceph-filesystem
-      VOLSYNC_CACHE_SNAPSHOTCLASS: ceph-filesystem
+      VOLSYNC_SECRET: volsync-home-archivebox
