@@ -25,6 +25,13 @@ spec:
     fullnameOverride: *name
     controllers:
       main:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        pod:
+          securityContext:
+            runAsUser: 2000
+            runAsGroup: 2000
+            fsGroup: 2000
         containers:
           sonic:
             image:
@@ -36,7 +43,8 @@ spec:
             image:
               repository: docker.io/archivebox/archivebox
               tag: latest@sha256:bdf72dd0173fdc08283c58a3422fa6c8a076b27ff767e9282b6947693c53fc17
-            args: ["server"]
+            command: [/bin/bash]
+            args: ["-c", "archivebox server --quick-init 0.0.0.0:8000"]
             env:
               TZ: "${SECRET_TIMEZONE}"
               PUID: 2000
