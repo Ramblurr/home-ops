@@ -61,9 +61,6 @@ locals {
     "volsync-home-archivebox" : {
       r2_enabled : false
     },
-    "volsync-home-baikal" : {
-      r2_enabled : true
-    },
     "volsync-home-davis" : {
       r2_enabled : true
     },
