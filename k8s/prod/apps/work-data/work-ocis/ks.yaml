@@ -12,7 +12,6 @@ spec:
   dependsOn:
     - name: cert-manager-issuers
     - name: external-secrets-stores
-    - name: app-db
   path: ./k8s/prod/apps/work-data/work-ocis/app
   prune: true
   sourceRef:
