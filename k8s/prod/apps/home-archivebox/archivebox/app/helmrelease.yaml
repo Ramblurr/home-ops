@@ -42,7 +42,7 @@ spec:
           main:
             image:
               repository: docker.io/archivebox/archivebox
-              tag: latest@sha256:bdf72dd0173fdc08283c58a3422fa6c8a076b27ff767e9282b6947693c53fc17
+              tag: dev@sha256:5ee24d5cf536c47a65cbbba92774f9e988ab82c401f71b9f03aef4b6357cd7c1
             command: [/bin/bash]
             args: ["-c", "archivebox server --quick-init 0.0.0.0:8000"]
             env:
@@ -54,6 +54,8 @@ spec:
               SEARCH_BACKEND_PASSWORD: sonic
               MEDIA_MAX_SIZE: 1024m
               SAVE_ARCHIVE_DOT_ORG: "True"
+              # REVERSE_PROXY_USER_HEADER: X-authentik-username
+              # REVERSE_PROXY_WHITELIST: ${CLUSTER_CIDR}
             resources:
               requests:
                 cpu: 50m
