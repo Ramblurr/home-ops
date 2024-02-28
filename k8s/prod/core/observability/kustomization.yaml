@@ -15,3 +15,4 @@ resources:
   - ./thanos/ks.yaml
   - ./unpoller/ks.yaml
   - ./vector/ks.yaml
+  - ./alertmanager-silencer/ks.yaml
