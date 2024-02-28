@@ -2,6 +2,16 @@ variable "domain" {
   type = string
 }
 
+variable "dav_enabled" {
+  default = false
+  type    = bool
+}
+
+variable "dav_domain" {
+  type    = string
+  default = null
+}
+
 variable "root_record_enabled" {
   type    = bool
   default = false
@@ -63,14 +73,14 @@ data "http" "ipv4" {
   url = "http://ipv4.icanhazip.com"
 }
 
-resource "cloudflare_record" "ipv4" {
-  name    = "ipv4"
-  zone_id = lookup(data.cloudflare_zones.domain.zones[0], "id")
-  value   = chomp(data.http.ipv4.response_body)
-  proxied = true
-  type    = "A"
-  ttl     = 1
-}
+#resource "cloudflare_record" "ipv4" {
+#  name    = "ipv4"
+#  zone_id = lookup(data.cloudflare_zones.domain.zones[0], "id")
+#  value   = chomp(data.http.ipv4.response_body)
+#  proxied = true
+#  type    = "A"
+#  ttl     = 1
+#}
 
 resource "cloudflare_record" "root" {
   count   = var.root_record_enabled ? 1 : 0
@@ -90,4 +100,93 @@ resource "cloudflare_record" "subdomains" {
   proxied  = true
   type     = "CNAME"
   ttl      = 1
+}
+
+
+resource "cloudflare_record" "caldav" {
+  count   = var.dav_enabled ? 1 : 0
+  zone_id = lookup(data.cloudflare_zones.domain.zones[0], "id")
+  name    = var.domain
+  type    = "SRV"
+  ttl     = 300
+
+  data {
+    name     = var.domain
+    proto    = "_tcp"
+    service  = "_caldav"
+    priority = 0
+    weight   = 0
+    port     = 0
+    target   = "."
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "cloudflare_record" "caldavs" {
+  count   = var.dav_enabled ? 1 : 0
+  zone_id = lookup(data.cloudflare_zones.domain.zones[0], "id")
+  name    = var.domain
+  type    = "SRV"
+  ttl     = 300
+
+  data {
+    name     = var.domain
+    proto    = "_tcp"
+    service  = "_caldavs"
+    priority = 0
+    weight   = 1
+    port     = 443
+    target   = var.dav_domain
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+resource "cloudflare_record" "carddav" {
+  count   = var.dav_enabled ? 1 : 0
+  zone_id = lookup(data.cloudflare_zones.domain.zones[0], "id")
+  name    = var.domain
+  type    = "SRV"
+  ttl     = 300
+
+  data {
+    name     = var.domain
+    proto    = "_tcp"
+    service  = "_carddav"
+    priority = 0
+    weight   = 0
+    port     = 0
+    target   = "."
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+
+resource "cloudflare_record" "carddavs" {
+  count   = var.dav_enabled ? 1 : 0
+  zone_id = lookup(data.cloudflare_zones.domain.zones[0], "id")
+  name    = var.domain
+  type    = "SRV"
+  ttl     = 300
+
+  data {
+    name     = var.domain
+    proto    = "_tcp"
+    service  = "_carddavs"
+    priority = 0
+    weight   = 1
+    port     = 443
+    target   = var.dav_domain
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
