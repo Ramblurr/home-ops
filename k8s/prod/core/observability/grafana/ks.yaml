@@ -21,8 +21,3 @@ spec:
   interval: 30m
   retryInterval: 1m
   timeout: 5m
-  postBuild:
-    substitute:
-      APP: cluster-grafana
-      DB_NAME: grafana
-      DB_USER: grafana

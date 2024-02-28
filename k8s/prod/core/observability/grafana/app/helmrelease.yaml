@@ -24,17 +24,24 @@ spec:
   uninstall:
     keepHistory: false
   values:
-    replicas: 2
+    annotations:
+      configmap.reloader.stakater.com/reload: grafana
+      secret.reloader.stakater.com/reload: grafana-secret
+    replicas: 1
     env:
+      GF_ANALYTICS_CHECK_FOR_UPDATES: false
+      GF_ANALYTICS_CHECK_FOR_PLUGIN_UPDATES: false
+      GF_ANALYTICS_REPORTING_ENABLED: false
+      GF_AUTH_ANONYMOUS_ENABLED: false
+      GF_AUTH_BASIC_ENABLED: false
       GF_DATE_FORMATS_USE_BROWSER_LOCALE: true
       GF_EXPLORE_ENABLED: true
       GF_FEATURE_TOGGLES_ENABLE: publicDashboards
       GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: natel-discrete-panel,pr0ps-trackmap-panel,panodata-map-panel
       GF_SECURITY_COOKIE_SAMESITE: grafana
       GF_SERVER_ROOT_URL: https://grafana.${SECRET_DOMAIN_INTERNAL}
-      GF_DATABASE_SSL_MODE: verify-full
-      GF_DATABASE_TYPE: postgres
-      GF_DATABASE_CA_CERT_PATH: /certs
+      GF_LOG_MODE: console
+      GF_NEWS_NEWS_FEED_ENABLED: false
     envFromSecrets:
       - name: grafana-secret
     grafana.ini:
@@ -380,26 +387,3 @@ spec:
         labelSelector:
           matchLabels:
             app.kubernetes.io/name: grafana
-    extraSecretMounts:
-      - name: pgo-root-cacert
-        mountPath: /certs
-        secretName: pgo-root-cacert
-        readOnly: true
-        subPath: root.crt
-  valuesFrom:
-    - name: "${APP}-pguser-${DB_USER}"
-      kind: Secret
-      valuesKey: dbname
-      targetPath: env.GF_DATABASE_NAME
-    - name: "${APP}-pguser-${DB_USER}"
-      kind: Secret
-      valuesKey: user
-      targetPath: env.GF_DATABASE_USER
-    - name: "${APP}-pguser-${DB_USER}"
-      kind: Secret
-      valuesKey: password
-      targetPath: env.GF_DATABASE_PASSWORD
-    - name: "${APP}-pguser-${DB_USER}"
-      kind: Secret
-      valuesKey: host
-      targetPath: env.GF_DATABASE_HOST
