@@ -61,6 +61,9 @@ locals {
     "volsync-home-archivebox" : {
       r2_enabled : false
     },
+    "volsync-home-baikal" : {
+      r2_enabled : true
+    },
   }
 
   crunchy_db_buckets = {
