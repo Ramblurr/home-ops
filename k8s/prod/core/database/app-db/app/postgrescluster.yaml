@@ -95,6 +95,11 @@ spec:
         - paperless
       password:
         type: AlphaNumeric
+    - name: "linkding"
+      databases:
+        - linkding
+      password:
+        type: AlphaNumeric
   backups:
     pgbackrest:
       configuration:

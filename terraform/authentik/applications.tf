@@ -3,7 +3,8 @@ locals {
   icon_base = "https://raw.githubusercontent.com/ramblurr/home-ops/main/icons"
   external_proxy_provider_ids = [
     module.calibre-web.proxy_provider_id,
-    module.radicale.proxy_provider_id
+    module.radicale.proxy_provider_id,
+    module.linkding.proxy_provider_id
   ]
   internal_proxy_provider_ids = [
     module.calibre-web.proxy_provider_id,
@@ -45,7 +46,6 @@ module "calibre-web" {
   authorization_flow_uuid = local.implicit_authorization_flow
   meta_icon               = "${local.icon_base}/calibre-web.png"
 }
-
 
 module "calibre" {
   source                  = "./modules/forward-auth-application"
@@ -111,6 +111,15 @@ module "radicale" {
   authorization_flow_uuid = local.implicit_authorization_flow
   meta_icon               = "${local.icon_base}/radicale.png"
   property_mappings       = [authentik_scope_mapping.radicale_username.id]
+}
+
+module "linkding" {
+  source                  = "./modules/forward-auth-application"
+  name                    = "linkding"
+  domain                  = "bookmarks.${var.external_domain}"
+  group                   = "Home"
+  authorization_flow_uuid = local.implicit_authorization_flow
+  meta_icon               = "${local.icon_base}/linkding.png"
 }
 
 locals {
