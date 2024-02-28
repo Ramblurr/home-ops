@@ -41,6 +41,7 @@ spec:
               OCIS_LOG_LEVEL: info
               OCIS_LOG_COLOR: true
               OCIS_LOG_PRETTY: true
+              PROXY_DEBUG_ADDR: 0.0.0.0:9205
               STORAGE_USERS_OCIS_ROOT: /data
               NOTIFICATIONS_SMTP_HOST: "${SMTP_RELAY_HOST}"
               NOTIFICATIONS_SMTP_PORT: "${SMTP_RELAY_PORT}"
@@ -70,9 +71,17 @@ spec:
         ports:
           http:
             port: 9200
+          metrics:
+            port: 9205
     serviceMonitor:
       main:
         enabled: true
+        endpoints:
+          - port: metrics
+            scheme: http
+            path: /metrics
+            interval: 1m
+            scrapeTimeout: 10s
     ingress:
       main:
         enabled: true
