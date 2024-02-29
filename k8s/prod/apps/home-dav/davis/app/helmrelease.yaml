@@ -62,8 +62,8 @@ spec:
               APP_ENV: prod
               DATABASE_DRIVER: postgresql
               MAILER_DSN: smtp://${SMTP_RELAY_HOST}:${SMTP_RELAY_PORT}
-              AUTH_REALM: SabreDAV
-              AUTH_METHOD: Basic
+              AUTH_METHOD: IMAP
+              IMAP_AUTH_USER_AUTOCREATE: false
               CALDAV_ENABLED: "true"
               CARDDAV_ENABLED: "true"
               WEBDAV_ENABLED: "false"
