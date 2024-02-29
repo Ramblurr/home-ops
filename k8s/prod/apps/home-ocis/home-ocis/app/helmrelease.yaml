@@ -93,6 +93,8 @@ spec:
         className: external
         annotations:
           external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+          nginx.ingress.kubernetes.io/proxy-body-size: 10G
+          nginx.ingress.kubernetes.io/custom-http-errors: "418" # dummy status code to disable custom http errors
         hosts:
           - host: &host ${HOSTNAME}
             paths:

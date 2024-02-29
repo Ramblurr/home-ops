@@ -88,6 +88,8 @@ spec:
         className: external-work
         annotations:
           external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN_WORK}"
+          nginx.ingress.kubernetes.io/proxy-body-size: 10G
+          nginx.ingress.kubernetes.io/custom-http-errors: "418" # dummy status code to disable custom http errors
         hosts:
           - host: &host data.${SECRET_DOMAIN_WORK}
             paths:
