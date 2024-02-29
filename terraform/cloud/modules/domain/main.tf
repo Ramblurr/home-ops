@@ -190,3 +190,25 @@ resource "cloudflare_record" "carddavs" {
     create_before_destroy = true
   }
 }
+
+resource "cloudflare_ruleset" "dav_redirect" {
+  zone_id = lookup(data.cloudflare_zones.domain.zones[0], "id")
+  name    = "Redirect .well-known/carddav and caldav"
+  kind    = "zone"
+  phase   = "http_request_dynamic_redirect"
+
+  rules {
+    action = "redirect"
+    action_parameters {
+      from_value {
+        status_code = 301
+        target_url {
+          value = "https://${var.dav_domain}/dav/"
+        }
+        preserve_query_string = true
+      }
+    }
+    expression  = "(http.host eq \"${var.domain}\") and ((http.request.uri.path eq \"/.well-known/carddav\") or (http.request.uri.path eq \"/.well-known/caldav\"))"
+    description = "Redirect .well-known/carddav and caldav to ${var.dav_domain}/dav/"
+  }
+}

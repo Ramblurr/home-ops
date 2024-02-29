@@ -4,13 +4,10 @@ data "sops_file" "cloudflare_secrets" {
 
 locals {
   secrets              = yamldecode(data.sops_file.cloudflare_secrets.raw)
-  cloudflare_api_token = local.secrets.cloudflare_api_token
   cloudflare_domains   = nonsensitive(local.secrets.cloudflare_domains)
 }
 
-provider "cloudflare" {
-  api_token = local.cloudflare_api_token
-}
+provider "cloudflare" {}
 
 module "domains" {
   source              = "./modules/domain"
