@@ -77,9 +77,6 @@ spec:
               - secretRef:
                   name: home-davis-db-secret
             resources:
-              limits:
-                memory: 512Mi
-                cpu: 100m
               requests:
                 cpu: 60m
                 memory: 512Mi
