@@ -1,0 +1,77 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.26.1-standalone-strict/cronjob-batch-v1.json
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: postgres-backup
+spec:
+  schedule: "0 4 * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          automountServiceAccountToken: false
+          enableServiceLinks: false
+          securityContext:
+            runAsUser: 2000
+            runAsGroup: 2000
+            fsGroup: 2000
+            supplementalGroups:
+              - 65541
+          initContainers:
+            - name: nfs-fixer
+              image: docker.io/library/alpine:20231219
+              securityContext:
+                runAsUser: 2000
+              volumeMounts:
+                - name: postgres-backup-nfs
+                  mountPath: /mnt/nfs-fix
+              command:
+                - sh
+                - -c
+                - (mkdir -p /mnt/nfs-fix/postgres && chmod  0770 /mnt/nfs-fix && chmod 0770 /mnt/nfs-fix/postgres && chgrp 2000 /mnt/nfs-fix /mnt/nfs-fix/postgres && ls -al /mnt/nfs-fix && touch /mnt/nfs-fix/postgres/hello)
+          containers:
+            - name: cruncy-postgres-extra-backup
+              image: docker.io/prodrigestivill/postgres-backup-local:16@sha256:085926531fbabe298792a83384d07d6146683732e53e51891ac75eaa71e09d08
+              imagePullPolicy: IfNotPresent
+              command:
+                - "/backup.sh"
+              env:
+                # Put database names to backup here
+                - name: POSTGRES_DB
+                  value: "postgres,home-davis,linkding,paperless,radarr_main,radarr_log,sonarr_main,sonarr_log"
+                - name: BACKUP_KEEP_DAYS
+                  value: "7"
+                - name: BACKUP_KEEP_WEEKS
+                  value: "4"
+                - name: BACKUP_KEEP_MONTHS
+                  value: "6"
+                - name: POSTGRES_EXTRA_OPTS
+                  value: "-n public -Z6"
+                - name: POSTGRES_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: &secret app-db-pguser-app-db-root
+                      key: user
+                - name: POSTGRES_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: *secret
+                      key: password
+                - name: POSTGRES_HOST
+                  valueFrom:
+                    secretKeyRef:
+                      name: *secret
+                      key: host
+              volumeMounts:
+                - name: postgres-backup-nfs
+                  mountPath: /backups
+                  subPath: postgres
+
+          restartPolicy: OnFailure
+
+          volumes:
+            - name: postgres-backup-nfs
+              persistentVolumeClaim:
+                claimName: postgres-backup-nfs

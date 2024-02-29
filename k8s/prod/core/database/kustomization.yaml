@@ -11,3 +11,4 @@ resources:
   - ./crunchy-postgres-operator/ks.yaml
   - ./app-db/ks.yaml
   - ./clustersecretstore/ks.yaml
+  - ./postgres-backup/ks.yaml
