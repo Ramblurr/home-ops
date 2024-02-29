@@ -33,7 +33,7 @@ spec:
                 - (mkdir -p /mnt/nfs-fix/postgres && chmod  0770 /mnt/nfs-fix && chmod 0770 /mnt/nfs-fix/postgres && chgrp 2000 /mnt/nfs-fix /mnt/nfs-fix/postgres && ls -al /mnt/nfs-fix && touch /mnt/nfs-fix/postgres/hello)
           containers:
             - name: cruncy-postgres-extra-backup
-              image: docker.io/prodrigestivill/postgres-backup-local:16@sha256:085926531fbabe298792a83384d07d6146683732e53e51891ac75eaa71e09d08
+              image: docker.io/prodrigestivill/postgres-backup-local:16@sha256:c577b0d62673d4dce0471c75d21e3e08e4e9789903f5a3fd6613c410442e9670
               imagePullPolicy: IfNotPresent
               command:
                 - "/backup.sh"
