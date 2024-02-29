@@ -56,6 +56,13 @@ spec:
               resources:
                 requests:
                   storage: 1Gi
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 60m
+            memory: 64Mi
     kubelet:
       enabled: true
       serviceMonitor:
@@ -139,6 +146,26 @@ spec:
               resources:
                 requests:
                   storage: 20Gi
+        resources:
+          requests:
+            cpu: 150m
+            memory: 1000Mi
+          limits:
+            memory: 4000Mi
+    prometheusOperator:
+      resources:
+        requests:
+          cpu: 35m
+          memory: 256Mi
+        limits:
+          memory: 384Mi
+      prometheusConfigReloader:
+        resources:
+          requests:
+            cpu: 5m
+            memory: 32M
+          limits:
+            memory: 32M
     nodeExporter:
       enabled: true
     prometheus-node-exporter:
@@ -177,6 +204,12 @@ spec:
               sourceLabels:
                 - __meta_kubernetes_pod_node_name
               targetLabel: kubernetes_node
+      resources:
+        requests:
+          cpu: 15m
+          memory: 127M
+        limits:
+          memory: 153M
     grafana:
       enabled: false
       forceDeployDashboards: true
