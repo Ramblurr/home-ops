@@ -10,7 +10,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./k8s/prod/apps/observability/alertmanager-silencer/app
+  path: ./k8s/prod/core/observability/alertmanager-silencer/app
   prune: true
   sourceRef:
     kind: GitRepository
