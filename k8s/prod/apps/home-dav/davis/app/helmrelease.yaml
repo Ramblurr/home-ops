@@ -32,7 +32,7 @@ spec:
           nginx:
             image:
               repository: ghcr.io/ramblurr/davis
-              tag: v4.4.1@sha256:abb371bc7daea17d00990fd522187fb4369053a69e80f7b42dca647e122d0e92
+              tag: v4.4.1@sha256:ce4017d8ca6442f7ae691fb234625da3c0b14904ed8b266d4099db441afa8c59
             args: [nginx]
             env:
               DAVIS_SERVER_NAME: "${HOSTNAME}"
@@ -55,7 +55,7 @@ spec:
           main:
             image:
               repository: ghcr.io/ramblurr/davis
-              tag: v4.4.1@sha256:abb371bc7daea17d00990fd522187fb4369053a69e80f7b42dca647e122d0e92
+              tag: v4.4.1@sha256:ce4017d8ca6442f7ae691fb234625da3c0b14904ed8b266d4099db441afa8c59
             args: [davis]
             env:
               APP_DEBUG: "true"
@@ -122,11 +122,11 @@ spec:
               - "${HOSTNAME}"
 
     persistence:
-      config:
+      cache:
         enabled: true
-        existingClaim: "${VOLSYNC_CLAIM}"
-        globalMounts:
-          - path: /data
-            subPath: data
-          - path: /var/www/davis/var
-            subPath: var
+        type: emptyDir
+        medium: Memory
+        advancedMounts:
+          main:
+            main:
+              - path: /var/www/davis/var

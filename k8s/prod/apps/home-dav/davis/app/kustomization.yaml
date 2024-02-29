@@ -6,6 +6,3 @@ resources:
   - ./externalsecret.yaml
   - ./helmrelease.yaml
   - ../../../../templates/app-db-root-cert
-  - ../../../../templates/volsync
-generatorOptions:
-  disableNameSuffixHash: true
