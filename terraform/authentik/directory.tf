@@ -18,6 +18,26 @@ resource "authentik_group" "home" {
   is_superuser = false
 }
 
+resource "authentik_group" "homedata_superuser" {
+  name         = "HomeDataSuperuser"
+  is_superuser = false
+}
+
+resource "authentik_group" "homedata_spaceadmin" {
+  name         = "HomeDataSpaceAdmin"
+  is_superuser = false
+}
+
+resource "authentik_group" "homedata_user" {
+  name         = "HomeDataUser"
+  is_superuser = false
+}
+
+resource "authentik_group" "homedata_guest" {
+  name         = "HomeDataGuest"
+  is_superuser = false
+}
+
 resource "authentik_group" "workdata_superuser" {
   name         = "WorkDataSuperuser"
   is_superuser = false

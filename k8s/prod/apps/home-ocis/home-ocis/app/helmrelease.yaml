@@ -61,6 +61,11 @@ spec:
               PROXY_USER_OIDC_CLAIM: "preferred_username"
               PROXY_ROLE_ASSIGNMENT_DRIVER: oidc
               WEB_OIDC_SCOPE: "openid profile email groups"
+            resources:
+              requests:
+                cpu: 10m
+                memory: 1Gi
+              limits:
         pod:
           securityContext:
             runAsUser: 2000
