@@ -111,7 +111,7 @@ resource "authentik_provider_oauth2" "main" {
   property_mappings     = var.property_mappings
   lifecycle {
     ignore_changes = [
-      "signing_key"
+      signing_key
     ]
   }
 }

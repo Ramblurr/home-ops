@@ -38,13 +38,6 @@ resource "authentik_group" "workdata_guest" {
   is_superuser = false
 }
 
-#resource "authentik_policy_binding" "work_data" {
-#  target = module.work-ocis.application_id
-#  group  = authentik_group.work_data.id
-#  order  = 0
-#}
-
-
 resource "authentik_policy_binding" "readers" {
   target = module.calibre-web.application_id
   group  = authentik_group.books.id

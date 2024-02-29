@@ -43,3 +43,4 @@ tmp/
 bin/pki
 .venv
 .direnv
+terraform/authentik/smurf

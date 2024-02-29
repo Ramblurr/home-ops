@@ -58,6 +58,10 @@ variable "property_mappings" {
   type    = list(string)
   default = null
 }
+variable "skip_path_regex" {
+  type    = string
+  default = null
+}
 resource "authentik_provider_proxy" "main" {
   name                          = var.name
   external_host                 = "https://${var.domain}"
@@ -69,6 +73,7 @@ resource "authentik_provider_proxy" "main" {
   authorization_flow            = var.authorization_flow_uuid
   access_token_validity         = var.access_token_validity
   property_mappings             = var.property_mappings
+  skip_path_regex               = var.skip_path_regex
 }
 
 

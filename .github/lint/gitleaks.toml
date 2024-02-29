@@ -10,7 +10,7 @@ paths = [
 'terraform.tfstate.*',
 'clusterconfig/.*yaml',
 'ansible/roles/external',
-'terraform/authentik/applications.tf',
+'terraform/authentik/ocis.tf',
 'readme.md'
 ]
 regexTarget = "line"
