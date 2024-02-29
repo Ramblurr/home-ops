@@ -32,8 +32,11 @@ spec:
           nginx:
             image:
               repository: ghcr.io/ramblurr/davis
-              tag: 4.4.1@sha256:a82b5bb91f4a55e20435232b9bc0e262fdae868bda8cca3524859f8b033c4f7c
+              tag: v4.4.1@sha256:abb371bc7daea17d00990fd522187fb4369053a69e80f7b42dca647e122d0e92
             args: [nginx]
+            env:
+              DAVIS_SERVER_NAME: "${HOSTNAME}"
+              TZ: "${SECRET_TIMEZONE}"
             probes:
               liveness: &probes
                 enabled: true
@@ -52,7 +55,7 @@ spec:
           main:
             image:
               repository: ghcr.io/ramblurr/davis
-              tag: 4.4.1@sha256:a82b5bb91f4a55e20435232b9bc0e262fdae868bda8cca3524859f8b033c4f7c
+              tag: v4.4.1@sha256:abb371bc7daea17d00990fd522187fb4369053a69e80f7b42dca647e122d0e92
             args: [davis]
             env:
               APP_DEBUG: "true"
@@ -67,7 +70,7 @@ spec:
               WEBDAV_TMP_DIR: "/tmp"
               WEBDAV_PUBLIC_DIR: "/webdav"
               INVITE_FROM_ADDRESS: "${SECRET_SMTP_FROM_FULL}"
-              APP_TIMEZONE: ${SECRET_TIMEZONE}
+              TZ: "${SECRET_TIMEZONE}"
             envFrom: &envFrom
               - secretRef:
                   name: davis-secret
