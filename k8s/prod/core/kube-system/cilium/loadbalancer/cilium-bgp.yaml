@@ -21,7 +21,7 @@ spec:
         - peerAddress: "${CILIUM_BGP_PEER}/32"
           peerASN: 64512
 ---
-# This is my main load balancer ip pool that most services are exposed over. It is exposed via BGP
+# This is my main load balancer ip pool that most services are exposed over.
 apiVersion: cilium.io/v2alpha1
 kind: CiliumLoadBalancerIPPool
 metadata:
@@ -34,6 +34,7 @@ spec:
     matchExpressions:
       - { key: expose.to.primary.vlan, operator: NotIn, values: ["yes"] }
 ---
+# This is a different ip pool for exposing Roon Server directly onto my primary vlan
 apiVersion: cilium.io/v2alpha1
 kind: CiliumLoadBalancerIPPool
 metadata:
@@ -45,35 +46,3 @@ spec:
   serviceSelector:
     matchExpressions:
       - { key: expose.to.primary.vlan, operator: In, values: ["yes"] }
-#---
-## However I want to expose some services directly on my primary vlan which is managed by my vyos router
-## I can't use BGP routing for that because other devices on that vlan will try to use L2 to access the
-## https://docs.cilium.io/en/latest/network/l2-announcements
-#apiVersion: cilium.io/v2alpha1
-#kind: CiliumL2AnnouncementPolicy
-#metadata:
-#  name: prim-vlan-l2-policy
-#spec:
-#  loadBalancerIPs: true
-#  externalIPs: true
-#  interfaces:
-#    - brprim4
-#  serviceSelector:
-#    matchLabels:
-#      expose.to.primary.vlan: "yes"
-#  nodeSelector:
-#    matchLabels:
-#      kubernetes.io/os: linux
-#---
-#apiVersion: cilium.io/v2alpha1
-#kind: CiliumLoadBalancerIPPool
-#metadata:
-#  name: roon-vlan-pool
-#  namespace: kube-system
-#spec:
-#  allowFirstLastIPs: "Yes"
-#  cidrs:
-#    - cidr: "10.9.6.23/32"
-#  serviceSelector:
-#    matchLabels:
-#      expose.to.primary.vlan: "yes"

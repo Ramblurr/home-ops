@@ -18,6 +18,7 @@ set interfaces ethernet eth3 vif 3 mtu 1500
 set interfaces ethernet eth3 vif 4 address '10.9.4.1/22'
 set interfaces ethernet eth3 vif 4 description 'PRIMARY'
 set interfaces ethernet eth3 vif 4 mtu 1500
+set interfaces ethernet eth3 vif 4 ip enable-proxy-arp # this is here so that k8s nodes running in the mgmt vlan can expose LB services in vlan 4 and other L2 vlan 4 hosts can route to them
 set interfaces ethernet eth3 vif 9 address '10.9.8.1/23'
 set interfaces ethernet eth3 vif 9 description 'MGMT'
 set interfaces ethernet eth3 vif 9 mtu 1500

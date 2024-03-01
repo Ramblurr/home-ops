@@ -593,6 +593,11 @@ set firewall name local-mgmt rule 6 action 'accept'
 set firewall name local-mgmt rule 6 description 'Rule: accept_tailscale_udp_in'
 set firewall name local-mgmt rule 6 destination port '41641,3478,5351,1900'
 set firewall name local-mgmt rule 6 protocol 'udp'
+set firewall name local-mgmt rule 7 action 'accept'
+set firewall name local-mgmt rule 7 description 'Rule: accept_traceroute'
+set firewall name local-mgmt rule 7 destination port '33434-34000'
+set firewall name local-mgmt rule 7 protocol 'udp'
+
 
 
 # From LOCAL to SERVICES
@@ -830,6 +835,11 @@ set firewall name mgmt-primary rule 12 destination group address-group 'roon'
 set firewall name mgmt-primary rule 12 destination group port-group 'roon'
 set firewall name mgmt-primary rule 12 protocol 'tcp_udp'
 set firewall name mgmt-primary rule 12 source group address-group 'k8s_cluster_prod_nodes'
+
+set firewall name mgmt-primary rule 13 action 'accept'
+set firewall name mgmt-primary rule 13 description 'Rule: TMP_DEBUG'
+set firewall name mgmt-primary rule 13 destination port '80'
+set firewall name mgmt-primary rule 13 protocol 'tcp_udp'
 
 # From MGMT to DATA
 set firewall name mgmt-data default-action 'drop'
@@ -1078,6 +1088,12 @@ set firewall name primary-local rule 13 description 'Rule: accept_ingress_for_ro
 set firewall name primary-local rule 13 destination group port-group 'roon-arc'
 set firewall name primary-local rule 13 protocol 'tcp_udp'
 
+set firewall name primary-local rule 14 action 'accept'
+set firewall name primary-local rule 14 description 'Rule: accept_plex_discovery'
+set firewall name primary-local rule 14 protocol 'udp'
+set firewall name primary-local rule 14 source group address-group 'android_tv_players'
+set firewall name primary-local rule 14 destination group port-group 'plex'
+
 # From PRIMARY to MGMT
 set firewall name primary-mgmt default-action 'drop'
 set firewall name primary-mgmt description 'From PRIMARY to MGMT'
@@ -1171,6 +1187,24 @@ set firewall name primary-mgmt rule 15 description 'Rule: accept_ovos_k8s_messag
 set firewall name primary-mgmt rule 15 protocol 'tcp_udp'
 set firewall name primary-mgmt rule 15 destination group port-group 'ovos-messagebus'
 set firewall name primary-mgmt rule 15 source group address-group 'ovos'
+
+set firewall name primary-mgmt rule 16 action 'accept'
+set firewall name primary-mgmt rule 16 description 'Rule: accept_from_bluesound'
+set firewall name primary-mgmt rule 16 destination group port-group 'bluesound'
+set firewall name primary-mgmt rule 16 protocol 'tcp_udp'
+set firewall name primary-mgmt rule 16 source group address-group 'bluesound'
+
+set firewall name primary-mgmt rule 17 action 'accept'
+set firewall name primary-mgmt rule 17 description 'Rule: accept_from_roon'
+set firewall name primary-mgmt rule 17 destination group port-group 'roon'
+set firewall name primary-mgmt rule 17 protocol 'tcp_udp'
+set firewall name primary-mgmt rule 17 source group address-group 'roon'
+
+set firewall name primary-mgmt rule 18 action 'accept'
+set firewall name primary-mgmt rule 18 description 'Rule: accept_homeassistant_to_roon'
+set firewall name primary-mgmt rule 18 destination group port-group 'roon'
+set firewall name primary-mgmt rule 18 protocol 'tcp_udp'
+set firewall name primary-mgmt rule 18 source group address-group 'homeassistant'
 
 # From PRIMARY to SERVICES
 set firewall name primary-services default-action 'accept'
