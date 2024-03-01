@@ -2,10 +2,7 @@
 # https://docs.cilium.io/en/latest/network/bgp-control-plane/
 apiVersion: cilium.io/v2alpha1
 kind: CiliumBGPPeeringPolicy
-# comments courtesy of JJGadgets
-# MAKE SURE CRDs ARE INSTALLED IN CLUSTER VIA cilium-config ConfigMap OR Cilium HelmRelease/values.yaml (bgpControlPlane.enabled: true), BEFORE THIS IS APPLIED!
-# "CiliumBGPPeeringPolicy" Custom Resource will replace the old MetalLB BGP's "bgp-config" ConfigMap
-# "CiliumBGPPeeringPolicy" is used with `bgpControlPlane.enabled: true` which uses GoBGP, NOT the old `bgp.enabled: true` which uses MetalLB
+# MAKE SURE CRDs ARE INSTALLED IN CLUSTER VIA cilium-config ConfigMap OR Cilium HelmRelease/values.yaml (bgpControlPlane.enabled: true), BEFORE THIS IS APPLIED! - JJGadgets
 metadata:
   name: bgp-loadbalancer-ip-main
 spec:
@@ -15,52 +12,68 @@ spec:
   virtualRouters:
     - localASN: 64512
       exportPodCIDR: false
-      serviceSelector: # this replaces address-pools, instead of defining the range of IPs that can be assigned to LoadBalancer services, now services have to match below selectors for their LB IPs to be announced
+      serviceSelector:
         matchExpressions:
           - key: fakeSelector
             operator: NotIn
             values: ["will-match-and-announce-all-services"]
       neighbors:
-        - peerAddress: "${CILIUM_BGP_PEER}/32" # unlike bgp-config ConfigMap, peerAddress needs to be in CIDR notation
+        - peerAddress: "${CILIUM_BGP_PEER}/32"
           peerASN: 64512
 ---
+# This is my main load balancer ip pool that most services are exposed over. It is exposed via BGP
 apiVersion: cilium.io/v2alpha1
 kind: CiliumLoadBalancerIPPool
 metadata:
   name: main-pool
 spec:
+  allowFirstLastIPs: "No"
   cidrs:
     - cidr: "${CILIUM_BGP_LB_CIDR}"
-      serviceSelector:
-        matchExpressions:
-          - { key: expose.to.primary.vlan, operator: NotIn, values: ["yes"] }
----
-# https://docs.cilium.io/en/latest/network/l2-announcements
-apiVersion: cilium.io/v2alpha1
-kind: CiliumL2AnnouncementPolicy
-metadata:
-  name: prim-vlan-l2-policy
-spec:
-  loadBalancerIPs: true
-  externalIPs: true
-  interfaces:
-    - brprim4
   serviceSelector:
-    matchLabels:
-      expose.to.primary.vlan: "yes"
-  nodeSelector:
-    matchLabels:
-      kubernetes.io/os: linux
+    matchExpressions:
+      - { key: expose.to.primary.vlan, operator: NotIn, values: ["yes"] }
 ---
 apiVersion: cilium.io/v2alpha1
 kind: CiliumLoadBalancerIPPool
 metadata:
-  name: roon-vlan-pool
-  namespace: kube-system
+  name: primary-vlan-pool-roon
 spec:
   allowFirstLastIPs: "Yes"
   cidrs:
-    - cidr: "10.9.6.23/32"
+    - cidr: "${CILIUM_BGP_LB_CIDR_ROON}"
   serviceSelector:
-    matchLabels:
-      expose.to.primary.vlan: "yes"
+    matchExpressions:
+      - { key: expose.to.primary.vlan, operator: In, values: ["yes"] }
+#---
+## However I want to expose some services directly on my primary vlan which is managed by my vyos router
+## I can't use BGP routing for that because other devices on that vlan will try to use L2 to access the
+## https://docs.cilium.io/en/latest/network/l2-announcements
+#apiVersion: cilium.io/v2alpha1
+#kind: CiliumL2AnnouncementPolicy
+#metadata:
+#  name: prim-vlan-l2-policy
+#spec:
+#  loadBalancerIPs: true
+#  externalIPs: true
+#  interfaces:
+#    - brprim4
+#  serviceSelector:
+#    matchLabels:
+#      expose.to.primary.vlan: "yes"
+#  nodeSelector:
+#    matchLabels:
+#      kubernetes.io/os: linux
+#---
+#apiVersion: cilium.io/v2alpha1
+#kind: CiliumLoadBalancerIPPool
+#metadata:
+#  name: roon-vlan-pool
+#  namespace: kube-system
+#spec:
+#  allowFirstLastIPs: "Yes"
+#  cidrs:
+#    - cidr: "10.9.6.23/32"
+#  serviceSelector:
+#    matchLabels:
+#      expose.to.primary.vlan: "yes"
