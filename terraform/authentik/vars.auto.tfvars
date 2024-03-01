@@ -1,0 +1,6 @@
+external_domain       = "socozy.casa"
+external_domain_work  = "outskirtslabs.com"
+internal_domain       = "k8s.socozy.casa"
+kubernetes_namespace  = "auth"
+authentik_domain      = "auth.socozy.casa"
+authentik_domain_work = "auth.outskirtslabs.com"

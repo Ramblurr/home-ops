@@ -3,7 +3,6 @@ locals {
   icon_base = "https://raw.githubusercontent.com/ramblurr/home-ops/main/icons"
   external_proxy_provider_ids = [
     module.calibre-web.proxy_provider_id,
-    module.radicale.proxy_provider_id,
     module.linkding.proxy_provider_id
   ]
   internal_proxy_provider_ids = [
@@ -34,7 +33,6 @@ locals {
 
   household_app_ids = toset([
     module.paperless.application_id,
-    module.radicale.application_id,
   ])
 }
 
@@ -99,18 +97,6 @@ module "sabnzbd" {
   group                   = "admin"
   authorization_flow_uuid = local.implicit_authorization_flow
   meta_icon               = "${local.icon_base}/sabnzbd.png"
-}
-
-module "radicale" {
-  source                  = "./modules/forward-auth-application"
-  name                    = "radicale"
-  domain                  = "radicale.${var.external_domain}"
-  group                   = "Home"
-  mode                    = "proxy"
-  internal_host           = "http://radicale.home-radicale.svc.cluster.local:5232"
-  authorization_flow_uuid = local.implicit_authorization_flow
-  meta_icon               = "${local.icon_base}/radicale.png"
-  property_mappings       = [authentik_scope_mapping.radicale_username.id]
 }
 
 module "linkding" {

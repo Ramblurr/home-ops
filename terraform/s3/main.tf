@@ -52,9 +52,6 @@ locals {
     "volsync-home-media-filebrowser" : {
       r2_enabled : true
     },
-    "volsync-home-radicale" : {
-      r2_enabled : true
-    },
     "volsync-work-invoiceninja-storage" : {
       r2_enabled : true
     },
