@@ -57,6 +57,9 @@ locals {
     },
     "volsync-home-archivebox" : {
       r2_enabled : false
+    },
+    "volsync-home-roon-server" : {
+      r2_enabled : false
     }
   }
 

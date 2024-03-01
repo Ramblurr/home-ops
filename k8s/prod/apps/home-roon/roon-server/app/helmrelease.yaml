@@ -1,0 +1,457 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2beta2.json
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: roon-server
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 2.6.0
+      interval: 30m
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+
+  values:
+    controllers:
+      main:
+        annotations:
+          reloader.stakater.com/auto: "true"
+
+        pod:
+          securityContext:
+            runAsUser: ${APP_UID}
+            runAsGroup: ${APP_GID}
+            fsGroup: ${APP_GID}
+            fsGroupChangePolicy: "OnRootMismatch"
+        containers:
+          main:
+            image:
+              repository: ghcr.io/ramblurr/roon-server
+              tag: latest@sha256:091c70f3db7715d2a5dd17e1c4623f050271a69120d71ea230758aaa668082de
+            resources:
+              requests:
+                cpu: 1000m
+                memory: 2Gi
+              limits:
+                cpu: 2500m
+                memory: 4Gi
+
+            probes:
+              liveness: &probes
+                enabled: false
+              readiness: *probes
+              startup: *probes
+
+    ingress:
+      main:
+        enabled: false
+
+    persistence:
+      config:
+        enabled: true
+        existingClaim: "${VOLSYNC_CLAIM}"
+        globalMounts:
+          - path: /data
+    service:
+      main:
+        type: LoadBalancer
+        labels:
+          expose.to.primary.vlan: "yes"
+        annotations:
+          io.cilium/lb-ipam-ips: "${CILIUM_BGP_LB_CIDR_ROON}"
+        ports:
+          http:
+            enabled: false
+          # begin the lulz
+          service0:
+            port: 9003
+            protocol: UDP
+          service1:
+            port: 9100
+            protocol: TCP
+          service2:
+            port: 9101
+            protocol: TCP
+          service3:
+            port: 9102
+            protocol: TCP
+          service4:
+            port: 9103
+            protocol: TCP
+          service5:
+            port: 9104
+            protocol: TCP
+          service6:
+            port: 9105
+            protocol: TCP
+          service7:
+            port: 9106
+            protocol: TCP
+          service8:
+            port: 9107
+            protocol: TCP
+          service9:
+            port: 9108
+            protocol: TCP
+          service10:
+            port: 9109
+            protocol: TCP
+          service11:
+            port: 9110
+            protocol: TCP
+          service12:
+            port: 9111
+            protocol: TCP
+          service13:
+            port: 9112
+            protocol: TCP
+          service14:
+            port: 9113
+            protocol: TCP
+          service15:
+            port: 9114
+            protocol: TCP
+          service16:
+            port: 9115
+            protocol: TCP
+          service17:
+            port: 9116
+            protocol: TCP
+          service18:
+            port: 9117
+            protocol: TCP
+          service19:
+            port: 9118
+            protocol: TCP
+          service20:
+            port: 9119
+            protocol: TCP
+          service21:
+            port: 9120
+            protocol: TCP
+          service22:
+            port: 9121
+            protocol: TCP
+          service23:
+            port: 9122
+            protocol: TCP
+          service24:
+            port: 9123
+            protocol: TCP
+          service25:
+            port: 9124
+            protocol: TCP
+          service26:
+            port: 9125
+            protocol: TCP
+          service27:
+            port: 9126
+            protocol: TCP
+          service28:
+            port: 9127
+            protocol: TCP
+          service29:
+            port: 9128
+            protocol: TCP
+          service30:
+            port: 9129
+            protocol: TCP
+          service31:
+            port: 9130
+            protocol: TCP
+          service32:
+            port: 9131
+            protocol: TCP
+          service33:
+            port: 9132
+            protocol: TCP
+          service34:
+            port: 9133
+            protocol: TCP
+          service35:
+            port: 9134
+            protocol: TCP
+          service36:
+            port: 9135
+            protocol: TCP
+          service37:
+            port: 9136
+            protocol: TCP
+          service38:
+            port: 9137
+            protocol: TCP
+          service39:
+            port: 9138
+            protocol: TCP
+          service40:
+            port: 9139
+            protocol: TCP
+          service41:
+            port: 9140
+            protocol: TCP
+          service42:
+            port: 9141
+            protocol: TCP
+          service43:
+            port: 9142
+            protocol: TCP
+          service44:
+            port: 9143
+            protocol: TCP
+          service45:
+            port: 9144
+            protocol: TCP
+          service46:
+            port: 9145
+            protocol: TCP
+          service47:
+            port: 9146
+            protocol: TCP
+          service48:
+            port: 9147
+            protocol: TCP
+          service49:
+            port: 9148
+            protocol: TCP
+          service50:
+            port: 9149
+            protocol: TCP
+          service51:
+            port: 9150
+            protocol: TCP
+          service52:
+            port: 9151
+            protocol: TCP
+          service53:
+            port: 9152
+            protocol: TCP
+          service54:
+            port: 9153
+            protocol: TCP
+          service55:
+            port: 9154
+            protocol: TCP
+          service56:
+            port: 9155
+            protocol: TCP
+          service57:
+            port: 9156
+            protocol: TCP
+          service58:
+            port: 9157
+            protocol: TCP
+          service59:
+            port: 9158
+            protocol: TCP
+          service60:
+            port: 9159
+            protocol: TCP
+          service61:
+            port: 9160
+            protocol: TCP
+          service62:
+            port: 9161
+            protocol: TCP
+          service63:
+            port: 9162
+            protocol: TCP
+          service64:
+            port: 9163
+            protocol: TCP
+          service65:
+            port: 9164
+            protocol: TCP
+          service66:
+            port: 9165
+            protocol: TCP
+          service67:
+            port: 9166
+            protocol: TCP
+          service68:
+            port: 9167
+            protocol: TCP
+          service69:
+            port: 9168
+            protocol: TCP
+          service70:
+            port: 9169
+            protocol: TCP
+          service71:
+            port: 9170
+            protocol: TCP
+          service72:
+            port: 9171
+            protocol: TCP
+          service73:
+            port: 9172
+            protocol: TCP
+          service74:
+            port: 9173
+            protocol: TCP
+          service75:
+            port: 9174
+            protocol: TCP
+          service76:
+            port: 9175
+            protocol: TCP
+          service77:
+            port: 9176
+            protocol: TCP
+          service78:
+            port: 9177
+            protocol: TCP
+          service79:
+            port: 9178
+            protocol: TCP
+          service80:
+            port: 9179
+            protocol: TCP
+          service81:
+            port: 9180
+            protocol: TCP
+          service82:
+            port: 9181
+            protocol: TCP
+          service83:
+            port: 9182
+            protocol: TCP
+          service84:
+            port: 9183
+            protocol: TCP
+          service85:
+            port: 9184
+            protocol: TCP
+          service86:
+            port: 9185
+            protocol: TCP
+          service87:
+            port: 9186
+            protocol: TCP
+          service88:
+            port: 9187
+            protocol: TCP
+          service89:
+            port: 9188
+            protocol: TCP
+          service90:
+            port: 9189
+            protocol: TCP
+          service91:
+            port: 9190
+            protocol: TCP
+          service92:
+            port: 9191
+            protocol: TCP
+          service93:
+            port: 9192
+            protocol: TCP
+          service94:
+            port: 9193
+            protocol: TCP
+          service95:
+            port: 9194
+            protocol: TCP
+          service96:
+            port: 9195
+            protocol: TCP
+          service97:
+            port: 9196
+            protocol: TCP
+          service98:
+            port: 9197
+            protocol: TCP
+          service99:
+            port: 9198
+            protocol: TCP
+          service100:
+            port: 9199
+            protocol: TCP
+          service101:
+            port: 9200
+            protocol: TCP
+          service102:
+            port: 30000
+            protocol: TCP
+          service103:
+            port: 30001
+            protocol: TCP
+          service104:
+            port: 30002
+            protocol: TCP
+          service105:
+            port: 30003
+            protocol: TCP
+          service106:
+            port: 30004
+            protocol: TCP
+          service107:
+            port: 30005
+            protocol: TCP
+          service108:
+            port: 30006
+            protocol: TCP
+          service109:
+            port: 30007
+            protocol: TCP
+          service110:
+            port: 30008
+            protocol: TCP
+          service111:
+            port: 30009
+            protocol: TCP
+          service112:
+            port: 30010
+            protocol: TCP
+          service113:
+            port: 9330
+            protocol: TCP
+          service114:
+            port: 9331
+            protocol: TCP
+          service115:
+            port: 9332
+            protocol: TCP
+          service116:
+            port: 9333
+            protocol: TCP
+          service117:
+            port: 9334
+            protocol: TCP
+          service118:
+            port: 9335
+            protocol: TCP
+          service119:
+            port: 9336
+            protocol: TCP
+          service120:
+            port: 9337
+            protocol: TCP
+          service121:
+            port: 9338
+            protocol: TCP
+          service122:
+            port: 9339
+            protocol: TCP
+          service123:
+            port: 49863
+            protocol: TCP
+          service124:
+            port: 52667
+            protocol: TCP
+          service125:
+            port: 52709
+            protocol: TCP
+          service126:
+            port: 63098
+            protocol: TCP
+          service127:
+            port: 63099
+            protocol: TCP
+          service128:
+            port: 63100
+            protocol: TCP
