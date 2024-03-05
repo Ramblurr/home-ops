@@ -144,6 +144,7 @@ spec:
             url: http://thanos-query-frontend.observability.svc.cluster.local:9090
             jsonData:
               prometheusType: Thanos
+              timeInterval: 1m # Must match interval in KPS Helm chart
             isDefault: true
           - name: Loki
             type: loki
