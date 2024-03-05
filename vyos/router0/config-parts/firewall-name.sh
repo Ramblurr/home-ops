@@ -1354,27 +1354,17 @@ set firewall name wan-mgmt default-action 'drop'
 set firewall name wan-mgmt description 'From WAN to MGMT'
 set firewall name wan-mgmt enable-default-log
 
-#DELETE
-#set firewall name wan-mgmt rule 1 action 'accept'
-#set firewall name wan-mgmt rule 1 description 'Rule: accept_ingress_from_cloudflare'
-#set firewall name wan-mgmt rule 1 destination group address-group 'k8s_cluster_test_ingress_external'
-#set firewall name wan-mgmt rule 1 destination port 'http,https'
-#set firewall name wan-mgmt rule 1 protocol 'tcp'
-#set firewall name wan-mgmt rule 1 source group network-group 'cloudflare-ipv4'
+set firewall name wan-mgmt rule 1 action 'accept'
+set firewall name wan-mgmt rule 1 description 'Rule: accept_plex'
+set firewall name wan-mgmt rule 1 destination address '10.10.12.8'
+set firewall name wan-mgmt rule 1 destination port '32400'
+set firewall name wan-mgmt rule 1 protocol 'tcp'
 
 set firewall name wan-mgmt rule 2 action 'accept'
-set firewall name wan-mgmt rule 2 description 'Rule: accept_plex'
-set firewall name wan-mgmt rule 2 destination address '10.10.12.8'
-set firewall name wan-mgmt rule 2 destination port '32400'
-set firewall name wan-mgmt rule 2 protocol 'tcp'
-
-#DELETE
-#set firewall name wan-mgmt rule 3 action 'accept'
-#set firewall name wan-mgmt rule 3 description 'Rule: accept_k8s_prod_ingress_from_cloudflare'
-#set firewall name wan-mgmt rule 3 destination group address-group 'k8s_cluster_prod_ingress_external'
-#set firewall name wan-mgmt rule 3 destination port 'http,https'
-#set firewall name wan-mgmt rule 3 protocol 'tcp'
-#set firewall name wan-mgmt rule 3 source group network-group 'cloudflare-ipv4'
+set firewall name wan-mgmt rule 2 description 'Rule: accept_ingress_for_roon_arc'
+set firewall name wan-mgmt rule 2 destination group address-group 'roon-server'
+set firewall name wan-mgmt rule 2 destination group port-group 'roon-arc'
+set firewall name wan-mgmt rule 2 protocol 'tcp_udp'
 
 # From WAN to SERVICES
 set firewall name wan-services default-action 'drop'

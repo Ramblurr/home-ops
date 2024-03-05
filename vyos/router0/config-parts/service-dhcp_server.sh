@@ -219,6 +219,8 @@ set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-ma
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping bluesound-ims-4 mac-address '90:56:82:17:24:88'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping bluesound-flex-speaker ip-address '10.9.6.16'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping bluesound-flex-speaker mac-address '48:d8:90:e4:f0:c5'
+set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping dewey-prim ip-address '10.9.4.17'
+set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping dewey-prim mac-address '56:00:ec:b1:db:46'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping rock ip-address '10.9.6.23'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping rock mac-address '96:84:68:47:64:06'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping homeassistant ip-address '10.9.4.25'

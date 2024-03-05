@@ -98,6 +98,8 @@ set firewall group address-group bluesound address '10.9.4.15'
 set firewall group address-group bluesound address '10.9.4.13'
 set firewall group address-group bluesound address '10.9.4.12'
 set firewall group address-group bluesound address '10.9.6.23'
+set firewall group address-group bluesound address '10.9.4.17'
+
 
 set firewall group address-group roon address '10.9.6.16'
 set firewall group address-group roon address '10.9.6.28'
@@ -106,6 +108,8 @@ set firewall group address-group roon address '10.9.4.13'
 set firewall group address-group roon address '10.9.4.12'
 set firewall group address-group roon address '10.9.4.3'
 set firewall group address-group roon address '10.9.6.23'
+set firewall group address-group roon address '10.9.4.17'
+
 set firewall group address-group roon address '10.9.6.31'
 set firewall group address-group roon address '10.9.6.32'
 set firewall group address-group roon address '10.9.6.33'
@@ -113,6 +117,8 @@ set firewall group address-group roon address '10.9.6.34'
 set firewall group address-group roon address '10.9.8.33'
 
 set firewall group address-group roon-server address '10.9.6.23'
+set firewall group address-group roon-server address '10.9.4.17' # dewey prim vlan
+set firewall group address-group roon-server address '10.9.8.14' # dewey mgmt vlan - for roon arc - because roon arc requires using the default gateway iface
 
 set firewall group address-group vector_journald_allowed address '10.1.3.56'
 set firewall group address-group vector_journald_allowed address '10.1.3.60'
