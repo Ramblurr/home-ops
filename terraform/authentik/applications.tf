@@ -29,10 +29,13 @@ locals {
     module.sonarr.application_id,
     module.radarr.application_id,
     module.grafana.application_id,
+    module.linkding.application_id
   ])
 
   household_app_ids = toset([
     module.paperless.application_id,
+    module.home-ocis-web.application_id
+
   ])
 }
 
