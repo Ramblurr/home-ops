@@ -30,19 +30,3 @@ spec:
   allowFirstLastIPs: "No"
   cidrs:
     - cidr: "${CILIUM_BGP_LB_CIDR}"
-  serviceSelector:
-    matchExpressions:
-      - { key: expose.to.primary.vlan, operator: NotIn, values: ["yes"] }
----
-# This is a different ip pool for exposing Roon Server directly onto my primary vlan
-apiVersion: cilium.io/v2alpha1
-kind: CiliumLoadBalancerIPPool
-metadata:
-  name: primary-vlan-pool-roon
-spec:
-  allowFirstLastIPs: "Yes"
-  cidrs:
-    - cidr: "${CILIUM_BGP_LB_CIDR_ROON}"
-  serviceSelector:
-    matchExpressions:
-      - { key: expose.to.primary.vlan, operator: In, values: ["yes"] }
