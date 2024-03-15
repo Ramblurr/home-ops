@@ -36,7 +36,7 @@ spec:
           main:
             image:
               repository: ghcr.io/onedr0p/kubanetics
-              tag: 2024.3.2@sha256:5f6836ba1dce3eef29d386b44c0c8fb9c1fef8bad862db2ed6ce16dfbe6bee17
+              tag: 2024.3.4@sha256:2dfb70e154b4d4cbd8b1f98f1647e4a96aa1fc084a7e07b2586e35f7fc743383
             env:
               SCRIPT_NAME: alertmanager-silencer.sh
               ALERTMANAGER_URL: http://alertmanager-operated.observability.svc.cluster.local:9093
