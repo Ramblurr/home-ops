@@ -21,7 +21,7 @@ spec:
               - 65541
           initContainers:
             - name: nfs-fixer
-              image: docker.io/library/alpine:20231219
+              image: docker.io/library/alpine:20240315
               securityContext:
                 runAsUser: 2000
               volumeMounts:
