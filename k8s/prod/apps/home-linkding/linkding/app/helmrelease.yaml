@@ -37,7 +37,6 @@ spec:
               repository: docker.io/sissbruecker/linkding
               tag: 1.25.0
             env:
-              PGSSLROOTCERT: /certs/pg-root.crt
               LD_SUPERUSER_NAME: casey
               LD_ENABLE_AUTH_PROXY: "True"
               LD_AUTH_PROXY_USERNAME_HEADER: "HTTP_X_AUTHENTIK_USERNAME"
