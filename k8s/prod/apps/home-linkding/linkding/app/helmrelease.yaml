@@ -37,6 +37,7 @@ spec:
               repository: docker.io/sissbruecker/linkding
               tag: 1.25.0
             env:
+              PGSSLROOTCERT: /certs/pg-root.crt
               LD_SUPERUSER_NAME: casey
               LD_ENABLE_AUTH_PROXY: "True"
               LD_AUTH_PROXY_USERNAME_HEADER: "HTTP_X_AUTHENTIK_USERNAME"
@@ -76,3 +77,15 @@ spec:
         tls:
           - hosts:
               - "${HOSTNAME}"
+
+    persistence:
+      app-db-root-cert:
+        enabled: true
+        type: secret
+        name: app-db-root-cert
+        items:
+          - key: root.crt
+            path: pg-root.crt
+        globalMounts:
+          - path: /certs
+            readOnly: true
