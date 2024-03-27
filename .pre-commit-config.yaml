@@ -41,7 +41,7 @@ repos:
         exclude: (Makefile|Makefile.j2|iot/|.sops)
 
   - repo: https://github.com/sirosen/texthooks
-    rev: 0.6.4
+    rev: 0.6.6
     hooks:
       - id: fix-smartquotes
 
