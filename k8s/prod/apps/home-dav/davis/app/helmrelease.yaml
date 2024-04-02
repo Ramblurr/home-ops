@@ -32,7 +32,7 @@ spec:
           nginx:
             image:
               repository: ghcr.io/ramblurr/davis
-              tag: v4.4.1@sha256:d9a55573af9807c660c5369e3796886bb744b250c739aba6508d5d20f4cbf6b2
+              tag: v4.4.2@sha256:f521774af83a7daecf0f7f94616de0e747d1c18fcb174c842a2463ea42ab917a
             args: [nginx]
             env:
               DAVIS_SERVER_NAME: "${HOSTNAME}"
@@ -55,7 +55,7 @@ spec:
           main:
             image:
               repository: ghcr.io/ramblurr/davis
-              tag: v4.4.1@sha256:d9a55573af9807c660c5369e3796886bb744b250c739aba6508d5d20f4cbf6b2
+              tag: v4.4.2@sha256:f521774af83a7daecf0f7f94616de0e747d1c18fcb174c842a2463ea42ab917a
             args: [davis]
             env:
               APP_DEBUG: "true"
