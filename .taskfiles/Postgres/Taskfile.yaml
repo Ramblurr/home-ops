@@ -28,7 +28,7 @@ tasks:
         sh: |-
           [[ -n "{{.DBUSER}}" ]] && echo -n "{{.DBUSER}}" || [[ -n "{{.APP}}" ]] && echo -n "{{.APP}}" || ( echo "Missing `DBUSER` environment variable for specifying user name!" && exit 1 )
     env:
-      DBUSER: '{{.DBUSER}}'
+      DBUSER: "{{.DBUSER}}"
     cmds:
       - kubectl exec -it --container database -n {{.NS}} {{.CRUNCHY_PRIMARY}} -- /bin/bash -c 'echo "ALTER DATABASE \"{{.DBNAME}}\" OWNER TO \"{{.DBUSER}}\";" | psql'
 
@@ -47,7 +47,7 @@ tasks:
         sh: |-
           [[ -n "{{.ARGS}}" ]] && echo -n "{{.ARGS}}" || echo -n "--verbose --clean --if-exists --no-owner --role {{.DBUSER}}"
     env:
-      DBUSER: '{{.DBUSER}}'
+      DBUSER: "{{.DBUSER}}"
     cmds:
       - kubectl cp --container database {{.DUMP}} {{.NS}}/{{.CRUNCHY_PRIMARY}}:{{.CP_DIR}}/restore-dump.psql
       - |-
@@ -70,7 +70,7 @@ tasks:
         sh: |-
           [[ -n "{{.ARGS}}" ]] && echo -n "{{.ARGS}}" || echo -n "--verbose --clean --if-exists --no-owner --role {{.DBUSER}}"
     env:
-      DBUSER: '{{.DBUSER}}'
+      DBUSER: "{{.DBUSER}}"
     cmds:
       - kubectl cp --container database {{.DUMP}} {{.NS}}/{{.CRUNCHY_PRIMARY}}:{{.CP_DIR}}/restore-dump.sql
       - |-
@@ -94,4 +94,22 @@ tasks:
           [[ -n "{{.ARGS}}" ]] && echo "{{.ARGS}}" || echo "--verbose --format=c --clean --if-exists --no-owner"
     cmds:
       - kubectl exec -it --container database -n {{.NS}} {{.CRUNCHY_PRIMARY}} -- /bin/bash -c 'rm -rf {{.CP_DIR}}/dump.psql && pg_dump --dbname {{.DBNAME}} {{.ARGS}} --file {{.CP_DIR}}/dump.psql'
+      - kubectl cp --container database {{.NS}}/{{.CRUNCHY_PRIMARY}}:{{.CP_DIR}}/dump.psql {{.DUMP}}
+
+  crunchy-dump-plain:
+    desc: Run pg_dump on the master instance of a CrunchyData Postgres cluster.
+    dir: "{{.USER_WORKING_DIR}}"
+    vars:
+      APP: "{{.APP}}"
+      NS: *ns-default
+      CRUNCHY_PRIMARY: *crunchy-primary
+      DUMP: *dump
+      CP_DIR: *cpdir
+      DBNAME: *dbname
+      DBUSER: *dbuser
+      ARGS:
+        sh: |-
+          [[ -n "{{.ARGS}}" ]] && echo "{{.ARGS}}" || echo "--verbose --clean --if-exists --no-owner"
+    cmds:
+      - kubectl exec -it --container database -n {{.NS}} {{.CRUNCHY_PRIMARY}} -- /bin/bash -c 'rm -rf {{.CP_DIR}}/dump.psql && pg_dump --exclude-schema=pgbouncer --dbname {{.DBNAME}} {{.ARGS}} --file {{.CP_DIR}}/dump.psql'
       - kubectl cp --container database {{.NS}}/{{.CRUNCHY_PRIMARY}}:{{.CP_DIR}}/dump.psql {{.DUMP}}
