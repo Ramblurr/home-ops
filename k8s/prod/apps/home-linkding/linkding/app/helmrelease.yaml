@@ -34,7 +34,7 @@ spec:
           main:
             image:
               repository: docker.io/sissbruecker/linkding
-              tag: 1.27.0
+              tag: 1.27.1
             env:
               LD_SUPERUSER_NAME: casey
               LD_ENABLE_AUTH_PROXY: "True"
