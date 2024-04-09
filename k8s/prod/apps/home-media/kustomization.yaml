@@ -7,8 +7,8 @@ resources:
   - ./namespace.yaml
   - ./notifications.yaml
   # Flux-Kustomizations
-  - ./media-pv/ks.yaml
-  - ./plex/ks.yaml
-  - ./overseerr/ks.yaml
-  - ./tautulli/ks.yaml
-  - ./filebrowser/ks.yaml
+  #- ./media-pv/ks.yaml
+  #- ./plex/ks.yaml
+  #- ./overseerr/ks.yaml
+  #- ./tautulli/ks.yaml
+  #- ./filebrowser/ks.yaml

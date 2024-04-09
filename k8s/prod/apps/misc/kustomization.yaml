@@ -7,7 +7,7 @@ resources:
   - ./namespace.yaml
   - ./notifications.yaml
   # Flux-Kustomizations
-  - ./archiveteam-warrior0/ks.yaml
-  - ./archiveteam-warrior1/ks.yaml
-  - ./archiveteam-warrior2/ks.yaml
-  - ./snowflake-proxy/ks.yaml
+  #- ./archiveteam-warrior0/ks.yaml
+  #- ./archiveteam-warrior1/ks.yaml
+  #- ./archiveteam-warrior2/ks.yaml
+  #- ./snowflake-proxy/ks.yaml

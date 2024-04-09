@@ -9,4 +9,4 @@ resources:
   # Flux-Kustomizations
   - ./invoiceninja-storage-pvc/ks.yaml
   - ./invoiceninja-public-pvc/ks.yaml
-  - ./invoiceninja/ks.yaml
+  #- ./invoiceninja/ks.yaml

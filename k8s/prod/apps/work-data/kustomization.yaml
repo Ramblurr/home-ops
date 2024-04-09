@@ -7,5 +7,5 @@ resources:
   - ./namespace.yaml
   - ./notifications.yaml
   # Flux-Kustomizations
-  - ./app-db-root-cert/ks.yaml
-  - ./work-ocis/ks.yaml
+  #- ./app-db-root-cert/ks.yaml
+  #- ./work-ocis/ks.yaml

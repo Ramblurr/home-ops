@@ -7,4 +7,4 @@ resources:
   - ./namespace.yaml
   - ./notifications.yaml
   # Flux-Kustomizations
-  - ./influxdb/ks.yaml
+  #- ./influxdb/ks.yaml

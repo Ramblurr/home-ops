@@ -7,4 +7,4 @@ resources:
   - ./namespace.yaml
   - ./notifications.yaml
   # Flux-Kustomizations
-  - ./home-ocis/ks.yaml
+  #- ./home-ocis/ks.yaml
