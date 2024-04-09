@@ -1168,7 +1168,7 @@ set firewall name primary-mgmt rule 11 protocol 'udp'
 set firewall name primary-mgmt rule 12 action 'accept'
 set firewall name primary-mgmt rule 12 description 'Rule: accept_plex'
 set firewall name primary-mgmt rule 12 destination port '32400'
-set firewall name primary-mgmt rule 12 destination address '10.10.12.8'
+set firewall name primary-mgmt rule 12 destination address '10.9.8.14'
 set firewall name primary-mgmt rule 12 protocol 'tcp'
 
 set firewall name primary-mgmt rule 13 action 'accept'
@@ -1356,7 +1356,7 @@ set firewall name wan-mgmt enable-default-log
 
 set firewall name wan-mgmt rule 1 action 'accept'
 set firewall name wan-mgmt rule 1 description 'Rule: accept_plex'
-set firewall name wan-mgmt rule 1 destination address '10.10.12.8'
+set firewall name wan-mgmt rule 1 destination address '10.9.8.14'
 set firewall name wan-mgmt rule 1 destination port '32400'
 set firewall name wan-mgmt rule 1 protocol 'tcp'
 
