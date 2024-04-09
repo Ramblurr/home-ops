@@ -17,7 +17,7 @@ locals {
 provider "cloudflare" {}
 
 provider "onepassword" {
-  url = "http://onepassword-connect.k8s.socozy.casa"
+  url = "https://op.socozy.casa"
   # token specified via env var
 }
 
