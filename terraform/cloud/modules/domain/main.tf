@@ -1,3 +1,8 @@
+variable "vault" {
+  type        = string
+  description = "The vault to store the item in"
+}
+
 variable "domain" {
   type = string
 }
@@ -17,11 +22,21 @@ variable "root_record_enabled" {
   default = false
 }
 
-variable "subdomains" {
-  type = map(object({
-    subdomain = string
-  }))
+variable "cnames" {
+  type    = map(string)
   default = null
+}
+
+variable "tunnels" {
+  type = map(object({
+    name  = string
+    cname = string
+  }))
+  default = {}
+}
+
+variable "account_id" {
+  type = string
 }
 
 data "cloudflare_zones" "domain" {
@@ -30,8 +45,12 @@ data "cloudflare_zones" "domain" {
   }
 }
 
-resource "cloudflare_zone_settings_override" "cloudflare_settings" {
+locals {
   zone_id = lookup(data.cloudflare_zones.domain.zones[0], "id")
+}
+
+resource "cloudflare_zone_settings_override" "cloudflare_settings" {
+  zone_id = local.zone_id
   settings {
     ssl                      = "strict"
     always_use_https         = "on"
@@ -69,13 +88,13 @@ resource "cloudflare_zone_settings_override" "cloudflare_settings" {
   }
 }
 
-data "http" "ipv4" {
-  url = "http://ipv4.icanhazip.com"
-}
+#data "http" "ipv4" {
+#  url = "http://ipv4.icanhazip.com"
+#}
 
 #resource "cloudflare_record" "ipv4" {
 #  name    = "ipv4"
-#  zone_id = lookup(data.cloudflare_zones.domain.zones[0], "id")
+#  zone_id = local.zone_id
 #  value   = chomp(data.http.ipv4.response_body)
 #  proxied = true
 #  type    = "A"
@@ -85,18 +104,18 @@ data "http" "ipv4" {
 resource "cloudflare_record" "root" {
   count   = var.root_record_enabled ? 1 : 0
   name    = var.domain
-  zone_id = lookup(data.cloudflare_zones.domain.zones[0], "id")
+  zone_id = local.zone_id
   value   = "ipv4.${var.domain}"
   proxied = true
   type    = "CNAME"
   ttl     = 1
 }
 
-resource "cloudflare_record" "subdomains" {
-  for_each = var.subdomains == null ? {} : var.subdomains
-  name     = each.value.subdomain
-  zone_id  = lookup(data.cloudflare_zones.domain.zones[0], "id")
-  value    = "ipv4.${var.domain}"
+resource "cloudflare_record" "cnames" {
+  for_each = var.cnames == null ? {} : var.cnames
+  name     = each.key
+  zone_id  = local.zone_id
+  value    = each.value
   proxied  = true
   type     = "CNAME"
   ttl      = 1
@@ -105,7 +124,7 @@ resource "cloudflare_record" "subdomains" {
 
 resource "cloudflare_record" "caldav" {
   count   = var.dav_enabled ? 1 : 0
-  zone_id = lookup(data.cloudflare_zones.domain.zones[0], "id")
+  zone_id = local.zone_id
   name    = var.domain
   type    = "SRV"
   ttl     = 300
@@ -127,7 +146,7 @@ resource "cloudflare_record" "caldav" {
 
 resource "cloudflare_record" "caldavs" {
   count   = var.dav_enabled ? 1 : 0
-  zone_id = lookup(data.cloudflare_zones.domain.zones[0], "id")
+  zone_id = local.zone_id
   name    = var.domain
   type    = "SRV"
   ttl     = 300
@@ -148,7 +167,7 @@ resource "cloudflare_record" "caldavs" {
 }
 resource "cloudflare_record" "carddav" {
   count   = var.dav_enabled ? 1 : 0
-  zone_id = lookup(data.cloudflare_zones.domain.zones[0], "id")
+  zone_id = local.zone_id
   name    = var.domain
   type    = "SRV"
   ttl     = 300
@@ -171,7 +190,7 @@ resource "cloudflare_record" "carddav" {
 
 resource "cloudflare_record" "carddavs" {
   count   = var.dav_enabled ? 1 : 0
-  zone_id = lookup(data.cloudflare_zones.domain.zones[0], "id")
+  zone_id = local.zone_id
   name    = var.domain
   type    = "SRV"
   ttl     = 300
@@ -192,7 +211,7 @@ resource "cloudflare_record" "carddavs" {
 }
 
 resource "cloudflare_ruleset" "dav_redirect" {
-  zone_id = lookup(data.cloudflare_zones.domain.zones[0], "id")
+  zone_id = local.zone_id
   name    = "Redirect .well-known/carddav and caldav"
   kind    = "zone"
   phase   = "http_request_dynamic_redirect"
@@ -211,4 +230,77 @@ resource "cloudflare_ruleset" "dav_redirect" {
     expression  = "(http.host eq \"${var.domain}\") and ((http.request.uri.path eq \"/.well-known/carddav\") or (http.request.uri.path eq \"/.well-known/caldav\"))"
     description = "Redirect .well-known/carddav and caldav to ${var.dav_domain}/dav/"
   }
+}
+
+resource "random_id" "cloudflare_tunnel_secret" {
+  for_each    = var.tunnels
+  byte_length = 35
+}
+
+resource "cloudflare_tunnel" "tunnel" {
+  for_each   = var.tunnels
+  account_id = var.account_id
+  name       = each.value.name
+  secret     = random_id.cloudflare_tunnel_secret[each.key].b64_std
+  config_src = "local"
+}
+
+resource "cloudflare_record" "tunnel" {
+  for_each = var.tunnels
+  zone_id  = local.zone_id
+  name     = each.value.cname
+  value    = cloudflare_tunnel.tunnel[each.key].cname
+  type     = "CNAME"
+  proxied  = true
+}
+
+
+resource "onepassword_item" "tunnels" {
+  for_each = var.tunnels
+  vault    = var.vault
+  title    = "cloudflare tunnel: ${each.value.name}"
+  category = "login"
+  section {
+    label = "cloudflare tunnel"
+    field {
+      label = "TUNNEL_ID"
+      value = cloudflare_tunnel.tunnel[each.key].id
+      type  = "CONCEALED"
+    }
+    field {
+      label = "TUNNEL_SECRET"
+      value = cloudflare_tunnel.tunnel[each.key].secret
+      type  = "CONCEALED"
+    }
+    field {
+      label = "TUNNEL_CNAME"
+      value = cloudflare_tunnel.tunnel[each.key].cname
+      type  = "CONCEALED"
+    }
+    field {
+      label = "TUNNEL_TOKEN"
+      value = cloudflare_tunnel.tunnel[each.key].tunnel_token
+      type  = "CONCEALED"
+    }
+    field {
+      label = "ZONE_ID"
+      value = local.zone_id
+      type  = "CONCEALED"
+    }
+    field {
+      label = "ACCOUNT_ID"
+      value = var.account_id
+      type  = "CONCEALED"
+    }
+  }
+}
+
+output "cloudflare_tunnels" {
+  value = {
+    for tunnel in cloudflare_tunnel.tunnel :
+    tunnel.name => merge(tunnel, {
+      account_id = var.account_id
+    })
+  }
+  sensitive = true
 }
