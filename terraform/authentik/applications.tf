@@ -6,6 +6,7 @@ locals {
     module.linkding.proxy_provider_id
   ]
   internal_proxy_provider_ids = [
+    module.archivebox.proxy_provider_id,
     module.calibre-web.proxy_provider_id,
     module.calibre.proxy_provider_id,
     module.filebrowser.proxy_provider_id,
@@ -37,6 +38,15 @@ locals {
     module.home-ocis-web.application_id
 
   ])
+}
+
+module "archivebox" {
+  source                  = "./modules/forward-auth-application"
+  name                    = "archivebox"
+  domain                  = "archive.${var.external_domain}"
+  group                   = "Home"
+  authorization_flow_uuid = local.implicit_authorization_flow
+  meta_icon               = "${local.icon_base}/archivebox.png"
 }
 
 module "calibre-web" {
