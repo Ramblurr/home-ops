@@ -142,9 +142,9 @@ set firewall name iot-mgmt description 'From IOT to MGMT'
 set firewall name iot-mgmt enable-default-log
 
 set firewall name iot-mgmt rule 1 action 'accept'
-set firewall name iot-mgmt rule 1 description 'Rule: accept_wall_dashboard_to_k8s_ingress'
+set firewall name iot-mgmt rule 1 description 'Rule: accept_wall_dashboard_to_homeops_ingress'
 set firewall name iot-mgmt rule 1 source group address-group 'wall-dashboards'
-set firewall name iot-mgmt rule 1 destination group address-group 'k8s_cluster_prod_ingress_all'
+set firewall name iot-mgmt rule 1 destination group address-group 'home_ops_ingress'
 set firewall name iot-mgmt rule 1 destination port 'http,https'
 set firewall name iot-mgmt rule 1 protocol 'tcp'
 
@@ -584,11 +584,7 @@ set firewall name local-mgmt rule 4 action 'accept'
 set firewall name local-mgmt rule 4 description 'Rule: accept_ssh'
 set firewall name local-mgmt rule 4 destination port 'ssh'
 set firewall name local-mgmt rule 4 protocol 'tcp'
-set firewall name local-mgmt rule 5 action 'accept'
-set firewall name local-mgmt rule 5 description 'Rule: accept_vector_syslog'
-set firewall name local-mgmt rule 5 destination group address-group 'k8s_vector_aggregator'
-set firewall name local-mgmt rule 5 destination port '6001'
-set firewall name local-mgmt rule 5 protocol 'tcp'
+# 5 is available
 set firewall name local-mgmt rule 6 action 'accept'
 set firewall name local-mgmt rule 6 description 'Rule: accept_tailscale_udp_in'
 set firewall name local-mgmt rule 6 destination port '41641,3478,5351,1900'
@@ -805,12 +801,7 @@ set firewall name mgmt-primary rule 7 destination port '9253'
 set firewall name mgmt-primary rule 7 destination group address-group 'local-dns-servers'
 set firewall name mgmt-primary rule 7 protocol 'tcp'
 
-set firewall name mgmt-primary rule 8 action 'accept'
-set firewall name mgmt-primary rule 8 description 'Rule: accept_prometheus_zrepl_scrape'
-set firewall name mgmt-primary rule 8 destination port '9811'
-set firewall name mgmt-primary rule 8 destination group address-group 'truenas'
-set firewall name mgmt-primary rule 8 source group address-group 'k8s_cluster_prod_nodes'
-set firewall name mgmt-primary rule 8 protocol 'tcp_udp'
+# rule 8 available
 
 set firewall name mgmt-primary rule 9 action 'accept'
 set firewall name mgmt-primary rule 9 description 'Rule: accept_tailscale_udp_in'
@@ -827,14 +818,14 @@ set firewall name mgmt-primary rule 11 description 'Rule: accept_bluesound'
 set firewall name mgmt-primary rule 11 destination group address-group 'bluesound'
 set firewall name mgmt-primary rule 11 destination group port-group 'bluesound'
 set firewall name mgmt-primary rule 11 protocol 'tcp_udp'
-set firewall name mgmt-primary rule 11 source group address-group 'k8s_cluster_prod_nodes'
+set firewall name mgmt-primary rule 11 source group address-group 'home_ops_ingress'
 
 set firewall name mgmt-primary rule 12 action 'accept'
 set firewall name mgmt-primary rule 12 description 'Rule: accept_roon'
 set firewall name mgmt-primary rule 12 destination group address-group 'roon'
 set firewall name mgmt-primary rule 12 destination group port-group 'roon'
 set firewall name mgmt-primary rule 12 protocol 'tcp_udp'
-set firewall name mgmt-primary rule 12 source group address-group 'k8s_cluster_prod_nodes'
+set firewall name mgmt-primary rule 12 source group address-group 'home_ops_ingress'
 
 set firewall name mgmt-primary rule 13 action 'accept'
 set firewall name mgmt-primary rule 13 description 'Rule: TMP_DEBUG'
@@ -1102,11 +1093,7 @@ set firewall name primary-mgmt rule 1 action 'accept'
 set firewall name primary-mgmt rule 1 description 'Rule: accept_icmp'
 set firewall name primary-mgmt rule 1 protocol 'icmp'
 
-set firewall name primary-mgmt rule 2 action 'accept'
-set firewall name primary-mgmt rule 2 description 'Rule: accept_ingress_to_container0'
-set firewall name primary-mgmt rule 2 destination address '10.9.8.30'
-set firewall name primary-mgmt rule 2 destination port 'http,https'
-set firewall name primary-mgmt rule 2 protocol 'tcp'
+# 2 is available
 
 set firewall name primary-mgmt rule 3 action 'accept'
 set firewall name primary-mgmt rule 3 description 'Rule: accept_dns'
@@ -1114,20 +1101,7 @@ set firewall name primary-mgmt rule 3 destination port 'domain,domain-s'
 set firewall name primary-mgmt rule 3 destination group address-group 'local-dns-servers'
 set firewall name primary-mgmt rule 3 protocol 'tcp_udp'
 
-#DELETE
-#set firewall name primary-mgmt rule 4 action 'accept'
-#set firewall name primary-mgmt rule 4 description 'Rule: accept_k8s_ingress'
-#set firewall name primary-mgmt rule 4 destination port 'http,https'
-#set firewall name primary-mgmt rule 4 destination group address-group 'k8s_cluster_test_ingress_all'
-#set firewall name primary-mgmt rule 4 protocol 'tcp_udp'
-
-#DELETE
-#set firewall name primary-mgmt rule 5 action 'accept'
-#set firewall name primary-mgmt rule 5 description 'Rule: accept_k8s_api_from_admin'
-#set firewall name primary-mgmt rule 5 destination group port-group 'k8s-api'
-#set firewall name primary-mgmt rule 5 destination group address-group 'k8s_cluster_test_api'
-#set firewall name primary-mgmt rule 5 protocol 'tcp_udp'
-#set firewall name primary-mgmt rule 5 source group address-group 'admin'
+# 4 5 are avaialble
 
 set firewall name primary-mgmt rule 6 action 'accept'
 set firewall name primary-mgmt rule 6 description 'Rule: accept_admin_ssh'
@@ -1136,17 +1110,12 @@ set firewall name primary-mgmt rule 6 protocol 'tcp_udp'
 set firewall name primary-mgmt rule 6 source group address-group 'admin'
 
 set firewall name primary-mgmt rule 7 action 'accept'
-set firewall name primary-mgmt rule 7 description 'Rule: accept_k8s_prod_ingress'
+set firewall name primary-mgmt rule 7 description 'Rule: accept_homeops_prod_ingress'
 set firewall name primary-mgmt rule 7 destination port 'http,https'
-set firewall name primary-mgmt rule 7 destination group address-group 'k8s_cluster_prod_ingress_all'
+set firewall name primary-mgmt rule 7 destination group address-group 'home_ops_ingress'
 set firewall name primary-mgmt rule 7 protocol 'tcp_udp'
 
-set firewall name primary-mgmt rule 8 action 'accept'
-set firewall name primary-mgmt rule 8 description 'Rule: accept_k8s_prod_api_from_admin'
-set firewall name primary-mgmt rule 8 destination group port-group 'k8s-api'
-set firewall name primary-mgmt rule 8 destination group address-group 'k8s_cluster_prod_api'
-set firewall name primary-mgmt rule 8 protocol 'tcp_udp'
-set firewall name primary-mgmt rule 8 source group address-group 'admin'
+# rule 8 available
 
 set firewall name primary-mgmt rule 9 action 'accept'
 set firewall name primary-mgmt rule 9 description 'Rule: accept_truenas_graphite'
@@ -1157,7 +1126,7 @@ set firewall name primary-mgmt rule 9 protocol 'tcp_udp'
 set firewall name primary-mgmt rule 10 action 'accept'
 set firewall name primary-mgmt rule 10 description 'Rule: accept_truenas_to_node'
 set firewall name primary-mgmt rule 10 source group address-group 'truenas'
-set firewall name primary-mgmt rule 10 destination group address-group 'k8s_cluster_prod_nodes'
+set firewall name primary-mgmt rule 10 destination group address-group 'home_ops_ingress'
 set firewall name primary-mgmt rule 10 protocol 'tcp_udp'
 
 set firewall name primary-mgmt rule 11 action 'accept'
@@ -1168,7 +1137,7 @@ set firewall name primary-mgmt rule 11 protocol 'udp'
 set firewall name primary-mgmt rule 12 action 'accept'
 set firewall name primary-mgmt rule 12 description 'Rule: accept_plex'
 set firewall name primary-mgmt rule 12 destination port '32400'
-set firewall name primary-mgmt rule 12 destination address '10.9.8.14'
+set firewall name primary-mgmt rule 12 destination group address-group 'home_ops_ingress'
 set firewall name primary-mgmt rule 12 protocol 'tcp'
 
 set firewall name primary-mgmt rule 13 action 'accept'
@@ -1284,13 +1253,6 @@ set firewall name data-mgmt default-action 'drop'
 set firewall name data-mgmt description 'From DATA to MGMT'
 set firewall name data-mgmt enable-default-log
 
-set firewall name data-mgmt rule 1 action 'accept'
-set firewall name data-mgmt rule 1 description 'Rule: accept_k8s_prod_api_from_admin'
-set firewall name data-mgmt rule 1 destination group port-group 'k8s-api'
-set firewall name data-mgmt rule 1 destination group address-group 'k8s_cluster_prod_api'
-set firewall name data-mgmt rule 1 protocol 'tcp_udp'
-set firewall name data-mgmt rule 1 source group address-group 'k8s_cluster_prod_nodes'
-
 # From DATA to SERVICES
 set firewall name data-services default-action 'accept'
 set firewall name data-services description 'From DATA to SERVICES'
@@ -1356,7 +1318,7 @@ set firewall name wan-mgmt enable-default-log
 
 set firewall name wan-mgmt rule 1 action 'accept'
 set firewall name wan-mgmt rule 1 description 'Rule: accept_plex'
-set firewall name wan-mgmt rule 1 destination address '10.9.8.14'
+set firewall name wan-mgmt rule 1 destination group address-group 'home_ops_ingress'
 set firewall name wan-mgmt rule 1 destination port '32400'
 set firewall name wan-mgmt rule 1 protocol 'tcp'
 

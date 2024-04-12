@@ -4,16 +4,6 @@
 # Container networks
 set container network services prefix '10.5.0.0/24'
 
-# haproxy-k8s-api
-set container name haproxy-k8s-api image 'docker.io/library/haproxy:2.9.6'
-set container name haproxy-k8s-api memory '0'
-set container name haproxy-k8s-api network services address '10.5.0.2'
-set container name haproxy-k8s-api restart 'on-failure'
-set container name haproxy-k8s-api shared-memory '0'
-set container name haproxy-k8s-api volume config destination '/usr/local/etc/haproxy/haproxy.cfg'
-set container name haproxy-k8s-api volume config source '/config/containers/haproxy/config/haproxy.cfg'
-set container name haproxy-k8s-api volume config mode 'ro'
-
 # smtp-relay
 set container name smtp-relay image 'ghcr.io/foxcpp/maddy:0.7.1'
 set container name smtp-relay environment SMTP_DOMAIN value "${SECRET_SMTP_FROM_DOMAIN}"

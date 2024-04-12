@@ -97,14 +97,14 @@ set nat destination rule 111 description 'Roon ARC TCP'
 set nat destination rule 111 destination port '33399'
 set nat destination rule 111 inbound-interface 'eth0'
 set nat destination rule 111 protocol 'tcp'
-set nat destination rule 111 translation address '10.9.8.14'
+set nat destination rule 111 translation address '10.9.8.14' # dewey
 set nat destination rule 111 translation port '33399'
 
 set nat destination rule 112 description 'Roon ARC UDP'
 set nat destination rule 112 destination port '33399'
 set nat destination rule 112 inbound-interface 'eth0'
 set nat destination rule 112 protocol 'udp'
-set nat destination rule 112 translation address '10.9.8.14'
+set nat destination rule 112 translation address '10.9.8.14' # dewey
 set nat destination rule 112 translation port '33399'
 
 # Mali zrepl replication
@@ -121,7 +121,7 @@ set nat destination rule 114 description 'Plex'
 set nat destination rule 114 destination port '32400'
 set nat destination rule 114 inbound-interface 'eth0'
 set nat destination rule 114 protocol 'tcp'
-set nat destination rule 114 translation address "10.9.8.14"
+set nat destination rule 114 translation address "10.9.8.14" # dewey
 set nat destination rule 114 translation port '32400'
 
 # LAN -> WAN masquerade

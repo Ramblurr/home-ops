@@ -59,23 +59,8 @@ set firewall group address-group wled address '10.8.60.47' # wled-fairylights
 set firewall group address-group wled address '10.8.60.102' # wled-gr-rgb
 set firewall group address-group octoprint address '10.8.50.52'
 
-set firewall group address-group k8s_cluster_prod_api address '10.9.9.120'
-set firewall group address-group k8s_cluster_prod_nodes address '10.9.8.13'
-set firewall group address-group k8s_cluster_prod_nodes address '10.9.8.14'
-set firewall group address-group k8s_cluster_prod_nodes address '10.9.8.16'
-set firewall group address-group k8s_cluster_prod_nodes address '10.9.8.18'
-set firewall group address-group k8s_cluster_prod_nodes address '10.9.8.21'
-set firewall group address-group k8s_cluster_prod_nodes address '10.9.10.13'
-set firewall group address-group k8s_cluster_prod_nodes address '10.9.10.14'
-set firewall group address-group k8s_cluster_prod_nodes address '10.9.10.16'
-set firewall group address-group k8s_cluster_prod_nodes address '10.9.10.18'
-set firewall group address-group k8s_cluster_prod_nodes address '10.9.10.21'
-
-set firewall group address-group k8s_vector_aggregator address '10.10.12.7'
-set firewall group address-group k8s_cluster_prod_ingress_external address '10.10.12.3'
-set firewall group address-group k8s_cluster_prod_ingress_internal address '10.10.12.1'
-set firewall group address-group k8s_cluster_prod_ingress_all address '10.10.12.1'
-set firewall group address-group k8s_cluster_prod_ingress_all address '10.10.12.3'
+set firewall group address-group home_ops_ingress address '10.9.8.14' # dewey
+set firewall group address-group home_ops_ingress address '10.9.4.17' # dewey
 
 set firewall group address-group ovos address '10.8.50.55'
 set firewall group address-group ovos address '10.9.6.30'
@@ -242,9 +227,6 @@ set firewall group port-group octoprint port '443'
 set firewall group port-group homeassistant port '8123'
 set firewall group port-group homeassistant-shelly port '8123'
 set firewall group port-group homeassistant-shelly port '5683'
-set firewall group port-group k8s-api port '6443'
-set firewall group port-group k8s-api port '50000'
-set firewall group port-group k8s-api port '50001'
 
 set firewall group port-group syncthing port '22000'
 set firewall group port-group syncthing port '21027'
