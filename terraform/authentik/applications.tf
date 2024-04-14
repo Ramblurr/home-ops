@@ -47,6 +47,7 @@ module "archivebox" {
   group                   = "Home"
   authorization_flow_uuid = local.implicit_authorization_flow
   meta_icon               = "${local.icon_base}/archivebox.png"
+  skip_path_regex         = "/add/.*"
 }
 
 module "calibre-web" {
@@ -129,7 +130,7 @@ module "linkding" {
   group                   = "Home"
   authorization_flow_uuid = local.implicit_authorization_flow
   meta_icon               = "${local.icon_base}/linkding.png"
-  skip_path_regex         = "/api/"
+  skip_path_regex         = "/(api|feeds)/"
 }
 
 module "grafana" {
