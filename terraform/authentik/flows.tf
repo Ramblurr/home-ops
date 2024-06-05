@@ -33,11 +33,11 @@ resource "authentik_flow_stage_binding" "recovery-flow-binding-00" {
   order  = 0
 }
 
-resource "authentik_flow_stage_binding" "recovery-flow-binding-10" {
-  target = authentik_flow.recovery.uuid
-  stage  = authentik_stage_email.recovery-email.id
-  order  = 10
-}
+#resource "authentik_flow_stage_binding" "recovery-flow-binding-10" {
+#  target = authentik_flow.recovery.uuid
+#  stage  = authentik_stage_email.recovery-email.id
+#  order  = 10
+#}
 
 resource "authentik_flow_stage_binding" "recovery-flow-binding-20" {
   target = authentik_flow.recovery.uuid

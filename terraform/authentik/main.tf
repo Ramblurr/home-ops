@@ -76,12 +76,11 @@ locals {
 #}
 
 resource "authentik_brand" "work" {
-  domain         = local.authentik_domain_work
-  default        = false
-  branding_title = "Outskirts Labs"
-
-  branding_logo    = "/static/dist/assets/icons/work-logo.svg"
-  branding_favicon = "/static/dist/assets/icons/work-favicon.png"
+  domain           = local.authentik_domain_work
+  default          = false
+  branding_title   = "Outskirts Labs"
+  branding_logo    = "https://outskirtslabs.com/outskirts-title3-s.40e13d72.png"
+  branding_favicon = "https://outskirtslabs.com/favicon-192x192.cb3b29d2.png"
 }
 
 #resource "authentik_outpost" "external-work" {
