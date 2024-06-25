@@ -18,7 +18,7 @@ collections:
   - name: prometheus.prometheus
     version: 0.16.3
   - name: vyos.vyos
-    version: 4.1.0
+    version: 5.0.0
 roles:
   - name: m3nu.ansible_role_borgbackup
     version: v0.9.4
