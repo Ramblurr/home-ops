@@ -72,7 +72,7 @@ resource "authentik_policy_binding" "admins" {
 }
 
 resource "authentik_policy_binding" "home" {
-  for_each = local.household_app_ids
+  for_each = local.household_apps
   target   = each.value
   group    = authentik_group.home.id
   order    = 0

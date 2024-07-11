@@ -3,7 +3,8 @@ locals {
   icon_base = "https://raw.githubusercontent.com/ramblurr/home-ops/main/icons"
   external_proxy_provider_ids = [
     module.calibre-web.proxy_provider_id,
-    module.linkding.proxy_provider_id
+    module.linkding.proxy_provider_id,
+    module.actual-budget.proxy_provider_id
   ]
   internal_proxy_provider_ids = [
     module.archivebox.proxy_provider_id,
@@ -33,11 +34,10 @@ locals {
     module.linkding.application_id
   ])
 
-  household_app_ids = toset([
-    #module.paperless.application_id,
-    module.home-ocis-web.application_id
-
-  ])
+  household_apps = {
+    "home-ocis"     = module.home-ocis-web.application_id
+    "actual-budget" = module.actual-budget.application_id
+  }
 }
 
 module "archivebox" {
@@ -135,6 +135,15 @@ module "linkding" {
   authorization_flow_uuid = local.implicit_authorization_flow
   meta_icon               = "${local.icon_base}/linkding.png"
   skip_path_regex         = "/(api|feeds)/"
+}
+
+module "actual-budget" {
+  source                  = "./modules/forward-auth-application"
+  name                    = "actual-budget"
+  domain                  = "budget.${var.external_domain}"
+  group                   = "Home"
+  authorization_flow_uuid = local.implicit_authorization_flow
+  meta_icon               = "${local.icon_base}/actual-budget.png"
 }
 
 module "grafana" {
