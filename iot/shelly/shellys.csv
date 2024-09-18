@@ -18,6 +18,7 @@ gr-switch,shellyswitch25,SHSW-25,shellyswitch25-gr-switch-E8DB84AABB8C,10.8.60.2
 bathroom-overhead-fan,shellyswitch25,SHSW-25,shellyswitch25-bathroom-overhead-fan-3C6105E4466A,10.8.60.24,3C6105E4466A
 hallway,shelly1pm,SHSW-PM,shelly1pm-hallway-E8DB84D7DAFF,10.8.60.27,E8DB84D7DAFF
 bedroom-switch-esphome,,,,10.8.60.28,e8:db:84:aa:8a:ab
+bedroom-dimmer,,,,10.8.60.28,3c:61:05:e3:dc:a4
 quinled-a-south,,,,10.8.60.29,84:cc:a8:69:9a:38
 quinled-b-north,,,,10.8.60.30,84:cc:a8:69:9c:50
 gr2,shellyswitch25,SHSW-25,shellyswitch25-gr2-E8DB84AABD27,10.8.60.31,E8DB84AABD27

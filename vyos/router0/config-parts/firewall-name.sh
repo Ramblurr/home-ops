@@ -323,6 +323,12 @@ set firewall name not-data enable-default-log
 # From NOT to WAN
 set firewall name not-wan default-action 'drop'
 set firewall name not-wan description 'From NOT to WAN'
+set firewall name not-wan enable-default-log
+
+set firewall name not-wan rule 1 action 'accept'
+set firewall name not-wan rule 1 description 'Rule: accept_shelly_update'
+set firewall name not-wan rule 1 source group address-group 'shellys'
+set firewall name not-wan rule 1 protocol 'tcp_udp'
 
 # From LAN to GUEST
 set firewall name lan-guest default-action 'drop'
@@ -989,6 +995,10 @@ set firewall name primary-not rule 4 destination group port-group 'wled-api'
 set firewall name primary-not rule 4 destination group address-group 'wled'
 set firewall name primary-not rule 4 protocol 'tcp'
 set firewall name primary-not rule 4 source group address-group 'homeassistant'
+set firewall name primary-not rule 5 action 'accept'
+set firewall name primary-not rule 5 description 'Rule: accept_admin'
+set firewall name primary-not rule 5 protocol 'tcp_udp'
+set firewall name primary-not rule 5 source group address-group 'admin'
 
 # From PRIMARY to LAN
 set firewall name primary-lan default-action 'accept'
