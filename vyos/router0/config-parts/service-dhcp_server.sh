@@ -239,6 +239,10 @@ set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-ma
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping galaxy-s21 mac-address 'c6:1c:79:b2:75:8b'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping ipad-personal ip-address '10.9.6.15'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping ipad-personal mac-address '32:39:a9:ab:34:38'
+set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping pixel-9 ip-address '10.9.6.17'
+set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping pixel-9 mac-address 'c0:1c:6a:6a:fc:6f'
+#set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping witt-wlan ip-address '10.9.6.18'
+#set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping witt-wlan mac-address 'redacted' # manually add
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping brother-label-printer ip-address '10.9.5.2'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping brother-label-printer mac-address '30:c9:ab:e8:6c:af'
 set service dhcp-server shared-network-name PRIMARY subnet 10.9.4.0/22 static-mapping brother-printer ip-address '10.9.5.1'

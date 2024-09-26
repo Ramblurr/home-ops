@@ -116,8 +116,10 @@ set firewall group address-group wall-dashboards address '10.8.50.10'
 set firewall group address-group admin address '192.168.1.82'
 set firewall group address-group admin address '192.168.1.83'
 set firewall group address-group admin address '192.168.1.243'
-set firewall group address-group admin address '10.9.6.14'
-set firewall group address-group admin address '10.9.6.15'
+set firewall group address-group admin address '10.9.6.14' # galaxy s21
+set firewall group address-group admin address '10.9.6.15' # ipad
+set firewall group address-group admin address '10.9.6.17' # pixel9
+set firewall group address-group admin address '10.9.6.18' # witt
 set firewall group address-group admin address '100.108.66.109'
 set firewall group address-group admin address '100.78.82.102'
 set firewall group address-group admin address '10.9.4.27'
