@@ -1376,7 +1376,7 @@ set firewall name wan-data enable-default-log
 
 set firewall name wan-data rule 1 action 'accept'
 set firewall name wan-data rule 1 description 'Rule: accept_ingress_for_mali_zrepl_replication'
-set firewall name wan-data rule 1 source group address-group 'ludwig-wan'
+set firewall name wan-data rule 1 source group address-group 'mali-replication-pullers'
 set firewall name wan-data rule 1 destination group address-group 'mali'
 set firewall name wan-data rule 1 destination group port-group 'mali-replication'
 set firewall name wan-data rule 1 protocol 'tcp_udp'

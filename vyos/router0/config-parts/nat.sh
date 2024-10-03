@@ -124,6 +124,13 @@ set nat destination rule 114 protocol 'tcp'
 set nat destination rule 114 translation address "10.9.8.14" # dewey
 set nat destination rule 114 translation port '32400'
 
+set nat destination rule 115 description 'mali zrepl replication2'
+set nat destination rule 115 destination port '3479'
+set nat destination rule 115 inbound-interface 'eth0'
+set nat destination rule 115 protocol 'tcp'
+set nat destination rule 115 translation address '10.9.10.10'
+set nat destination rule 115 translation port '3479'
+
 # LAN -> WAN masquerade
 set nat source rule 100 description 'LAN -> WAN'
 set nat source rule 100 destination address '0.0.0.0/0'

@@ -142,7 +142,8 @@ set firewall group address-group mali address '10.9.10.10'
 set firewall group address-group truenas address '10.9.4.10'
 set firewall group address-group truenas address '192.168.8.4'
 
-set firewall group address-group ludwig-wan address "${SECRET_LUDWIG_WAN_IP}"
+set firewall group address-group mali-replication-pullers address "${SECRET_LUDWIG_WAN_IP}"
+set firewall group address-group mali-replication-pullers address "${SECRET_RSYNC_WAN_IP}"
 
 set firewall group address-group local-dns-servers address '10.5.0.4'
 set firewall group address-group local-dns-servers address '10.9.4.4'
@@ -218,6 +219,7 @@ set firewall group port-group esphome-api port '80'
 set firewall group port-group wled-api port '80'
 set firewall group port-group roon-arc port '33399'
 set firewall group port-group mali-replication port '3478'
+set firewall group port-group mali-replication port '3479'
 set firewall group port-group truenas-nfs port '111'
 set firewall group port-group truenas-nfs port '2049'
 set firewall group port-group truenas-samba port '137'
