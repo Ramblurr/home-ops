@@ -23,23 +23,9 @@ jobs:
   interval: 10m
   pruning:
     keep_sender:
-    - type: not_replicated
-    - type: last_n
-      count: 1
-    - type: grid
-      # of the last 24 hours keep all snapshots
-      # of the last 7 days keep 1 snapshot each day
-      # of the last 30 days keep 1 snapshot each day
-      # of the last 6 months keep 1 snapshot each month
-      # of the last 1 year keep 1 snapshot each year
-      # discard the rest
-      # details see: https://zrepl.github.io/configuration/prune.html#policy-grid
-      grid: 1x24h(keep=all) | 7x1d(keep=1) | 30x1d(keep=1) | 6x30d(keep=1) | 1x365d(keep=1)
-      regex: "^zrepl_.*"
-    # !! keep snapshots not created by zrepl
-    - type: regex
-      negate: true
-      regex: "^zrepl_.*"
+      # source handles its own pruning
+      - type: regex
+        regex: ".*"
     keep_receiver:
     - type: grid
       # of the last 24 hours keep all snapshots
