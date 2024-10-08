@@ -5,7 +5,7 @@ collections:
   - name: containers.podman
     version: 1.16.1
   - name: community.general
-    version: 9.4.0
+    version: 9.5.0
   - name: ansible.posix
     version: 1.6.0
   - type: git
