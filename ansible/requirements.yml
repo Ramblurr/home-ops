@@ -3,7 +3,7 @@ collections:
   - name: ansible.netcommon
     version: 7.1.0
   - name: containers.podman
-    version: 1.16.1
+    version: 1.16.2
   - name: community.general
     version: 10.0.0
   - name: ansible.posix
