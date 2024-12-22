@@ -796,11 +796,7 @@ set firewall name mgmt-primary rule 4 destination group address-group 'zigbee2mq
 set firewall name mgmt-primary rule 4 source group address-group 'admin'
 set firewall name mgmt-primary rule 4 protocol 'tcp_udp'
 
-set firewall name mgmt-primary rule 5 action 'accept'
-set firewall name mgmt-primary rule 5 description 'Rule: accept_ssh_to_borgbackup'
-set firewall name mgmt-primary rule 5 destination port 'ssh'
-set firewall name mgmt-primary rule 5 destination group address-group 'borgbackup-hosts'
-set firewall name mgmt-primary rule 5 protocol 'tcp_udp'
+# rule 5 deleted
 
 set firewall name mgmt-primary rule 6 action 'accept'
 set firewall name mgmt-primary rule 6 description 'Rule: accept_prometheus_node_exporter'

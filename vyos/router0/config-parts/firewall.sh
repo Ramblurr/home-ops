@@ -122,7 +122,7 @@ set firewall group address-group admin address '10.9.6.17' # pixel9
 set firewall group address-group admin address '10.9.6.18' # witt
 set firewall group address-group admin address '100.108.66.109'
 set firewall group address-group admin address '100.78.82.102'
-set firewall group address-group admin address '10.9.4.27'
+set firewall group address-group admin address '10.9.4.21' # TODO, this is debord need to change this
 set firewall group address-group admin address '10.9.4.3' # quine-prim
 set firewall group address-group admin address '10.9.8.33' # quine-mgmt
 
@@ -161,8 +161,6 @@ set firewall group address-group minio address '10.9.10.10'
 set firewall group address-group filebrowser address '10.9.6.60'
 
 set firewall group address-group unifi-cloudkey address '192.168.1.2'
-
-set firewall group address-group borgbackup-hosts address '10.9.4.21'
 
 # Network groups
 set firewall group network-group cloudflare-ipv4 network '173.245.48.0/20'

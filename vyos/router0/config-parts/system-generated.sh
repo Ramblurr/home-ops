@@ -15,3 +15,5 @@ set system login user vyos authentication public-keys casey-ipad-new key 'AAAAE2
 set system login user vyos authentication public-keys casey-ipad-new type 'ecdsa-sha2-nistp256'
 set system login user vyos authentication public-keys disaster key 'AAAAC3NzaC1lZDI1NTE5AAAAIF7TTPusOHuyKotZBcwWqIH3B+cRRDQM46+lvATGNAWO'
 set system login user vyos authentication public-keys disaster type 'ssh-ed25519'
+set system login user vyos authentication public-keys ident-keychain key 'AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIEtpfkZ/mmPnaXlmRS8nPc2L5N/bmqXDmBz1oUSQq4VvAAAABHNzaDo='
+set system login user vyos authentication public-keys ident-keychain type 'sk-ssh-ed25519@openssh.com'
