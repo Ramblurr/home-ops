@@ -49,6 +49,10 @@ all:
       hosts:
         pikvm.mgmt.socozy.casa:
           ansible_user: root
+        octoprint.int.socozy.casa:
+    octoprint:
+      hosts:
+        octoprint.int.socozy.casa:
     ovos-mic-satellites:
       vars:
         ansible_python_interpreter: /usr/bin/python3

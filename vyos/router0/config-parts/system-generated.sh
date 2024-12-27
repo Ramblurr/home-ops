@@ -17,3 +17,5 @@ set system login user vyos authentication public-keys disaster key 'AAAAC3NzaC1l
 set system login user vyos authentication public-keys disaster type 'ssh-ed25519'
 set system login user vyos authentication public-keys ident-keychain key 'AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIEtpfkZ/mmPnaXlmRS8nPc2L5N/bmqXDmBz1oUSQq4VvAAAABHNzaDo='
 set system login user vyos authentication public-keys ident-keychain type 'sk-ssh-ed25519@openssh.com'
+set system login user vyos authentication public-keys ident-nano key 'AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIKW5vQNm1qlEnKunuhsQsA4BS/LCU/6pXeUiad8EFAZ7AAAABHNzaDo='
+set system login user vyos authentication public-keys ident-nano type 'sk-ssh-ed25519@openssh.com'

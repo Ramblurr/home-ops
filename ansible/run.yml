@@ -86,3 +86,15 @@
     - import_role:
         name: rmblr.hivemind-sat
       tags: [sat]
+
+- name: Set SSH Keys
+  hosts: [dns, octoprint]
+  tags: [ssh-keys]
+  tasks:
+    - name: set authorized keys
+      ansible.posix.authorized_key:
+        user: "{{ ansible_user }}"
+        state: present
+        key: "{{ ssh_public_keys | join('\n\n') }}"
+        follow: true
+        exclusive: false
