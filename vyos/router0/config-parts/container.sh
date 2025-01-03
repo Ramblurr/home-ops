@@ -106,7 +106,7 @@ set container name udp-broadcast-relay-syncthing shared-memory '0'
 
 
 # snmp-exporter
-set container name snmp-exporter image 'quay.io/prometheus/snmp-exporter:v0.26.0'
+set container name snmp-exporter image 'quay.io/prometheus/snmp-exporter:v0.27.0'
 set container name snmp-exporter memory '0'
 set container name snmp-exporter network services address '10.5.0.9'
 set container name snmp-exporter restart 'on-failure'
