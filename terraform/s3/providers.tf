@@ -10,7 +10,7 @@ terraform {
     }
     cloudflare = {
       source  = "cloudflare/cloudflare"
-      version = "4.50.0"
+      version = "5.0.0"
     }
     sops = {
       source  = "carlpett/sops"
