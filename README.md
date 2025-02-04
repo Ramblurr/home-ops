@@ -1,6 +1,21 @@
+## 🚧 NO LONGER MAINTAINED
+
+> [!IMPORTANT]
+> As of late 2024, I am no longer using Kubernetes at home.
+>
+> Thank you to everyone that has followed, donated time config and answered questions.
+>
+> Over the past several years I have migrated entirely to NixOS, and as of early 2025 *everything* is on Nix.
+>
+> Follow along at <https://github.com/ramblurr/nixcfg>
+>
+> This repo will remain available, but consider it outdated.
+
+
 <div align="center">
 
 <img src="https://avatars.githubusercontent.com/u/14830?v=4" align="left" width="144px" height="144px"/>
+
 
 ## My Home Operations repository
 
